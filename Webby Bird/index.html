@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebbyBird</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <h2 id="wb-baslik1">WebbyBird - Kuş Oyunu</h2>
+</head>
+<body>
+    <div id="oyun">
+        <div id="arkaplan-konteyner">
+            <div id="arkaplan"></div>
+            <div id="arkaplan2"></div>
+        </div>
+        <div id="puan-goster">0</div>
+        <img id="kus" src="kus.png" alt="Kuş">
+        <div id="engel" class="engel"><img src="boru.png" alt="Engel"></div>
+        <div id="engel2" class="engel"><img src="boru.png" alt="Engel"></div>
+    </div>
+    <div id="baslangic-popup" class="popup">
+        <h2 id="wb-baslik2">Hazırsan başla!</h2>
+        <button id="baslat-buton">Başlat</button>
+    </div>
+    <div id="oyun-bitti-popup" class="popup">
+        <h2>Oyun Bitti!</h2>
+        <p>Skorunuz: <span id="son-puan">0</span></p>
+        <button id="yeniden-baslat-buton">Tekrar Başlat</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
