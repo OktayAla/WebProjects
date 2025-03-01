@@ -1,0 +1,496 @@
+{
+    "Lüks Kumaş Koleksiyonu": [
+        {
+            "id": 2,
+            "name": "Kaşmir Yün",
+            "description": "Premium kalite kaşmir yün karışımı kumaşımız, benzersiz yumuşaklığı ve sıcak tutuşu ile kış mevsiminin vazgeçilmezi. Özel işleme teknikleriyle üretilen bu lüks kumaş, maksimum konfor sunar.",
+            "image": "img/collections/2_kasmiryun.jpg",
+            "features": {
+                "Kumaş Türü": "Kaşmir Yün Karışımı",
+                "Ağırlık": "320 g\/m²",
+                "Karışım Oranı": "70% Kaşmir, 30% Yün",
+                "Renk Skalası": [
+                    "Camel",
+                    "Gri",
+                    "Lacivert",
+                    "Siyah",
+                    "Kahverengi"
+                ],
+                "Özellikler": [
+                    "Isı Yalıtımı",
+                    "Anti-Statik",
+                    "Doğal Yumuşaklık"
+                ],
+                "Kullanım Alanları": [
+                    "Palto",
+                    "Kaban",
+                    "Ceket"
+                ],
+                "Bakım": "Kuru Temizleme"
+            }
+        },
+        {
+            "id": 3,
+            "name": "Merserize Pamuk",
+            "description": "Yüksek kalite merserize işlemi uygulanmış pamuklu kumaşımız, üstün dayanıklılık ve parlaklık sunar. Özel işleme tekniği sayesinde normal pamuklu kumaşlara göre daha parlak ve dayanıklıdır.",
+            "image": "img/collections/3_merserizepamuk.webp",
+            "features": {
+                "Kumaş Türü": "Merserize Pamuk",
+                "Ağırlık": "180 g\/m²",
+                "İplik Numarası": "Ne 60\/2",
+                "Renk Skalası": [
+                    "Beyaz",
+                    "Siyah",
+                    "Gri",
+                    "Lacivert",
+                    "Bej"
+                ],
+                "Özellikler": [
+                    "Yüksek Parlaklık",
+                    "Dayanıklılık",
+                    "Kolay Ütülenebilir"
+                ],
+                "Kullanım Alanları": [
+                    "Gömlek",
+                    "Bluz",
+                    "Elbise"
+                ],
+                "Bakım": "40 Derecede Yıkama"
+            }
+        },
+        {
+            "id": 4,
+            "name": "İtalyan Keten",
+            "description": "İtalya'dan ithal edilen premium keten kumaşımız, doğal ve nefes alabilen yapısıyla yaz aylarının vazgeçilmezi. El dokuması görünümü ve karakteristik keten dokusu ile öne çıkar.",
+            "image": "img/collections/4_italyanketen.jpeg",
+            "features": {
+                "Kumaş Türü": "Saf Keten",
+                "Ağırlık": "200 g\/m²",
+                "Menşei": "İtalya",
+                "Renk Skalası": [
+                    "Doğal Keten",
+                    "Beyaz",
+                    "Bej",
+                    "Açık Mavi",
+                    "Gri"
+                ],
+                "Özellikler": [
+                    "Nefes Alabilir",
+                    "Doğal Serinlik",
+                    "Dayanıklı"
+                ],
+                "Kullanım Alanları": [
+                    "Yaz Giysileri",
+                    "Gömleklik",
+                    "Ev Tekstili"
+                ],
+                "Bakım": "30 Derecede Yıkama"
+            }
+        },
+        {
+            "id": 5,
+            "name": "Jakar Dokuma",
+            "description": "Özel desenli jakar dokuma kumaşlarımız, benzersiz tasarımları ve yüksek kalitesiyle göz kamaştırıyor. Modern teknoloji ile geleneksel dokuma sanatını birleştiriyoruz.",
+            "image": "img/collections/5_jakardokuma.jpg",
+            "features": {
+                "Kumaş Türü": "Jakar Dokuma",
+                "Ağırlık": "280 g\/m²",
+                "Desen": "Özel Tasarım",
+                "Renk Skalası": [
+                    "Altın",
+                    "Gümüş",
+                    "Bordo",
+                    "Lacivert",
+                    "Zümrüt"
+                ],
+                "Özellikler": [
+                    "Özel Desen",
+                    "Yüksek Dayanıklılık",
+                    "Lüks Görünüm"
+                ],
+                "Kullanım Alanları": [
+                    "Döşemelik",
+                    "Perdelik",
+                    "Özel Dikim"
+                ],
+                "Bakım": "Kuru Temizleme"
+            }
+        },
+        {
+            "id": 6,
+            "name": "Brokar",
+            "description": "Geleneksel brokar dokuma tekniğiyle üretilen kumaşlarımız, altın ve gümüş ipliklerle işlenen desenleriyle göz kamaştırıyor. Özel günleriniz için lüks ve ihtişam vadediyor.",
+            "image": "img/collections/6_brokar.jpg",
+            "features": {
+                "Kumaş Türü": "Brokar",
+                "Ağırlık": "300 g\/m²",
+                "İplik": "İpek ve Metalik Karışım",
+                "Renk Skalası": [
+                    "Altın",
+                    "Gümüş",
+                    "Krem",
+                    "Beyaz",
+                    "Siyah"
+                ],
+                "Özellikler": [
+                    "Metalik Detaylar",
+                    "Özel Desenler",
+                    "Premium Kalite"
+                ],
+                "Kullanım Alanları": [
+                    "Abiye",
+                    "Gelinlik",
+                    "Özel Dikim"
+                ],
+                "Bakım": "Sadece Kuru Temizleme"
+            }
+        },
+        {
+            "id": 1,
+            "name": "İpek Saten",
+            "description": "Özel dokuma lüks ipek kumaşımız, benzersiz yumuşaklığı ve parlaklığı ile öne çıkıyor. %100 doğal ipek kullanılarak üretilen bu premium kumaş, özel günleriniz için mükemmel bir seçim.",
+            "image": "img/collections/1_ipeksaten.jpg",
+            "features": {
+                "Kumaş Türü": "İpek Saten",
+                "Ağırlık": "16mm (85 g\/m²)",
+                "Dokuma": "Saten",
+                "Renk Skalası": [
+                    "Ekru",
+                    "Siyah",
+                    "Lacivert",
+                    "Bordo",
+                    "Zümrüt Yeşili"
+                ],
+                "Özellikler": [
+                    "Doğal Parlaklık",
+                    "Ultra Yumuşak",
+                    "Nefes Alabilir"
+                ],
+                "Kullanım Alanları": [
+                    "Abiye",
+                    "Gelinlik",
+                    "Özel Dikim"
+                ],
+                "Bakım": "Kuru Temizleme Önerilir"
+            }
+        }
+    ],
+    "Ev Tekstili": [
+        {
+            "id": 7,
+            "name": "Lüks Havlu Serisi",
+            "description": "600 GSM ağırlığında, ultra yumuşak ve emici özelliğe sahip premium havlu serimiz. %100 Türk pamuğundan üretilmiştir.",
+            "image": "img/collections/7_lukshavluserisi.webp",
+            "features": {
+                "Malzeme": "100% Türk Pamuğu",
+                "Gramaj": "600 GSM",
+                "Boyutlar": [
+                    "50x90 cm",
+                    "70x140 cm",
+                    "90x150 cm"
+                ],
+                "Renk Skalası": [
+                    "Beyaz",
+                    "Bej",
+                    "Gri",
+                    "Lacivert",
+                    "Bordo"
+                ],
+                "Özellikler": [
+                    "Ultra Emici",
+                    "Hızlı Kuruyan",
+                    "Antibakteriyel"
+                ],
+                "Bakım": "60 Derecede Yıkama"
+            }
+        },
+        {
+            "id": 8,
+            "name": "Pamuklu Bornoz",
+            "description": "Ultra yumuşak dokuma tekniği ile üretilen lüks bornozlarımız, maksimum konfor ve şıklık sunar.",
+            "image": "img/collections/8_pamuklubornoz.webp",
+            "features": {
+                "Malzeme": "100% Pamuk",
+                "Gramaj": "400 GSM",
+                "Bedenler": [
+                    "S",
+                    "M",
+                    "L",
+                    "XL",
+                    "XXL"
+                ],
+                "Renk Skalası": [
+                    "Beyaz",
+                    "Gri",
+                    "Lacivert",
+                    "Bej"
+                ],
+                "Özellikler": [
+                    "Şal Yaka",
+                    "Kuşaklı",
+                    "Çift Cepli"
+                ],
+                "Bakım": "40 Derecede Yıkama"
+            }
+        },
+        {
+            "id": 9,
+            "name": "Merino Battaniye",
+            "description": "%100 merinos yününden üretilen lüks battaniyelerimiz, maksimum sıcaklık ve konfor sunar. Doğal antibakteriyel özelliği ile sağlıklı bir uyku deneyimi sağlar.",
+            "image": "img/collections/9_merinobattaniye.jpg",
+            "features": {
+                "Malzeme": "100% Merinos Yünü",
+                "Gramaj": "350 g\/m²",
+                "Boyutlar": [
+                    "150x200 cm",
+                    "200x220 cm"
+                ],
+                "Renk Skalası": [
+                    "Ekru",
+                    "Gri",
+                    "Bej",
+                    "Kahverengi"
+                ],
+                "Özellikler": [
+                    "Doğal Isı Yalıtımı",
+                    "Antibakteriyel",
+                    "Antialerjik"
+                ],
+                "Bakım": "Kuru Temizleme Önerilir"
+            }
+        },
+        {
+            "id": 10,
+            "name": "Dekoratif Perde",
+            "description": "Özel dokuma tekniğiyle üretilen dekoratif perdelerimiz, mekanlarınıza şıklık ve zarafet katıyor. UV koruma özelliği ile güneş ışınlarına karşı etkili koruma sağlar.",
+            "image": "img/collections/10_dekoratifperde.jpg",
+            "features": {
+                "Malzeme": "Polyester ve Pamuk Karışımı",
+                "Gramaj": "180 g\/m²",
+                "En": "280 cm",
+                "Renk Skalası": [
+                    "Beyaz",
+                    "Krem",
+                    "Gri",
+                    "Bej"
+                ],
+                "Özellikler": [
+                    "UV Koruma",
+                    "Kolay Bakım",
+                    "Dökümlü Yapı"
+                ],
+                "Bakım": "40 Derecede Yıkama"
+            }
+        },
+        {
+            "id": 11,
+            "name": "El Dokuma Halı",
+            "description": "Geleneksel el dokuma tekniğiyle üretilen halılarımız, modern tasarımlarla buluşuyor. Her biri benzersiz bir sanat eseri niteliğindedir.",
+            "image": "img/collections/11_eldokumahali.jpg",
+            "features": {
+                "Malzeme": "100% Yün",
+                "Düğüm Sayısı": "1.000.000 düğüm\/m²",
+                "Boyutlar": [
+                    "Özel Sipariş"
+                ],
+                "Renk Skalası": [
+                    "Müşteri Tercihine Göre"
+                ],
+                "Özellikler": [
+                    "El Dokuma",
+                    "Özel Tasarım",
+                    "Dayanıklı"
+                ],
+                "Bakım": "Profesyonel Temizlik"
+            }
+        },
+        {
+            "id": 12,
+            "name": "Masa Örtüsü",
+            "description": "Leke tutmaz özel işlem görmüş masa örtülerimiz, pratik kullanım ve şık görünüm bir arada sunuyor. Özel dokuma tekniği ile uzun ömürlü kullanım sağlar.",
+            "image": "img/collections/12_masaortusu.jpg",
+            "features": {
+                "Malzeme": "Pamuk ve Polyester Karışımı",
+                "Boyutlar": [
+                    "140x180 cm",
+                    "160x220 cm"
+                ],
+                "Renk Skalası": [
+                    "Beyaz",
+                    "Krem",
+                    "Bej"
+                ],
+                "Özellikler": [
+                    "Leke Tutmaz",
+                    "Ütü Gerektirmez",
+                    "Dayanıklı"
+                ],
+                "Bakım": "40 Derecede Yıkama"
+            }
+        }
+    ],
+    "Sürdürülebilir Koleksiyon": [
+        {
+            "id": 13,
+            "name": "Organik Pamuk",
+            "description": "GOTS sertifikalı organik pamuktan üretilen, çevre dostu ve sürdürülebilir kumaşımız.",
+            "image": "img/collections/13_organikpamuk.jpg",
+            "features": {
+                "Sertifikalar": [
+                    "GOTS",
+                    "OEKO-TEX"
+                ],
+                "Ağırlık": "160 g\/m²",
+                "Üretim": "Organik Tarım",
+                "Renk Skalası": [
+                    "Doğal",
+                    "Ekru",
+                    "Açık Gri",
+                    "Haki"
+                ],
+                "Özellikler": [
+                    "Pestisitsiz",
+                    "Kimyasal İşlem Görmemiş",
+                    "Ekolojik"
+                ],
+                "Kullanım Alanları": [
+                    "Her Türlü Giysi",
+                    "Bebek Giysileri"
+                ],
+                "Bakım": "30 Derecede Yıkama"
+            }
+        },
+        {
+            "id": 14,
+            "name": "Geri Dönüşüm Kot",
+            "description": "Geri dönüştürülmüş kot kumaşlardan üretilen sürdürülebilir denim kumaşlarımız, çevre dostu üretim anlayışıyla öne çıkıyor.",
+            "image": "img/collections/14_geridonusumkot.jpg",
+            "features": {
+                "Malzeme": "80% Geri Dönüştürülmüş Pamuk",
+                "Ağırlık": "12 oz",
+                "Renk Skalası": [
+                    "İndigo",
+                    "Açık Mavi",
+                    "Koyu Mavi"
+                ],
+                "Özellikler": [
+                    "Sürdürülebilir",
+                    "Dayanıklı",
+                    "Su Tasarruflu Üretim"
+                ],
+                "Kullanım Alanları": [
+                    "Kot Pantolon",
+                    "Ceket",
+                    "Aksesuar"
+                ],
+                "Bakım": "30 Derecede Yıkama"
+            }
+        },
+        {
+            "id": 15,
+            "name": "Bambu Kumaş",
+            "description": "Doğal bambu liflerinden üretilen kumaşlarımız, antibakteriyel özellikleri ve yumuşak dokusuyla tercih ediliyor.",
+            "image": "img/collections/15_bambukumas.jpg",
+            "features": {
+                "Malzeme": "100% Bambu Lifi",
+                "Gramaj": "160 g\/m²",
+                "Renk Skalası": [
+                    "Doğal",
+                    "Beyaz",
+                    "Açık Gri"
+                ],
+                "Özellikler": [
+                    "Antibakteriyel",
+                    "Nefes Alabilir",
+                    "Yumuşak"
+                ],
+                "Kullanım Alanları": [
+                    "İç Giyim",
+                    "Spor Giyim",
+                    "Bebek Giysileri"
+                ],
+                "Bakım": "30 Derecede Yıkama"
+            }
+        },
+        {
+            "id": 16,
+            "name": "Tencel Kumaş",
+            "description": "Sürdürülebilir ağaç liflerinden üretilen Tencel kumaşlarımız, ipeksi yumuşaklığı ve çevre dostu üretim süreciyle öne çıkıyor.",
+            "image": "img/collections/16_tencelkumas.avif",
+            "features": {
+                "Malzeme": "100% Tencel Lyocell",
+                "Gramaj": "150 g\/m²",
+                "Renk Skalası": [
+                    "Beyaz",
+                    "Bej",
+                    "Navy",
+                    "Siyah"
+                ],
+                "Özellikler": [
+                    "Nem Yönetimi",
+                    "Biyobozunur",
+                    "Yumuşak"
+                ],
+                "Kullanım Alanları": [
+                    "Bluz",
+                    "Elbise",
+                    "Gömlek"
+                ],
+                "Bakım": "30 Derecede Yıkama"
+            }
+        },
+        {
+            "id": 17,
+            "name": "Geri Dönüşüm Polyester",
+            "description": "Pet şişelerden elde edilen geri dönüştürülmüş polyester kumaşlarımız, sürdürülebilir moda anlayışını destekliyor.",
+            "image": "img/collections/17_geridonusumpolyester.jpg",
+            "features": {
+                "Malzeme": "100% Geri Dönüştürülmüş Polyester",
+                "Gramaj": "140 g\/m²",
+                "Renk Skalası": [
+                    "Beyaz",
+                    "Siyah",
+                    "Gri",
+                    "Navy"
+                ],
+                "Özellikler": [
+                    "Hızlı Kuruma",
+                    "Dayanıklı",
+                    "Çevre Dostu"
+                ],
+                "Kullanım Alanları": [
+                    "Spor Giyim",
+                    "Dış Giyim",
+                    "Çanta"
+                ],
+                "Bakım": "40 Derecede Yıkama"
+            }
+        },
+        {
+            "id": 18,
+            "name": "Hemp Kumaş",
+            "description": "Doğal kenevir liflerinden üretilen kumaşlarımız, dayanıklılığı ve ekolojik üretim süreciyle dikkat çekiyor.",
+            "image": "img/collections/18_hempkumas.webp",
+            "features": {
+                "Malzeme": "100% Kenevir",
+                "Gramaj": "200 g\/m²",
+                "Renk Skalası": [
+                    "Doğal",
+                    "Bej",
+                    "Haki"
+                ],
+                "Özellikler": [
+                    "UV Dirençli",
+                    "Antibakteriyel",
+                    "Dayanıklı"
+                ],
+                "Kullanım Alanları": [
+                    "Dış Giyim",
+                    "Çanta",
+                    "Aksesuar"
+                ],
+                "Bakım": "30 Derecede Yıkama"
+            }
+        }
+    ]
+}
