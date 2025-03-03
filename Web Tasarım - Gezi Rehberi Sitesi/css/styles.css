@@ -1,0 +1,98 @@
+/* Mobil responsiveness için düzenlemeler */
+@media screen and (max-width: 768px) {
+    .destinations-grid {
+        flex-direction: column;
+    }
+
+    .filter-sidebar {
+        position: static;
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 15px;
+    }
+
+    .search-box {
+        margin-bottom: 15px;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+    }
+
+    .search-input-wrapper input {
+        width: calc(100% - 40px);
+        font-size: 16px; /* iOS'ta zoom sorununu önlemek için */
+        padding: 10px;
+    }
+
+    .filter-section {
+        margin-top: 15px;
+    }
+
+    .filter-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .filter-options label {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .destinations-content {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .destination-card {
+        margin-bottom: 20px;
+    }
+
+    .pagination-container {
+        padding: 15px 0;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .pagination button {
+        padding: 8px 12px;
+        font-size: 14px;
+        min-width: 35px;
+    }
+
+    .btn-details {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+    }
+}
+
+/* Çok küçük ekranlar için ek düzenlemeler */
+@media screen and (max-width: 480px) {
+    .filter-options {
+        grid-template-columns: 1fr;
+    }
+
+    .destination-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .destination-meta span {
+        font-size: 13px;
+    }
+
+    .destination-info h2 {
+        font-size: 18px;
+    }
+
+    .destination-info p {
+        font-size: 14px;
+    }
+}
