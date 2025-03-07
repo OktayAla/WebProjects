@@ -312,8 +312,61 @@ include 'includes/header.php';
                     </div>
                 </div>
 
+
+                <!-- 16. Tarihi Yer -->
+                <div class="destination-card">
+                    <div class="destination-image">
+                        <img src="" alt="Kastamonu Saat Kulesi">
+                        <span class="destination-category">Karadeniz</span>
+                    </div>
+                    <div class="destination-info">
+                        <h2>Kastamonu Saat Kulesi</h2>
+                        <div class="destination-meta">
+                            <span><i class="fas fa-map-marker-alt"> Merkez, Kastamonu</i></span>
+                            <span><i class="far fa-calendar-alt">1885</i></span>
+                        </div>
+                        <p>Sultan II. Abdülhamit döneminde inşa edilen, şehrin simgelerinden biri haline gelmiş, dört katlı kesme taştan yapılmış tarihi saat kulesi.</p>
+                        <a href="pages/tarihi-yerler/kastamonu-kalesi-detay.php" class="btn-details">Detayları Gör</a>
+                    </div>
                 
+
+
+                <!-- 17. Tarihi Yer -->
+                <div class="destination-card">
+                    <div class="destination-image">
+                        <img src="" alt="Çarşamba Köprüsü">
+                        <span class="destination-category">Karadeniz</span>
+                    </div>
+                    <div class="destination-info">
+                        <h2>Çarşamba Köprüsü</h2>
+                        <div class="destination-meta">
+                            <span><i class="fas fa-map-marker-alt"> Çarşamba, Samsung</i></span>
+                            <span><i class="far fa-calendar-alt">1890</i></span>
+                        </div>
+                        <p>Osmanlı döneminde inşa edilen, 270 metre uzunluğundaki, 10 gözlü, taş kemerli, tarihi köprü.</p>
+                        <a href="pages/tarihi-yerler/carsamba-koprusu-detay.php" class="btn-details">Detayları Gör</a>
+                    </div>
+
+
+                <!-- 18. Tarihi Yer -->
+                <div class="destination-card">
+                    <div class="destination-image">
+                        <img src="" alt="Aizanoi Antik Kenti">
+                        <span class="destination-category">Ege</span>
+                    </div>
+                    <div class="destination-info">
+                        <h2>Aizanoi Antik Kenti</h2>
+                        <div class="destination-meta">
+                            <span><i class="fas fa-map-marker-alt"> Çavdarhisar, Kütahya</i></span>
+                            <span><i class="far fa-calendar-alt">MÖ 3000</i></span>
+                        </div>
+                        <p>Zeus Tapınağı, antik tiyatro, stadyum kompleksi ve dünyanın ilk ticaret borsası kalıntılarıyla ünlü, Roma İmparatorluğu döneminin önemli ticaret ve kültür merkezlerinden biri.</p>
+                        <a href="pages/tarihi-yerler/aizanoi-detay.php" class="btn-details">Detayları Gör</a>
+                    </div>
+
+
             </div>
+            
 
             <!-- Sayfalama butonları için ayrı bir konteyner -->
             <div class="pagination-container">
