@@ -32,8 +32,8 @@
             <section class="history-section">
                 <h2>Tarihçe</h2>
                 <p>Efes, MÖ 6000 yıllarından itibaren yerleşim gören, tarih boyunca Hitit, Yunan, Roma, Bizans, Selçuklu ve Osmanlı medeniyetlerine ev sahipliği yapmış önemli bir antik kenttir. Roma İmparatorluğu döneminde Asya Eyaleti'nin başkenti olan Efes, 200.000'i aşkın nüfusuyla döneminin en büyük kentlerinden biriydi.</p>
-                
-                <p>Antik dünyanın yedi harikasından biri olan Artemis Tapınağı'na ev sahipliği yapan kent, aynı zamanda önemli bir liman şehriydi. Zamanla limanın dolması ve sıtma salgınları nedeniyle önemini yitirmeye başladı.</p>
+                <p>Antik dünyanın yedi harikasından biri olan Artemis Tapınağı'na ev sahipliği yapan kent, ticaret, kültür ve sanatın merkezi olarak büyük bir öneme sahiptir. Zamanla limanın dolması ve salgınlar nedeniyle işlevini yitirsen de, tarihsel dokusu ve mimari kalıntılarıyla günümüze ışık tutmaktadır.</p>
+                <p>Efes, antik dönemdeki yaşam tarzı, inanç sistemleri ve sosyal yapıyı yansıtan kalıntıları ile ziyaretçilere eşsiz tarihsel deneyimler sunmaktadır.</p>
             </section>
 
             <section class="architecture-section">

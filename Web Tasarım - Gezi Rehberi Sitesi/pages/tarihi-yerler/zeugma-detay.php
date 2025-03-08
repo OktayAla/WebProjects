@@ -30,10 +30,12 @@
     <div class="detail-content">
         <div class="content-wrapper">
             <section class="history-section">
-                <h2>Tarihçe ve Önem</h2>
+                <h2>Tarihçe</h2>
                 <p>Zeugma antik kenti, MÖ 300'lü yıllarda Büyük İskender'in generallerinden I. Selevkos Nikator tarafından kurulmuştur. Roma döneminde 80.000 nüfusa ulaşan kent, döneminin en önemli ticaret merkezlerinden biriydi. Fırat Nehri üzerindeki konumu nedeniyle "Köprü" anlamına gelen Zeugma adını almıştır.</p>
-                
-                <p>2000 yılında Birecik Barajı'nın yapımı sırasında kurtarma kazıları başlatılmış ve muhteşem mozaikler gün yüzüne çıkarılmıştır. "Çingene Kızı" mozaiği başta olmak üzere, pek çok eşsiz eser müzede sergilenmektedir.</p>
+                <p>Kent, Seleukos İmparatorluğu döneminde "Seleucia Euphratensis" adıyla anılmış, daha sonra Roma İmparatorluğu'nun egemenliğine girmiştir. Roma döneminde Zeugma, büyük bir refah ve kültürel gelişme yaşamıştır.</p>
+                <p>Zeugma, Roma İmparatorluğu'nun doğu sınırında yer alması nedeniyle stratejik bir öneme sahipti. Kent, aynı zamanda İpek Yolu üzerinde bulunması nedeniyle önemli bir ticaret merkeziydi.</p>
+                <p>Kentte bulunan mozaikler, Roma döneminin zenginliğini ve kültürel çeşitliliğini yansıtmaktadır. Mozaikler, mitolojik sahneleri, günlük yaşamı ve çeşitli figürleri tasvir etmektedir.</p>
+                <p>2000 yılında yapılan kurtarma kazıları, Zeugma'nın dünya çapında tanınmasını sağlamıştır. Kazılar sırasında bulunan mozaikler, antik kentin sanatsal ve kültürel değerini ortaya koymuştur.</p>
             </section>
 
             <section class="architecture-section">
@@ -123,4 +125,3 @@
 </main>
 
 <?php include '../../includes/footer.php'; ?>
-

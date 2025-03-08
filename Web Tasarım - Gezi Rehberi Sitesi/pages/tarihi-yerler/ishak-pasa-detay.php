@@ -32,8 +32,10 @@
             <section class="history-section">
                 <h2>Tarihçe</h2>
                 <p>1784 yılında Doğubayazıt'ta, dönemin beylerinden İshak Paşa tarafından yaptırılan saray, Osmanlı İmparatorluğu'nun son büyük anıtsal yapılarından biridir. Selçuklu, Osmanlı, Gürcü ve İran mimarisinin özelliklerini taşıyan özgün bir yapıdır.</p>
-                
                 <p>2000 yılında UNESCO Dünya Mirası Geçici Listesi'ne alınan saray, deniz seviyesinden 1.900 metre yükseklikte, Ağrı Dağı manzaralı bir tepe üzerinde inşa edilmiştir. Sarayın yapımı yaklaşık 99 yıl sürmüştür.</p>
+                <p>Saray, sadece bir konut değil, aynı zamanda bir devlet merkezi olarak da kullanılmıştır. İçerisinde divan, mahkeme salonu, zindan ve çeşitli yönetim birimleri bulunmaktadır. Bu özelliğiyle saray, bölgedeki siyasi ve idari gücün sembolü olmuştur.</p>
+                <p>İshak Paşa Sarayı, Osmanlı İmparatorluğu'nun Doğu Anadolu'daki etkisini ve gücünü gösteren önemli bir yapıdır. Saray, aynı zamanda bölgedeki farklı kültürlerin etkileşimini ve sentezini temsil etmektedir.</p>
+                <p>Günümüzde İshak Paşa Sarayı, Türkiye'nin önemli turistik merkezlerinden biridir. Ziyaretçiler, sarayın tarihi atmosferini soluyabilir, mimari detaylarını inceleyebilir ve Ağrı Dağı'nın eşsiz manzarasının tadını çıkarabilirler.</p>
             </section>
 
             <section class="architecture-section">

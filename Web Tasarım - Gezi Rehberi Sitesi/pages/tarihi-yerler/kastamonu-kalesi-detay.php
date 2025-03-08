@@ -32,8 +32,10 @@
             <section class="history-section">
                 <h2>Tarihçe</h2>
                 <p>Kastamonu Kalesi'nin temelleri Bizans dönemine dayanmaktadır. Candaroğulları ve Osmanlı dönemlerinde stratejik önemi nedeniyle sürekli güçlendirilmiş ve onarılmıştır. Kalenin yapımında Roma ve Bizans dönemlerinden kalma devşirme malzemeler kullanılmıştır.</p>
-                
                 <p>Kale, tarih boyunca şehrin savunmasında önemli rol oynamış ve bölgenin kontrolünü sağlamıştır. Günümüzde restore edilerek ziyarete açık olan kale, şehrin en önemli tarihi ve turistik mekanlarından biridir.</p>
+                <p>Kalenin Bizans dönemindeki ilk inşası, bölgedeki yerel beyliklerin ve daha sonraki dönemlerde Osmanlı İmparatorluğu'nun kontrolünü sağlamak amacıyla yapılmıştır. Kale, stratejik konumu sayesinde, Karadeniz ticaret yolunu ve iç bölgelerle olan bağlantıyı kontrol altında tutmuştur.</p>
+                <p>Candaroğulları Beyliği döneminde kale, büyük bir onarım ve genişleme geçirmiştir. Bu dönemde, kaleye yeni burçlar, surlar ve iç yapılar eklenmiştir. Candaroğulları, kaleyi hem askeri bir üs hem de bir yönetim merkezi olarak kullanmışlardır.</p>
+                <p>Osmanlı İmparatorluğu döneminde de kale, önemini korumuş ve çeşitli onarımlar görmüştür. Osmanlılar, kaleyi bölgedeki isyanları bastırmak ve güvenliği sağlamak amacıyla kullanmışlardır. Ayrıca, kale içerisinde bir de cami inşa edilmiştir.</p>
             </section>
 
             <section class="architecture-section">
@@ -96,7 +98,7 @@
                     </a>
                     <a href="https://i.pinimg.com/originals/1c/64/4d/1c644d769759d639a8e585e5dc1c8659.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i.pinimg.com/originals/1c/64/4d/1c644d769759d639a8e585e5dc1c8659.jpg">
+                        <img src="https://i.pinimg.com/originals/1c/64/4d/1c644d769759d639a8e585e5dc1c8659.jpg  ">
                     </a>
                     <a href="https://media-cdn.tripadvisor.com/media/photo-m/1280/18/c9/9a/10/kastamonu-kalesi.jpg" 
                        class="gallery-item" data-fancybox="gallery">

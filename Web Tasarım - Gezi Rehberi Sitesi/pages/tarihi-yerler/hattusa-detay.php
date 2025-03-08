@@ -30,10 +30,12 @@
     <div class="detail-content">
         <div class="content-wrapper">
             <section class="history-section">
-                <h2>Tarihçe ve Önem</h2>
+                <h2>Tarihçe</h2>
                 <p>Hattuşa, MÖ 17. yüzyıldan MÖ 13. yüzyıla kadar Hitit İmparatorluğu'nun başkentliğini yapmış, döneminin en önemli merkezlerinden biriydi. Kent, güçlü surları, anıtsal kapıları, görkemli tapınakları ve saraylarıyla Hitit uygarlığının ihtişamını yansıtmaktadır.</p>
-                
                 <p>1986 yılında UNESCO Dünya Mirası Listesi'ne alınan Hattuşa, çivi yazılı tabletleriyle de dünya tarihine ışık tutmaktadır. Bulunan binlerce tablet sayesinde Hitit dili, kültürü ve diplomasisi hakkında önemli bilgilere ulaşılmıştır.</p>
+                <p>Hattuşa, sadece bir başkent değil, aynı zamanda önemli bir dini merkezdi. Kentte, Hitit panteonuna ait birçok tanrı ve tanrıça için tapınaklar inşa edilmiştir. Büyük Tapınak, bunlardan en önemlilerinden biridir ve Hatti'nin Fırtına Tanrısı ile Güneş Tanrıçası'na adanmıştır.</p>
+                <p>Kentte bulunan kraliyet arşivleri, Hitit diplomasisi, hukuku ve edebiyatı hakkında benzersiz bilgiler sunmaktadır. Bu tabletler, Hititlerin komşularıyla olan ilişkilerini, yaptıkları antlaşmaları ve kültürel etkileşimlerini aydınlatmaktadır.</p>
+                <p>Hattuşa'nın keşfi ve kazıları, 20. yüzyılın başlarında başlamış ve hala devam etmektedir. Kazılar, Hitit uygarlığı hakkında yeni bilgiler ortaya çıkarmaya devam etmektedir ve antik kentin gizemlerini çözmeye yardımcı olmaktadır.</p>
             </section>
 
             <section class="architecture-section">

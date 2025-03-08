@@ -32,8 +32,10 @@
             <section class="history-section">
                 <h2>Tarihçe</h2>
                 <p>Fatih Sultan Mehmet tarafından 1478 yılında inşa ettirilen Topkapı Sarayı, Osmanlı İmparatorluğu'nun yönetim, eğitim ve sanat merkezi olarak hizmet vermiştir. 19. yüzyıla kadar devletin resmi ikametgahı olan saray, günümüzde dünyanın en zengin saray-müzelerinden biridir.</p>
-                
                 <p>Saray, yaklaşık 700.000 metrekarelik bir alana yayılmış olup, dört ana avlu ve Harem bölümünden oluşmaktadır. Her bölüm farklı dönemlerde eklenmiş ve sarayın mimarisi sürekli gelişmiştir.</p>
+                <p>Topkapı Sarayı, Osmanlı İmparatorluğu'nun en uzun süre kullanılan sarayı olmuştur. Yaklaşık 400 yıl boyunca Osmanlı padişahları ve aileleri, sarayda yaşamış ve devleti buradan yönetmişlerdir.</p>
+                <p>Saray, farklı dönemlerde çeşitli eklemeler ve değişiklikler geçirmiştir. Her padişah, kendi zevkine ve ihtiyaçlarına göre saraya yeni yapılar ekletmiş veya mevcut yapıları onartmıştır. Bu nedenle, Topkapı Sarayı, farklı mimari üslupların bir arada görülebildiği bir komplekstir.</p>
+                <p>19. yüzyılda Dolmabahçe Sarayı'nın inşa edilmesiyle birlikte Topkapı Sarayı, önemini kaybetmeye başlamış ve padişahlar Dolmabahçe Sarayı'na taşınmışlardır. Ancak, Topkapı Sarayı, yine de Osmanlı İmparatorluğu'nun sembolik bir merkezi olarak varlığını sürdürmüştür.</p>
             </section>
 
             <section class="architecture-section">

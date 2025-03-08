@@ -32,8 +32,10 @@
             <section class="history-section">
                 <h2>Tarihçe</h2>
                 <p>Sümela Manastırı, MS 386 yılında Atinalı iki rahip tarafından kurulmuştur. Rivayete göre, Meryem Ana'nın ikonası burada bulunmuş ve manastır bunun üzerine inşa edilmiştir. Manastır, Trabzon Rum İmparatorluğu döneminde en parlak günlerini yaşamıştır.</p>
-                
-                <p>2015-2020 yılları arasında kapsamlı bir restorasyon geçiren manastır, günümüzde hem önemli bir turistik merkez hem de dini bir ziyaret noktasıdır. Kayadaki freskler ve mimari yapısıyla dünya çapında üne sahiptir.</p>
+                <p>Manastırın kuruluşuyla ilgili efsaneler, İmparator I. Theodosius dönemine kadar uzanmaktadır. Efsaneye göre, Aziz Luka'nın yaptığı Meryem Ana ikonasını gören iki rahip, aynı rüyayı görmüş ve rüyalarında Meryem Ana'nın kendilerine manastırın yerini gösterdiğine inanmışlardır.</p>
+                <p>Sümela Manastırı, Trabzon Rum İmparatorluğu döneminde büyük bir önem kazanmış ve imparatorlar tarafından desteklenmiştir. Manastır, bu dönemde önemli bir dini ve kültürel merkez haline gelmiştir.</p>
+                <p>Osmanlı İmparatorluğu'nun Trabzon'u fethetmesiyle birlikte Sümela Manastırı, Osmanlı yönetimi altında varlığını sürdürmüştür. Osmanlı sultanları, manastıra çeşitli ayrıcalıklar tanımış ve manastırın korunmasını sağlamışlardır.</p>
+                <p>Manastır, 20. yüzyılın başlarına kadar aktif bir şekilde kullanılmış, ancak 1923 yılında mübadele sonucu bölgedeki Rum nüfusunun ayrılmasıyla terk edilmiştir. Manastır, daha sonra uzun yıllar boyunca bakımsız kalmıştır.</p>
             </section>
 
             <section class="architecture-section">

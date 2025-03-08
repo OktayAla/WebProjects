@@ -32,8 +32,10 @@
             <section class="history-section">
                 <h2>Tarihçe</h2>
                 <p>Hierapolis, MÖ 190 yılında Bergama Kralı II. Eumenes tarafından kurulmuştur. Adını, kurulduğu bölgenin kutsal sayılmasından dolayı "Kutsal Kent" anlamına gelen "Hierapolis"ten almıştır. Kent, şifalı sıcak su kaynakları ve travertenleriyle antik dönemin önemli bir sağlık ve tedavi merkezi olmuştur.</p>
-                
                 <p>Roma ve Bizans dönemlerinde büyük önem kazanan kent, MS 7. yüzyılda depremlerle büyük zarar görmüş, ancak sonrasında tekrar inşa edilmiştir. 1988 yılında UNESCO Dünya Mirası Listesi'ne alınmıştır.</p>
+                <p>Kuruluşundan itibaren Helenistik dönemin izlerini taşıyan Hierapolis, daha sonra Roma İmparatorluğu'nun egemenliğine girmiştir. Bu dönemde kent, özellikle termal tedavi merkezleri ve dini yapılar açısından büyük bir gelişme göstermiştir.</p>
+                <p>Hristiyanlık, MS 1. yüzyılda Hierapolis'te yayılmaya başlamış ve kent, önemli bir dini merkez haline gelmiştir. Hristiyanlığın yayılmasında önemli rol oynayan St. Philip'in burada şehit edilmesi, kentin dini önemini artırmıştır.</p>
+                <p>Günümüzde Hierapolis Antik Kenti, Pamukkale travertenleriyle birlikte eşsiz bir kültürel ve doğal miras alanı olarak ziyaretçilerini ağırlamaktadır. Kazılar ve restorasyon çalışmaları, kentin tarihi ve kültürel değerini ortaya çıkarmaya devam etmektedir.</p>
             </section>
 
             <section class="architecture-section">

@@ -30,10 +30,11 @@
     <div class="detail-content">
         <div class="content-wrapper">
             <section class="history-section">
-                <h2>Tarihçe ve Jeolojik Oluşum</h2>
+                <h2>Tarihçe</h2>
                 <p>Yaklaşık 60 milyon yıl önce Erciyes, Hasandağı ve Güllüdağ'ın püskürttüğü lav ve küllerin oluşturduğu yumuşak tabakaların milyonlarca yıl boyunca yağmur ve rüzgar tarafından aşındırılmasıyla bugünkü peri bacaları oluşmuştur.</p>
-                
-                <p>Tarih boyunca Hititler, Persler, Romalılar, Bizanslılar, Selçuklular ve Osmanlılar gibi birçok medeniyete ev sahipliği yapan bölge, özellikle erken Hristiyanlık döneminde önemli bir dini merkez olmuştur.</p>
+                <p>Kapadokya adının kökeni, Pers İmparatorluğu dönemine kadar uzanmaktadır. Pers dilinde "Güzel Atlar Ülkesi" anlamına gelen "Katpatuka" kelimesinden türediği düşünülmektedir. Bu isim, bölgedeki at yetiştiriciliğinin ve atların öneminin bir göstergesi olabilir.</p>
+                <p>Bölge, Hristiyanlığın ilk yıllarında, baskılardan kaçan Hristiyanlar için önemli bir sığınak olmuştur. Kapadokya'daki yeraltı şehirleri, bu dönemde inşa edilmiş ve binlerce kişiyi barındırabilecek büyüklükteydi. Bu şehirler, karmaşık tünel sistemleri, havalandırma bacaları ve yaşam alanlarıyla dikkat çekmektedir.</p>
+                <p>Göreme Açık Hava Müzesi, Kapadokya'nın en önemli tarihi ve kültürel merkezlerinden biridir. Kaya oyma kiliseler, şapeller ve manastırlar, Bizans sanatının eşsiz örneklerini sergilemektedir. Bu kiliselerdeki freskler, İncil'den sahneleri ve Hristiyan azizlerinin yaşamlarını anlatmaktadır.</p>
             </section>
 
             <section class="architecture-section">

@@ -32,8 +32,10 @@
             <section class="history-section">
                 <h2>Tarihçe</h2>
                 <p>1568-1575 yılları arasında II. Selim'in emriyle Mimar Sinan tarafından inşa edilen Selimiye Camii, Osmanlı-Türk mimarisinin en önemli eserlerinden biridir. Mimar Sinan'ın 80 yaşında tamamladığı ve "ustalık eserim" dediği cami, muhteşem kubbesi ve minareleriyle dünya mimarlık tarihinin şaheserleri arasında yer almaktadır.</p>
-                
-                <p>2011 yılında UNESCO Dünya Mirası Listesi'ne alınan yapı, klasik Osmanlı mimarisinin en olgun örneğini temsil etmektedir. Tek kubbeli merkezi plan şemasının en başarılı uygulaması olarak kabul edilmektedir.</p>
+                <p>II. Selim, Edirne'yi çok sevdiği için buraya büyük bir cami yaptırmaya karar vermiştir. Mimar Sinan, caminin tasarımında, daha önceki eserlerinde edindiği deneyimleri ve yeni mimari fikirlerini bir araya getirmiştir.</p>
+                <p>Caminin yapımında kullanılan malzemeler, Osmanlı İmparatorluğu'nun dört bir yanından getirilmiştir. Mermerler, taşlar, çiniler ve diğer süsleme malzemeleri, en kaliteli olanlardan seçilmiştir.</p>
+                <p>Selimiye Camii, sadece bir ibadethane değil, aynı zamanda bir külliye olarak tasarlanmıştır. Camiye ek olarak, medrese, darüşşifa, imaret, türbe ve diğer yapılar da inşa edilmiştir.</p>
+                <p>Caminin inşası sırasında, Mimar Sinan'ın ustalık anlayışı ve detaylara verdiği önem, her aşamada kendini göstermiştir. Caminin kubbesi, minareleri, iç mekan süslemeleri ve diğer detaylar, büyük bir titizlikle tasarlanmış ve uygulanmıştır.</p>
             </section>
 
             <section class="architecture-section">

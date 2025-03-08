@@ -30,10 +30,11 @@
     <div class="detail-content">
         <div class="content-wrapper">
             <section class="history-section">
-                <h2>Tarihçe ve Efsane</h2>
-                <p>Bizans İmparatoru I. Alexios Komnenos döneminde (1104) inşa edilen Kızkalesi, Akdeniz'in küçük bir adasında yer almaktadır. Kalenin yapılış amacı, korsanların saldırılarına karşı bölgeyi korumaktı.</p>
-                
+                <h2>Tarihçe</h2>
+                <p>Bizans İmparatoru I. Alexios Komnenos döneminde (1104) inşa edilen Kızkalesi, Akdeniz'in küçük bir adasında yer almaktadır. Kalenin yapılış amacı, korsanların saldırılarına karşı bölgeyi korumaktı.</p>    
                 <p>Kızkalesi'nin adını aldığı meşhur efsaneye göre; bir kralın çok sevdiği kızına falcı tarafından "bir yılan sokmasıyla öleceksin" kehaneti söylenir. Kral, kızını korumak için denizin ortasında bu kaleyi yaptırır. Ancak kaleye gönderilen üzüm sepetinden çıkan yılan, prensesi sokarak ölümüne neden olur.</p>
+                <p>Kızkalesi'nin bulunduğu bölge, antik çağlarda Kilikya olarak bilinmekteydi ve tarih boyunca birçok medeniyete ev sahipliği yapmıştır. Kale, Bizans döneminde inşa edilmiş olsa da, daha sonraki dönemlerde farklı devletler tarafından da kullanılmıştır.</p>
+                <p>Günümüzde Kızkalesi, Türkiye'nin önemli turistik merkezlerinden biridir. Ziyaretçiler, tekneyle kaleye ulaşabilir, kalenin tarihi atmosferini soluyabilir ve Akdeniz'in eşsiz manzarasının tadını çıkarabilirler.</p>
             </section>
 
             <section class="architecture-section">

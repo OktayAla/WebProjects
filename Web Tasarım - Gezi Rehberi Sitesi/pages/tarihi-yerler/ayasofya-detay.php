@@ -38,8 +38,12 @@
             <section class="history-section">
                 <h2>Tarihçe</h2>
                 <p>MS 537 yılında Bizans İmparatoru I. Justinianus tarafından inşa ettirilen Ayasofya, bin yılı aşkın bir süre boyunca dünyanın en büyük kilisesi olarak hizmet vermiştir. 1453'te İstanbul'un fethiyle birlikte camiye çevrilmiş, 1934'te müze olarak hizmet vermeye başlamış, 2020 yılında tekrar camii olarak ibadete açılmıştır.</p>
-                
                 <p>Yapının mimarları Miletli Isidoros ile Trallesli Anthemios'tur. İnşaatında 10.000 işçinin çalıştığı Ayasofya, döneminin en büyük kubbeli yapısı olarak inşa edilmiştir.</p>
+                <p>Ayasofya'nın bulunduğu alanda daha önce iki farklı kilise inşa edilmiş, ancak her ikisi de yangınlar sonucu kullanılamaz hale gelmiştir. Justinianus'un emriyle inşa edilen Ayasofya, bu önceki yapıların yerine, daha görkemli ve dayanıklı bir şekilde tasarlanmıştır.</p>
+                <p>İstanbul'un fethinden sonra Fatih Sultan Mehmet, yapıyı camiye dönüştürmüş ve minareler ekleyerek İslam'ın sembolü haline getirmiştir. Yapıya eklenen minber, mihrap ve diğer İslami unsurlar, Ayasofya'nın hem Hristiyan hem de İslam sanatının izlerini taşımasına neden olmuştur.</p>
+                <p>Osmanlı döneminde Ayasofya, padişahların ve devlet adamlarının özel önem verdiği bir yapı olmuştur. Yapıya çeşitli onarımlar ve eklemeler yapılmış, özellikle Mimar Sinan'ın katkılarıyla yapı daha da güçlendirilmiştir.</p>
+                <p>Türkiye Cumhuriyeti'nin kurulmasının ardından, 1934 yılında Mustafa Kemal Atatürk'ün emriyle Ayasofya müze olarak hizmete açılmıştır. Bu dönemde, yapının içindeki mozaikler ve diğer tarihi eserler gün yüzüne çıkarılmış ve ziyaretçilere sergilenmiştir.</p>
+                <p>2020 yılında tekrar cami olarak ibadete açılması, Ayasofya'nın tarih boyunca farklı kültürlere ve inançlara ev sahipliği yapma özelliğini bir kez daha göstermiştir. Günümüzde hem ibadethane hem de tarihi bir anıt olarak ziyaretçilerini ağırlamaktadır.</p>
             </section>
 
             <section class="architecture-section">

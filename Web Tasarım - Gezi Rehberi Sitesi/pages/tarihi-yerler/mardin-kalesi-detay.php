@@ -32,8 +32,10 @@
             <section class="history-section">
                 <h2>Tarihçe</h2>
                 <p>Mardin Kalesi, şehrin 3000 yıllık tarihine tanıklık etmiş, Süryani, Roma, Bizans, Artuklu, Akkoyunlu ve Osmanlı dönemlerinde stratejik öneme sahip olmuş bir yapıdır. "Kartal Yuvası" olarak da anılan kale, konumu itibariyle Mezopotamya Ovası'na hakim bir noktada bulunmaktadır.</p>
-                
                 <p>Kalenin ilk yapım tarihi kesin olarak bilinmemekle birlikte, bugünkü yapının temelleri Roma dönemine dayanmaktadır. Kale, özellikle Artuklu döneminde önemli bir savunma ve yönetim merkezi olarak kullanılmıştır.</p>
+                <p>Mardin Kalesi'nin bulunduğu tepenin stratejik önemi, antik çağlardan beri fark edilmiş ve yerleşim yeri olarak kullanılmıştır. Roma İmparatorluğu döneminde kale, sınır güvenliğini sağlamak amacıyla inşa edilmiş ve askeri bir üs olarak kullanılmıştır.</p>
+                <p>Kalenin kontrolü, tarih boyunca farklı devletler arasında el değiştirmiştir. Akkoyunlular, Safeviler ve Osmanlılar, kaleyi kendi egemenlikleri altında tutmuş ve çeşitli onarımlar yapmışlardır. Bu farklı dönemler, kalenin mimarisine ve kültürel dokusuna yansımıştır.</p>
+                <p>Mardin Kalesi, sadece askeri bir yapı olmanın ötesinde, aynı zamanda bir yaşam alanı olmuştur. Kale içerisinde, camiler, hamamlar, su sarnıçları ve diğer yaşam alanları inşa edilmiştir. Bu yapılar, kalenin sadece bir savunma yapısı değil, aynı zamanda bir yerleşim yeri olduğunu göstermektedir.</p>
             </section>
 
             <section class="architecture-section">
