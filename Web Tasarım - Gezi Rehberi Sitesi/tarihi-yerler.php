@@ -52,7 +52,7 @@ include 'includes/header.php';
                         </div>
                         <p>Bizans İmparatoru I. Justinianus tarafından inşa ettirilen, dünya mimarlık tarihinin günümüze
                             kadar ayakta kalmış en önemli anıtları arasında yer alan muhteşem mabet.</p>
-                            <a href="pages/tarihi-yerler/ayasofya-detay.php" class="btn-details">Detayları Gör</a>
+                        <a href="pages/tarihi-yerler/ayasofya-detay.php" class="btn-details">Detayları Gör</a>
                         </a>
                     </div>
                 </div>
@@ -179,8 +179,7 @@ include 'includes/header.php';
                 <!-- 8. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.turrehberin.com/wp-content/uploads/2020/09/Hattusas.jpeg"
-                            alt="Hattuşa">
+                        <img src="https://www.turrehberin.com/wp-content/uploads/2020/09/Hattusas.jpeg" alt="Hattuşa">
                         <span class="destination-category">İç Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -337,7 +336,8 @@ include 'includes/header.php';
                 <!-- 16. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://ankarakasderfed.com.tr/wp-content/uploads/2014/01/kastamonu_kalesi.jpg" alt="Kastamonu Kalesi">
+                        <img src="https://ankarakasderfed.com.tr/wp-content/uploads/2014/01/kastamonu_kalesi.jpg"
+                            alt="Kastamonu Kalesi">
                         <span class="destination-category">Karadeniz</span>
                     </div>
                     <div class="destination-info">
@@ -346,7 +346,8 @@ include 'includes/header.php';
                             <span><i class="fas fa-map-marker-alt"></i> Merkez, Kastamonu</span>
                             <span><i class="far fa-calendar-alt"></i> MS 12. yüzyıl</span>
                         </div>
-                        <p>Bizans döneminde inşa edilen, Kastamonu'nun en yüksek noktasında yer alan, şehrin tarihine tanıklık eden ve muhteşem manzaralar sunan tarihi kale.</p>
+                        <p>Bizans döneminde inşa edilen, Kastamonu'nun en yüksek noktasında yer alan, şehrin tarihine
+                            tanıklık eden ve muhteşem manzaralar sunan tarihi kale.</p>
                         <a href="pages/tarihi-yerler/kastamonu-kalesi-detay.php" class="btn-details">Detayları Gör</a>
                     </div>
                 </div>
@@ -526,8 +527,7 @@ include 'includes/header.php';
                 <!-- 26. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://arkeofili.com/wp-content/uploads/2015/08/harran1.jpg"
-                            alt="Harran Örenyeri">
+                        <img src="https://arkeofili.com/wp-content/uploads/2015/08/harran1.jpg" alt="Harran Örenyeri">
                         <span class="destination-category">Güneydoğu Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -581,6 +581,45 @@ include 'includes/header.php';
                     </div>
                 </div>
 
+
+                <!-- 29. Tarihi Yer -->
+                <div class="destination-card">
+                    <div class="destination-image">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Haydarpa%C5%9Fa_Gari_-_panoramio.jpg/1200px-Haydarpa%C5%9Fa_Gari_-_panoramio.jpg"
+                            alt="Haydarpaşa Garı">
+                        <span class="destination-category">Marmara</span>
+                    </div>
+                    <div class="destination-info">
+                        <h2>Haydarpaşa Garı</h2>
+                        <div class="destination-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> Kadıköy, İstanbul</span>
+                            <span><i class="far fa-calendar-alt"></i> 1872</span>
+                        </div>
+                        <p>Kadıköy'de yer alan, 1872 yılında ilk defa insa edilen, muhteşem mimarisiyle göz kamaştıran
+                            tarihi tren istasyon garı.</p>
+                        <a href="pages/tarihi-yerler/haydarpasa-gari-detay.php" class="btn-details">Detayları Gör</a>
+                    </div>
+                </div>
+
+                <!-- 30. Tarihi Yer -->
+                <div class="destination-card">
+                    <div class="destination-image">
+                        <img src="https://i.pinimg.com/736x/2d/c9/9d/2dc99d34220551cea0fbe2ef2de4bb14--mosques-turkey.jpg"
+                            alt="Eşrefoğlu Camii">
+                        <span class="destination-category">İç Anadolu</span>
+                    </div>
+                    <div class="destination-info">
+                        <h2>Eşrefoğlu Camii</h2>
+                        <div class="destination-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> Beyşehir, Konya</span>
+                            <span><i class="far fa-calendar-alt"></i> 1297</span>
+                        </div>
+                        <p>Anadolu Konya Sultanlarının türbelerinin bulunduğu, Osmanlı mimarisi ve süslemeleriyle dikkat
+                            çeken, ahşap direkler üzerine inşaa edilen tarihi cami.</p>
+                        <a href="pages/tarihi-yerler/esreoglu-cami-detay.php" class="btn-details">Detayları Gör</a>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Sayfalama -->
@@ -591,17 +630,12 @@ include 'includes/header.php';
                         Önceki
                     </button>
 
-                    <div class="page-numbers">
-
-                    </div>
-
                     <button class="page-btn next-btn">
                         Sonraki
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
 </main>
