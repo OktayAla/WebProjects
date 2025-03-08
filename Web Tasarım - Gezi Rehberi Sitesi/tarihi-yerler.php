@@ -13,7 +13,6 @@ include 'includes/header.php';
 
     <div class="destinations-grid">
         <aside class="filter-sidebar">
-            <!-- Arama kutusu bölgeler filtresinden önce ayrı bir kutu olarak yer alacak -->
             <div class="search-box">
                 <h3>Tarihi Yer Ara</h3>
                 <div class="search-input-wrapper">
@@ -22,7 +21,6 @@ include 'includes/header.php';
                 </div>
             </div>
 
-            <!-- Bölgeler filtresi ayrı bir kutu olarak -->
             <div class="filter-section">
                 <h3>Bölgeler</h3>
                 <div class="filter-options">
@@ -39,7 +37,6 @@ include 'includes/header.php';
 
         <div class="destinations-content">
             <div class="destinations-list">
-
 
                 <!-- 1. Tarihi Yer -->
                 <div class="destination-card">
@@ -587,7 +584,7 @@ include 'includes/header.php';
 
             </div>
 
-            <!-- Sayfalama butonları -->
+            <!-- Sayfalama -->
             <div class="pagination-container">
                 <div class="pagination">
                     <button class="page-btn prev-btn">
