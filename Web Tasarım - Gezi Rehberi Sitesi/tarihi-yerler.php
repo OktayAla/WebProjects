@@ -337,17 +337,16 @@ include 'includes/header.php';
                 <!-- 16. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://gezikesfet.com/i/img/kastamonu_saat_kulesi.jpg" alt="Kastamonu Saat Kulesi">
+                        <img src="https://ankarakasderfed.com.tr/wp-content/uploads/2014/01/kastamonu_kalesi.jpg" alt="Kastamonu Kalesi">
                         <span class="destination-category">Karadeniz</span>
                     </div>
                     <div class="destination-info">
-                        <h2>Kastamonu Saat Kulesi</h2>
+                        <h2>Kastamonu Kalesi</h2>
                         <div class="destination-meta">
                             <span><i class="fas fa-map-marker-alt"></i> Merkez, Kastamonu</span>
-                            <span><i class="far fa-calendar-alt"></i> 1885</span>
+                            <span><i class="far fa-calendar-alt"></i> MS 12. yüzyıl</span>
                         </div>
-                        <p>Sultan II. Abdülhamit döneminde inşa edilen, şehrin simgelerinden biri haline gelmiş, dört
-                            katlı kesme taştan yapılmış tarihi saat kulesi.</p>
+                        <p>Bizans döneminde inşa edilen, Kastamonu'nun en yüksek noktasında yer alan, şehrin tarihine tanıklık eden ve muhteşem manzaralar sunan tarihi kale.</p>
                         <a href="pages/tarihi-yerler/kastamonu-kalesi-detay.php" class="btn-details">Detayları Gör</a>
                     </div>
                 </div>
