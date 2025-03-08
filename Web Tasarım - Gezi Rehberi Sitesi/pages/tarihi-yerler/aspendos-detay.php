@@ -32,8 +32,10 @@
             <section class="history-section">
                 <h2>Tarihçe</h2>
                 <p>Roma İmparatoru Marcus Aurelius döneminde, MS 155 yılında Mimar Zeno tarafından inşa edilen Aspendos Antik Tiyatrosu, dünyanın en iyi korunmuş antik tiyatrolarından biridir. Pamphylia bölgesinin en önemli kentlerinden olan Aspendos'un simgesi haline gelen tiyatro, günümüzde hala etkinliklere ev sahipliği yapmaktadır.</p>
-
-                <p>Selçuklu döneminde kervansaray olarak da kullanılan yapı, sahip olduğu muhteşem akustiği sayesinde fısıltıyla konuşulan sözler bile en üst sıralara kadar ulaşabilmektedir.</p>
+                <p>Aspendos, antik dönemde Pamphylia bölgesinin önemli bir ticaret kentiydi ve Köprüçay (Eurymedon) Nehri sayesinde verimli topraklara ve limana sahipti. Bu durum, kentin zenginleşmesine ve gelişmesine katkıda bulunmuştur.</p>
+                <p>Tiyatronun inşasıyla ilgili bir efsane bulunmaktadır. Efsaneye göre, Aspendos'un iki zengin vatandaşı, kentin en değerli yapısını inşa etme konusunda yarışmışlardır. Biri tiyatroyu, diğeri ise su kemerlerini yapmıştır. Halk, tiyatronun akustiğinden etkilenerek tiyatroyu en iyi yapı seçmiştir.</p>
+                <p>Selçuklu döneminde Alaeddin Keykubad'ın tiyatroyu kervansaray olarak kullanması, yapının hem kültürel hem de ticari önemini vurgulamaktadır. Kervansaray olarak kullanılması, tiyatronun tahrip olmasını engellemiş ve günümüze kadar ulaşmasını sağlamıştır.</p>
+                <p>Günümüzde Aspendos Antik Tiyatrosu, her yıl binlerce yerli ve yabancı turisti ağırlamakta ve çeşitli etkinliklere ev sahipliği yapmaktadır. Tiyatro, antik dönemin ihtişamını ve sanatını günümüze taşıyan önemli bir kültürel mirastır.</p>
             </section>
 
             <section class="architecture-section">
