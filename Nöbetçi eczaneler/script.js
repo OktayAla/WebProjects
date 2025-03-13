@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Türkçe gün ve ay isimleri
     const days = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
     const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
     
-    // Tarih gösterimini güncelle
     function updateDate() {
         const now = new Date();
         const dateText = document.getElementById('date-text');
@@ -13,15 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     updateDate();
     
-    // Telefon numarasını aranabilir formata dönüştür
     function formatPhoneNumber(phoneNumber) {
-        // Boşlukları ve özel karakterleri kaldır
         return phoneNumber.replace(/\s+/g, '').replace(/[^\d]/g, '');
     }
     
-    // Eczane kartını oluştur
     function createEczaneCard(eczane) {
-        // Temiz telefon numarası
         const cleanPhone = formatPhoneNumber(eczane.telefon);
         
         return `
@@ -43,10 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
     
-    // Nöbetçi eczaneleri getir
     async function getNobetciEczaneler() {
         try {
-            const response = await fetch('api.php'); // PHP dosyasının URL'i
+            const response = await fetch('api.php');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -59,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            // Pamukkale Eczanelerini Listele
+            // Pamukkale
             const pamukkaleContainer = document.getElementById('pamukkale-eczane-container');
             if (pamukkaleContainer) {
                 if (data.pamukkale && data.pamukkale.length > 0) {
@@ -71,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Pamukkale eczane container bulunamadı!');
             }
             
-            // Merkezefendi Eczanelerini Listele
+            // Merkezefendi
             const merkezefendiContainer = document.getElementById('merkezefendi-eczane-container');
             if (merkezefendiContainer) {
                 if (data.merkezefendi && data.merkezefendi.length > 0) {
@@ -90,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Hata mesajı göster
     function showError(containerId, message) {
         const container = document.getElementById(containerId);
         if (container) {
@@ -98,12 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // İlk yükleme
     getNobetciEczaneler();
     
-    // Her saat başı güncelle
     setInterval(() => {
         updateDate();
         getNobetciEczaneler();
-    }, 3600000); // 60 dakika = 3600000 ms
+    }, 3600000); // 60 dakika
 });

@@ -2,8 +2,8 @@
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 
-error_reporting(E_ALL); // Tüm hataları göster
-ini_set('display_errors', 1); // Hataları ekranda göster
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 function getNobetciEczaneler() {
     $url = "https://www.denizli.bel.tr/Default.aspx?k=NobetciEczaneler";
@@ -23,7 +23,6 @@ function getNobetciEczaneler() {
         'pamukkale' => []
     ];
 
-    // Eczane bilgilerini çekmek için genel fonksiyon
     function parseEczane($xpath, $path) {
         $node = $xpath->query($path)->item(0);
         if (!$node) {
@@ -31,10 +30,8 @@ function getNobetciEczaneler() {
             return null;
         }
 
-        // Eczane ismini çek
         $isim = trim($xpath->query('./b/text()', $node)->item(0)->nodeValue);
 
-        // Adres, ilçe ve telefon bilgilerini çek
         $adres = '';
         $ilce = '';
         $telefon = '';
@@ -63,7 +60,7 @@ function getNobetciEczaneler() {
         ];
     }
 
-    // Merkezefendi Eczaneleri
+    // Merkezefendi
     for ($i = 3; $i <= 7; $i++) {
         $path = "//*[@id='ctl14_rightcontent']/div[" . $i . "]/div";
         $eczane = parseEczane($xpath, $path);
@@ -74,7 +71,7 @@ function getNobetciEczaneler() {
         }
     }
 
-    // Pamukkale Eczaneleri
+    // Pamukkale
     for ($i = 8; $i <= 11; $i++) {
         $path = "//*[@id='ctl14_rightcontent']/div[" . $i . "]/div";
         $eczane = parseEczane($xpath, $path);

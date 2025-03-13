@@ -79,15 +79,13 @@ body {
     transition: transform 0.3s ease;
 }
 
-/* Eczane Listesi Container */
 .eczane-listesi {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Tam 3 kart bir satırda */
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     padding: 1rem 0;
 }
 
-/* Loading Spinner */
 .loading {
     display: flex;
     flex-direction: column;
@@ -95,7 +93,7 @@ body {
     justify-content: center;
     padding: 2rem;
     width: 100%;
-    grid-column: 1 / -1; /* Tüm sütunları kapla */
+    grid-column: 1 / -1;
     color: var(--primary-color);
 }
 
@@ -104,12 +102,11 @@ body {
     margin-bottom: 1rem;
 }
 
-/* Eczane Kartları */
 .eczane {
     background: white;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    padding: 1rem; /* Azaltılmış padding */
+    padding: 1rem;
     transition: all 0.3s ease;
     border-top: 5px solid var(--primary-color);
     height: 100%;
@@ -124,23 +121,23 @@ body {
 }
 
 .eczane-header {
-    margin-bottom: 0.7rem; /* Azaltılmış margin */
+    margin-bottom: 0.7rem;
     text-align: center;
 }
 
 .eczane-icon {
-    font-size: 1.8rem; /* Biraz küçültülmüş */
+    font-size: 1.8rem;
     color: red;
-    margin-bottom: 0.7rem; /* Azaltılmış margin */
+    margin-bottom: 0.7rem;
 }
 
 .eczane h3 {
     color: var(--primary-color);
-    font-size: 1.2rem; /* Küçültülmüş font */
+    font-size: 1.2rem;
     font-weight: 600;
-    margin-bottom: 0.7rem; /* Azaltılmış margin */
+    margin-bottom: 0.7rem;
     border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 0.4rem; /* Azaltılmış padding */
+    padding-bottom: 0.4rem;
 }
 
 .eczane-info {
@@ -148,9 +145,9 @@ body {
 }
 
 .eczane p {
-    margin: 0.5rem 0; /* Azaltılmış margin */
+    margin: 0.5rem 0;
     color: var(--dark-text);
-    font-size: 0.9rem; /* Küçültülmüş font */
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
 }
@@ -164,23 +161,23 @@ body {
 .eczane .eczane-telefon {
     color: var(--secondary-color);
     font-weight: 600;
-    font-size: 1.05rem; /* Biraz küçültülmüş */
+    font-size: 1.05rem;
 }
 
 .eczane-actions {
     display: flex;
     justify-content: space-between;
-    margin-top: 0.7rem; /* Azaltılmış margin */
-    padding-top: 0.7rem; /* Azaltılmış padding */
+    margin-top: 0.7rem;
+    padding-top: 0.7rem;
     border-top: 1px solid #e2e8f0;
 }
 
 .action-btn {
-    padding: 0.4rem 0.8rem; /* Azaltılmış padding */
+    padding: 0.4rem 0.8rem;
     border-radius: 8px;
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.85rem; /* Küçültülmüş font */
+    font-size: 0.85rem;
     transition: all 0.2s;
     display: flex;
     align-items: center;
@@ -229,7 +226,6 @@ body {
     opacity: 0.8;
 }
 
-/* Scrollbar Stili */
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -248,7 +244,6 @@ body {
     background: #af1e1e;
 }
 
-/* Hata Mesajı Stili */
 .error-message {
     background-color: #fee2e2;
     border-left: 4px solid #ef4444;
@@ -257,12 +252,12 @@ body {
     margin: 1rem 0;
     border-radius: 8px;
     font-weight: 500;
-    grid-column: 1 / -1; /* Tüm sütunları kapla */
+    grid-column: 1 / -1;
 }
 
 @media (max-width: 768px) {
     .eczane-listesi {
-        grid-template-columns: 1fr; /* Mobilde tek sütun */
+        grid-template-columns: 1fr; 
     }
     
     .header h1 {
@@ -274,16 +269,14 @@ body {
     }
 }
 
-/* Özel medya sorguları - tablet için 2 kart */
 @media (min-width: 769px) and (max-width: 1200px) {
     .eczane-listesi {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-/* Geniş ekranlar için düzenleme */
 @media (min-width: 1400px) {
     .content-container {
-        max-width: 1600px; /* Daha geniş konteyner */
+        max-width: 1600px; 
     }
 }
