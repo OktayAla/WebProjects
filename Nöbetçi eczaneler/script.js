@@ -1,22 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const days = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
-    const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+    const gunler = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
+    const aylar = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
     
-    function updateDate() {
-        const now = new Date();
-        const dateText = document.getElementById('date-text');
-        const formattedDate = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}, ${days[now.getDay()]}`;
-        dateText.textContent = formattedDate;
+    function tarihiGuncelle() {
+        const simdi = new Date();
+        const tarihMetni = document.getElementById('date-text');
+        const formatliTarih = `${simdi.getDate()} ${aylar[simdi.getMonth()]} ${simdi.getFullYear()}, ${gunler[simdi.getDay()]}`;
+        tarihMetni.textContent = formatliTarih;
     }
     
-    updateDate();
+    tarihiGuncelle();
     
-    function formatPhoneNumber(phoneNumber) {
-        return phoneNumber.replace(/\s+/g, '').replace(/[^\d]/g, '');
+    function telefonNumarasiniDuzenle(telefonNumarasi) {
+        return telefonNumarasi.replace(/\s+/g, '').replace(/[^\d]/g, '');
     }
     
-    function createEczaneCard(eczane) {
-        const cleanPhone = formatPhoneNumber(eczane.telefon);
+    function eczaneKartiOlustur(eczane) {
+        const temizTelefon = telefonNumarasiniDuzenle(eczane.telefon);
         
         return `
             <div class="eczane">
@@ -29,34 +29,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p><i class="fas fa-map-marker-alt"></i> ${eczane.adres}</p>
                     <p><i class="fas fa-phone-alt"></i> <span class="eczane-telefon">${eczane.telefon}</span></p>
                 </div>
-                <div class="eczane-actions">
-                    <a href="tel:${cleanPhone}" class="action-btn call-btn"><i class="fas fa-phone"></i> Ara</a>
-                    <a href="https://maps.google.com/?q=${encodeURIComponent(eczane.adres + ' ' + eczane.ilce + ' Denizli')}" target="_blank" class="action-btn map-btn"><i class="fas fa-map-marked-alt"></i> Harita</a>
-                </div>
             </div>
         `;
     }
     
-    async function getNobetciEczaneler() {
+    async function nobetciEczaneleriGetir() {
         try {
             const response = await fetch('api.php');
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP hatası! durum: ${response.status}`);
             }
-            const data = await response.json();
+            const veri = await response.json();
             
-            if (data.error) {
-                console.error('Veri çekme hatası:', data.error);
-                showError('pamukkale-eczane-container', 'Veri çekme hatası: ' + data.error);
-                showError('merkezefendi-eczane-container', 'Veri çekme hatası: ' + data.error);
+            if (veri.error) {
+                console.error('Veri çekme hatası:', veri.error);
+                hataGoster('pamukkale-eczane-container', 'Veri çekme hatası: ' + veri.error);
+                hataGoster('merkezefendi-eczane-container', 'Veri çekme hatası: ' + veri.error);
                 return;
             }
             
             // Pamukkale
             const pamukkaleContainer = document.getElementById('pamukkale-eczane-container');
             if (pamukkaleContainer) {
-                if (data.pamukkale && data.pamukkale.length > 0) {
-                    pamukkaleContainer.innerHTML = data.pamukkale.map(eczane => createEczaneCard(eczane)).join('');
+                if (veri.pamukkale && veri.pamukkale.length > 0) {
+                    pamukkaleContainer.innerHTML = veri.pamukkale.map(eczane => eczaneKartiOlustur(eczane)).join('');
                 } else {
                     pamukkaleContainer.innerHTML = '<div class="error-message">Pamukkale için nöbetçi eczane bulunamadı.</div>';
                 }
@@ -67,8 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Merkezefendi
             const merkezefendiContainer = document.getElementById('merkezefendi-eczane-container');
             if (merkezefendiContainer) {
-                if (data.merkezefendi && data.merkezefendi.length > 0) {
-                    merkezefendiContainer.innerHTML = data.merkezefendi.map(eczane => createEczaneCard(eczane)).join('');
+                if (veri.merkezefendi && veri.merkezefendi.length > 0) {
+                    merkezefendiContainer.innerHTML = veri.merkezefendi.map(eczane => eczaneKartiOlustur(eczane)).join('');
                 } else {
                     merkezefendiContainer.innerHTML = '<div class="error-message">Merkezefendi için nöbetçi eczane bulunamadı.</div>';
                 }
@@ -78,22 +74,22 @@ document.addEventListener('DOMContentLoaded', () => {
             
         } catch (error) {
             console.error('Veri çekme hatası:', error);
-            showError('pamukkale-eczane-container', 'Veri çekme hatası: ' + error.message);
-            showError('merkezefendi-eczane-container', 'Veri çekme hatası: ' + error.message);
+            hataGoster('pamukkale-eczane-container', 'Veri çekme hatası: ' + error.message);
+            hataGoster('merkezefendi-eczane-container', 'Veri çekme hatası: ' + error.message);
         }
     }
     
-    function showError(containerId, message) {
+    function hataGoster(containerId, mesaj) {
         const container = document.getElementById(containerId);
         if (container) {
-            container.innerHTML = `<div class="error-message">${message}</div>`;
+            container.innerHTML = `<div class="error-message">${mesaj}</div>`;
         }
     }
     
-    getNobetciEczaneler();
+    nobetciEczaneleriGetir();
     
     setInterval(() => {
-        updateDate();
-        getNobetciEczaneler();
+        tarihiGuncelle();
+        nobetciEczaneleriGetir();
     }, 3600000); // 60 dakika
 });
