@@ -91,8 +91,8 @@ include 'includes/header.php';
             </div>
             <div class="food-card">
                 <img src="img/featured/nemrut.webp" alt=" ">
-                <h3> </h3>
-                <p> </p>
+                <h3>Beyran Çorbası</h3>
+                <p></p>
             </div>
             <div class="food-card">
                 <img src="img/featured/efes.webp" alt=" ">
