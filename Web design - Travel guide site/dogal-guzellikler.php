@@ -94,7 +94,7 @@ include 'includes/header.php';
                 <!-- 4. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://i.hurimg.com/i/hdn/75/0x0/5dc2c587d3806c17b8c79b9f.jpg"
+                        <img src="https://img-s2.onedio.com/id-60d9981ee8865fa833926284/rev-0/w-1200/h-800/f-jpg/s-608d4de6134f7792572a39fa2535a58cfc6e7ef7.jpg"
                             alt="Saklıkent Kanyonu">
                         <span class="destination-category">Akdeniz</span>
                     </div>
@@ -112,7 +112,7 @@ include 'includes/header.php';
                 <!-- 5. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://i.hurimg.com/i/hdn/75/0x0/5cd147fd67b0a92584c136ae.jpg" alt="Salda Gölü">
+                        <img src="https://tv5comtr.teimg.com/tv5-com-tr/uploads/2024/06/salda-golu.webp" alt="Salda Gölü">
                         <span class="destination-category">Akdeniz</span>
                     </div>
                     <div class="destination-info">
@@ -131,7 +131,7 @@ include 'includes/header.php';
                 <!-- 6. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://i.hurimg.com/i/hdn/75/0x0/5e995e322269a21c98f28435.jpg" alt="Ayder Yaylası">
+                        <img src="https://dokuzeylulcom.teimg.com/dokuzeylul-com/uploads/2023/10/ayder-yaylasinda-gezilecek-yerler.jpg" alt="Ayder Yaylası">
                         <span class="destination-category">Karadeniz</span>
                     </div>
                     <div class="destination-info">
