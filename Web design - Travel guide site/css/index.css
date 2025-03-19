@@ -1,0 +1,190 @@
+/* Hero Slider Stilleri */
+.hero-slider {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.slide-content {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.slide-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+}
+
+.slide-text {
+  position: absolute;
+  left: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  max-width: 600px;
+}
+
+.slide-text h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  animation: fadeInLeft 1s ease;
+}
+
+.slide-text p {
+  font-size: 1.2rem;
+  animation: fadeInLeft 1.2s ease;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #fff;
+}
+
+.swiper-pagination-bullet {
+  background: #fff;
+  opacity: 0.7;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+}
+
+/* Anasayfa Blog Kutucukları Stilleri */
+.blog-section {
+  background-color: #f8f9fa;
+  text-align: center;
+}
+
+.blog-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.blog-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.blog-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+  transition: transform 0.3s ease;
+}
+
+.blog-card:hover img {
+  transform: scale(1.05);
+}
+
+.blog-card h3 {
+  padding: 1rem;
+  font-size: 1.25rem;
+  color: var(--dark);
+  text-align: left;
+}
+
+.blog-card p {
+  padding: 0 1rem 1rem;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.6;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.blog-card a {
+  display: block;
+  padding: 0.75rem 1rem;
+  background-color: var(--secondary);
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  transition: background-color 0.3s ease;
+}
+
+.blog-card a:hover {
+  background-color: var(--accent);
+}
+
+/* Yemek Bölümü Stilleri */
+.food-section {
+  background-color: #f8f9fa;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.food-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.food-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.food-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.food-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.food-card h3 {
+  font-size: 1.25rem;
+  color: var(--dark);
+  text-align: center;
+}
+
+.food-card p {
+  padding: 0 1rem 1rem;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.home-content {
+  flex: 1 0 auto; /* içerik alanı esnek büyüyebilir */
+  min-height: calc(100vh - 80px); /* header yüksekliğini çıkar */
+}
