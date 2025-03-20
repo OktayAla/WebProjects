@@ -1,5 +1,10 @@
 <?php
 include 'includes/header.php';
+include 'includes/random_destinations.php';
+
+$randomDestinations = getRandomDestinations();
+
+$randomFoodDestinations = getRandomFoodDestinations();
 ?>
 
 <main class="home-content">
@@ -9,8 +14,10 @@ include 'includes/header.php';
                 <div class="swiper-slide">
                     <div class="slide-content" style="background-image: url('img/index/header1.webp')">
                         <div class="slide-text">
-                            <h1>Türkiye'yi keşfedin!</h1>
-                            <p>Doğal güzellikler, tarihi mekanlar ve daha fazlası; Türkiye'nin tüm yerlerini keşfedin
+                            <h1>Türkiye'yi Keşfet!</h1>
+                            <p>
+                                Türkiye, doğal güzellikleri, tarihi zenginlikleri ve kültürel çeşitliliğiyle her gezgine hitap eden bir cennet. 
+                                Her köşesinde yeni bir macera ve keşif sizi bekliyor. Hayalinizdeki rotayı bulun ve unutulmaz bir yolculuğa çıkın!
                             </p>
                         </div>
                     </div>
@@ -18,32 +25,48 @@ include 'includes/header.php';
                 <div class="swiper-slide">
                     <div class="slide-content" style="background-image: url('img/index/header2.webp')">
                         <div class="slide-text">
-                            <h1>Türkiye'yi keşfedin!</h1>
-                            <p></p>
+                            <h1>Tarihin Doğal Güzellikle Buluşması</h1>
+                            <p>
+                                Türkiye, antik kentlerin büyüleyici atmosferi ile muhteşem doğal manzaraların buluştuğu bir ülke. 
+                                Tarihin izlerini takip ederken bir yandan da dağların, denizlerin ve vadilerin tadını çıkarın. 
+                                Her adımda yeni bir hikaye sizi bekliyor!
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="swiper-slide">
                     <div class="slide-content" style="background-image: url('img/index/header3.webp')">
                         <div class="slide-text">
-                            <h1>Türkiye'yi keşfedin!</h1>
-                            <p></p>
+                            <h1>Lezzetler ve Kültürler Arası Yolculuk</h1>
+                            <p>
+                            Türkiye, dünyanın en zengin mutfak kültürlerinden birine ev sahipliği yapıyor. 
+                            Geleneksel lezzetler, renkli pazarlar ve misafirperver insanlarla dolu bu yolculuk, damak tadınıza ve ruhunuza hitap edecek. 
+                            Yemeklerin hikayesini keşfedin!
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="swiper-slide">
                     <div class="slide-content" style="background-image: url('img/index/header4.webp')">
                         <div class="slide-text">
-                            <h1>Türkiye'yi keşfedin!</h1>
-                            <p></p>
+                        <h1>Kültürlerin Buluşma Noktası</h1>
+                            <p>
+                            Binlerce yıllık tarihiyle Türkiye, medeniyetlerin kesiştiği bir nokta. 
+                            Antik kentler, camiler, kiliseler ve hanlar, geçmişin izlerini bugüne taşıyor. 
+                            Bu topraklarda her taşın altında bir hikaye yatıyor.
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="swiper-slide">
                     <div class="slide-content" style="background-image: url('img/index/header5.webp')">
                         <div class="slide-text">
-                            <h1>Türkiye'yi keşfedin!</h1>
-                            <p></p>
+                        <h1>Bir Ülke, Binbir Renk</h1>
+                            <p>
+                            Türkiye, her mevsim ayrı bir güzellik sunar. 
+                            Yazın masmavi sahilleri, kışın karlı dağları, ilkbaharda yemyeşil vadileri ve sonbaharda renk cümbüşüyle dolu ormanlarıyla sizi büyüleyecek. 
+                            Her mevsim ayrı bir macera sizi bekliyor!
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -57,48 +80,30 @@ include 'includes/header.php';
     <section class="blog-section">
         <h2>Buralara Uğramadan Geçme</h2>
         <div class="blog-container">
+            <?php foreach ($randomDestinations as $destination): ?>
             <div class="blog-card">
-                <img src="img/blog/kapadokya.webp" alt="Kapadokya Balon Turu">
-                <h3>Kapadokya'da Balon Turu</h3>
-                <p>Kapadokya'nın eşsiz manzarasını balonla keşfedin. Unutulmaz bir deneyim için...</p>
-                <a href="blog/kapadokya-balon-turu">Devamını Oku</a>
+                <img src="<?php echo $destination['image']; ?>" alt="<?php echo $destination['name']; ?>">
+                <h3><?php echo $destination['name']; ?></h3>
+                <p><?php echo substr($destination['description'], 0, 100); ?>...</p>
+                <a href="<?php echo $destination['url']; ?>">Devamını Oku</a>
             </div>
-            <div class="blog-card">
-                <img src="img/blog/istanbul.webp" alt="İstanbul Tarihi Yarımada Gezisi">
-                <h3>İstanbul Tarihi Yarımada Gezisi</h3>
-                <p>İstanbul'un tarihi dokusunu keşfedin. Ayasofya, Sultanahmet ve daha fazlası...</p>
-                <a href="blog/istanbul-tarihi-yarimada">Devamını Oku</a>
-            </div>
-            <div class="blog-card">
-                <img src="img/blog/antalya.webp" alt="Antalya'da Tatil Keyfi">
-                <h3>Antalya'da Tatil Keyfi</h3>
-                <p>Antalya'nın berrak sularında serinleyin ve güneşin tadını çıkarın...</p>
-                <a href="blog/antalya-tatil-keyfi">Devamını Oku</a>
-            </div>
+            <?php endforeach; ?>
         </div>
     </section>
 
 
 
     <section class="food-section">
-        <h2>Kesinlikle Tatman Gerek!</h2>
+        <h2>Kesinlikle Tatman Gerek</h2>
         <div class="food-container">
+            <?php foreach ($randomFoodDestinations as $food): ?>
             <div class="food-card">
-                <a href="/lezzet-duraklari/denizli.php">
-                <img src="https://image.dha.com.tr/i/dha/75/0x0/6164e7be45d2a06a3ce65c3e.jpg" alt="Denizli Kebabı"></a>
-                <h3>Denizli Kebabı</h3>
-                <p>Denizli'nin en meşhur lezzeti olan Denizli Kebabı...</p>
+                <a href="<?php echo $food['url']; ?>">
+                <img src="<?php echo $food['image']; ?>" alt="<?php echo $food['name']; ?>"></a>
+                <h3><?php echo $food['name']; ?></h3>
+                <p><?php echo substr($food['description'], 0, 100); ?>...</p>
             </div>
-            <div class="food-card">
-                <img src="img/featured/nemrut.webp" alt=" ">
-                <h3>Beyran Çorbası</h3>
-                <p></p>
-            </div>
-            <div class="food-card">
-                <img src="img/featured/efes.webp" alt=" ">
-                <h3> </h3>
-                <p> </p>
-            </div>
+            <?php endforeach; ?>
         </div>
     </section>
 
