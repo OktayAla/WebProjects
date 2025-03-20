@@ -285,7 +285,6 @@ section h2::after {
     color: #666;
 }
 
-/* Animations */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -313,7 +312,6 @@ section h2::after {
     }
 }
 
-/* Galeri Bölümü Stilleri */
 .gallery-section {
     margin: 4rem 0;
 }
@@ -376,7 +374,6 @@ section h2::after {
     opacity: 0.8;
 }
 
-/* Fancybox Özelleştirmeleri */
 .fancybox__backdrop {
     background: rgba(0, 0, 0, 0.9);
 }
@@ -385,7 +382,6 @@ section h2::after {
     --fancybox-bg: transparent;
 }
 
-/* Timeline Bölümü */
 .timeline-section {
     position: relative;
     padding: 3rem 0;
@@ -447,7 +443,6 @@ section h2::after {
     margin-bottom: 0.5rem;
 }
 
-/* 3D Sanal Tur Bölümü */
 .virtual-tour {
     height: 500px;
     border-radius: 12px;
@@ -456,7 +451,6 @@ section h2::after {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .detail-hero {
         height: 60vh;
@@ -490,7 +484,6 @@ section h2::after {
     }
 }
 
-/* Location Section */
 .location-section {
     margin: 4rem 0;
 }

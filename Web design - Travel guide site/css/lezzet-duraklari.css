@@ -1,10 +1,8 @@
-/* Ana Sayfa Düzeni */
 .food-detail-page {
     margin-top: 80px;
     padding: 0 0 4rem;
 }
 
-/* Hero Bölümü */
 .food-hero {
     height: 50vh;
     background-size: cover;
@@ -41,7 +39,6 @@
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-/* İçerik Bölümü */
 .food-content {
     max-width: 1200px;
     margin: 0 auto;
@@ -51,7 +48,6 @@
     gap: 3rem;
 }
 
-/* Ana İçerik */
 .food-main {
     background: white;
     border-radius: 12px;
@@ -116,7 +112,6 @@
     border-bottom-right-radius: 12px;
 }
 
-/* Tarif Bölümü */
 .recipe-section {
     background: #f8f9fa;
     padding: 2rem;
@@ -196,7 +191,6 @@
     font-weight: bold;
 }
 
-/* Yan Bölüm */
 .food-sidebar {
     position: sticky;
     top: 2rem;
@@ -311,7 +305,6 @@
     margin-right: 10px;
 }
 
-/* Responsive Tasarım */
 @media (max-width: 992px) {
     .food-content {
         grid-template-columns: 1fr;

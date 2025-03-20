@@ -1,11 +1,9 @@
-/* Genel Sıfırlama ve Kutu Boyutlandırması */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-/* Kök Değişkenler (Renk Paleti) */
 :root {
   --primary: #2c3e50;
   --secondary: #3498db;
@@ -15,7 +13,6 @@
   --dark: #34495e;
 }
 
-/* Temel Stil */
 html,
 body {
   height: 100%;
@@ -38,7 +35,6 @@ img {
   display: block;
 }
 
-/* Animasyonlar */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -63,7 +59,6 @@ img {
   }
 }
 
-/* Ortak Bileşen Stilleri */
 .destinations-grid {
   max-width: 1400px;
   margin: 3rem auto;
@@ -185,8 +180,8 @@ section h2::after {
   content: '';
   position: absolute !important;
   bottom: 0 !important;
-  left: 50% !important; /* Ortalamak için */
-  transform: translateX(-50%) !important; /* Tam ortalamak için */
+  left: 50% !important;
+  transform: translateX(-50%) !important;
   width: 60px !important;
   height: 3px !important;
   background: linear-gradient(to right, #3498db, #2c3e50) !important;
@@ -223,12 +218,8 @@ section h2::after {
   font-weight: 700;
 }
 
-/* Hero Section */
 .hero-section {
   height: 80vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600")
-    center/cover;
   margin-top: 60px;
   display: flex;
   align-items: center;
@@ -246,7 +237,6 @@ footer {
   margin-top: auto;
 }
 
-/* Destinations Page Styles */
 .destinations-page {
   margin-top: 80px;
   padding: 0 0 4rem;
@@ -317,7 +307,6 @@ footer {
   border: 1px solid var(--light);
 }
 
-/* Yerel Lezzetler Sayfası Özel Stilleri */
 .culinary-card {
   background: #fff;
   border-radius: 12px;
@@ -373,7 +362,6 @@ footer {
   font-size: 0.9rem;
 }
 
-/* Arama Kutusu Stilleri */
 .search-box {
   background: white;
   padding: 1.5rem;
@@ -415,7 +403,6 @@ footer {
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
-/* Sayfalama Stilleri */
 .pagination-container {
   width: 100%;
   display: flex;
@@ -469,12 +456,9 @@ footer {
   opacity: 0.5;
 }
 
-
-
-/* Detail Page Hero Section Responsive Styles */
 .detail-hero {
   position: relative;
-  height: 100px; /* Desktop için varsayılan yükseklik */
+  height: 100px;
   width: 100%;
   overflow: hidden;
 }
@@ -557,7 +541,6 @@ footer {
   font-size: 1.2rem;
 }
 
-/* Mobil Uyumlu Tasarım */
 @media (max-width: 1200px) {
   .destinations-grid {
     padding: 0 1.5rem;
@@ -585,7 +568,7 @@ footer {
   }
 
   .filter-sidebar {
-    position: relative; /* Sticky pozisyonu kaldırıldı */
+    position: relative;
     top: auto;
     margin-bottom: 2rem;
     z-index: 1;
@@ -605,7 +588,6 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  /* Mobil Menü Stilleri (Mevcut Stil Eklemelerinize Göre Uyarlanabilir) */
   .nav-links,
   .nav-right {
     display: none;
@@ -634,7 +616,6 @@ footer {
     padding: 2rem;
   }
 
-  /* Slider */
   .hero-slider {
     height: 80vh;
   }
@@ -656,7 +637,6 @@ footer {
     transform: translateY(-50%);
   }
 
-  /* Detail page */
   .detail-hero {
     height: auto;
     min-height: 500px;
@@ -704,7 +684,6 @@ footer {
     color: #333;
   }
 
-  /* Tarihi yerler */
   .destinations-grid {
     padding: 0 1rem;
     margin: 2rem auto;
@@ -738,7 +717,6 @@ footer {
     z-index: 1;
   }
 
-  /* Pagination */
   .pagination-container {
     padding: 1rem 0;
   }
@@ -760,7 +738,6 @@ footer {
 }
 
 @media (max-width: 576px) {
-  /* slider */
   .hero-slider {
     height: 70vh;
   }
@@ -805,7 +782,6 @@ footer {
     min-height: 400px;
   }
 
-  /* Detail page */
   .detail-hero {
     min-height: 450px;
     padding: 60px 0;
@@ -833,7 +809,6 @@ footer {
   }
 }
 
-/* Responsive Header için ek stiller */
 @media (max-width: 992px) {
   .nav-links {
     gap: 2rem;
