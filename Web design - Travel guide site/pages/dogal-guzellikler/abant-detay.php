@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Abant_lake.jpg/1280px-Abant_lake.jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://grandgames.net/puzzle/f1200/domik_u_ozera_2.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Göl</span>
             <h1 class="hero-title">Abant Gölü</h1>
@@ -88,17 +88,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://www.goturkeytourism.com/wp-content/uploads/2022/10/abant-lake-bolu.jpg"
+                    <a href="https://i20.haber7.net/resize/1280x720/haber/haber7/photos/2022/23/boludaki_abant_golu_ve_cevresi_milli_park_oldu_1654971118_265.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.goturkeytourism.com/wp-content/uploads/2022/10/abant-lake-bolu.jpg">
+                        <img src="https://i20.haber7.net/resize/1280x720/haber/haber7/photos/2022/23/boludaki_abant_golu_ve_cevresi_milli_park_oldu_1654971118_265.jpg">
                     </a>
-                    <a href="https://www.kulturportali.gov.tr/repoKullanici/GaleriResimleri/12Eylul2017/11165129/22Abant1.jpg"
+                    <a href="https://blog.obilet.com/wp-content/uploads/2018/04/4-Abant-G%C3%B6l%C3%BC.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.kulturportali.gov.tr/repoKullanici/GaleriResimleri/12Eylul2017/11165129/22Abant1.jpg">
+                        <img src="https://blog.obilet.com/wp-content/uploads/2018/04/4-Abant-G%C3%B6l%C3%BC.jpg">
                     </a>
-                    <a href="https://i.pinimg.com/originals/f0/c7/c7/f0c7c7c343579f53b461146449232f17.jpg"
+                    <a href="https://cdng.jollytur.com/files/cms/media/hotel/8151d95b-6998-43a5-b9da-6111b9bc4eb3.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i.pinimg.com/originals/f0/c7/c7/f0c7c7c343579f53b461146449232f17.jpg">
+                        <img src="https://cdng.jollytur.com/files/cms/media/hotel/8151d95b-6998-43a5-b9da-6111b9bc4eb3.jpg">
                     </a>
                 </div>
             </section>

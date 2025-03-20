@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.ayderyaylasi.com/wp-content/uploads/2023/10/Ayder-Yaylasi-Konaklama-rehberi-1280x640.jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://dokuzeylulcom.teimg.com/dokuzeylul-com/uploads/2023/10/ayder-yaylasinda-gezilecek-yerler.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Yaylalar</span>
             <h1 class="hero-title">Ayder Yaylası</h1>
@@ -89,17 +89,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://www.neredekal.com/resimler/blog/1571969282_ayder-yaylasi-gezilecek-yerler.jpg"
+                    <a href="https://dokuzeylulcom.teimg.com/dokuzeylul-com/uploads/2023/10/kaplicalari-ile-unlu-bir-karadeniz-yaylasiayder-yaylasini-kesfedin.webp"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.neredekal.com/resimler/blog/1571969282_ayder-yaylasi-gezilecek-yerler.jpg">
+                        <img src="https://dokuzeylulcom.teimg.com/dokuzeylul-com/uploads/2023/10/kaplicalari-ile-unlu-bir-karadeniz-yaylasiayder-yaylasini-kesfedin.webp">
                     </a>
-                    <a href="https://i4.hurimg.com/i/hurriyet/75/750x422/6149730f4e3fe116f447c7b9.jpg"
+                    <a href="https://www.gezgincift.com/wp-content/uploads/2018/08/3e95e9cc-19d8-4cfc-a737-befeab237d51.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i4.hurimg.com/i/hurriyet/75/750x422/6149730f4e3fe116f447c7b9.jpg">
+                        <img src="https://www.gezgincift.com/wp-content/uploads/2018/08/3e95e9cc-19d8-4cfc-a737-befeab237d51.jpg">
                     </a>
-                    <a href="https://blog.biletbayi.com/wp-content/uploads/2022/06/ayder-yaylasi-aktiviteleri-2-1024x683.jpg"
+                    <a href="https://galeri13.uludagsozluk.com/658/ayder-yaylasi-talan-projesinin-aciklanmasi_2041129.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://blog.biletbayi.com/wp-content/uploads/2022/06/ayder-yaylasi-aktiviteleri-2-1024x683.jpg">
+                        <img src="https://galeri13.uludagsozluk.com/658/ayder-yaylasi-talan-projesinin-aciklanmasi_2041129.jpg">
                     </a>
                 </div>
             </section>
