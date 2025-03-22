@@ -2,8 +2,8 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="https://www.kulturportali.gov.tr/contents/images/saklikent-kanyonu.jpg"></div>
-        <div class="hero-content">
+    <div class="hero-background" style="background-image: url('https://cdn.hellovillam.com/HelloVillam/Images/2022-03/mugla-neyi-meshur_8OJKYJXVV2YPMCT228OX6SAPDQBLEP.jpg');"></div>
+    <div class="hero-content">
             <span class="hero-category">Kanyon</span>
             <h1 class="hero-title">Saklıkent Kanyonu</h1>
             <p class="hero-description">Muğla'da bulunan Saklıkent Kanyonu, eşsiz doğal güzellikleri, buz gibi suları ve heyecan verici aktiviteleriyle hem serinlemek hem de macera dolu bir gün geçirmek isteyenler için ideal bir destinasyondur.</p>
@@ -86,17 +86,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://www.muhtarliktan.com/upload/resimler/saklikent-kanyonu-nasil-gidilir-1470047892.jpg"
+                    <a href="https://www.clubmarina.com.tr/wp-content/uploads/2018/08/saklikent-1333x800.jpeg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.muhtarliktan.com/upload/resimler/saklikent-kanyonu-nasil-gidilir-1470047892.jpg">
+                        <img src="https://www.clubmarina.com.tr/wp-content/uploads/2018/08/saklikent-1333x800.jpeg">
                     </a>
-                    <a href="https://www.havas.net/uploads/2019/09/saklikent-kanyonu.jpg"
+                    <a href="https://kabakmisafirevi.com/images/photos/activities/saklikent.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.havas.net/uploads/2019/09/saklikent-kanyonu.jpg">
+                        <img src="https://kabakmisafirevi.com/images/photos/activities/saklikent.jpg">
                     </a>
-                    <a href="https://gezimanya.com/sites/default/files/styles/940x500/public/images/destination/field_destination_image/saklikent-kanyonunda-yuruyus-gezimanya.jpg"
+                    <a href="https://www.enkisa.com/wp-content/uploads/2018/04/fethiye-saklikent4.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://gezimanya.com/sites/default/files/styles/940x500/public/images/destination/field_destination_image/saklikent-kanyonunda-yuruyus-gezimanya.jpg">
+                        <img src="https://www.enkisa.com/wp-content/uploads/2018/04/fethiye-saklikent4.jpg">
                     </a>
                 </div>
             </section>

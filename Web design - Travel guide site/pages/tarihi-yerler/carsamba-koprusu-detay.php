@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.samsunetkinlik.com/wp-content/uploads/2021/11/Hafta-Sonu-Plani-icin-Carsamba-.jpg);"></div>
+        <div class="hero-background" style="background-image: url('https://www.carsamba.bel.tr/assets/img/slide/1.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Tarihi Köprü</span>
             <h1 class="hero-title">Çarşamba Köprüsü</h1>

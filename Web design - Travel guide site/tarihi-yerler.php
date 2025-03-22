@@ -619,7 +619,6 @@ include 'includes/header.php';
                         <a href="pages/tarihi-yerler/esreoglu-cami-detay.php" class="btn-details">Detayları Gör</a>
                     </div>
                 </div>
-
             </div>
 
             <!-- Sayfalama -->

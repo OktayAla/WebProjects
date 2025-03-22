@@ -84,7 +84,7 @@ $randomFoodDestinations = getRandomFoodDestinations();
             <div class="blog-card">
                 <img src="<?php echo $destination['image']; ?>" alt="<?php echo $destination['name']; ?>">
                 <h3><?php echo $destination['name']; ?></h3>
-                <p><?php echo substr($destination['description'], 0, 100); ?>...</p>
+                <p><?php echo mb_substr($destination['description'], 0, 100, 'UTF-8'); ?>...</p>
                 <a href="<?php echo $destination['url']; ?>">Devamını Oku</a>
             </div>
             <?php endforeach; ?>
@@ -101,7 +101,7 @@ $randomFoodDestinations = getRandomFoodDestinations();
                 <a href="<?php echo $food['url']; ?>">
                 <img src="<?php echo $food['image']; ?>" alt="<?php echo $food['name']; ?>"></a>
                 <h3><?php echo $food['name']; ?></h3>
-                <p><?php echo substr($food['description'], 0, 100); ?>...</p>
+                <p><?php echo mb_substr($food['description'], 0, 100, 'UTF-8'); ?>...</p>
             </div>
             <?php endforeach; ?>
         </div>

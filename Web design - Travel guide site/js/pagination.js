@@ -1,10 +1,16 @@
-    // Sayfalama için gerekli değişkenler
+// Sayfalama için gerekli değişkenler
     let currentPage = 1;
-    const itemsPerPage = 9;
-    const cards = document.querySelectorAll('.destination-card');
+    const itemsPerPage = 6;
+    
+    // Sayfa türüne göre doğru card sınıfını seç
+    const isLezzetPage = window.location.href.includes('lezzet-duraklari');
+    const cardSelector = isLezzetPage ? '.culinary-card' : '.destination-card';
+    const cards = document.querySelectorAll(cardSelector);
+    
     const pageNumbers = document.querySelector('.page-numbers');
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
+    const pagination = document.querySelector('.pagination');
 
     // Toplam sayfa sayısını hesapla
     const totalPages = Math.ceil(cards.length / itemsPerPage);

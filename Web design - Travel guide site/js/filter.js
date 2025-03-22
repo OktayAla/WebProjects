@@ -1,7 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const checkboxes = document.querySelectorAll('.filter-options input[type="checkbox"]');
-    const cards = document.querySelectorAll('.destination-card');
+    
+    // Sayfa türüne göre doğru card sınıfını seç
+    const isLezzetPage = window.location.href.includes('lezzet-duraklari');
+    const cardSelector = isLezzetPage ? '.culinary-card' : '.destination-card';
+    const cards = document.querySelectorAll(cardSelector);
+    
     const itemsPerPage = 6;
     let currentPage = 1;
 
@@ -14,9 +19,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Önce tüm kartları filtrele
         const filteredCards = Array.from(cards).filter(card => {
             const title = card.querySelector('h2').textContent.toLowerCase();
-            const region = card.querySelector('.destination-category').textContent;
+            
+            // Sayfa türüne göre kategori seçicisini belirle
+            const categorySelector = isLezzetPage ? '.cuisine-category' : '.destination-category';
+            const region = card.querySelector(categorySelector)?.textContent || '';
+            
             const description = card.querySelector('p').textContent.toLowerCase();
-            const location = card.querySelector('.destination-meta').textContent.toLowerCase();
+            
+            // Sayfa türüne göre meta seçicisini belirle
+            const metaSelector = isLezzetPage ? '.cuisine-meta' : '.destination-meta';
+            const location = card.querySelector(metaSelector)?.textContent.toLowerCase() || '';
             
             const allContent = `${title} ${description} ${location}`.toLowerCase();
             const matchesSearch = searchTerm === '' || allContent.includes(searchTerm);
@@ -99,6 +111,9 @@ document.addEventListener('DOMContentLoaded', function() {
             filterAndPaginateDestinations();
         });
     });
+    
+    // Sayfa yüklendiğinde filtreleme ve sayfalama işlemini başlat
+    filterAndPaginateDestinations();
 
     // İlk yükleme
     filterAndPaginateDestinations();
