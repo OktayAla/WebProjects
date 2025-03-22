@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.goturkey.com/storage/simple-images/July-2020/1594809360_duden-waterfall-antalya-turkey.jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://i.pinimg.com/originals/c0/2b/05/c02b0518d04317f6707ca729f2a9e9b1.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Şelale</span>
             <h1 class="hero-title">Düden Şelalesi</h1>
@@ -88,17 +88,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://www.antalya.bel.tr/upload/icerik/duden-selalesi-gezilecek-yerler-nerede-nasil-gidilir-tarihcesi-fiyatlari-ve-ziyaret-saatleri_2022032511560431.jpg"
+                    <a href="https://i.pinimg.com/originals/ac/75/db/ac75db3307e50b9a2b03d23b20a4660f.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.antalya.bel.tr/upload/icerik/duden-selalesi-gezilecek-yerler-nerede-nasil-gidilir-tarihcesi-fiyatlari-ve-ziyaret-saatleri_2022032511560431.jpg">
+                        <img src="https://i.pinimg.com/originals/ac/75/db/ac75db3307e50b9a2b03d23b20a4660f.jpg">
                     </a>
-                    <a href="https://i.ytimg.com/vi/Uv1wDhhqE5U/maxresdefault.jpg"
+                    <a href="https://sozcuo01.sozcucdn.com/wp-content/uploads/2023/07/15/resim11_23367527.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i.ytimg.com/vi/Uv1wDhhqE5U/maxresdefault.jpg">
+                        <img src="https://sozcuo01.sozcucdn.com/wp-content/uploads/2023/07/15/resim11_23367527.jpg">
                     </a>
-                    <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Lower_Duden_Waterfall.jpg/1280px-Lower_Duden_Waterfall.jpg"
+                    <a href="https://www.kulturportali.gov.tr/contents/images/20190506132023077_THK%20ORHAN%20OZGULBAS%20ANTALYA%20Duden%20Selalesi(2).jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Lower_Duden_Waterfall.jpg/1280px-Lower_Duden_Waterfall.jpg">
+                        <img src="https://www.kulturportali.gov.tr/contents/images/20190506132023077_THK%20ORHAN%20OZGULBAS%20ANTALYA%20Duden%20Selalesi(2).jpg">
                     </a>
                 </div>
             </section>
