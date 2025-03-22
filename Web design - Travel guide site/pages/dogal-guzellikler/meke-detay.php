@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Mekegolu.jpg/1280px-Mekegolu.jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://cdn.karar.com/gallery/2020/07/1573490/080720200959205406816.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Göl</span>
             <h1 class="hero-title">Meke Gölü</h1>
@@ -83,17 +83,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://i4.hurimg.com/i/hurriyet/75/750x422/5cf62b066707711b68c8c0c7.jpg"
+                    <a href="https://icdn.ensonhaber.com/crop/1200x675/resimler/diger/kok/2021/01/08/meke-golu_9977.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i4.hurimg.com/i/hurriyet/75/750x422/5cf62b066707711b68c8c0c7.jpg">
+                        <img src="https://icdn.ensonhaber.com/crop/1200x675/resimler/diger/kok/2021/01/08/meke-golu_9977.jpg">
                     </a>
-                    <a href="https://cdnuploads.aa.com.tr/uploads/Contents/2021/07/26/thumbs_b_c_a09b2e7d34bc2f0037f4855266f9987c.jpg"
+                    <a href="https://i20.haber7.net/resize/1280x720/haber/haber7/photos/2018/22/meke_golu_nerede_meke_golu_neden_tamamen_kurudu_1527696265_943.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://cdnuploads.aa.com.tr/uploads/Contents/2021/07/26/thumbs_b_c_a09b2e7d34bc2f0037f4855266f9987c.jpg">
+                        <img src="https://i20.haber7.net/resize/1280x720/haber/haber7/photos/2018/22/meke_golu_nerede_meke_golu_neden_tamamen_kurudu_1527696265_943.jpgg">
                     </a>
-                    <a href="https://www.konhaber.com/images/haberler/2023/05/meke_golunun_son_hali_yurek_burktu_h526637_332cd.jpg"
+                    <a href="https://trthaberstatic.cdn.wp.trt.com.tr/resimler/1560000/meke-golu-dha-1561561.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.konhaber.com/images/haberler/2023/05/meke_golunun_son_hali_yurek_burktu_h526637_332cd.jpg">
+                        <img src="https://trthaberstatic.cdn.wp.trt.com.tr/resimler/1560000/meke-golu-dha-1561561.jpg">
                     </a>
                 </div>
             </section>
