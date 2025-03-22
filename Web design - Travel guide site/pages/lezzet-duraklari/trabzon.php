@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.pixabay.com/photo/2019/06/30/20/09/kofte-4308873_1280.jpg');">
+    <section class="food-hero" style="background-image: url('https://image.cnnturk.com/i/cnnturk/75/1200x675/6525b434ae0a8f18046d95f7.jpg');">
         <div class="food-hero-overlay">
             <h1>Trabzon'un Meşhur Akçaabat Köftesi</h1>
             <p>Trabzon'un eşsiz lezzeti, özel kıyması ve pişirme tekniğiyle damaklarda iz bırakan geleneksel bir Karadeniz lezzeti</p>
@@ -21,8 +21,8 @@
                 <p>Akçaabat Köftesi, dana etinin özel bir şekilde hazırlanıp, baharatlarla harmanlanarak şekillendirilmesi ve kömür ateşinde pişirilmesiyle hazırlanan geleneksel bir Karadeniz yemeğidir. Köftenin en önemli özelliği, etin sinirlerinden tamamen arındırılması ve özel bir teknikle yoğrulmasıdır. Genellikle yanında piyaz, közlenmiş domates ve biber ile servis edilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.pixabay.com/photo/2019/06/30/20/09/kofte-4308873_1280.jpg" data-fancybox="gallery" data-caption="Trabzon'un meşhur Akçaabat Köftesi">
-                        <img src="https://cdn.pixabay.com/photo/2019/06/30/20/09/kofte-4308873_1280.jpg" alt="Akçaabat Köftesi" class="food-image">
+                    <a href="https://image.cnnturk.com/i/cnnturk/75/1200x675/6525b434ae0a8f18046d95f7.jpg" data-fancybox="gallery" data-caption="Trabzon'un meşhur Akçaabat Köftesi">
+                        <img src="https://image.cnnturk.com/i/cnnturk/75/1200x675/6525b434ae0a8f18046d95f7.jpg" alt="Akçaabat Köftesi" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Akçaabat Köftesi</div>
                 </div>
