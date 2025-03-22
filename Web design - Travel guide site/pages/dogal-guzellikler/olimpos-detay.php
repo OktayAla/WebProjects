@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.kulturportali.gov.tr/contents/images/OLYMPOS%20ANTIK%20KENT.jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://www.beecarrental.com/dosya/2287/haber/8-1-antalyadan-olympos-antik-kentine-yolculuk_502.jpeg');"></div>
         <div class="hero-content">
             <span class="hero-category">Antik Kent</span>
             <h1 class="hero-title">Olimpos Antik Kenti</h1>
@@ -95,17 +95,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://i.pinimg.com/originals/c4/0f/06/c40f06d69555122b7638bc5c2a0f6434.jpg"
+                    <a href="https://yesilgazete.org/wp-content/uploads/2024/03/dima-pima-h-qwe7cnvrs-unsplash.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i.pinimg.com/originals/c4/0f/06/c40f06d69555122b7638bc5c2a0f6434.jpg">
+                        <img src="https://yesilgazete.org/wp-content/uploads/2024/03/dima-pima-h-qwe7cnvrs-unsplash.jpg">
                     </a>
-                    <a href="https://www.neredekal.com/resimler/blog/1520855298_ihlara-vadisi-gezilecek-yerler.jpg"
+                    <a href="https://i0.wp.com/www.klosdag.org/wp-content/uploads/2018/04/BayramdaOlimpos01.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.neredekal.com/resimler/blog/1520855298_ihlara-vadisi-gezilecek-yerler.jpg">
+                        <img src="https://i0.wp.com/www.klosdag.org/wp-content/uploads/2018/04/BayramdaOlimpos01.jpg">
                     </a>
-                    <a href="https://antalyagezirehberi.net/wp-content/uploads/2022/01/olimpos-antik-kenti-1.jpg"
+                    <a href="https://www.olimpospansiyonlar.com/wp-content/uploads/2017/06/olimpos-can-baba-pansiyon-17.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://antalyagezirehberi.net/wp-content/uploads/2022/01/olimpos-antik-kenti-1.jpg">
+                        <img src="https://www.olimpospansiyonlar.com/wp-content/uploads/2017/06/olimpos-can-baba-pansiyon-17.jpg">
                     </a>
                 </div>
             </section>
