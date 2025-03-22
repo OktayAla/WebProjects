@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.artvinturizm.com/wp-content/uploads/2019/05/borcka-karagol-1.jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://i.pinimg.com/originals/c7/48/30/c74830ebbac01b4e3b7e65538b4e99a2.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Göl</span>
             <h1 class="hero-title">Borçka Karagöl</h1>
@@ -93,17 +93,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://m.artuklu.org.tr/images/fotogaleri/karagol2_51871.jpg"
+                    <a href="https://www.dogadergisi.com/wp-content/uploads/2017/03/artvin-borcka-karagol-14.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://m.artuklu.org.tr/images/fotogaleri/karagol2_51871.jpg">
+                        <img src="https://www.dogadergisi.com/wp-content/uploads/2017/03/artvin-borcka-karagol-14.jpg">
                     </a>
-                    <a href="https://i.pinimg.com/originals/5f/36/06/5f360668062ca17f66a90d9239a57c75.jpg"
+                    <a href="https://i.pinimg.com/originals/74/b0/ad/74b0adaed7119a4a5aec6a6abfd2d90e.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i.pinimg.com/originals/5f/36/06/5f360668062ca17f66a90d9239a57c75.jpg">
+                        <img src="https://i.pinimg.com/originals/74/b0/ad/74b0adaed7119a4a5aec6a6abfd2d90e.jpg">
                     </a>
-                    <a href="https://gezilecekyerler.com/wp-content/uploads/2017/07/artvin-karagol.jpg"
+                    <a href="https://www.zagnostur.com/upload/6718dabe153bb.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://gezilecekyerler.com/wp-content/uploads/2017/07/artvin-karagol.jpg">
+                        <img src="https://www.zagnostur.com/upload/6718dabe153bb.jpg">
                     </a>
                 </div>
             </section>

@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.kulturportali.gov.tr/contents/images/KARCAL%20DAGLARI.JPG');"></div>
+        <div class="hero-background" style="background-image: url('https://cdn.gezelim.com/2024/05/batch_AW210688_01.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Dağ</span>
             <h1 class="hero-title">Karçal Dağları</h1>
@@ -94,17 +94,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://dagcilik.tv/wp-content/uploads/2021/08/karkal-daglari-transi-2021-10.jpg"
+                    <a href="https://isbh.tmgrup.com.tr/sbh/2021/05/16/650x344/macahel-karcal-daglari-eteklerinde-kisin-donan-gol-1621163713191.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://dagcilik.tv/wp-content/uploads/2021/08/karkal-daglari-transi-2021-10.jpg">
+                        <img src="https://isbh.tmgrup.com.tr/sbh/2021/05/16/650x344/macahel-karcal-daglari-eteklerinde-kisin-donan-gol-1621163713191.jpg">
                     </a>
-                    <a href="https://gezgininpusulasi.com/wp-content/uploads/2019/08/Karcal-Daglari-6.jpg"
+                    <a href="http://i.tmgrup.com.tr/anews/v1/album/2018/12/04/turkeys-black-sea-mountains-come-alive-with-color-1543934281587.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://gezgininpusulasi.com/wp-content/uploads/2019/08/Karcal-Daglari-6.jpg">
+                        <img src="http://i.tmgrup.com.tr/anews/v1/album/2018/12/04/turkeys-black-sea-mountains-come-alive-with-color-1543934281587.jpg">
                     </a>
-                    <a href="https://i.ytimg.com/vi/aPjC62WBc6w/maxresdefault.jpg"
+                    <a href="https://cdn.gezelim.com/2024/05/batch_AW210688_02.jpgg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i.ytimg.com/vi/aPjC62WBc6w/maxresdefault.jpg">
+                        <img src="https://cdn.gezelim.com/2024/05/batch_AW210688_02.jpg">
                     </a>
                 </div>
             </section>
