@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.kulturportali.gov.tr/contents/images/Nemrut%20Krater%20Golu%20(2).jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://rayhaber.com/wp-content/uploads/2023/07/Nemrut-Kalderasi-ve-Krater-Golu-Turizme-Kazandirilacak.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Göl</span>
             <h1 class="hero-title">Nemrut Krater Gölü</h1>
@@ -90,17 +90,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://www.aa.com.tr/uploads/Contents/2020/06/19/thumbs_b_c_6a8a76d59d4bd2380c582e70f4d0e25b.jpg"
+                    <a href="https://cdn.halktv.com.tr/news/292865.jpgg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.aa.com.tr/uploads/Contents/2020/06/19/thumbs_b_c_6a8a76d59d4bd2380c582e70f4d0e25b.jpg">
+                        <img src="https://cdn.halktv.com.tr/news/292865.jpg">
                     </a>
-                    <a href="https://gezimanya.com/sites/default/files/styles/940x500/public/images/destination/field_destination_image/nemrut-krater-golunde-kamp-yapmak-gezimanya.jpg"
+                    <a href="https://i.arkeolojikhaber.com/pool_file/2019/25/71252_nemrut-golu-nemrutlake-ahlat-bitlis-tatvan-210619-2000x.jpg
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://gezimanya.com/sites/default/files/styles/940x500/public/images/destination/field_destination_image/nemrut-krater-golunde-kamp-yapmak-gezimanya.jpg">
+                        <img src="https://i.arkeolojikhaber.com/pool_file/2019/25/71252_nemrut-golu-nemrutlake-ahlat-bitlis-tatvan-210619-2000x.jpg">
                     </a>
-                    <a href="https://i.ytimg.com/vi/T607Cn-YRZA/maxresdefault.jpg"
+                    <a href="https://www.turkiyeningezginleri.com/img/6422a61a2d464.jpeg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i.ytimg.com/vi/T607Cn-YRZA/maxresdefault.jpg">
+                        <img src="https://www.turkiyeningezginleri.com/img/6422a61a2d464.jpeg">
                     </a>
                 </div>
             </section>
