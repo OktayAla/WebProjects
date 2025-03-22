@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.kulturportali.gov.tr/contents/images/SALDA%20GOLU.jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://www.tokihaber.com.tr/wp-content/uploads/2020/07/salda-golu-burdur-1.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Göl</span>
             <h1 class="hero-title">Salda Gölü</h1>
@@ -88,17 +88,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://gezimanya.com/sites/default/files/styles/940x500/public/images/destination/field_destination_image/salda-golunde-gun-batimi-gezimanya.jpg"
+                    <a href="https://idsb.tmgrup.com.tr/ly/uploads/images/2022/12/08/245482.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://gezimanya.com/sites/default/files/styles/940x500/public/images/destination/field_destination_image/salda-golunde-gun-batimi-gezimanya.jpg">
+                        <img src="https://idsb.tmgrup.com.tr/ly/uploads/images/2022/12/08/245482.jpg">
                     </a>
-                    <a href="https://i4.hurimg.com/i/hurriyet/75/750x422/5edc770167077118f81a7975.jpg"
+                    <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Salda_G%C3%B6l%C3%BC_2.jpg/1599px-Salda_G%C3%B6l%C3%BC_2.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i4.hurimg.com/i/hurriyet/75/750x422/5edc770167077118f81a7975.jpg">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Salda_G%C3%B6l%C3%BC_2.jpg/1599px-Salda_G%C3%B6l%C3%BC_2.jpg">
                     </a>
-                    <a href="https://www.aa.com.tr/uploads/Contents/2020/07/06/thumbs_b_c_7b01e88b7d6123a7a0b908611c74225a.jpg"
+                    <a href="https://abcgazetesi.com.tr/d/news/88060.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.aa.com.tr/uploads/Contents/2020/07/06/thumbs_b_c_7b01e88b7d6123a7a0b908611c74225a.jpg">
+                        <img src="https://abcgazetesi.com.tr/d/news/88060.jpg">
                     </a>
                 </div>
             </section>
