@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.kulturportali.gov.tr/contents/images/IHLARA%20VADISI%20(2).jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://arkeonews.com/wp-content/uploads/2022/03/Ihlara-Vadisi-e1647504780590.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Vadi</span>
             <h1 class="hero-title">Ihlara Vadisi</h1>
@@ -92,17 +92,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Ihlara_Valley.jpg/1280px-Ihlara_Valley.jpg"
+                    <a href="https://www.gomutur.com/img/turlar/01252024050706.webp"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Ihlara_Valley.jpg/1280px-Ihlara_Valley.jpg">
+                        <img src="https://www.gomutur.com/img/turlar/01252024050706.webp">
                     </a>
-                    <a href="https://www.kapadokyahillhotel.com/wp-content/uploads/2021/10/ıhlara-vadisi-nerede-1.jpg"
+                    <a href="https://img.piri.net/mnresize/1200/-/resim/upload/2024/07/09/02/21/ffcc2c28c4b1hlaravadisi.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.kapadokyahillhotel.com/wp-content/uploads/2021/10/ıhlara-vadisi-nerede-1.jpg">
+                        <img src="https://img.piri.wnet/mnresize/1200/-/resim/upload/2024/07/09/02/21/ffcc2c28c4b1hlaravadisi.jpg">
                     </a>
-                    <a href="https://neredekal.com.tr/resimler/blog/1520855298_ihlara-vadisi-gezilecek-yerler.jpg"
+                    <a href="https://i.pinimg.com/originals/64/03/b6/6403b600030a8e509298f53ac9657569.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://neredekal.com.tr/resimler/blog/1520855298_ihlara-vadisi-gezilecek-yerler.jpg">
+                        <img src="https://i.pinimg.com/originals/64/03/b6/6403b600030a8e509298f53ac9657569.jpg">
                     </a>
                 </div>
             </section>
