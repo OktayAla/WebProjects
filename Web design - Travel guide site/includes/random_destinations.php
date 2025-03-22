@@ -60,10 +60,16 @@ function getRandomFoodDestinations() {
  * @return array|false 
  */
 function extractDestinationInfo($filePath, $category) {
-    // Read file content
     $content = file_get_contents($filePath);
     if (!$content) {
         return false;
+    }
+    
+    $encoding = mb_detect_encoding($content, ['UTF-8', 'ISO-8859-9', 'ISO-8859-1', 'Windows-1252'], true);
+    if ($encoding && $encoding !== 'UTF-8') {
+        $content = mb_convert_encoding($content, 'UTF-8', $encoding);
+    } elseif (!$encoding) {
+        $content = mb_convert_encoding($content, 'UTF-8', 'Windows-1254');
     }
     
     preg_match('/<h1 class="hero-title">([^<]+)<\/h1>/', $content, $nameMatches);
@@ -77,6 +83,9 @@ function extractDestinationInfo($filePath, $category) {
     
     $filename = basename($filePath);
     $detailUrl = "/turkiyegezirehberi/pages/{$category}/{$filename}";
+    
+    $name = normalizeText($name);
+    $description = normalizeText($description);
     
     return [
         'name' => $name,
@@ -92,10 +101,16 @@ function extractDestinationInfo($filePath, $category) {
  * @return array|false 
  */
 function extractFoodInfo($filePath) {
-    // Read file content
     $content = file_get_contents($filePath);
     if (!$content) {
         return false;
+    }
+    
+    $encoding = mb_detect_encoding($content, ['UTF-8', 'ISO-8859-9', 'ISO-8859-1', 'Windows-1252'], true);
+    if ($encoding && $encoding !== 'UTF-8') {
+        $content = mb_convert_encoding($content, 'UTF-8', $encoding);
+    } elseif (!$encoding) {
+        $content = mb_convert_encoding($content, 'UTF-8', 'Windows-1254');
     }
     
     preg_match('/<h1>([^<]+)<\/h1>/', $content, $nameMatches);
@@ -116,6 +131,9 @@ function extractFoodInfo($filePath) {
     $filename = basename($filePath);
     $detailUrl = "/turkiyegezirehberi/pages/lezzet-duraklari/{$filename}";
     
+    $name = normalizeText($name);
+    $description = normalizeText($description);
+    
     return [
         'name' => $name,
         'description' => $description,
@@ -123,5 +141,35 @@ function extractFoodInfo($filePath) {
         'url' => $detailUrl,
         'category' => 'lezzet-duraklari'
     ];
+}
+
+/**
+ * @param string $text
+ * @return string
+ */
+function normalizeText($text) {
+    if (!mb_check_encoding($text, 'UTF-8')) {
+        $text = mb_convert_encoding($text, 'UTF-8', 'auto');
+    }
+    
+    $replacements = [
+        'Ä±' => 'ı',
+        'Ä°' => 'İ',
+        'Ã¼' => 'ü', 
+        'Ã–' => 'Ö', 
+        'Ã¶' => 'ö',
+        'ÅŸ' => 'ş',
+        'Åž' => 'Ş',
+        'ÄŸ' => 'ğ',
+        'Äž' => 'Ğ',
+        'Ã§' => 'ç',
+        'Ã‡' => 'Ç', 
+        'farkl�' => 'farklı',
+        'ünl�' => 'ünlü',
+        'G�' => 'Gö',
+        'de�' => 'değ'
+    ];
+    
+    return str_replace(array_keys($replacements), array_values($replacements), $text);
 }
 ?>
