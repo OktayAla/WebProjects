@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.yemek.com/uploads/2019/01/edirne-cigeri-yemekcom.jpg');">
+    <section class="food-hero" style="background-image: url('https://images.deliveryhero.io/image/fd-tr/LH/owlj-hero.jpg');">
         <div class="food-hero-overlay">
             <h1>Edirne'nin Meşhur Ciğer Tavası</h1>
             <p>Edirne'nin simgesi haline gelmiş, kendine özgü pişirme tekniği ve sunumuyla eşsiz bir lezzet</p>
@@ -21,8 +21,8 @@
                 <p>Edirne Ciğer Tavası, kuzu ciğerinin ince dilimler halinde kesilerek kızgın yağda kıtır hale gelene kadar kızartılması ve yanında özel garnitürlerle servis edilmesiyle hazırlanan bir yemektir. Edirne'nin en önemli gastronomik değerlerinden biri olan bu lezzet, şehrin simgesi haline gelmiştir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.yemek.com/uploads/2019/01/edirne-cigeri-yemekcom.jpg" data-fancybox="gallery" data-caption="Edirne'nin meşhur Tava Ciğeri">
-                        <img src="https://cdn.yemek.com/uploads/2019/01/edirne-cigeri-yemekcom.jpg" alt="Edirne Ciğer Tavası" class="food-image">
+                    <a href="https://images.deliveryhero.io/image/fd-tr/LH/owlj-hero.jpg" data-fancybox="gallery" data-caption="Edirne'nin meşhur Tava Ciğeri">
+                        <img src="https://images.deliveryhero.io/image/fd-tr/LH/owlj-hero.jpg" alt="Edirne Ciğer Tavası" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Edirne Tava Ciğeri</div>
                 </div>

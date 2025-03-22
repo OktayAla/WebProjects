@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.getiryemek.com/restaurants/1683796075177_1125x522.jpeg');">
+    <section class="food-hero" style="background-image: url('https://i20.haber7.net/resize/1280x720/haber/haber7/photos/2020/13/evinizde_denizlinin_meshur_yemeklerini_taniyin_1585035086_1156.jpg');">
         <div class="food-hero-overlay">
             <h1>Denizli'nin Meşhur Denizli Kebabı</h1>
             <p>Denizli'nin geleneksel lezzeti, özel pişirme tekniği ve sunumuyla damakları şenlendiren bir klasik</p>
@@ -21,8 +21,8 @@
                 <p>Denizli Kebabı, kuzu etinin özel bir şekilde hazırlanıp, çömlek içinde odun ateşinde pişirilmesiyle hazırlanan geleneksel bir Ege yemeğidir. Etin yumuşaklığı ve aroması, uzun süre düşük ısıda pişirilmesinden kaynaklanır. Yanında genellikle pilav, közlenmiş domates ve biber ile servis edilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.getiryemek.com/restaurants/1683796075177_1125x522.jpeg" data-fancybox="gallery" data-caption="Denizli'nin meşhur Denizli Kebabı">
-                        <img src="https://cdn.getiryemek.com/restaurants/1683796075177_1125x522.jpeg" alt="Denizli Kebabı" class="food-image">
+                    <a href="https://i20.haber7.net/resize/1280x720/haber/haber7/photos/2020/13/evinizde_denizlinin_meshur_yemeklerini_taniyin_1585035086_1156.jpg" data-fancybox="gallery" data-caption="Denizli'nin meşhur Denizli Kebabı">
+                        <img src="https://i20.haber7.net/resize/1280x720/haber/haber7/photos/2020/13/evinizde_denizlinin_meshur_yemeklerini_taniyin_1585035086_1156.jpg" alt="Denizli Kebabı" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Denizli Kebabı</div>
                 </div>
