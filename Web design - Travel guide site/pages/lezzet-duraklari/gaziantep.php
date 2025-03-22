@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.pixabay.com/photo/2020/05/11/15/06/food-5158702_1280.jpg');">
+    <section class="food-hero" style="background-image: url('https://trthaberstatic.cdn.wp.trt.com.tr/resimler/1808000/baklava-dha-1809638.jpg');">
         <div class="food-hero-overlay">
             <h1>Gaziantep'in Meşhur Baklavası</h1>
             <p>Gaziantep'in dünyaca ünlü tatlısı, ince yufkası, Antep fıstığı ve özel şerbetiyle damakları şenlendiren bir şaheser</p>
@@ -21,8 +21,8 @@
                 <p>Antep Baklavası, ince açılmış yufkaların arasına Antep fıstığı serpilerek, özel bir teknikle pişirilip şerbet dökülerek hazırlanan geleneksel bir Türk tatlısıdır. Baklavanın en önemli özelliği, hamurunu açan ustanın mahareti, kullanılan malzemelerin kalitesi ve pişirme tekniğidir. Bu sayede kendine has bir lezzet ve doku kazanır.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.pixabay.com/photo/2020/05/11/15/06/food-5158702_1280.jpg" data-fancybox="gallery" data-caption="Gaziantep'in meşhur Baklavası">
-                        <img src="https://cdn.pixabay.com/photo/2020/05/11/15/06/food-5158702_1280.jpg" alt="Antep Baklavası" class="food-image">
+                    <a href="https://trthaberstatic.cdn.wp.trt.com.tr/resimler/1808000/baklava-dha-1809638.jpg" data-fancybox="gallery" data-caption="Gaziantep'in meşhur Baklavası">
+                        <img src="https://trthaberstatic.cdn.wp.trt.com.tr/resimler/1808000/baklava-dha-1809638.jpg" alt="Antep Baklavası" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Antep Baklavası</div>
                 </div>
