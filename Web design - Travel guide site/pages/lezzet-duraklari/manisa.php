@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.pixabay.com/photo/2020/05/11/21/57/mesir-paste-5160234_1280.jpg');">
+    <section class="food-hero" style="background-image: url('http://haberkurulu.com/wp-content/uploads/2019/08/070820190933108140931.jpg');">
         <div class="food-hero-overlay">
             <h1>Manisa'nın Meşhur Mesir Macunu</h1>
             <p>Manisa'nın yüzyıllardır süregelen şifalı tatlısı, 41 çeşit baharat ve şifalı otla hazırlanan eşsiz bir lezzet</p>
@@ -21,8 +21,8 @@
                 <p>Mesir Macunu, 41 çeşit baharat ve şifalı bitkinin bal ile karıştırılmasıyla hazırlanan, hem tatlı hem de şifalı özelliklere sahip geleneksel bir Türk macunudur. Macunun en önemli özelliği, içerdiği baharatların ve bitkilerin sağlığa olan faydalarıdır. Geleneksel olarak her yıl Mart ayında düzenlenen Mesir Macunu Festivali'nde, Manisa Sultan Camii'nin kubbe ve minarelerinden halka saçılır.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.pixabay.com/photo/2020/05/11/21/57/mesir-paste-5160234_1280.jpg" data-fancybox="gallery" data-caption="Manisa'nın meşhur Mesir Macunu">
-                        <img src="https://cdn.pixabay.com/photo/2020/05/11/21/57/mesir-paste-5160234_1280.jpg" alt="Mesir Macunu" class="food-image">
+                    <a href="http://haberkurulu.com/wp-content/uploads/2019/08/070820190933108140931.jpg" data-fancybox="gallery" data-caption="Manisa'nın meşhur Mesir Macunu">
+                        <img src="http://haberkurulu.com/wp-content/uploads/2019/08/070820190933108140931.jpg" alt="Mesir Macunu" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Manisa Mesir Macunu</div>
                 </div>

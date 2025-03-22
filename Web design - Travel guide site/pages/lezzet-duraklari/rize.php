@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.pixabay.com/photo/2020/05/11/15/06/food-5158702_1280.jpg');">
+    <section class="food-hero" style="background-image: url('https://i20.haber7.net/resize/1280x720/haber/haber7/photos/2018/14/karadenizden_gelen_efsane_lezzet_nefis_mihlama_kuymak_tarifi_1522847371_7721.jpg');">
         <div class="food-hero-overlay">
             <h1>Rize'nin Meşhur Muhlama (Kuymak)</h1>
             <p>Rize'nin eşsiz lezzeti, peynir ve mısır ununun muhteşem uyumuyla damaklarda iz bırakan geleneksel bir Karadeniz lezzeti</p>
@@ -21,8 +21,8 @@
                 <p>Muhlama, mısır unu, tereyağı ve yöresel peynirin bir araya gelmesiyle hazırlanan, uzayan kıvamıyla bilinen geleneksel bir Karadeniz yemeğidir. Rize'de genellikle kahvaltıda tüketilen bu lezzet, yöre halkının vazgeçilmez tatlarından biridir. Özellikle bakır tavalarda pişirildiğinde daha lezzetli olduğu düşünülür ve sıcak servis edilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.pixabay.com/photo/2020/05/11/15/06/food-5158702_1280.jpg" data-fancybox="gallery" data-caption="Rize'nin meşhur Muhlaması">
-                        <img src="https://cdn.pixabay.com/photo/2020/05/11/15/06/food-5158702_1280.jpg" alt="Muhlama" class="food-image">
+                    <a href="https://static.daktilo.com/sites/1262/uploads/2023/10/05/trabzon-usulu-kuymak-nasil-yapilir.jpg" data-fancybox="gallery" data-caption="Rize'nin meşhur Muhlaması">
+                        <img src="https://static.daktilo.com/sites/1262/uploads/2023/10/05/trabzon-usulu-kuymak-nasil-yapilir.jpg" alt="Muhlama" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Rize Muhlaması</div>
                 </div>

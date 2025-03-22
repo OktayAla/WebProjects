@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.pixabay.com/photo/2018/06/10/17/40/apricots-3466819_1280.jpg');">
+    <section class="food-hero" style="background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiZKZ5TJfP1VGFGcNEb5SSKqUX8SuQW8vaCmCR1uXpNomiW0WihuXHSvu5U-krVddVr1NOpW-DRlg7kHfc9qcXExE8oIYRZZZbwMrZ7pYga5dy8uoKNXpEFNc2OsS_vjOq4WmIxAo1wQvQ/s1600/P1220142.JPG');">
         <div class="food-hero-overlay">
             <h1>Malatya'nın Meşhur Kayısısı</h1>
             <p>Malatya'nın altın değerindeki kayısıları, eşsiz aroması ve besin değeriyle dünya çapında tanınan bir lezzet</p>
@@ -21,8 +21,8 @@
                 <p>Malatya Kayısısı, Türkiye'nin ve dünyanın en kaliteli kayısı çeşitlerinden biridir. Malatya'nın kendine özgü iklim koşulları ve toprak yapısı sayesinde, burada yetişen kayısılar hem taze hem de kurutulmuş olarak eşsiz bir lezzete sahiptir. Özellikle kurutulmuş kayısılar, yüksek şeker oranı, parlak turuncu rengi ve yumuşak dokusuyla diğer bölgelerde yetişen kayısılardan kolayca ayırt edilebilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.pixabay.com/photo/2018/06/10/17/40/apricots-3466819_1280.jpg" data-fancybox="gallery" data-caption="Malatya'nın meşhur kayısıları">
-                        <img src="https://cdn.pixabay.com/photo/2018/06/10/17/40/apricots-3466819_1280.jpg" alt="Malatya Kayısısı" class="food-image">
+                    <a href="https://superkanaltvcom.teimg.com/superkanaltv-com/uploads/2024/07/agency/igf/malatyada-kayisi-tatlilari-yaristi.webp" data-fancybox="gallery" data-caption="Malatya'nın meşhur kayısıları">
+                        <img src="https://superkanaltvcom.teimg.com/superkanaltv-com/uploads/2024/07/agency/igf/malatyada-kayisi-tatlilari-yaristi.webp" alt="Malatya Kayısısı" class="food-image">
                     </a>
                     <div class="food-image-caption">Malatya'nın Altın Değerindeki Kayısıları</div>
                 </div>

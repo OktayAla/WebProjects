@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.pixabay.com/photo/2020/03/22/16/18/food-4957650_1280.jpg');">
+    <section class="food-hero" style="background-image: url('https://images.deliveryhero.io/image/fd-tr/LH/ikpk-hero.jpg');">
         <div class="food-hero-overlay">
             <h1>Kayseri'nin Meşhur Mantısı</h1>
             <p>Kayseri'nin dünyaca ünlü lezzeti, ince hamuru ve özel sunumuyla damakları şenlendiren bir klasik</p>
@@ -21,8 +21,8 @@
                 <p>Kayseri Mantısı, ince açılmış hamurun içine kıyma konulup küçük bohçalar şeklinde kapatılması, haşlanması ve üzerine sarımsaklı yoğurt, tereyağı ve baharatlar dökülerek servis edilmesiyle hazırlanan geleneksel bir Türk yemeğidir. Kayseri Mantısı'nın en önemli özelliği, hamurların çok küçük olması ve bir kaşığa 40 tane mantının sığabilmesidir. Bu özelliği ile diğer mantı çeşitlerinden ayrılır.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.pixabay.com/photo/2020/03/22/16/18/food-4957650_1280.jpg" data-fancybox="gallery" data-caption="Kayseri'nin meşhur Mantısı">
-                        <img src="https://cdn.pixabay.com/photo/2020/03/22/16/18/food-4957650_1280.jpg" alt="Kayseri Mantısı" class="food-image">
+                    <a href="https://images.deliveryhero.io/image/fd-tr/LH/ikpk-hero.jpg" data-fancybox="gallery" data-caption="Kayseri'nin meşhur Mantısı">
+                        <img src="https://images.deliveryhero.io/image/fd-tr/LH/ikpk-hero.jpg" alt="Kayseri Mantısı" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Kayseri Mantısı</div>
                 </div>

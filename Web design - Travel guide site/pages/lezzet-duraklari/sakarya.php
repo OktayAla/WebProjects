@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://i.lezzet.com.tr/images-xxlarge-secondary/islama-kofte-nasil-yapilir-f6ce2f32-a77b-4a11-95ea-509d1b14e71f.jpg');">
+    <section class="food-hero" style="background-image: url('https://cdn.tasteatlas.com/images/dishes/56e8c1a5706643d9892119859121da26.jpg?mw=2000');">
         <div class="food-hero-overlay">
             <h1>Sakarya'nın Meşhur Islama Köftesi</h1>
             <p>Sakarya'nın geleneksel lezzeti, eşsiz tadı ve sunumuyla damakları şenlendiren bir klasik</p>
@@ -21,8 +21,8 @@
                 <p>Islama Köfte, adını pişirme tekniğinden alır. Köfteler önce ızgarada pişirilir, ardından özel olarak hazırlanan et suyuna "ıslatılarak" servis edilir. Bu yöntem, köftenin hem sulu hem de lezzetli olmasını sağlar. Yanında genellikle pide, domates, biber ve soğan ile servis edilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://i.lezzet.com.tr/images-xxlarge-secondary/islama-kofte-nasil-yapilir-f6ce2f32-a77b-4a11-95ea-509d1b14e71f.jpg" data-fancybox="gallery" data-caption="Sakarya'nın meşhur Islama Köftesi">
-                        <img src="https://i.lezzet.com.tr/images-xxlarge-secondary/islama-kofte-nasil-yapilir-f6ce2f32-a77b-4a11-95ea-509d1b14e71f.jpg" alt="Islama Köfte" class="food-image">
+                    <a href="https://turkiyevedunyadanlezzetler.wordpress.com/wp-content/uploads/2009/03/adapazariislamakofte1porsiyon.jpgg" data-fancybox="gallery" data-caption="Sakarya'nın meşhur Islama Köftesi">
+                        <img src="https://turkiyevedunyadanlezzetler.wordpress.com/wp-content/uploads/2009/03/adapazariislamakofte1porsiyon.jpg" alt="Islama Köfte" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Sakarya Islama Köftesi</div>
                 </div>

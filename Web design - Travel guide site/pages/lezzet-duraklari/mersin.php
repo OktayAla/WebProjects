@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.pixabay.com/photo/2020/02/06/14/58/kebab-4824859_1280.jpg');">
+    <section class="food-hero" style="background-image: url('https://cdn.karar.com/news/1627785.jpg');">
         <div class="food-hero-overlay">
             <h1>Mersin'in Meşhur Tantunisi</h1>
             <p>Mersin'in eşsiz sokak lezzeti, özel baharatları ve hazırlanış tekniğiyle damaklarda iz bırakan bir klasik</p>
@@ -21,8 +21,8 @@
                 <p>Tantuni, küçük parçalar halinde doğranmış etin özel bir tavada pişirilip, ince lavaş ekmeğine sarılmasıyla hazırlanan geleneksel bir Akdeniz sokak yemeğidir. Etin pişirilme şekli, kullanılan baharatlar ve servis edilme biçimi, Tantuni'yi diğer dürüm çeşitlerinden ayırır. Genellikle acılı olarak servis edilir ve yanında ayran ile tüketilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.pixabay.com/photo/2020/02/06/14/58/kebab-4824859_1280.jpg" data-fancybox="gallery" data-caption="Mersin'in meşhur Tantunisi">
-                        <img src="https://cdn.pixabay.com/photo/2020/02/06/14/58/kebab-4824859_1280.jpg" alt="Tantuni" class="food-image">
+                    <a href="https://cdn.karar.com/news/1627785.jpg" data-fancybox="gallery" data-caption="Mersin'in meşhur Tantunisi">
+                        <img src="https://cdn.karar.com/news/1627785.jpg" alt="Tantuni" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Mersin Tantunisi</div>
                 </div>

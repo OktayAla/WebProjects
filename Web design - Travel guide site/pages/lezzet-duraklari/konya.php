@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.pixabay.com/photo/2019/06/18/10/46/pide-4282388_1280.jpg');">
+    <section class="food-hero" style="background-image: url('https://images.deliveryhero.io/image/fd-tr/LH/v3gi-hero.jpg');">
         <div class="food-hero-overlay">
             <h1>Konya'nın Meşhur Etli Ekmeği</h1>
             <p>Konya'nın eşsiz lezzeti, ince hamuru ve özel kıymalı harcıyla damakları şenlendiren bir klasik</p>
@@ -21,8 +21,8 @@
                 <p>Etli Ekmek, ince açılmış hamurun üzerine kıyma, domates, biber ve baharatlardan oluşan bir harç yayılarak taş fırında pişirilmesiyle hazırlanan geleneksel bir Orta Anadolu yemeğidir. Pide ve lahmacundan farklı olarak, Etli Ekmek çok daha ince ve uzundur. Genellikle 1-1.5 metre uzunluğunda hazırlanır ve dilimlenerek servis edilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.pixabay.com/photo/2019/06/18/10/46/pide-4282388_1280.jpg" data-fancybox="gallery" data-caption="Konya'nın meşhur Etli Ekmeği">
-                        <img src="https://cdn.pixabay.com/photo/2019/06/18/10/46/pide-4282388_1280.jpg" alt="Etli Ekmek" class="food-image">
+                    <a href="https://images.deliveryhero.io/image/fd-tr/LH/v3gi-hero.jpg" data-fancybox="gallery" data-caption="Konya'nın meşhur Etli Ekmeği">
+                        <img src="https://images.deliveryhero.io/image/fd-tr/LH/v3gi-hero.jpg" alt="Etli Ekmek" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Konya Etli Ekmeği</div>
                 </div>
