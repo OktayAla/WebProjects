@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.kulturportali.gov.tr/contents/images/UZUNGOL.jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://yiyegeze.com/wp-content/uploads/2020/07/Uzung%C3%B6l.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Göl</span>
             <h1 class="hero-title">Uzungöl</h1>
@@ -91,17 +91,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://www.uzungol.bel.tr/wp-content/uploads/2020/01/ea5ca496-0075-4146-9576-e606b1112f63.jpg"
+                    <a href="https://content.r9cdn.net/rimg/dimg/19/5c/f0f5d89f-city-49527-16a73c142e2.jpg?width=1366&height=768&xhint=1497&yhint=1172&crop=true"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.uzungol.bel.tr/wp-content/uploads/2020/01/ea5ca496-0075-4146-9576-e606b1112f63.jpg">
+                        <img src="https://content.r9cdn.net/rimg/dimg/19/5c/f0f5d89f-city-49527-16a73c142e2.jpg?width=1366&height=768&xhint=1497&yhint=1172&crop=true">
                     </a>
-                    <a href="https://i.ytimg.com/vi/ViJ-W1tBP1Q/maxresdefault.jpg"
+                    <a href="https://www.otelfiyat.com/media/blog/blog_icerik/659440uzungol1.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i.ytimg.com/vi/ViJ-W1tBP1Q/maxresdefault.jpg">
+                        <img src="https://www.otelfiyat.com/media/blog/blog_icerik/659440uzungol1.jpg">
                     </a>
-                    <a href="https://gezimanya.com/sites/default/files/styles/940x500/public/images/destination/field_destination_image/uzungol-de-sisli-sabah-gezimanya.jpg"
+                    <a href="https://silkrow.az/media/2024/06/20/mahmoud-fawzy-8nvmfffgh5k-unsplash.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://gezimanya.com/sites/default/files/styles/940x500/public/images/destination/field_destination_image/uzungol-de-sisli-sabah-gezimanya.jpg">
+                        <img src="https://silkrow.az/media/2024/06/20/mahmoud-fawzy-8nvmfffgh5k-unsplash.jpg">
                     </a>
                 </div>
             </section>

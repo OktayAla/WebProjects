@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.sakarya.bel.tr/resimler/galeri/buyuk/393481050_8182017994484909090.jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://cdn.hellovillam.com/HelloVillam/Images/2021-09/shutterstock_1438200995_TKEBVYTIFY7Q8M3IY4UGOZ498Y3SBQ.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Göl</span>
             <h1 class="hero-title">Sapanca Gölü</h1>
@@ -91,17 +91,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://www.neredekal.com/resimler/blog/1520855298_ihlara-vadisi-gezilecek-yerler.jpg"
+                    <a href="https://i.gazeteduvar.com.tr/2/1280/720/storage/files/images/2024/05/13/masukiye-zedg_cover.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.neredekal.com/resimler/blog/1520855298_ihlara-vadisi-gezilecek-yerler.jpg">
+                        <img src="https://i.gazeteduvar.com.tr/2/1280/720/storage/files/images/2024/05/13/masukiye-zedg_cover.jpg">
                     </a>
-                    <a href="https://www.residence.com.tr/blog/wp-content/uploads/2022/01/sapanca-golunde-yapilacak-10-sey.jpg"
+                    <a href="https://image.hurimg.com/i/hurriyet/75/0x0/59ca400fc03c1024c46d42d9.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.residence.com.tr/blog/wp-content/uploads/2022/01/sapanca-golunde-yapilacak-10-sey.jpg">
+                        <img src="https://image.hurimg.com/i/hurriyet/75/0x0/59ca400fc03c1024c46d42d9.jpg">
                     </a>
-                    <a href="https://gezimanya.com/sites/default/files/images/destination/field_destination_image/sapanca-golu-gezimanya_0.jpg"
+                    <a href="https://www.vipturkiye.com/uploads/sistem/blog/71.webp"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://gezimanya.com/sites/default/files/images/destination/field_destination_image/sapanca-golu-gezimanya_0.jpg">
+                        <img src="https://www.vipturkiye.com/uploads/sistem/blog/71.webp">
                     </a>
                 </div>
             </section>
