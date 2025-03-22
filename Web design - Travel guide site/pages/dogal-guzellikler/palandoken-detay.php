@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.kulturportali.gov.tr/contents/images/PALANDOKEN_DAGI.jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://www.gidiyoruz.com/wp-content/uploads/2019/01/Dedeman-Paland%C3%B6ken-0001-800x445@2x.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Dağ</span>
             <h1 class="hero-title">Palandöken Dağı</h1>
@@ -94,17 +94,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://www.aa.com.tr/uploads/Contents/2020/01/22/thumbs_b_c_950201159051869a9f8a424bb1569a8b.jpg"
+                    <a href="https://idsb.tmgrup.com.tr/ly/uploads/images/2022/02/06/180202.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.aa.com.tr/uploads/Contents/2020/01/22/thumbs_b_c_950201159051869a9f8a424bb1569a8b.jpg">
+                        <img src="https://idsb.tmgrup.com.tr/ly/uploads/images/2022/02/06/180202.jpg">
                     </a>
-                    <a href="https://www.erzurum.ktb.gov.tr/Resim/189876,palandokenjpg.png?0"
+                    <a href="https://erzurumca.com/wp-content/uploads/2021/09/Palandoken-Dedeman-Hotel.jpeg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.erzurum.ktb.gov.tr/Resim/189876,palandokenjpg.png?0">
+                        <img src="https://erzurumca.com/wp-content/uploads/2021/09/Palandoken-Dedeman-Hotel.jpeg">
                     </a>
-                    <a href="https://www.haberler.com/haber/2021/01/18/palandoken-de-kayak-keyfi-13873092_amp.jpg"
+                    <a href="https://www.otelfiyat.com/media/inet/686018141/kucuk/OQWK1705169315.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.haberler.com/haber/2021/01/18/palandoken-de-kayak-keyfi-13873092_amp.jpg">
+                        <img src="https://www.otelfiyat.com/media/inet/686018141/kucuk/OQWK1705169315.jpg">
                     </a>
                 </div>
             </section>

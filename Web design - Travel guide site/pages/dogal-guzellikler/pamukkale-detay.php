@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.kulturportali.gov.tr/contents/images/Pamukkale-01.jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Pamukkale_56.jpg/1200px-Pamukkale_56.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Doğal Sit Alanı</span>
             <h1 class="hero-title">Pamukkale</h1>
@@ -95,17 +95,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Pamukkale_Turkey.jpg/1280px-Pamukkale_Turkey.jpg"
+                    <a href="https://img.superhaber.com/storage/files/images/2020/03/28/gttttttttttttttttttttt-Q6pI_cover.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Pamukkale_Turkey.jpg/1280px-Pamukkale_Turkey.jpg">
+                        <img src="https://img.superhaber.com/storage/files/images/2020/03/28/gttttttttttttttttttttt-Q6pI_cover.jpg">
                     </a>
-                    <a href="https://www.denizli.bel.tr/userfiles/icerik/icerik_resim/buyuk/20161027114103-pamukkale_1.jpg"
+                    <a href="https://istanbultrips.com/wp-content/uploads/2019/01/Pamukkale.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.denizli.bel.tr/userfiles/icerik/icerik_resim/buyuk/20161027114103-pamukkale_1.jpg">
+                        <img src="https://istanbultrips.com/wp-content/uploads/2019/01/Pamukkale.jpg">
                     </a>
-                    <a href="https://i.pinimg.com/originals/80/16/28/801628f91484ef4e49bd547396a43724.jpg"
+                    <a href="https://gezicini.com/wp-content/uploads/2021/11/pamukkaleli.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i.pinimg.com/originals/80/16/28/801628f91484ef4e49bd547396a43724.jpg">
+                        <img src="https://gezicini.com/wp-content/uploads/2021/11/pamukkaleli.jpg">
                     </a>
                 </div>
             </section>
