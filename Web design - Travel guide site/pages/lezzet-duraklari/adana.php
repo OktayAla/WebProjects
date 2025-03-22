@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.pixabay.com/photo/2019/11/09/17/02/kebab-4614070_1280.jpg');">
+    <section class="food-hero" style="background-image: url('https://abcgazetesi.com/d/news/89441.jpg');">
         <div class="food-hero-overlay">
             <h1>Adana'nın Meşhur Adana Kebabı</h1>
             <p>Adana'nın dünyaca ünlü lezzeti, özel baharatları ve pişirme tekniğiyle damak çatlatan bir efsane</p>
@@ -21,8 +21,8 @@
                 <p>Adana Kebabı, zırh adı verilen özel bir bıçakla kıyılan kuzu etinin, çeşitli baharatlar ve yağ ile yoğrulup şişlere dizilerek mangalda pişirilmesiyle hazırlanan geleneksel bir Türk yemeğidir. Adana Kebabı'nın en önemli özelliği, içindeki kırmızı pul biber oranı ve etin zırhla kıyılmasıdır. Bu sayede kendine has bir lezzet ve doku kazanır.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.pixabay.com/photo/2019/11/09/17/02/kebab-4614070_1280.jpg" data-fancybox="gallery" data-caption="Adana'nın meşhur Adana Kebabı">
-                        <img src="https://cdn.pixabay.com/photo/2019/11/09/17/02/kebab-4614070_1280.jpg" alt="Adana Kebabı" class="food-image">
+                    <a href="https://www.reklamzamani.net/dosyalar/urun/1650527188384959472.webp" data-fancybox="gallery" data-caption="Adana'nın meşhur Adana Kebabı">
+                        <img src="https://www.reklamzamani.net/dosyalar/urun/1650527188384959472.webp" alt="Adana Kebabı" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Adana Kebabı</div>
                 </div>
