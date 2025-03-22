@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://www.kulturportali.gov.tr/contents/images/BEYSEHIR%20GOLU(2).jpg');"></div>
+        <div class="hero-background" style="background-image: url('https://www.beysehir.bel.tr/gezilecekyergorseller/16272898109667947321.jpeg');"></div>
         <div class="hero-content">
             <span class="hero-category">Göl</span>
             <h1 class="hero-title">Beyşehir Gölü</h1>
@@ -88,17 +88,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://www.konyakultur.gov.tr/wp-content/uploads/2019/09/29072016232.jpg"
+                    <a href="https://www.kivitadinda.com/wp-content/uploads/2021/04/Beysehir-Golu2.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.konyakultur.gov.tr/wp-content/uploads/2019/09/29072016232.jpg">
+                        <img src="https://www.kivitadinda.com/wp-content/uploads/2021/04/Beysehir-Golu2.jpg">
                     </a>
-                    <a href="https://www.birlikkurum.com.tr/wp-content/uploads/2022/08/beysehir-golu.jpg"
+                    <a href="https://www.kivitadinda.com/wp-content/uploads/2021/04/Beysehir-Golu1.jpgg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.birlikkurum.com.tr/wp-content/uploads/2022/08/beysehir-golu.jpg">
+                        <img src="https://www.kivitadinda.com/wp-content/uploads/2021/04/Beysehir-Golu1.jpg">
                     </a>
-                    <a href="https://gezimanya.com/sites/default/files/styles/940x500/public/images/destination/field_destination_image/beysehir-golunun-koyluler-tarafindan-korunmasi-gezimanya_0.jpg"
+                    <a href="https://cdn.gezelim.com/2023/08/Beysehir-Golu-Nerede-1024x768-1.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://gezimanya.com/sites/default/files/styles/940x500/public/images/destination/field_destination_image/beysehir-golunun-koyluler-tarafindan-korunmasi-gezimanya_0.jpg">
+                        <img src="https://cdn.gezelim.com/2023/08/Beysehir-Golu-Nerede-1024x768-1.jpg">
                     </a>
                 </div>
             </section>
