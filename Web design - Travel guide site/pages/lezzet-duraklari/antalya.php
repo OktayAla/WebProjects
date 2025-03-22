@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.pixabay.com/photo/2020/08/31/12/15/piyaz-5532473_1280.jpg');">
+    <section class="food-hero" style="background-image: url('https://www.kulturportali.gov.tr/contents/images/22022013_0d48fc9e-ab86-4763-8d35-799dcbf1992f.jpg');">
         <div class="food-hero-overlay">
             <h1>Antalya'nın Meşhur Antalya Piyazı</h1>
             <p>Akdeniz'in incisi Antalya'nın eşsiz lezzeti, özel tahin sosu ve sunumuyla damakları şenlendiren bir klasik</p>
@@ -21,8 +21,8 @@
                 <p>Antalya Piyazı, haşlanmış kuru fasulye, soğan, maydanoz ve domates gibi malzemelerin tahin, sirke, limon suyu ve zeytinyağı ile hazırlanan özel bir sos ile harmanlanmasıyla yapılan geleneksel bir Akdeniz mezesidir. Piyazın en önemli özelliği, içindeki tahin sosu ve servis şeklidir. Genellikle köfte veya şiş kebap gibi et yemeklerinin yanında servis edilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.pixabay.com/photo/2020/08/31/12/15/piyaz-5532473_1280.jpg" data-fancybox="gallery" data-caption="Antalya'nın meşhur Antalya Piyazı">
-                        <img src="https://cdn.pixabay.com/photo/2020/08/31/12/15/piyaz-5532473_1280.jpg" alt="Antalya Piyazı" class="food-image">
+                    <a href="https://www.kulturportali.gov.tr/contents/images/22022013_0d48fc9e-ab86-4763-8d35-799dcbf1992f.jpg" data-fancybox="gallery" data-caption="Antalya'nın meşhur Antalya Piyazı">
+                        <img src="https://www.kulturportali.gov.tr/contents/images/22022013_0d48fc9e-ab86-4763-8d35-799dcbf1992f.jpg" alt="Antalya Piyazı" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Antalya Piyazı</div>
                 </div>

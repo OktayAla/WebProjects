@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.yemek.com/uploads/2016/05/iskender-kebap-yemekcom.jpg');">
+    <section class="food-hero" style="background-image: url('https://images.deliveryhero.io/image/fd-tr/LH/f1k1-hero.jpg');">
         <div class="food-hero-overlay">
             <h1>Bursa'nın Meşhur İskender Kebabı</h1>
             <p>Bursa'nın dünyaca ünlü lezzeti, eşsiz tadı ve sunumuyla Türk mutfağının en önemli temsilcilerinden biri</p>
@@ -21,8 +21,8 @@
                 <p>İskender Kebap, ince dilimlenmiş döner etinin tereyağı gezdirilmiş pide üzerine yerleştirilmesi, üzerine domates sosu dökülmesi ve yanında yoğurt ile servis edilmesiyle hazırlanan bir yemektir. Adını, 19. yüzyılın sonlarında bu yemeği icat eden İskender Efendi'den almıştır.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.yemek.com/uploads/2016/05/iskender-kebap-yemekcom.jpg" data-fancybox="gallery" data-caption="Bursa'nın meşhur İskender Kebabı">
-                        <img src="https://cdn.yemek.com/uploads/2016/05/iskender-kebap-yemekcom.jpg" alt="İskender Kebap" class="food-image">
+                    <a href="https://images.deliveryhero.io/image/fd-tr/LH/f1k1-hero.jpgg" data-fancybox="gallery" data-caption="Bursa'nın meşhur İskender Kebabı">
+                        <img src="https://images.deliveryhero.io/image/fd-tr/LH/f1k1-hero.jpg" alt="İskender Kebap" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Bursa İskender Kebabı</div>
                 </div>

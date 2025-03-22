@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://cdn.pixabay.com/photo/2018/08/02/23/58/figs-3580568_1280.jpg');">
+    <section class="food-hero" style="background-image: url('https://i.pinimg.com/originals/7b/c0/12/7bc01257b9a691f666f64ce7ecd03d12.jpg');">
         <div class="food-hero-overlay">
             <h1>Aydın'ın Meşhur İncir Tatlısı</h1>
             <p>Aydın'ın altın değerindeki incirlerinden yapılan, ceviz dolgulu, bal şerbetli muhteşem bir lezzet</p>
@@ -21,8 +21,8 @@
                 <p>Aydın İncir Tatlısı, kurutulmuş incirlerin içine ceviz konularak, bal ve şeker şerbetiyle tatlandırılmasıyla hazırlanan geleneksel bir Ege tatlısıdır. Tatlının en önemli özelliği, Aydın'ın verimli topraklarında yetişen, iri taneli ve etli incirlerin kullanılmasıdır. Genellikle Türk kahvesi veya çay ile servis edilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://cdn.pixabay.com/photo/2018/08/02/23/58/figs-3580568_1280.jpg" data-fancybox="gallery" data-caption="Aydın'ın meşhur İncir Tatlısı">
-                        <img src="https://cdn.pixabay.com/photo/2018/08/02/23/58/figs-3580568_1280.jpg" alt="İncir Tatlısı" class="food-image">
+                    <a href="https://i.pinimg.com/originals/7b/c0/12/7bc01257b9a691f666f64ce7ecd03d12.jpgg" data-fancybox="gallery" data-caption="Aydın'ın meşhur İncir Tatlısı">
+                        <img src="https://i.pinimg.com/originals/7b/c0/12/7bc01257b9a691f666f64ce7ecd03d12.jpg" alt="İncir Tatlısı" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Aydın İncir Tatlısı</div>
                 </div>
