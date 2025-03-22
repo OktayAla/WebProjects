@@ -17,64 +17,39 @@
                     <input type="text" id="searchInput" placeholder="Ara..">
                 </div>
             </div>
-
-            <div class="filter-section">
-                <h3>Mutfak Türleri</h3>
-                <div class="filter-options">
-                    <label><input type="checkbox" value="Kebap ve Et Yemekleri"> Kebap ve Et Yemekleri</label>
-                    <label><input type="checkbox" value="Deniz Mahsülleri"> Deniz Mahsülleri</label>
-                    <label><input type="checkbox" value="Hamur İşleri"> Hamur İşleri</label>
-                    <label><input type="checkbox" value="Tatlılar"> Tatlılar</label>
-                    <label><input type="checkbox" value="Kahvaltı Kültürü"> Kahvaltı Kültürü</label>
-                    <label><input type="checkbox" value="Sokak Lezzetleri"> Sokak Lezzetleri</label>
-                </div>
-            </div>
-
-            <div class="filter-section">
-                <h3>Bölgeler</h3>
-                <div class="filter-options">
-                    <label><input type="checkbox" value="Marmara"> Marmara</label>
-                    <label><input type="checkbox" value="Ege"> Ege</label>
-                    <label><input type="checkbox" value="Akdeniz"> Akdeniz</label>
-                    <label><input type="checkbox" value="Karadeniz"> Karadeniz</label>
-                    <label><input type="checkbox" value="İç Anadolu"> İç Anadolu</label>
-                    <label><input type="checkbox" value="Doğu Anadolu"> Doğu Anadolu</label>
-                    <label><input type="checkbox" value="Güneydoğu Anadolu"> Güneydoğu Anadolu</label>
-                </div>
-            </div>
         </aside>
 
-    <div class="destinations-content">
-        <div class="destinations-list">
-            <!-- Adana Kebabı -->
-            <div class="culinary-card">
-                <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2019/11/09/17/02/kebab-4614070_1280.jpg" alt="Adana Kebabı">
-                    <span class="cuisine-category">Kebap Kültürü</span>
-                </div>
-                <div class="destination-info">
-                    <h2>Adana Kebabı</h2>
-                    <div class="cuisine-meta">
-                        <span><i class="fas fa-map-marker-alt"></i> Adana</span>
-                        <span><i class="fas fa-utensils"></i> Et Yemekleri</span>
+        <div class="destinations-content">
+            <div class="destinations-list">
+                <!-- Adana Kebabı -->
+                <div class="culinary-card">
+                    <div class="destination-image">
+                        <img src="https://www.kolaycayap.com/wp-content/uploads/2021/12/orjinal-ev-yapimi-acisiz-urfa-kebabi-nasil-yapilir-3-NXTB8TJd.jpg" alt="Adana Kebabı">
+                        <span class="cuisine-category">Kebap Kültürü</span>
                     </div>
-                    <p>Dünyaca ünlü lezzeti, özel baharatları ve pişirme tekniğiyle damak çatlatan bir efsane. Zırh adı verilen özel bir bıçakla kıyılan kuzu eti, çeşitli baharatlar ve yağ ile yoğrulup şişlere dizilerek mangalda pişirilir.</p>
-                    <div class="famous-spots">
-                        <h4>Mekanlar:</h4>
-                        <ul>
-                            <li>Yüzevler Kebap</li>
-                            <li>Ciğerci Mahmut</li>
-                            <li>Kebapçı Şeyhmus</li>
-                        </ul>
+                    <div class="destination-info">
+                        <h2>Adana Kebabı</h2>
+                        <div class="cuisine-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> Adana</span>
+                            <span><i class="fas fa-utensils"></i> Et Yemekleri</span>
+                        </div>
+                        <p>Dünyaca ünlü lezzeti, özel baharatları ve pişirme tekniğiyle damak çatlatan bir efsane. Zırh adı verilen özel bir bıçakla kıyılan kuzu eti, çeşitli baharatlar ve yağ ile yoğrulup şişlere dizilerek mangalda pişirilir.</p>
+                        <div class="famous-spots">
+                            <h4>Mekanlar:</h4>
+                            <ul>
+                                <li>Yüzevler Kebap</li>
+                                <li>Ciğerci Mahmut</li>
+                                <li>Kebapçı Şeyhmus</li>
+                            </ul>
+                        </div>
+                        <a href="pages/lezzet-duraklari/adana.php" class="btn-details">Lezzeti Keşfet</a>
                     </div>
-                    <a href="pages/lezzet-duraklari/adana.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
-            </div>
 
             <!-- Gaziantep Baklavası -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2020/05/11/15/06/food-5158702_1280.jpg" alt="Antep Baklavası">
+                    <img src="https://www.yenikonya.com.tr/uploads/2024/04/07/b5e71425_big.jpg" alt="Antep Baklavası">
                     <span class="cuisine-category">Tatlılar</span>
                 </div>
                 <div class="destination-info">
@@ -99,7 +74,7 @@
             <!-- Bursa İskender Kebabı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.yemek.com/uploads/2016/05/iskender-kebap-yemekcom.jpg" alt="İskender Kebap">
+                    <img src="https://beylerkebap.com.tr/wp-content/uploads/2019/12/iskender-kebap-v2.jpg" alt="İskender Kebap">
                     <span class="cuisine-category">Kebap Kültürü</span>
                 </div>
                 <div class="destination-info">
@@ -124,7 +99,7 @@
             <!-- Aydın İncir Tatlısı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2018/08/02/23/58/figs-3580568_1280.jpg" alt="İncir Tatlısı">
+                    <img src="https://cdn.anadoludabugun.com.tr/news/213015.jpg" alt="İncir Tatlısı">
                     <span class="cuisine-category">Tatlılar</span>
                 </div>
                 <div class="destination-info">
@@ -149,7 +124,7 @@
             <!-- Erzurum Cağ Kebabı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2019/09/15/08/06/meat-4477748_1280.jpg" alt="Cağ Kebabı">
+                    <img src="https://i.5nhaber.com/uploads/96258/public/24213/bu-tarif-nusret-i-bile-pesinizden-kosturur-iste-erzurum-un-meshur-cag-kebabi-tarifi-2230.webp" alt="Cağ Kebabı">
                     <span class="cuisine-category">Kebap Kültürü</span>
                 </div>
                 <div class="destination-info">
@@ -174,7 +149,7 @@
             <!-- Diyarbakır Kaburga Dolması -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2019/06/03/22/06/meat-4250412_1280.jpg" alt="Kaburga Dolması">
+                    <img src="https://img3.aksam.com.tr/imgsdisk/2019/10/02/t25_021020191447023649175.jpg" alt="Kaburga Dolması">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -199,7 +174,7 @@
             <!-- Denizli Kebabı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.getiryemek.com/restaurants/1683796075177_1125x522.jpeg" alt="Denizli Kebabı">
+                    <img src="https://image.dha.com.tr/i/dha/75/0x0/6164e7be45d2a06a3ce65c3e.jpg" alt="Denizli Kebabı">
                     <span class="cuisine-category">Kebap Kültürü</span>
                 </div>
                 <div class="destination-info">
@@ -224,7 +199,7 @@
             <!-- Edirne Ciğer Tavası -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.yemek.com/uploads/2019/01/edirne-cigeri-yemekcom.jpg" alt="Edirne Ciğer Tavası">
+                    <img src="https://ettder.org/wp-content/uploads/2017/02/tava-ciger.jpg" alt="Edirne Ciğer Tavası">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -249,7 +224,7 @@
             <!-- Ankara Tava -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2020/02/11/15/51/meat-4839763_1280.jpg" alt="Ankara Tava">
+                    <img src="https://img-s1.onedio.com/id-5dca9db95a73bf2d690376bf/rev-0/w-1200/h-990/f-jpg/s-465804b6220f08e339079a329bbe3229d58043e6.jpg" alt="Ankara Tava">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -274,7 +249,7 @@
             <!-- Antalya Piyazı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2020/08/31/12/15/piyaz-5532473_1280.jpg" alt="Antalya Piyazı">
+                    <img src="https://sakaryagazetesicomtr.teimg.com/sakaryagazetesi-com-tr/uploads/2023/09/piyaz.jpg" alt="Antalya Piyazı">
                     <span class="cuisine-category">Mezeler</span>
                 </div>
                 <div class="destination-info">
@@ -299,7 +274,7 @@
             <!-- Kayseri Mantısı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2020/03/22/16/18/food-4957650_1280.jpg" alt="Kayseri Mantısı">
+                    <img src="https://img-s1.onedio.com/id-63ba9cce0863c5ed1abe3a1e/rev-0/w-1200/h-800/f-jpg/s-591f2dcb4b98a1c838a6aaa4916919dd97bdcac8.jpg" alt="Kayseri Mantısı">
                     <span class="cuisine-category">Hamur İşleri</span>
                 </div>
                 <div class="destination-info">
@@ -324,7 +299,7 @@
             <!-- Konya Etli Ekmeği -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2019/06/18/10/46/pide-4282388_1280.jpg" alt="Etli Ekmek">
+                    <img src="https://www.dir.gen.tr/image/76382-0-tepe-etliekmek-lahmacun-pizza-pastane-cafe.jpg" alt="Etli Ekmek">
                     <span class="cuisine-category">Hamur İşleri</span>
                 </div>
                 <div class="destination-info">
@@ -349,7 +324,7 @@
              <!-- Malatya Kayısısı -->
              <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2018/06/10/17/40/apricots-3466819_1280.jpg" alt="Malatya Kayısısı">
+                    <img src="https://vostorg.buzz/uploads/posts/2022-02/1645069331_2-vostorg-buzz-p-blyuda-iz-kuragi-3.jpg" alt="Malatya Kayısısı">
                     <span class="cuisine-category">Meyveler</span>
                 </div>
                 <div class="destination-info">
@@ -374,7 +349,7 @@
             <!-- Elazığ Harput Köftesi -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2019/06/30/20/09/kofte-4308873_1280.jpg" alt="Harput Köftesi">
+                    <img src="https://i.pinimg.com/originals/38/0d/d6/380dd6e30721af26e5c3c765d6488c38.jpg" alt="Harput Köftesi">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -399,7 +374,7 @@
             <!-- Mersin Tantunisi -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2020/02/06/14/58/kebab-4824859_1280.jpg" alt="Mersin Tantunisi">
+                    <img src="https://www.dir.gen.tr/image/42673-0-mersin-tantuni-ismail-usta.jpg" alt="Mersin Tantunisi">
                     <span class="cuisine-category">Sokak Lezzetleri</span>
                 </div>
                 <div class="destination-info">
@@ -424,7 +399,7 @@
             <!-- Rize Muhlaması -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2020/05/11/15/06/food-5158702_1280.jpg" alt="Rize Muhlaması">
+                    <img src="https://renklitarifler.com/wp-content/uploads/2022/11/muhlama-tarifi.jpg" alt="Rize Muhlaması">
                     <span class="cuisine-category">Kahvaltı Kültürü</span>
                 </div>
                 <div class="destination-info">
@@ -449,7 +424,7 @@
             <!-- Trabzon Akçaabat Köftesi -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2019/06/30/20/09/kofte-4308873_1280.jpg" alt="Akçaabat Köftesi">
+                    <img src="https://cdn.karar.com/news/1488455.jpg" alt="Akçaabat Köftesi">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -474,7 +449,7 @@
             <!-- Şanlıurfa Çiğ Köftesi -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2019/11/16/13/13/meat-4629313_1280.jpg" alt="Çiğ Köfte">
+                    <img src="https://cdn.karar.com/news/1626867.jpg" alt="Çiğ Köfte">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -499,7 +474,7 @@
             <!-- Samsun Pide -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2020/05/17/18/01/pide-5181547_1280.jpg" alt="Samsun Pidesi">
+                    <img src="https://i.ytimg.com/vi/ycJEDyO2aYI/maxresdefault.jpg" alt="Samsun Pidesi">
                     <span class="cuisine-category">Hamur İşleri</span>
                 </div>
                 <div class="destination-info">
@@ -524,7 +499,7 @@
              <!-- Sakarya Islama Köftesi -->
              <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2019/06/30/20/09/kofte-4308873_1280.jpg" alt="Islama Köfte">
+                    <img src="https://www.kivitadinda.com/wp-content/uploads/2021/03/Islama-Kofte.jpg" alt="Islama Köfte">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -549,7 +524,7 @@
              <!-- Manisa Mesir Macunu -->
              <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.pixabay.com/photo/2020/05/11/15/06/food-5158702_1280.jpg" alt="Mesir Macunu">
+                    <img src="https://media-cdn.t24.com.tr/media/library/2020/03/1584091740062-mesirmacunu.jpg" alt="Mesir Macunu">
                     <span class="cuisine-category">Tatlılar</span>
                 </div>
                 <div class="destination-info">
@@ -573,20 +548,20 @@
         </div>
         <!-- Sayfalama -->
         <div class="pagination-container">
-                <div class="pagination">
-                    <button class="page-btn prev-btn">
-                        <i class="fas fa-chevron-left"></i>
-                        Önceki
-                    </button>
+            <div class="pagination">
+                <button class="page-btn prev-btn">
+                    <i class="fas fa-chevron-left"></i>
+                    Önceki
+                </button>
 
-                    <div class="page-numbers"></div>
+                <div class="page-numbers"></div>
 
-                    <button class="page-btn next-btn">
-                        Sonraki
-                        <i class="fas fa-chevron-right"></i>
-                        </button>
-                </div>
+                <button class="page-btn next-btn">
+                    Sonraki
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
+        </div>
     </div>
 </main>
 
