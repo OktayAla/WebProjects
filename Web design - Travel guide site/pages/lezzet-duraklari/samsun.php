@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://samsungazetesicom.teimg.com/samsungazetesi-com/uploads/2022/10/yud5-hero.jpg');">
+    <section class="food-hero" style="background-image: url('/turkiyegezirehberi/img/lezzet-duraklari/samsun.jpg');">
         <div class="food-hero-overlay">
             <h1>Samsun'un Meşhur Pidesi</h1>
             <p>Samsun'un eşsiz lezzeti, özel hamuru ve zengin iç malzemeleriyle damaklarda iz bırakan geleneksel bir Karadeniz lezzeti</p>
@@ -21,8 +21,8 @@
                 <p>Samsun Pidesi, ince açılan özel hamurun üzerine kıyma, kuşbaşı et, pastırma, sucuk, kaşar peyniri gibi çeşitli malzemelerden biri veya birkaçı konularak taş fırında pişirilen geleneksel bir Karadeniz yemeğidir. Pidenin en önemli özelliği, hamurunun incecik açılması ve kenarlarının yüksek olmasıdır. Bu sayede içindeki malzemeler ve yağ dışarı taşmaz ve lezzet içeride hapsolur.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://samsungazetesicom.teimg.com/samsungazetesi-com/uploads/2022/10/yud5-hero.jpg" data-fancybox="gallery" data-caption="Samsun'un meşhur pidesi">
-                        <img src="https://samsungazetesicom.teimg.com/samsungazetesi-com/uploads/2022/10/yud5-hero.jpg" alt="Samsun Pidesi" class="food-image">
+                    <a href="/turkiyegezirehberi/img/lezzet-duraklari/samsun.jpg" data-fancybox="gallery" data-caption="Samsun'un meşhur pidesi">
+                        <img src="/turkiyegezirehberi/img/lezzet-duraklari/samsun.jpg" alt="Samsun Pidesi" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Samsun Pidesi</div>
                 </div>
