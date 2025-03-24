@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://img.superhaber.com/storage/files/images/2022/10/21/1-nJne.jpg');">
+    <section class="food-hero" style="background-image: url('/turkiyegezirehberi/img/lezzet-duraklari/ankara.jpg');">
         <div class="food-hero-overlay">
             <h1>Ankara'nın Meşhur Ankara Tava</h1>
             <p>Başkentin eşsiz lezzeti, özel pişirme tekniği ve zengin içeriğiyle damaklarda iz bırakan bir tat</p>
@@ -21,8 +21,8 @@
                 <p>Ankara Tava, kuzu etinin kemikli parçalarının patates, soğan ve biber gibi sebzelerle birlikte fırında pişirilmesiyle hazırlanan geleneksel bir Orta Anadolu yemeğidir. Etin yumuşaklığı ve lezzeti, uzun süre düşük ısıda pişirilmesinden kaynaklanır. Yanında genellikle pilav ve ayran ile servis edilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://i3.wp.com/img3.aksam.com.tr/imgsdisk/2019/08/28/t25_280820191356368739755.jpg?ssl=1" data-fancybox="gallery" data-caption="Ankara'nın meşhur Ankara Tava">
-                        <img src="https://i3.wp.com/img3.aksam.com.tr/imgsdisk/2019/08/28/t25_280820191356368739755.jpg?ssl=1" alt="Ankara Tava" class="food-image">
+                    <a href="/turkiyegezirehberi/img/lezzet-duraklari/ankara.jpg" data-fancybox="gallery" data-caption="Ankara'nın meşhur Ankara Tava">
+                        <img src="/turkiyegezirehberi/img/lezzet-duraklari/ankara.jpg" alt="Ankara Tava" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Ankara Tava</div>
                 </div>

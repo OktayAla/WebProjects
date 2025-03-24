@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://img3.aksam.com.tr/imgsdisk/2019/10/02/t25_021020191447023649175.jpg');">
+    <section class="food-hero" style="background-image: url('/turkiyegezirehberi/img/lezzet-duraklari/diyarbakir.webp');">
         <div class="food-hero-overlay">
             <h1>Diyarbakır'ın Meşhur Kaburga Dolması</h1>
             <p>Diyarbakır'ın eşsiz lezzeti, özel baharatları ve pişirme tekniğiyle damaklarda iz bırakan bir şölen</p>
@@ -21,8 +21,8 @@
                 <p>Kaburga Dolması, kuzu kaburgasının içinin özel bir teknikle boşaltılıp, pirinç, kıyma, baharatlar ve kuruyemişlerle doldurularak fırında pişirilmesiyle hazırlanan geleneksel bir Güneydoğu Anadolu yemeğidir. Etin yumuşaklığı ve içinin lezzeti, uzun süre düşük ısıda pişirilmesinden kaynaklanır. Özellikle özel günlerde ve davetlerde yapılan bu yemek, görünümü ve tadıyla sofraların baş tacıdır.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://img3.aksam.com.tr/imgsdisk/2019/10/02/t25_021020191447023649175.jpg" data-fancybox="gallery" data-caption="Diyarbakır'ın meşhur Kaburga Dolması">
-                        <img src="https://img3.aksam.com.tr/imgsdisk/2019/10/02/t25_021020191447023649175.jpg" alt="Kaburga Dolması" class="food-image">
+                    <a href="/turkiyegezirehberi/img/lezzet-duraklari/diyarbakir.webp" data-fancybox="gallery" data-caption="Diyarbakır'ın meşhur Kaburga Dolması">
+                        <img src="/turkiyegezirehberi/img/lezzet-duraklari/diyarbakir.webp" alt="Kaburga Dolması" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Diyarbakır Kaburga Dolması</div>
                 </div>
