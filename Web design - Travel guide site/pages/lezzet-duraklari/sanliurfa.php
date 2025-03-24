@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhi37rG24K9AF7uJT-trYWW6U9oTyugw4cWg7n3SdEFCbZAC04cAkyn1eOZQZU8TVUesOyQEm6Ga2ETnETzK11T_fiwQgxuIPKCmPxlV7dkur_2O6sIfXQ8-IgC4hyT4wRi13LthYf2PoM/s1600/adiyaman-usulu-cig-kofte.JPG');">
+    <section class="food-hero" style="background-image: url('/turkiyegezirehberi/img/lezzet-duraklari/sanliurfa.webp');">
         <div class="food-hero-overlay">
             <h1>Şanlıurfa'nın Meşhur Çiğ Köftesi</h1>
             <p>Şanlıurfa'nın eşsiz lezzeti, özel baharatları ve yoğurma tekniğiyle damaklarda iz bırakan geleneksel bir Güneydoğu lezzeti</p>
@@ -21,8 +21,8 @@
                 <p>Çiğ Köfte, bulgur, isot (Urfa biberi), domates ve biber salçası, çeşitli baharatlar ve zeytinyağı ile yoğrularak hazırlanan geleneksel bir Güneydoğu Anadolu mezesidir. Adından da anlaşılacağı gibi pişirilmeden servis edilir. Çiğ Köfte'nin en önemli özelliği, uzun süre ve özel bir teknikle yoğrulmasıdır. Bu sayede bulgur yumuşar ve tüm malzemeler birbiriyle bütünleşir. Genellikle marul yaprağı veya lavaş ekmeği ile servis edilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhi37rG24K9AF7uJT-trYWW6U9oTyugw4cWg7n3SdEFCbZAC04cAkyn1eOZQZU8TVUesOyQEm6Ga2ETnETzK11T_fiwQgxuIPKCmPxlV7dkur_2O6sIfXQ8-IgC4hyT4wRi13LthYf2PoM/s1600/adiyaman-usulu-cig-kofte.JPG" data-fancybox="gallery" data-caption="Şanlıurfa'nın meşhur Çiğ Köftesi">
-                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhi37rG24K9AF7uJT-trYWW6U9oTyugw4cWg7n3SdEFCbZAC04cAkyn1eOZQZU8TVUesOyQEm6Ga2ETnETzK11T_fiwQgxuIPKCmPxlV7dkur_2O6sIfXQ8-IgC4hyT4wRi13LthYf2PoM/s1600/adiyaman-usulu-cig-kofte.JPG" alt="Çiğ Köfte" class="food-image">
+                    <a href="/turkiyegezirehberi/img/lezzet-duraklari/sanliurfa.webp" data-fancybox="gallery" data-caption="Şanlıurfa'nın meşhur Çiğ Köftesi">
+                        <img src="/turkiyegezirehberi/img/lezzet-duraklari/sanliurfa.webp" alt="Çiğ Köfte" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Şanlıurfa Çiğ Köftesi</div>
                 </div>
