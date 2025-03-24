@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://avatars.mds.yandex.net/get-altay/6322664/2a0000018d87694a80a5fdf0b06ba589d8b4/orig');">
+    <section class="food-hero" style="background-image: url('/turkiyegezirehberi/img/lezzet-duraklari/erzurum.webp');">
         <div class="food-hero-overlay">
             <h1>Erzurum'un Meşhur Cağ Kebabı</h1>
             <p>Erzurum'un eşsiz lezzeti, özel pişirme tekniği ve yüzyıllık geleneğiyle damakları şenlendiren bir efsane</p>
@@ -21,8 +21,8 @@
                 <p>Cağ Kebabı, kuzu etinin özel bir şekilde marine edilip, yatay şişlere dizilerek odun ateşinde pişirilmesiyle hazırlanan geleneksel bir Doğu Anadolu yemeğidir. Döner kebaptan farklı olarak yatay şişte pişirilir ve küçük şişlere alınarak servis edilir. Etin yumuşaklığı ve aroması, uzun süre marine edilmesinden ve odun ateşinde yavaş pişirilmesinden kaynaklanır.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://avatars.mds.yandex.net/get-altay/6322664/2a0000018d87694a80a5fdf0b06ba589d8b4/orig" data-fancybox="gallery" data-caption="Erzurum'un meşhur Cağ Kebabı">
-                        <img src="https://avatars.mds.yandex.net/get-altay/6322664/2a0000018d87694a80a5fdf0b06ba589d8b4/orig" alt="Cağ Kebabı" class="food-image">
+                    <a href="/turkiyegezirehberi/img/lezzet-duraklari/erzurum.webp" data-fancybox="gallery" data-caption="Erzurum'un meşhur Cağ Kebabı">
+                        <img src="/turkiyegezirehberi/img/lezzet-duraklari/erzurum.webp" alt="Cağ Kebabı" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Erzurum Cağ Kebabı</div>
                 </div>

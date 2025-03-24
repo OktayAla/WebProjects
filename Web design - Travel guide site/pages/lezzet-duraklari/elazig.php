@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/turkiyegezirehberi/css/lezzet-duraklari.css">
 
 <main class="food-detail-page">
-    <section class="food-hero" style="background-image: url('https://1001yemektarifi.com/wp-content/uploads/harput-kofte-tarifi-elazig-yoresi-harput-koftesi-tarifi-nasil-yapilir-kac-kalori-kolay-puf-noktasi-1001yemektarifi-1-rotated.jpg');">
+    <section class="food-hero" style="background-image: url('/turkiyegezirehberi/img/lezzet-duraklari/elazig.jpg');">
         <div class="food-hero-overlay">
             <h1>Elazığ'ın Meşhur Harput Köftesi</h1>
             <p>Elazığ'ın eşsiz lezzeti, özel baharatları ve pişirme tekniğiyle damaklarda iz bırakan geleneksel bir tat</p>
@@ -21,8 +21,8 @@
                 <p>Harput Köftesi, yağsız dana kıymasının özel baharatlarla yoğrulup, içine ceviz konularak hazırlanan ve genellikle fırında pişirilen geleneksel bir Doğu Anadolu yemeğidir. Köftenin içine konulan ceviz ve özel baharat karışımı, ona diğer köftelerden farklı bir lezzet katar. Yanında genellikle bulgur pilavı ve ayran ile servis edilir.</p>
                 
                 <div class="food-image-container">
-                    <a href="https://1001yemektarifi.com/wp-content/uploads/harput-kofte-tarifi-elazig-yoresi-harput-koftesi-tarifi-nasil-yapilir-kac-kalori-kolay-puf-noktasi-1001yemektarifi-1-rotated.jpg" data-fancybox="gallery" data-caption="Elazığ'ın meşhur Harput Köftesi">
-                        <img src="https://1001yemektarifi.com/wp-content/uploads/harput-kofte-tarifi-elazig-yoresi-harput-koftesi-tarifi-nasil-yapilir-kac-kalori-kolay-puf-noktasi-1001yemektarifi-1-rotated.jpg" alt="Harput Köftesi" class="food-image">
+                    <a href="/turkiyegezirehberi/img/lezzet-duraklari/elazig.jpg" data-fancybox="gallery" data-caption="Elazığ'ın meşhur Harput Köftesi">
+                        <img src="/turkiyegezirehberi/img/lezzet-duraklari/elazig.jpg" alt="Harput Köftesi" class="food-image">
                     </a>
                     <div class="food-image-caption">Geleneksel Harput Köftesi</div>
                 </div>
