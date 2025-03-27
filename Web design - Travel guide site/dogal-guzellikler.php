@@ -4,7 +4,7 @@ include 'includes/header.php';
 
 <main class="destinations-page">
     <section class="page-hero"
-        style="background-image: url('https://sozcuo01.sozcucdn.com/wp-content/uploads/2020/08/16/iecrop/ayder-yaylasi-shutter_4_3_1597574808.jpg');">
+        style="background-image: url('/turkiyegezirehberi/img/dogal-guzellikler/header.jpg');">
         <div class="hero-overlay">
             <h1>Doğal Güzellikler</h1>
             <p>Türkiye'nin nefes kesen doğal güzelliklerini keşfedin.</p>
@@ -41,7 +41,7 @@ include 'includes/header.php';
                 <!-- 1. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://i.pinimg.com/originals/b5/c9/b3/b5c9b36a11a32d29a89adc63d4d703e4.jpg" alt="Pamukkale">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/pamukkale.jpg" alt="Pamukkale">
                         <span class="destination-category">Ege</span>
                     </div>
                     <div class="destination-info">
@@ -59,7 +59,7 @@ include 'includes/header.php';
                 <!-- 2. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://yiyegeze.com/wp-content/uploads/2020/07/Uzung%C3%B6l.jpg" alt="Uzungöl">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/uzungol.jpg" alt="Uzungöl">
                         <span class="destination-category">Karadeniz</span>
                     </div>
                     <div class="destination-info">
@@ -77,7 +77,7 @@ include 'includes/header.php';
                 <!-- 3. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://i0.wp.com/turkeyoutdoor.org/wp-content/uploads/2024/08/Ihlara-Vadisi-Aksaray.jpg?w=960&ssl=1" alt="Ihlara Vadisi">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/ihlara.webp" alt="Ihlara Vadisi">
                         <span class="destination-category">İç Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -94,7 +94,7 @@ include 'includes/header.php';
                 <!-- 4. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://img-s2.onedio.com/id-60d9981ee8865fa833926284/rev-0/w-1200/h-800/f-jpg/s-608d4de6134f7792572a39fa2535a58cfc6e7ef7.jpg"
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/saklikent.jpg"
                             alt="Saklıkent Kanyonu">
                         <span class="destination-category">Akdeniz</span>
                     </div>
@@ -112,7 +112,7 @@ include 'includes/header.php';
                 <!-- 5. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://tv5comtr.teimg.com/tv5-com-tr/uploads/2024/06/salda-golu.webp" alt="Salda Gölü">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/salda.webp" alt="Salda Gölü">
                         <span class="destination-category">Akdeniz</span>
                     </div>
                     <div class="destination-info">
@@ -131,7 +131,7 @@ include 'includes/header.php';
                 <!-- 6. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://dokuzeylulcom.teimg.com/dokuzeylul-com/uploads/2023/10/ayder-yaylasinda-gezilecek-yerler.jpg" alt="Ayder Yaylası">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/ayder.webp" alt="Ayder Yaylası">
                         <span class="destination-category">Karadeniz</span>
                     </div>
                     <div class="destination-info">
@@ -149,7 +149,7 @@ include 'includes/header.php';
                 <!-- 7. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://rayhaber.com/wp-content/uploads/2023/07/Nemrut-Kalderasi-ve-Krater-Golu-Turizme-Kazandirilacak.jpg"
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/nemrut.jpg"
                             alt="Nemrut Krater Gölü">
                         <span class="destination-category">Doğu Anadolu</span>
                     </div>
@@ -168,7 +168,7 @@ include 'includes/header.php';
                 <!-- 8. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://img.superhaber.com/storage/files/images/2019/07/03/duden-selalesi-antalya-DJK0_cover.jpg" alt="Düden Şelalesi">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/duden.webp" alt="Düden Şelalesi">
                         <span class="destination-category">Akdeniz</span>
                     </div>
                     <div class="destination-info">
@@ -187,7 +187,7 @@ include 'includes/header.php';
                 <!-- 9. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://cdn.memleket.com.tr/news/307456.jpg" alt="Meke Gölü">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/meke.jpg" alt="Meke Gölü">
                         <span class="destination-category">İç Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -205,7 +205,7 @@ include 'includes/header.php';
                 <!-- 10. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://grandgames.net/puzzle/f1200/domik_u_ozera_2.jpg" alt="Abant Gölü">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/abant.jpg" alt="Abant Gölü">
                         <span class="destination-category">Marmara</span>
                     </div>
                     <div class="destination-info">
@@ -222,7 +222,7 @@ include 'includes/header.php';
                 <!-- 11. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://pbs.twimg.com/media/EUWsUX4XYAAcuSD.jpg" alt="Karçal Dağları">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/karcal.jpg" alt="Karçal Dağları">
                         <span class="destination-category">Karadeniz</span>
                     </div>
                     <div class="destination-info">
@@ -240,7 +240,7 @@ include 'includes/header.php';
                 <!-- 12. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://polatlipostasicom.teimg.com/polatlipostasi-com/uploads/2023/10/doganin-buyuleyici-hediyesi-ve-dogaseverlerin-ruyasi-karagol-2.JPG" alt="Karagöl">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/borcka.webp" alt="Karagöl">
                         <span class="destination-category">Karadeniz</span>
                     </div>
                     <div class="destination-info">
@@ -257,7 +257,7 @@ include 'includes/header.php';
                 <!-- 13. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.gidiyoruz.com/wp-content/uploads/2019/01/Dedeman-Paland%C3%B6ken-0001-800x445@2x.jpg" alt="Palandöken Dağı">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/palandoken.jpg" alt="Palandöken Dağı">
                         <span class="destination-category">Doğu Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -275,7 +275,7 @@ include 'includes/header.php';
                 <!-- 14. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://avatars.mds.yandex.net/i?id=2ec02e1c5b33f0071f00549542420708d8c43cd9-7741114-images-thumbs&n=13" alt="Olimpos">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/olimpos.webp" alt="Olimpos">
                         <span class="destination-category">Akdeniz</span>
                     </div>
                     <div class="destination-info">
@@ -294,7 +294,7 @@ include 'includes/header.php';
                 <!-- 15. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://yiyegeze.com/wp-content/uploads/2020/09/DSC_9968.jpg" alt="Beyşehir Gölü">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/beysehir.jpg" alt="Beyşehir Gölü">
                         <span class="destination-category">İç Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -311,7 +311,7 @@ include 'includes/header.php';
                 <!-- 16. Doğal Güzellik -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://i.pinimg.com/originals/98/97/c3/9897c3797b0cda4c7d819182a591f46a.jpg" alt="Sapanca Gölü">
+                        <img src="/turkiyegezirehberi/img/dogal-guzellikler/sapanca.jpg" alt="Sapanca Gölü">
                         <span class="destination-category">Marmara</span>
                     </div>
                     <div class="destination-info">

@@ -1,7 +1,7 @@
 <?php include 'includes/header.php'; ?>
 
 <main class="destinations-page">
-    <section class="page-hero" style="background-image: url('https://cdnp.flypgs.com/files/Sehirler-long-tail/istanbul/istanbulda-nerede-yenir.jpg');">
+    <section class="page-hero" style="background-image: url('/turkiyegezirehberi/img/lezzet-duraklari/header.jpg');">
         <div class="hero-overlay">
             <h1>Lezzet Durakları</h1>
             <p>Türkiye'nin eşsiz mutfak kültürünü ve yöresel lezzetlerini keşfedin</p>
