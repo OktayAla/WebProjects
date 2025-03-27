@@ -24,7 +24,7 @@
                 <!-- Adana Kebabı -->
                 <div class="culinary-card">
                     <div class="destination-image">
-                        <img src="https://www.kolaycayap.com/wp-content/uploads/2021/12/orjinal-ev-yapimi-acisiz-urfa-kebabi-nasil-yapilir-3-NXTB8TJd.jpg" alt="Adana Kebabı">
+                        <img src="/turkiyegezirehberi/img/lezzet-duraklari/adana.jpg" alt="Adana Kebabı">
                         <span class="cuisine-category">Kebap Kültürü</span>
                     </div>
                     <div class="destination-info">
@@ -42,14 +42,14 @@
                                 <li>Kebapçı Şeyhmus</li>
                             </ul>
                         </div>
-                        <a href="pages/lezzet-duraklari/adana.php" class="btn-details">Lezzeti Keşfet</a>
+                        <a href="lezzet-duraklari/adana.php" class="btn-details">Lezzeti Keşfet</a>
                     </div>
                 </div>
 
             <!-- Gaziantep Baklavası -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://www.yenikonya.com.tr/uploads/2024/04/07/b5e71425_big.jpg" alt="Antep Baklavası">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/gaziantep.jpg" alt="Antep Baklavası">
                     <span class="cuisine-category">Tatlılar</span>
                 </div>
                 <div class="destination-info">
@@ -67,14 +67,14 @@
                             <li>Güllüoğlu</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/gaziantep.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/gaziantep.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Bursa İskender Kebabı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://beylerkebap.com.tr/wp-content/uploads/2019/12/iskender-kebap-v2.jpg" alt="İskender Kebap">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/bursa.jpg" alt="İskender Kebap">
                     <span class="cuisine-category">Kebap Kültürü</span>
                 </div>
                 <div class="destination-info">
@@ -92,14 +92,14 @@
                             <li>Uludağ Kebapçısı</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/bursa.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/bursa.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Aydın İncir Tatlısı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.anadoludabugun.com.tr/news/213015.jpg" alt="İncir Tatlısı">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/aydin.jpg" alt="İncir Tatlısı">
                     <span class="cuisine-category">Tatlılar</span>
                 </div>
                 <div class="destination-info">
@@ -117,14 +117,14 @@
                             <li>Ege Lezzetleri</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/aydin.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/aydin.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Erzurum Cağ Kebabı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://i.5nhaber.com/uploads/96258/public/24213/bu-tarif-nusret-i-bile-pesinizden-kosturur-iste-erzurum-un-meshur-cag-kebabi-tarifi-2230.webp" alt="Cağ Kebabı">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/erzurum.webp" alt="Cağ Kebabı">
                     <span class="cuisine-category">Kebap Kültürü</span>
                 </div>
                 <div class="destination-info">
@@ -142,14 +142,14 @@
                             <li>Dadaş Cağ Kebap</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/erzurum.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/erzurum.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Diyarbakır Kaburga Dolması -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://img3.aksam.com.tr/imgsdisk/2019/10/02/t25_021020191447023649175.jpg" alt="Kaburga Dolması">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/diyarbakir.webp" alt="Kaburga Dolması">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -167,14 +167,14 @@
                             <li>Sur Ocakbaşı</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/diyarbakir.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/diyarbakir.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Denizli Kebabı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://image.dha.com.tr/i/dha/75/0x0/6164e7be45d2a06a3ce65c3e.jpg" alt="Denizli Kebabı">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/denizli.webp" alt="Denizli Kebabı">
                     <span class="cuisine-category">Kebap Kültürü</span>
                 </div>
                 <div class="destination-info">
@@ -192,14 +192,14 @@
                             <li>Ege Sofrası</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/denizli.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/denizli.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Edirne Ciğer Tavası -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://ettder.org/wp-content/uploads/2017/02/tava-ciger.jpg" alt="Edirne Ciğer Tavası">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/edirne.jpg" alt="Edirne Ciğer Tavası">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -217,14 +217,14 @@
                             <li>Köfteci Osman</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/edirne.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/edirne.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Ankara Tava -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://img-s1.onedio.com/id-5dca9db95a73bf2d690376bf/rev-0/w-1200/h-990/f-jpg/s-465804b6220f08e339079a329bbe3229d58043e6.jpg" alt="Ankara Tava">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/ankara.jpg" alt="Ankara Tava">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -242,14 +242,14 @@
                             <li>Kızılcahamam Sofrası</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/ankara.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/ankara.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Antalya Piyazı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://sakaryagazetesicomtr.teimg.com/sakaryagazetesi-com-tr/uploads/2023/09/piyaz.jpg" alt="Antalya Piyazı">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/antalya.webp" alt="Antalya Piyazı">
                     <span class="cuisine-category">Mezeler</span>
                 </div>
                 <div class="destination-info">
@@ -267,14 +267,14 @@
                             <li>Akdeniz Piyaz Evi</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/antalya.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/antalya.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Kayseri Mantısı -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://img-s1.onedio.com/id-63ba9cce0863c5ed1abe3a1e/rev-0/w-1200/h-800/f-jpg/s-591f2dcb4b98a1c838a6aaa4916919dd97bdcac8.jpg" alt="Kayseri Mantısı">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/kayseri.jpg" alt="Kayseri Mantısı">
                     <span class="cuisine-category">Hamur İşleri</span>
                 </div>
                 <div class="destination-info">
@@ -292,14 +292,14 @@
                             <li>Erciyes Mantı Salonu</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/kayseri.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/kayseri.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Konya Etli Ekmeği -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://www.dir.gen.tr/image/76382-0-tepe-etliekmek-lahmacun-pizza-pastane-cafe.jpg" alt="Etli Ekmek">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/konya.jpg" alt="Etli Ekmek">
                     <span class="cuisine-category">Hamur İşleri</span>
                 </div>
                 <div class="destination-info">
@@ -317,14 +317,14 @@
                             <li>Cemo Etli Ekmek</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/konya.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/konya.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
              <!-- Malatya Kayısısı -->
              <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://vostorg.buzz/uploads/posts/2022-02/1645069331_2-vostorg-buzz-p-blyuda-iz-kuragi-3.jpg" alt="Malatya Kayısısı">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/malatya.jpg" alt="Malatya Kayısısı">
                     <span class="cuisine-category">Meyveler</span>
                 </div>
                 <div class="destination-info">
@@ -342,14 +342,14 @@
                             <li>Anadolu Lezzetleri</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/malatya.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/malatya.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Elazığ Harput Köftesi -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://i.pinimg.com/originals/38/0d/d6/380dd6e30721af26e5c3c765d6488c38.jpg" alt="Harput Köftesi">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/elazig.jpg" alt="Harput Köftesi">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -367,14 +367,14 @@
                             <li>Fırat Lezzetleri</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/elazig.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/elazig.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Mersin Tantunisi -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://www.dir.gen.tr/image/42673-0-mersin-tantuni-ismail-usta.jpg" alt="Mersin Tantunisi">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/mersin.jpg" alt="Mersin Tantunisi">
                     <span class="cuisine-category">Sokak Lezzetleri</span>
                 </div>
                 <div class="destination-info">
@@ -392,14 +392,14 @@
                             <li>Akdeniz Tantuni</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/mersin.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/mersin.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Rize Muhlaması -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://renklitarifler.com/wp-content/uploads/2022/11/muhlama-tarifi.jpg" alt="Rize Muhlaması">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/rize.jpg" alt="Rize Muhlaması">
                     <span class="cuisine-category">Kahvaltı Kültürü</span>
                 </div>
                 <div class="destination-info">
@@ -417,14 +417,14 @@
                             <li>Muhlama Evi</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/rize.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/rize.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Trabzon Akçaabat Köftesi -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.karar.com/news/1488455.jpg" alt="Akçaabat Köftesi">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/trabzon.webp" alt="Akçaabat Köftesi">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -442,14 +442,14 @@
                             <li>Karadeniz Köfte Evi</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/trabzon.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/trabzon.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Şanlıurfa Çiğ Köftesi -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://cdn.karar.com/news/1626867.jpg" alt="Çiğ Köfte">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/sanliurfa.webp" alt="Çiğ Köfte">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -467,14 +467,14 @@
                             <li>Güneydoğu Sofrası</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/sanliurfa.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/sanliurfa.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
             <!-- Samsun Pide -->
             <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://i.ytimg.com/vi/ycJEDyO2aYI/maxresdefault.jpg" alt="Samsun Pidesi">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/samsun.jpg" alt="Samsun Pidesi">
                     <span class="cuisine-category">Hamur İşleri</span>
                 </div>
                 <div class="destination-info">
@@ -492,14 +492,14 @@
                             <li>Pide Ustası</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/samsun.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/samsun.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
              <!-- Sakarya Islama Köftesi -->
              <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://www.kivitadinda.com/wp-content/uploads/2021/03/Islama-Kofte.jpg" alt="Islama Köfte">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/sakarya.jpg" alt="Islama Köfte">
                     <span class="cuisine-category">Et Yemekleri</span>
                 </div>
                 <div class="destination-info">
@@ -517,14 +517,14 @@
                             <li>Islama Köfte Evi</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/sakarya.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/sakarya.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
 
              <!-- Manisa Mesir Macunu -->
              <div class="culinary-card">
                 <div class="destination-image">
-                    <img src="https://media-cdn.t24.com.tr/media/library/2020/03/1584091740062-mesirmacunu.jpg" alt="Mesir Macunu">
+                    <img src="/turkiyegezirehberi/img/lezzet-duraklari/manisa.jpg" alt="Mesir Macunu">
                     <span class="cuisine-category">Tatlılar</span>
                 </div>
                 <div class="destination-info">
@@ -542,7 +542,7 @@
                             <li>Mesir Baharat Evi</li>
                         </ul>
                     </div>
-                    <a href="pages/lezzet-duraklari/manisa.php" class="btn-details">Lezzeti Keşfet</a>
+                    <a href="lezzet-duraklari/manisa.php" class="btn-details">Lezzeti Keşfet</a>
                 </div>
             </div>
         </div>
