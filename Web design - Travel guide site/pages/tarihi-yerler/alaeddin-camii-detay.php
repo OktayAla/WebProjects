@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://gezicini.com/wp-content/uploads/2020/10/AlaeddinKeykubadCami.jpg');"></div>
+        <div class="hero-background" style="background-image: url('/turkiyegezirehberi/img/tarihi-yerler/post/alaeddin_header.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Tarihi Cami</span>
             <h1 class="hero-title">Alaeddin Camii</h1>
@@ -86,17 +86,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Turkey%2C_Konya_-_Alaeddin_Mosque_02.jpg/800px-Turkey%2C_Konya_-_Alaeddin_Mosque_02.jpg"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/alaeddin_galeri1.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Turkey%2C_Konya_-_Alaeddin_Mosque_02.jpg/800px-Turkey%2C_Konya_-_Alaeddin_Mosque_02.jpg">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/post/alaeddin_galeri1.jpg">
                     </a>
-                    <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Turkey%2C_Konya_-_Alaeddin_Mosque_04.jpg/800px-Turkey%2C_Konya_-_Alaeddin_Mosque_04.jpg"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/alaeddin_galeri2.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Turkey%2C_Konya_-_Alaeddin_Mosque_04.jpg/800px-Turkey%2C_Konya_-_Alaeddin_Mosque_04.jpg">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/post/alaeddin_galeri2.jpg">
                     </a>
-                    <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Turkey%2C_Konya_-_Alaeddin_Mosque_06.jpg/800px-Turkey%2C_Konya_-_Alaeddin_Mosque_06.jpg"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/alaeddin_galeri3.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Turkey%2C_Konya_-_Alaeddin_Mosque_06.jpg/800px-Turkey%2C_Konya_-_Alaeddin_Mosque_06.jpg">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/post/alaeddin_galeri3.jpg">
                     </a>
                 </div>
             </section>
