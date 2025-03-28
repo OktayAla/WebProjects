@@ -4,7 +4,7 @@ include 'includes/header.php';
 
 <main class="destinations-page">
     <section class="page-hero"
-        style="background-image: url('https://voyageturkey.net/wp-content/uploads/2019/02/turkey_historical_places.png.webp');">
+        style="background-image: url('/turkiyegezirehberi/img/tarihi-yerler/header.webp');">
         <div class="hero-overlay">
             <h1>Tarihi Yerler</h1>
             <p>Türkiye'nin zengin tarihini keşfedin.</p>
@@ -41,7 +41,7 @@ include 'includes/header.php';
                 <!-- 1. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://arkeofili.com/wp-content/uploads/2020/07/ayasofya1.jpg" alt="Ayasofya">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/ayasofya.jpg" alt="Ayasofya">
                         <span class="destination-category">Marmara</span>
                     </div>
                     <div class="destination-info">
@@ -61,8 +61,7 @@ include 'includes/header.php';
                 <!-- 2. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/77/64/05/kizkalesi.jpg?w=1200&h=-1&s=1"
-                            alt="Kızkalesi">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/kizkalesi.jpg" alt="Kızkalesi">
                         <span class="destination-category">Akdeniz</span>
                     </div>
                     <div class="destination-info">
@@ -81,8 +80,7 @@ include 'includes/header.php';
                 <!-- 3. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://muzeler.org/images/google-place-images/topkapi-sarayi-muzesi.jpg"
-                            alt="Topkapı Sarayı">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/topkapi.jpg" alt="Topkapı Sarayı">
                         <span class="destination-category">Marmara</span>
                     </div>
                     <div class="destination-info">
@@ -101,8 +99,7 @@ include 'includes/header.php';
                 <!-- 4. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://cdn.villareyonu.com/uploads/200_Efes-antik-kenti-gezi-rehberi-villa-reyonu.jpg"
-                            alt="Efes Antik Kenti">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/efes.webp" alt="Efes Antik Kenti">
                         <span class="destination-category">Ege</span>
                     </div>
                     <div class="destination-info">
@@ -121,7 +118,7 @@ include 'includes/header.php';
                 <!-- 5. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.ktb.gov.tr/Resim/352574,zeugmapng.png?0" alt="Zeugma Mozaik Müzesi">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/zeugma.png" alt="Zeugma Mozaik Müzesi">
                         <span class="destination-category">Güneydoğu Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -140,8 +137,7 @@ include 'includes/header.php';
                 <!-- 6. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.baskentankarameclisi.com/cdn/ankarakalesi_1606815710.jpg"
-                            alt="Ankara Kalesi">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/ankara.jpg" alt="Ankara Kalesi">
                         <span class="destination-category">İç Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -160,7 +156,7 @@ include 'includes/header.php';
                 <!-- 7. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://cdn.villacim.com.tr/uploads/197_aspendos.jpg" alt="Aspendos Antik Tiyatrosu">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/aspendos.jpg" alt="Aspendos Antik Tiyatrosu">
                         <span class="destination-category">Akdeniz</span>
                     </div>
                     <div class="destination-info">
@@ -179,7 +175,7 @@ include 'includes/header.php';
                 <!-- 8. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.turrehberin.com/wp-content/uploads/2020/09/Hattusas.jpeg" alt="Hattuşa">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/hattusa.jpeg" alt="Hattuşa">
                         <span class="destination-category">İç Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -198,8 +194,7 @@ include 'includes/header.php';
                 <!-- 9. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://mirsoumhotels.com/wp-content/uploads/2021/06/mardin-kalesi-uzaktan-gorunum.jpg"
-                            alt="Mardin Kalesi">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/mardin.jpg" alt="Mardin Kalesi">
                         <span class="destination-category">Güneydoğu Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -218,8 +213,7 @@ include 'includes/header.php';
                 <!-- 10. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://diyanethabercomtr.teimg.com/diyanethaber-com-tr/uploads/2023/01/ishakpasa-sarayi-11.jpg"
-                            alt="İshak Paşa Sarayı">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/ishakpasa.webp" alt="İshak Paşa Sarayı">
                         <span class="destination-category">Doğu Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -238,8 +232,7 @@ include 'includes/header.php';
                 <!-- 11. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://guryapi.com/wp-content/uploads/2023/02/selimiye-camii-icerik.jpg"
-                            alt="Selimiye Camii">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/selimiye.jpg" alt="Selimiye Camii">
                         <span class="destination-category">Marmara</span>
                     </div>
                     <div class="destination-info">
@@ -258,8 +251,7 @@ include 'includes/header.php';
                 <!-- 12. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.cappadociapage.com/wp-content/uploads/peribacalari-milli-park.jpg"
-                            alt=Kapadokya">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/kapadokya.jpg" alt=Kapadokya">
                         <span class="destination-category">İç Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -278,8 +270,7 @@ include 'includes/header.php';
                 <!-- 13. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://aslindacom.teimg.com/crop/1280x720/aslinda-com/uploads/2024/07/sumela-manastirina-nasil-gidilir-trabzonun-tarihi-ve-dogal-guzelligi.jpg"
-                            alt="Sümela Manastırı">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/sumela.webp" alt="Sümela Manastırı">
                         <span class="destination-category">Karadeniz</span>
                     </div>
                     <div class="destination-info">
@@ -298,8 +289,7 @@ include 'includes/header.php';
                 <!-- 14. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://muzeler.org/images/google-place-images/hierapolis.jpg"
-                            alt="Hierapolis Antik Kenti">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/hierapolis.jpg" alt="Hierapolis Antik Kenti">
                         <span class="destination-category">Ege</span>
                     </div>
                     <div class="destination-info">
@@ -317,7 +307,7 @@ include 'includes/header.php';
                 <!-- 15. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://arkeofili.com/wp-content/uploads/2016/07/ani1.jpg" alt="Ani Harabeleri">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/ani.jpg" alt="Ani Harabeleri">
                         <span class="destination-category">Doğu Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -336,8 +326,7 @@ include 'includes/header.php';
                 <!-- 16. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://ankarakasderfed.com.tr/wp-content/uploads/2014/01/kastamonu_kalesi.jpg"
-                            alt="Kastamonu Kalesi">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/kastamonu.jpg" alt="Kastamonu Kalesi">
                         <span class="destination-category">Karadeniz</span>
                     </div>
                     <div class="destination-info">
@@ -355,8 +344,7 @@ include 'includes/header.php';
                 <!-- 17. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.kitaptansanattan.com/wp-content/uploads/2017/05/%C3%A7AR%C5%9EAMBA-k%C3%96PR%C3%9CS%C3%9C.jpg"
-                            alt="Çarşamba Köprüsü">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/carsamba.jpg" alt="Çarşamba Köprüsü">
                         <span class="destination-category">Karadeniz</span>
                     </div>
                     <div class="destination-info">
@@ -374,7 +362,7 @@ include 'includes/header.php';
                 <!-- 18. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.hisglobal.com.tr/assets/images/1640594216.jpg" alt="Aizanoi Antik Kenti">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/aizanoi.jpg" alt="Aizanoi Antik Kenti">
                         <span class="destination-category">Ege</span>
                     </div>
                     <div class="destination-info">
@@ -394,8 +382,7 @@ include 'includes/header.php';
                 <!-- 19. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://image.hurimg.com/i/hurriyet/75/1110x740/5abb4775c03c0e0fdcf0eed8.jpg"
-                            alt="Nemrut Dağı">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/nemrut.webp" alt="Nemrut Dağı">
                         <span class="destination-category">Güneydoğu Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -413,8 +400,7 @@ include 'includes/header.php';
                 <!-- 20. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.fiberli.com.tr/Upload/Referanslar/f/1346/galata-kulesi-4.jpg"
-                            alt="Galata Kulesi">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/galata.jpg" alt="Galata Kulesi">
                         <span class="destination-category">Marmara</span>
                     </div>
                     <div class="destination-info">
@@ -432,8 +418,7 @@ include 'includes/header.php';
                 <!-- 21. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://kvmgm.ktb.gov.tr/Resim/216757,afrodisias03jpg.png?0"
-                            alt="Afrodisias Antik Kenti">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/afrodisias.png" alt="Afrodisias Antik Kenti">
                         <span class="destination-category">Ege</span>
                     </div>
                     <div class="destination-info">
@@ -451,8 +436,7 @@ include 'includes/header.php';
                 <!-- 22. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.stonewrap.com/media/2025/1/1836/divrigi-ulu-camii-nerededir-divrigi-ulu-cami-hakkinda-bilgi-1558783646-9408.jpg"
-                            alt="Divriği Ulu Cami">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/divrigi.jpg" alt="Divriği Ulu Cami">
                         <span class="destination-category">Doğu Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -470,8 +454,7 @@ include 'includes/header.php';
                 <!-- 23. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://yoldaolmak.com/wp-content/uploads/2017/10/Bergama-Akropol.jpg"
-                            alt="Bergama Antik Kenti">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/bergama.jpg" alt="Bergama Antik Kenti">
                         <span class="destination-category">Ege</span>
                     </div>
                     <div class="destination-info">
@@ -489,8 +472,7 @@ include 'includes/header.php';
                 <!-- 24. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.kulturportali.gov.tr/contents/images/Alaaddin_Camii%20FOTO%20Fatih%20K%C4%B1z%C4%B1lkaya%20logolu.jpg"
-                            alt="Alaeddin Camii">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/alaeddin.jpg" alt="Alaeddin Camii">
                         <span class="destination-category">İç Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -508,8 +490,7 @@ include 'includes/header.php';
                 <!-- 25. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://www.kulturportali.gov.tr/contents/images/20190730120006864_myra%201%20yeni.jpeg"
-                            alt="Myra Antik Kenti">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/myra.jpeg" alt="Myra Antik Kenti">
                         <span class="destination-category">Akdeniz</span>
                     </div>
                     <div class="destination-info">
@@ -527,7 +508,7 @@ include 'includes/header.php';
                 <!-- 26. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://arkeofili.com/wp-content/uploads/2015/08/harran1.jpg" alt="Harran Örenyeri">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/harran.jpg" alt="Harran Örenyeri">
                         <span class="destination-category">Güneydoğu Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -545,8 +526,7 @@ include 'includes/header.php';
                 <!-- 27. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://antalya.com.tr/Uploaded/listing/1-426/antalya_alanya_kalesi.jpg"
-                            alt="Alanya Kalesi">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/alanya.jpg" alt="Alanya Kalesi">
                         <span class="destination-category">Akdeniz</span>
                     </div>
                     <div class="destination-info">
@@ -564,8 +544,7 @@ include 'includes/header.php';
                 <!-- 28. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://trthaberstatic.cdn.wp.trt.com.tr/resimler/922000/922820.jpg"
-                            alt="Amasya Kral Kaya Mezarları">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/amasya.png" alt="Amasya Kral Kaya Mezarları">
                         <span class="destination-category">Karadeniz</span>
                     </div>
                     <div class="destination-info">
@@ -585,8 +564,7 @@ include 'includes/header.php';
                 <!-- 29. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Haydarpa%C5%9Fa_Gari_-_panoramio.jpg/1200px-Haydarpa%C5%9Fa_Gari_-_panoramio.jpg"
-                            alt="Haydarpaşa Garı">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/haydarpasa.jpg" alt="Haydarpaşa Garı">
                         <span class="destination-category">Marmara</span>
                     </div>
                     <div class="destination-info">
@@ -604,8 +582,7 @@ include 'includes/header.php';
                 <!-- 30. Tarihi Yer -->
                 <div class="destination-card">
                     <div class="destination-image">
-                        <img src="https://i.pinimg.com/736x/2d/c9/9d/2dc99d34220551cea0fbe2ef2de4bb14--mosques-turkey.jpg"
-                            alt="Eşrefoğlu Camii">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/esrefoglu.jpg" alt="Eşrefoğlu Camii">
                         <span class="destination-category">İç Anadolu</span>
                     </div>
                     <div class="destination-info">
@@ -641,6 +618,7 @@ include 'includes/header.php';
 
 <script src="js/pagination.js"></script>
 
-<script src="js/filter.js"></script>
+
+<script src="js/filter.js"></scrip>
 
 <?php include 'includes/footer.php'; ?>
