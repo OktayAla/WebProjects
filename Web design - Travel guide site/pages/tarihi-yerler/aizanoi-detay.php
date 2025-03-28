@@ -3,7 +3,7 @@
 <main class="detail-page">
     <div class="detail-hero">
         <div class="hero-background"
-            style="background-image: url('https://idsb.tmgrup.com.tr/ly/uploads/images/2021/08/19/137767.jpg');"></div>
+            style="background-image: url('/turkiyegezirehberi/img/tarihi-yerler/post/aizanoi_header.jpg');"></div>
         <div class="hero-content">
             <span class="hero-category">Antik Kent</span>
             <h1 class="hero-title">Aizanoi Antik Kenti</h1>
@@ -95,18 +95,18 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://www.insaatim.com/wp-content/uploads/2023/01/2-Aizanoi-Antik-Kenti-Kutahya.jpeg"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/aizanoi_galeri1.jpeg"
                         class="gallery-item" data-fancybox="gallery">
                         <img
-                            src="https://www.insaatim.com/wp-content/uploads/2023/01/2-Aizanoi-Antik-Kenti-Kutahya.jpeg">
+                            src="/turkiyegezirehberi/img/tarihi-yerler/post/aizanoi_galeri1.jpeg">
                     </a>
-                    <a href="https://upload.wikimedia.org/wikipedia/commons/1/19/Aizanoi_Zeus_temple_2225.jpg"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/aizanoi_galeri2.jpg"
                         class="gallery-item" data-fancybox="gallery">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Aizanoi_Zeus_temple_2225.jpg">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/post/aizanoi_galeri2.jpg">
                     </a>
-                    <a href="https://www.alanyaexcursion.net/resimler/30/1552844620_kuet3.jpg" class="gallery-item"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/aizanoi_galeri3.jpg" class="gallery-item"
                         data-fancybox="gallery">
-                        <img src="https://www.alanyaexcursion.net/resimler/30/1552844620_kuet3.jpg">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/post/aizanoi_galeri3.jpg">
                     </a>
                 </div>
             </section>

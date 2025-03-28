@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('https://aydinhedefcomtr.teimg.com/aydinhedef-com-tr/uploads/2024/12/whatsapp-image-2024-12-03-at-174739.jpeg');"></div>
+        <div class="hero-background" style="background-image: url('/turkiyegezirehberi/img/tarihi-yerler/post/afrodisias_header.webp');"></div>
         <div class="hero-content">
             <span class="hero-category">Antik Kent</span>
             <h1 class="hero-title">Afrodisias Antik Kenti</h1>
@@ -92,17 +92,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://www.atlasdergisi.com/wp-content/uploads/2017/07/afrodisias-kucuk.jpg"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/afrodisias_galeri1.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://www.atlasdergisi.com/wp-content/uploads/2017/07/afrodisias-kucuk.jpg">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/post/afrodisias_galeri1.jpg">
                     </a>
-                    <a href="https://thelawofattraction.ru/wp-content/uploads/f/5/e/f5e5ed73ff05d10aae6e4f081a6cbd97.jpeg"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/afrodisias_galeri2.jpeg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://thelawofattraction.ru/wp-content/uploads/f/5/e/f5e5ed73ff05d10aae6e4f081a6cbd97.jpeg">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/post/afrodisias_galeri2.jpeg">
                     </a>
-                    <a href="https://i.pinimg.com/originals/58/84/8f/58848f10474c71df25803884ad82da61.jpg"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/afrodisias_galeri3.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://i.pinimg.com/originals/58/84/8f/58848f10474c71df25803884ad82da61.jpg">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/post/afrodisias_galeri3.jpg">
                     </a>
                 </div>
             </section>
