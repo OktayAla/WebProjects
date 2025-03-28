@@ -2,7 +2,7 @@
 
 <main class="detail-page">
     <div class="detail-hero">
-        <div class="hero-background" style="background-image: url('http://photos.wikimapia.org/p/00/02/29/37/44_full.jpeg');"></div>
+        <div class="hero-background" style="background-image: url('/turkiyegezirehberi/img/tarihi-yerler/post/amasya_header.jpeg');"></div>
         <div class="hero-content">
             <span class="hero-category">Tarihi Kaya Mezarları</span>
             <h1 class="hero-title">Amasya Kral Kaya Mezarları</h1>
@@ -89,17 +89,17 @@
             <section class="gallery-section">
                 <h2>Fotoğraf Galerisi</h2>
                 <div class="gallery-grid">
-                    <a href="https://img3.aksam.com.tr/imgsdisk/2021/10/05/t25_2500-yillik-tarihe-vandal-815.jpg"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/amasya_galeri1.webp"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://img3.aksam.com.tr/imgsdisk/2021/10/05/t25_2500-yillik-tarihe-vandal-815.jpg">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/post/amasya_galeri1.webp">
                     </a>
-                    <a href="https://yudosk.org/resimx/files/borabay%203.jpg"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/amasya_galeri2.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://yudosk.org/resimx/files/borabay%203.jpg">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/post/amasya_galeri2.jpg">
                     </a>
-                    <a href="https://upload.wikimedia.org/wikipedia/commons/f/fa/Kaunos_rock_graves.jpg"
+                    <a href="/turkiyegezirehberi/img/tarihi-yerler/post/amasya_galeri3.jpg"
                        class="gallery-item" data-fancybox="gallery">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Kaunos_rock_graves.jpg">
+                        <img src="/turkiyegezirehberi/img/tarihi-yerler/post/amasya_galeri3.jpg">
                     </a>
                 </div>
             </section>
