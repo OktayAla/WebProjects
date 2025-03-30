@@ -1,27 +1,29 @@
-// Text Animation Script
+// Yazı animasyonu için gerekli JavaScript kodu
+// Bouncing ve wave efektleri için gerekli kodlar
 document.addEventListener('DOMContentLoaded', function() {
-    // Get the bouncing text element
+
+    // Bouncing efekini uygulamak için gerekli kodlar
     const bouncingTextElement = document.querySelector('.bouncing-text');
     
+    // Eğer bouncing-text sınıfına sahip bir element varsa
+    // highlight sınıfına sahip span'ları bul ve bunları ayır
     if (bouncingTextElement) {
-        // Get the original text
         const originalText = bouncingTextElement.innerHTML;
         
-        // Use a more robust approach to handle nested spans with multiple classes
-        // First, extract the highlighted content with its classes
+        // highlight sınıfına sahip span'ları bulmak için regex kullan
         const highlightRegex = /<span class="([^"]*)">([^<]*)<\/span>/g;
         const matches = [...originalText.matchAll(highlightRegex)];
         
-        // If we found highlighted spans
+        // Eğer highlight sınıfına sahip span'lar varsa, bunları ayır ve yeni bir HTML oluştur ve animasyon ekle
         if (matches.length > 0) {
-            // Get the text before the first highlight
             const beforeHighlight = originalText.split(matches[0][0])[0];
-            // Get the text after the last highlight
             const afterHighlight = originalText.split(matches[matches.length-1][0])[1];
             
+            // Yeni HTML oluştur
+            // beforeHighlight ve afterHighlight kısımlarını ayrı ayrı işlemle
             let newHtml = '';
             
-            // Process text before highlight
+            // beforeHighlight kısmını işleme al
             for (let i = 0; i < beforeHighlight.length; i++) {
                 const char = beforeHighlight[i];
                 if (char === ' ') {
@@ -31,12 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            // Add the highlighted spans with their original classes
+            // highlight kısmını işleme al
             matches.forEach(match => {
                 newHtml += `<span class="${match[1]}">${match[2]}</span>`;
             });
             
-            // Process text after highlight
+            // afterHighlight kısmını işleme al
             for (let i = 0; i < afterHighlight.length; i++) {
                 const char = afterHighlight[i];
                 if (char === ' ') {
@@ -50,12 +52,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     
-    // Initialize wave animation for specific elements if needed
+    // Wave efekti için gerekli kodlar
     const waveTextElements = document.querySelectorAll('.wave-text');
     waveTextElements.forEach(element => {
         const text = element.textContent;
         let newHtml = '';
         
+        // Her bir karakteri ayrı ayrı işleme al
         for (let i = 0; i < text.length; i++) {
             if (text[i] === ' ') {
                 newHtml += ' ';
