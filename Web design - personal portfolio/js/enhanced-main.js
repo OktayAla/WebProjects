@@ -1,51 +1,31 @@
-// Enhanced Main JavaScript for Portfolio
-
+// Sayfa yüklendiğinde tüm başlatma işlemlerini gerçekleştir
 document.addEventListener('DOMContentLoaded', function () {
-    // AOS'u devre dışı bırak
+    // AOS animasyonlarını devre dışı bırak
     AOS.init({
         disable: true
     });
 
-    // Tüm AOS elementlerini direkt görünür yap
+    // AOS animasyonlarını hemen uygula
+    // Tüm elementlerin başlangıç stillerini ayarla
     document.querySelectorAll('[data-aos]').forEach(function (el) {
         el.style.opacity = '1';
         el.style.transform = 'none';
     });
 
-    // Add floating effect to specific elements
-    addFloatingEffect();
+    // Temel animasyon ve etkileşimleri başlat
+    addFloatingEffect(); // Yüzen efektleri ekle
+    initSmoothScroll(); // Yumuşak kaydırma işlevselliğini başlat
+    initSkillAnimations(); // Yetenek animasyonlarını başlat
+    addScrollIndicator(); // Aşağı kaydırma göstergesini ekle
+    addGradientTextEffect(); // Gradyan metin efektini ekle
+    addRevealAnimations(); // Açılış animasyonlarını ekle
+    enhanceFormInteractions(); // Form etkileşimlerini geliştir
+    enhanceProjectCards(); // Proje kartlarını geliştir
+    enhanceContactInfo(); // İletişim bilgilerini geliştir
+    initParallaxEffect(); // Parallax efektini başlat
+    initTextAnimations(); // Metin animasyonlarını başlat
 
-    // Initialize smooth scrolling
-    initSmoothScroll();
-
-    // Initialize skill animations
-    initSkillAnimations();
-
-    // Add scroll indicator
-    addScrollIndicator();
-
-    // Add gradient text effect
-    addGradientTextEffect();
-
-    // Add reveal animations
-    addRevealAnimations();
-
-    // Add form animations
-    enhanceFormInteractions();
-
-    // Add project card interactions
-    enhanceProjectCards();
-
-    // Add contact info interactions
-    enhanceContactInfo();
-
-    // Add optimized parallax effect
-    initParallaxEffect();
-
-    // Initialize text animations
-    initTextAnimations();
-
-    // Section görünürlük kontrolü için IntersectionObserver ekle
+    // Bölüm görünürlük gözlemcisini oluştur
     const sectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -56,54 +36,41 @@ document.addEventListener('DOMContentLoaded', function () {
         threshold: 0.1
     });
 
-    // Tüm section'ları gözlemle
     document.querySelectorAll('section').forEach(section => {
         section.classList.add('visible');
     });
 
-    // Progress bar'ları hemen başlat
+    // İlerleme çubuklarını hemen ayarla
     setProgressBarsImmediately();
 });
 
-// Progress bar'ları anında ayarla - hiçbir animasyon olmadan
+// İlerleme çubuklarını belirlenen değerlere ayarla
 function setProgressBarsImmediately() {
-    // Python için
-    setProgressBar('Python', '45%');
-    
-    // Java için
+    // Yeteneklerin yüzdelerini ayarla
+    setProgressBar('Python', '45%'); 
+
     setProgressBar('Java', '20%');
-    
-    // C# için
+
     setProgressBar('C#', '30%');
-    
-    // HTML/CSS için
+
     setProgressBar('HTML/CSS', '80%');
-    
-    // JavaScript için
+
     setProgressBar('JavaScript', '60%');
-    
-    // PHP için
+
     setProgressBar('PHP', '50%');
-    
-    // MS Windows için
+
     setProgressBar('MS Windows', '95%');
-    
-    // MS Office için
+
     setProgressBar('MS Office', '80%');
-    
-    // Donanım için
+
     setProgressBar('Donanım', '70%');
-    
-    // Ağ Sistemleri için
+
     setProgressBar('Ağ Sistemleri', '60%');
-    
-    // Robotik Sistemler için
+
     setProgressBar('Robotik Sistemler', '40%');
-    
-    // Yapay Zeka için
+
     setProgressBar('Yapay Zeka', '20%');
-    
-    // Data-percentage özelliği olan progress bar'ları da ayarla
+
     const otherProgressBars = document.querySelectorAll('.progress-bar[data-percentage]');
     otherProgressBars.forEach(bar => {
         const percentage = bar.getAttribute('data-percentage');
@@ -112,53 +79,43 @@ function setProgressBarsImmediately() {
     });
 }
 
-// Belirli bir beceri için progress bar'ı ayarla
+// Belirli bir yeteneğin ilerleme çubuğunu ayarla
 function setProgressBar(skillName, percentage) {
-    // Beceri adına göre elementi bul
     const skillElement = Array.from(document.querySelectorAll('.skill')).find(skill => {
         return skill.textContent.includes(skillName);
     });
-    
+
     if (skillElement) {
         const progressBar = skillElement.querySelector('.progress-bar');
         if (progressBar) {
-            // Progress bar'ı anında ayarla
             progressBar.style.transition = "none";
             progressBar.style.width = percentage;
         }
     }
 }
 
-// Initialize skill animations - IntersectionObserver'ı kaldır
+// Yetenek animasyonlarını başlat
 function initSkillAnimations() {
-    // Tüm skill elementlerini seç
     const skills = document.querySelectorAll('.skill');
-    
-    // Her skill için hover efektlerini koru ama progress bar animasyonunu kaldır
+
     skills.forEach(skill => {
-        // Skill'i görünür yap
         skill.classList.add('animated');
     });
-    
-    // Progress bar'ları anında ayarla
+
     setProgressBarsImmediately();
 }
 
-// Sayfa tamamen yüklendikten sonra progress bar'ları tekrar kontrol et
-window.addEventListener('load', function() {
-    // Progress bar'ları anında ayarla
+// Sayfa yükleme ve kaydırma olaylarını dinle
+window.addEventListener('load', function () {
     setProgressBarsImmediately();
 });
 
-// Sayfa kaydırıldığında progress bar'ları tekrar ayarla
-window.addEventListener('scroll', function() {
-    // Progress bar'ları anında ayarla
+window.addEventListener('scroll', function () {
     setProgressBarsImmediately();
 });
 
-// Add floating animation to elements - optimized to reduce DOM operations
+// Yüzen efektleri ekle
 function addFloatingEffect() {
-    // Add floating class to elements that should float
     const elementsToFloat = [
         { selector: '.hero h1', className: 'floating-slow' },
         { selector: '.hero p', className: 'floating' },
@@ -172,7 +129,7 @@ function addFloatingEffect() {
     });
 }
 
-// Initialize smooth scrolling for all anchor links - optimized for performance
+// Yumuşak kaydırma işlevselliğini başlat
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -182,7 +139,6 @@ function initSmoothScroll() {
             const targetElement = document.querySelector(targetId);
 
             if (targetElement) {
-                // Smooth scroll to target
                 window.scrollTo({
                     top: targetElement.offsetTop - 50,
                     behavior: 'smooth'
@@ -192,7 +148,7 @@ function initSmoothScroll() {
     });
 }
 
-// Add scroll indicator to hero section
+// Aşağı kaydırma göstergesini ekle
 function addScrollIndicator() {
     const heroSection = document.querySelector('.hero');
     const existingIndicator = document.querySelector('.scroll-down');
@@ -203,7 +159,6 @@ function addScrollIndicator() {
         scrollIndicator.innerHTML = '<i class="fas fa-chevron-down fa-2x pulse"></i>';
         heroSection.appendChild(scrollIndicator);
 
-        // Add click event to scroll to about section
         scrollIndicator.addEventListener('click', function () {
             const aboutSection = document.querySelector('#about');
             if (aboutSection) {
@@ -216,7 +171,7 @@ function addScrollIndicator() {
     }
 }
 
-// Add gradient text effect to headings - optimized to reduce reflows
+// Gradyan metin efektini ekle
 function addGradientTextEffect() {
     const headings = document.querySelectorAll('h2, .highlight');
     headings.forEach(heading => {
@@ -226,7 +181,7 @@ function addGradientTextEffect() {
     });
 }
 
-// Add reveal animations to sections using IntersectionObserver for better performance
+// Açılış animasyonlarını ekle
 function addRevealAnimations() {
     const sections = document.querySelectorAll('section');
 
@@ -241,17 +196,15 @@ function addRevealAnimations() {
     sections.forEach(section => observer.observe(section));
 }
 
-// Enhance form interactions with optimized event handling
+// Form etkileşimlerini geliştir
 function enhanceFormInteractions() {
     const formInputs = document.querySelectorAll('.form-control');
 
     formInputs.forEach(input => {
-        // Add focus effect
         input.addEventListener('focus', function () {
             this.parentElement.classList.add('focused');
         });
 
-        // Remove focus effect
         input.addEventListener('blur', function () {
             if (this.value === '') {
                 this.parentElement.classList.remove('focused');
@@ -260,7 +213,7 @@ function enhanceFormInteractions() {
     });
 }
 
-// Enhance project cards with optimized event delegation
+// Proje kartlarını geliştir
 function enhanceProjectCards() {
     const projectCards = document.querySelectorAll('.project-card');
 
@@ -269,7 +222,6 @@ function enhanceProjectCards() {
             this.style.transform = 'scale(1.05) translateY(-10px)';
             this.style.boxShadow = '0 15px 30px rgba(201, 160, 255, 0.3)';
 
-            // Enhance image
             const img = this.querySelector('img');
             if (img) img.style.transform = 'scale(1.1)';
         });
@@ -278,14 +230,13 @@ function enhanceProjectCards() {
             this.style.transform = '';
             this.style.boxShadow = '';
 
-            // Reset image
             const img = this.querySelector('img');
             if (img) img.style.transform = '';
         });
     });
 }
 
-// Enhance contact info with hover effects
+// İletişim bilgilerini geliştir
 function enhanceContactInfo() {
     const contactItems = document.querySelectorAll('.contact-info .d-flex');
 
@@ -310,12 +261,11 @@ function enhanceContactInfo() {
     });
 }
 
-// Add parallax effect to sections
+// Parallax efektini başlat
 function initParallaxEffect() {
     window.addEventListener('scroll', function () {
         const scrollY = window.scrollY || window.pageYOffset;
 
-        // Apply parallax effect to hero section
         const heroSection = document.querySelector('.hero');
         if (heroSection) {
             heroSection.style.backgroundPositionY = scrollY * 0.5 + 'px';
@@ -323,30 +273,22 @@ function initParallaxEffect() {
     });
 }
 
-// Initialize text animations
+// Metin animasyonlarını başlat
 function initTextAnimations() {
-    // Get the bouncing text element
     const bouncingTextElement = document.querySelector('.bouncing-text');
 
     if (bouncingTextElement) {
-        // Get the original text
         const originalText = bouncingTextElement.innerHTML;
 
-        // Use a more robust approach to handle nested spans with multiple classes
-        // First, extract the highlighted content with its classes
         const highlightRegex = /<span class="([^"]*)">([^<]*)<\/span>/g;
         const matches = [...originalText.matchAll(highlightRegex)];
 
-        // If we found highlighted spans
         if (matches.length > 0) {
-            // Get the text before the first highlight
             const beforeHighlight = originalText.split(matches[0][0])[0];
-            // Get the text after the last highlight
             const afterHighlight = originalText.split(matches[matches.length - 1][0])[1];
 
             let newHtml = '';
 
-            // Process text before highlight
             for (let i = 0; i < beforeHighlight.length; i++) {
                 const char = beforeHighlight[i];
                 if (char === ' ') {
@@ -356,12 +298,10 @@ function initTextAnimations() {
                 }
             }
 
-            // Add the highlighted spans with their original classes
             matches.forEach(match => {
                 newHtml += `<span class="${match[1]}">${match[2]}</span>`;
             });
 
-            // Process text after highlight
             for (let i = 0; i < afterHighlight.length; i++) {
                 const char = afterHighlight[i];
                 if (char === ' ') {
