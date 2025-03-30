@@ -184,6 +184,11 @@ function initRevealTextAnimations() {
 // Gelişmiş yetenek animasyonlarını başlat
 function initEnhancedSkillAnimations() {
     const skills = document.querySelectorAll('.skill');
+    
+    // Her skill için bir flag ekleyelim
+    skills.forEach(skill => {
+        skill.setAttribute('data-animated', 'false');
+    });
 
     // Görünürlük gözlemcisi ile yetenek animasyonlarını tetikle
     const observer = new IntersectionObserver((entries) => {
@@ -193,20 +198,32 @@ function initEnhancedSkillAnimations() {
                 entry.target.style.transitionDelay = `${index * 0.1}s`;
                 entry.target.classList.add('animated');
 
+                // Set progress bars immediately with their defined widths
                 const progressBar = entry.target.querySelector('.progress-bar');
                 if (progressBar) {
-                    const width = progressBar.style.width;
-                    progressBar.style.width = '0%';
-
-                    setTimeout(() => {
-                        progressBar.style.width = width;
-                    }, 300 + index * 100);
+                    // Get the defined width from style or percentage text
+                    const width = progressBar.style.width || entry.target.querySelector('.skill-percentage').textContent;
+                    // Set width immediately without animation
+                    progressBar.style.width = width;
+                    entry.target.setAttribute('data-animated', 'true');
                 }
             }
         });
     }, { threshold: 0.2 });
 
     skills.forEach(skill => observer.observe(skill));
+    
+    // Set all progress bars immediately on page load
+    skills.forEach(skill => {
+        const progressBar = skill.querySelector('.progress-bar');
+        const percentageSpan = skill.querySelector('.skill-percentage');
+        
+        if (progressBar && percentageSpan) {
+            progressBar.style.width = percentageSpan.textContent;
+            progressBar.style.transition = 'none';
+            skill.setAttribute('data-animated', 'true');
+        }
+    });
 }
 
 // Gelişmiş proje kartı etkileşimlerini başlat
