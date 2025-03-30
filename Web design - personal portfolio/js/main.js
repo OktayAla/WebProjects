@@ -1,26 +1,29 @@
-// Main JavaScript for Portfolio
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize smooth scrolling for navigation
+// Sayfa yüklendiğinde tüm başlatma fonksiyonlarını çağır
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Yumuşak kaydırma işlemini başlat
     initSmoothScroll();
-    
-    // Initialize skill animations
+
+    // Yetenek çubuklarının animasyonlarını başlat
     initSkillAnimations();
-    
-    // Add scroll indicator functionality
+
+    // Aşağı kaydırma göstergesini başlat
     initScrollIndicator();
-    
-    // Initialize project card hover effects
+
+    // Proje kartlarının hover efektlerini başlat
     initProjectCards();
 });
 
-// Smooth Scroll for Navigation Links
+// Sayfa içi yumuşak kaydırma işlemini başlat
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
             const targetElement = document.querySelector(targetId);
-            
+
+            // Eğer hedef element varsa, sayfayı yumuşak bir şekilde kaydır
+            // ve kaydırma işlemi tamamlandığında, hedef elementin üst kısmını 50px yukarıda göster
             if (targetElement) {
                 window.scrollTo({
                     top: targetElement.offsetTop - 50,
@@ -31,11 +34,14 @@ function initSmoothScroll() {
     });
 }
 
-// Skills Animation on Scroll using Intersection Observer for better performance
+// Yetenek çubuklarının animasyonlarını başlat
 function initSkillAnimations() {
+    // Görünürlük gözlemcisi oluştur
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
+            // Element görünür olduğunda
             if (entry.isIntersecting) {
+                // İlerleme çubuklarını seç ve animasyonu uygula
                 const progressBars = entry.target.querySelectorAll('.progress-bar');
                 progressBars.forEach(bar => {
                     const width = bar.style.width;
@@ -47,16 +53,19 @@ function initSkillAnimations() {
             }
         });
     }, { threshold: 0.2 });
-    
+
     const skillsSection = document.querySelector('.skills');
     if (skillsSection) {
         observer.observe(skillsSection);
     }
 }
 
-// Scroll Indicator functionality
+// Aşağı kaydırma göstergesini başlat
 function initScrollIndicator() {
     const scrollIndicator = document.querySelector('.scroll-down');
+
+    // Eğer kaydırma göstergesi varsa, tıklama olayını dinle
+    // ve tıklandığında "Hakkımda" bölümüne kaydır
     if (scrollIndicator) {
         scrollIndicator.addEventListener('click', () => {
             const aboutSection = document.querySelector('#about');
@@ -70,27 +79,30 @@ function initScrollIndicator() {
     }
 }
 
-// Project Cards Hover Effect with optimized event handling
+// Proje kartlarının hover efektlerini başlat
 function initProjectCards() {
     const projectCards = document.querySelectorAll('.project-card');
-    
+
+    // Her bir proje kartına mouse giriş ve çıkış olaylarını dinle
     projectCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
+        card.addEventListener('mouseenter', function () {
             this.style.transform = 'scale(1.05) translateY(-10px)';
             this.style.boxShadow = '0 15px 30px rgba(201, 160, 255, 0.3)';
         });
-        
-        card.addEventListener('mouseleave', function() {
+
+        card.addEventListener('mouseleave', function () {
             this.style.transform = '';
             this.style.boxShadow = '';
         });
     });
 }
 
-// Initialize AOS (Animate On Scroll)
-document.addEventListener('DOMContentLoaded', function() {
+// Yetenek çubuklarının başlangıç animasyonlarını ayarla
+document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.progress-bar').forEach(bar => {
         const skillPercentage = bar.parentElement.previousElementSibling?.querySelector('.skill-percentage');
+
+        // Eğer yüzde değeri varsa, başlangıçta çubuğun genişliğini 0% yap ve sonra gerçek yüzdeye ayarla
         if (skillPercentage) {
             const percentage = skillPercentage.textContent;
             bar.style.width = '0%';
@@ -101,12 +113,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// AOS (Animate On Scroll) kütüphanesini başlat
 if (typeof AOS !== 'undefined') {
-        AOS.init({
-            duration: 800,
-            easing: 'ease-out',
-            once: false,
-            mirror: true
-        });
-    }
+    AOS.init({
+        duration: 800,
+        easing: 'ease-out',
+        once: false,
+        mirror: true
+    });
+}
 
