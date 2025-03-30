@@ -1,14 +1,27 @@
 .neon-gradient-text {
-    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    background: linear-gradient(135deg, 
+        var(--secondary-color) 30%, 
+        var(--accent-color) 70%
+    );
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     display: inline-block;
-    font-weight: 700;
-    text-shadow: 0 0 8px rgba(138, 43, 226, 0.5);
+    font-size: 90px;
     animation: neonPulse 2s ease-in-out infinite alternate;
 }
 
+.section-title {
+    background: linear-gradient(135deg, 
+        #8a2be2 0%,    /* Mor */
+        #00bfff 50%,   /* Mavi */
+        #4299e1 100%   /* Açık mavi */
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: sectionTitleGlow 3s ease-in-out infinite alternate;
+}
 
 .highlight.gradient-text {
     color: transparent;
@@ -20,18 +33,13 @@
 
 @keyframes neonPulse {
     0% {
-        text-shadow: 0 0 8px rgba(138, 43, 226, 0.5);
+        text-shadow: 
+            0 0 10px rgba(138, 43, 226, 0.7),
+            0 0 20px rgba(138, 43, 226, 0.5),
+            0 0 30px rgba(0, 191, 255, 0.3);
     }
     100% {
-        text-shadow: 0 0 15px rgba(138, 43, 226, 0.8), 0 0 25px rgba(0, 191, 255, 0.6);
-    }
-}
-
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
+        text-shadow: 
         background-position: 100% 50%;
     }
     100% {

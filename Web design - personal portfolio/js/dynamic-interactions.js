@@ -95,6 +95,28 @@ function initScrollProgress() {
     });
 }
 
+// Throttle fonksiyonu ekleniyor
+function throttle(func, limit) {
+    let lastFunc;
+    let lastRan;
+    return function() {
+        const context = this;
+        const args = arguments;
+        if (!lastRan) {
+            func.apply(context, args);
+            lastRan = Date.now();
+        } else {
+            clearTimeout(lastFunc);
+            lastFunc = setTimeout(function() {
+                if ((Date.now() - lastRan) >= limit) {
+                    func.apply(context, args);
+                    lastRan = Date.now();
+                }
+            }, limit - (Date.now() - lastRan));
+        }
+    }
+}
+
 // İmleç takipçisini başlat
 function initCursorFollower() {
     // İmleç takipçisi elementini oluştur (eğer yoksa)
@@ -107,10 +129,10 @@ function initCursorFollower() {
     const cursor = document.querySelector('.cursor-follower');
 
     // Mouse hareketini takip et
-    document.addEventListener('mousemove', function (e) {
+    document.addEventListener('mousemove', throttle(function (e) {
         cursor.style.left = `${e.clientX}px`;
         cursor.style.top = `${e.clientY}px`;
-    });
+    }, 16)); // 16ms throttle (yaklaşık 60fps)
 
     document.querySelectorAll('a, button, .btn, .project-card, .skill').forEach(element => {
         element.addEventListener('mouseenter', function () {
