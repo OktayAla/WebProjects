@@ -1,5 +1,5 @@
-// Particle Network Animation
-// Based on https://github.com/VincentGarreau/particles.js
+// Partikül ağları efekti için gerekli kodlar
+// https://github.com/VincentGarreau/particles.js
 
 class ParticleNetwork {
     constructor(canvas, options) {
@@ -22,8 +22,9 @@ class ParticleNetwork {
         this.init();
     }
 
+
+    // Partiküleri oluştur ve başlat
     init() {
-        // Create particles
         for (let i = 0; i < this.particleCount; i++) {
             this.particles.push({
                 x: Math.random() * this.width,
@@ -35,7 +36,7 @@ class ParticleNetwork {
             });
         }
 
-        // Add mouse move event
+        // Fare hareketini izlemek için event listener ekle
         window.addEventListener('mousemove', (e) => {
             const rect = this.canvas.getBoundingClientRect();
             this.mousePosition = {
@@ -44,38 +45,40 @@ class ParticleNetwork {
             };
         });
 
-        // Start animation
+        // Fare tıklama olayını izlemek için event listener ekle
         this.animate();
     }
 
+    // Animasyonu başlat
     animate() {
         this.ctx.clearRect(0, 0, this.width, this.height);
-        
-        // Update and draw particles
+
+        // Fare pozisyonunu güncelle
         for (let i = 0; i < this.particles.length; i++) {
             const p = this.particles[i];
-            
-            // Move particles
+
+            // Partiküleleri hareket ettir
             p.x += p.vx;
             p.y += p.vy;
-            
-            // Bounce off edges
+
+            // Partiküleleri kanvas dışına cçıkarmayı engelle
             if (p.x < 0 || p.x > this.width) p.vx *= -1;
             if (p.y < 0 || p.y > this.height) p.vy *= -1;
-            
-            // Draw particle
+
+            // Partiküleleri çiz
             this.ctx.beginPath();
             this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             this.ctx.fillStyle = p.color;
             this.ctx.fill();
-            
-            // Draw connections
+
+            // Çizgi bağlantılarını oluştur
             for (let j = i + 1; j < this.particles.length; j++) {
                 const p2 = this.particles[j];
                 const dx = p.x - p2.x;
                 const dy = p.y - p2.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                
+
+                // Çizgi bağlantılarını oluştur
                 if (distance < this.maxDistance) {
                     this.ctx.beginPath();
                     this.ctx.moveTo(p.x, p.y);
@@ -85,12 +88,13 @@ class ParticleNetwork {
                     this.ctx.stroke();
                 }
             }
-            
-            // Connect to mouse position
+
+            // Fare ile bağlantı çizgilerini oluştur
             const dx = p.x - this.mousePosition.x;
             const dy = p.y - this.mousePosition.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            
+
+            // Fare ile bağlantı çizgilerini oluştur
             if (distance < this.maxDistance * 1.5) {
                 this.ctx.beginPath();
                 this.ctx.moveTo(p.x, p.y);
@@ -100,22 +104,22 @@ class ParticleNetwork {
                 this.ctx.stroke();
             }
         }
-        
         requestAnimationFrame(this.animate.bind(this));
     }
 
+    // Canvas boyutunu güncelle
     resize() {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
     }
 }
 
-// Initialize on load
+// Partikül ağları efekti için gerekli kodlar
 document.addEventListener('DOMContentLoaded', () => {
     const heroSection = document.getElementById('home');
     if (!heroSection) return;
-    
-    // Create canvas element
+
+    // Hero bölümünün boyutunu ayarla
     const canvas = document.createElement('canvas');
     canvas.id = 'particle-canvas';
     canvas.style.position = 'absolute';
@@ -126,12 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.style.zIndex = '0'; // Z-index değerini düşürdük
     canvas.style.pointerEvents = 'none'; // Tıklamaları engellemeyi kaldır
     heroSection.appendChild(canvas);
-    
-    // Set canvas size
+
+    // Hero bölümünün boyutunu ayarla
     canvas.width = heroSection.offsetWidth;
     canvas.height = heroSection.offsetHeight;
-    
-    // Initialize particle network
+
+    // Partikül ağları efekti için kullanılacak ParticleNetwork nesnesini oluştur
     const particleNetwork = new ParticleNetwork(canvas, {
         particleCount: 80,
         color: '#c9a0ff',
@@ -140,8 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
         speed: 0.5,
         size: 2
     });
-    
-    // Handle resize
+
+    // Yeniden boyutlandırma eventini ayarla
     window.addEventListener('resize', () => {
         canvas.width = heroSection.offsetWidth;
         canvas.height = heroSection.offsetHeight;
