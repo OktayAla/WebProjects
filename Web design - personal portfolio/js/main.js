@@ -1,3 +1,13 @@
+/*
+* Bu JavaScript dosyası, web sitesinin ana işlevselliğini kontrol eden temel dosyadır.
+* İçerdiği temel işlevler:
+* - Sayfa içi yumuşak kaydırma
+* - Yetenek çubuklarının animasyonları
+* - Aşağı kaydırma göstergesi
+* - Proje kartları hover efektleri
+* - Sayfa yükleme ve başlatma işlemleri
+*/
+
 // Sayfa yüklendiğinde tüm başlatma fonksiyonlarını çağır
 document.addEventListener('DOMContentLoaded', function () {
 
