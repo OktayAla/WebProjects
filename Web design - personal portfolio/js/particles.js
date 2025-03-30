@@ -1,3 +1,13 @@
+/*
+* Bu JavaScript dosyası, web sitesinin arka planında görünen hareketli parçacık ağını oluşturur.
+* İçerdiği temel işlevler:
+* - Parçacık sistemi oluşturma ve yönetimi
+* - Fare ile etkileşimli parçacık hareketi
+* - Parçacıklar arası bağlantı çizgileri
+* - Responsive (duyarlı) canvas yönetimi
+* - Parçacık animasyonları ve fizik hesaplamaları
+*/
+
 // Partikül ağları efekti için gerekli kodlar
 // https://github.com/VincentGarreau/particles.js
 
