@@ -1,3 +1,15 @@
+/*
+* Bu JavaScript dosyası, web sitesinin gelişmiş özelliklerini ve animasyonlarını yöneten ana dosyadır.
+* İçerdiği temel işlevler:
+* - Gelişmiş sayfa yükleme optimizasyonları
+* - AOS (Animate on Scroll) entegrasyonu
+* - Yüzen efektler ve gradyan metin efektleri
+* - Gelişmiş form etkileşimleri
+* - İyileştirilmiş proje kartı animasyonları
+* - Parallax efektleri
+* - Özelleştirilmiş metin animasyonları
+*/
+
 // Sayfa yüklendiğinde tüm başlatma işlemlerini gerçekleştir
 document.addEventListener('DOMContentLoaded', function () {
     // AOS animasyonlarını devre dışı bırak

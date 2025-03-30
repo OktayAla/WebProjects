@@ -1,3 +1,17 @@
+/*
+* Bu JavaScript dosyası, web sitesindeki tüm dinamik etkileşimleri ve animasyonları yönetir.
+* İçerdiği temel işlevler:
+* - Manyetik element efektleri (elementlerin fareyi takip etmesi)
+* - Parallax kaydırma efektleri
+* - Sayfa kaydırma ilerleme çubuğu
+* - Özelleştirilmiş fare imleci takipçisi
+* - Metin görünüm animasyonları
+* - Yetenek çubukları animasyonları
+* - Proje kartları için 3D hover efektleri
+* - Form etkileşim animasyonları
+* - Sayfa kaydırma tabanlı animasyonlar
+*/
+
 // Sayfa yüklendiğinde dinamik etkileşimleri başlat
 document.addEventListener('DOMContentLoaded', function () {
     initDynamicInteractions();

@@ -1,3 +1,13 @@
+/*
+* Bu JavaScript dosyası, gelişmiş parçacık sistemi için özelleştirilmiş sınıf ve işlevleri içerir.
+* İçerdiği temel işlevler:
+* - Çoklu renk desteği ile gelişmiş parçacık sistemi
+* - Parlaklık ve dalgalanma efektleri
+* - Gelişmiş fare etkileşimleri
+* - Performans optimizasyonları
+* - Özelleştirilebilir parçacık davranışları
+*/
+
 // Gelişmiş Parçacık Ağı sınıfı
 class EnhancedParticleNetwork {
     constructor(canvasId, options = {}) {
