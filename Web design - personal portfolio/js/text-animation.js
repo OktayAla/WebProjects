@@ -1,3 +1,12 @@
+/*
+* Bu JavaScript dosyası, web sitesindeki metinsel öğeler için özel animasyonları kontrol eder.
+* İçerdiği temel işlevler:
+* - Metinlerin harf harf zıplama animasyonları
+* - Vurgulanan metin parçalarının özel animasyonları
+* - Dalga efekti ile hareket eden metinler
+* - Highlight (vurgulama) efektleri için özel işleyiciler
+*/
+
 // Yazı animasyonu için gerekli JavaScript kodu
 // Bouncing ve wave efektleri için gerekli kodlar
 document.addEventListener('DOMContentLoaded', function () {
