@@ -1,35 +1,35 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Form verilerini al
+    // Form verilerini al ve temizle
     $name = strip_tags(trim($_POST["name"]));
     $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
     $message = strip_tags(trim($_POST["message"]));
 
-    // E-posta başlığı
-    $subject = "Yeni İletişim Formu Mesajı";
-    
-    
-    // E-posta içeriği
-    $email_content = "İsim: $name\n";
-    $email_content .= "E-posta: $email\n\n";
-    $email_content .= "Mesaj:\n$message\n";
+    // Karakter sınırlamalarını kontrol et
+    if (strlen($name) > 25 || strlen($email) > 25 || strlen($message) > 300) {
+        http_response_code(400);
+        exit;
+    }
 
-    // E-posta başlıkları
-    $email_headers = "From: $name <$email>";
+    // Dosyaya kaydetme işlemi
+    $log_file = 'messages.txt';
+    $timestamp = date('d-m-y H:i:s');
+    $log_entry = "Tarih: $timestamp\n";
+    $log_entry .= "İsim: $name\n";
+    $log_entry .= "E-posta: $email\n";
+    $log_entry .= "Mesaj: $message\n";
+    $log_entry .= "----------------------------------------\n";
 
-    // E-postayı gönder
-    // Not: Gerçek uygulamada kendi e-posta adresinizi kullanın
-    $recipient = "info@oktayala.com";
-    
-    if (mail($recipient, $subject, $email_content, $email_headers)) {
+    // Dosyaya yaz
+    if (file_put_contents($log_file, $log_entry, FILE_APPEND)) {
         http_response_code(200);
-        echo "Teşekkürler! Mesajınız gönderildi.";
+        echo "success";
     } else {
         http_response_code(500);
-        echo "Üzgünüz, mesajınız gönderilemedi.";
+        echo "error";
     }
 } else {
     http_response_code(403);
-    echo "Form gönderiminde bir hata oluştu.";
+    echo "error";
 }
 ?>

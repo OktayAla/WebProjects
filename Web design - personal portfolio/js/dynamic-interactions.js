@@ -262,35 +262,62 @@ function initEnhancedProjectCards() {
 // Form animasyonlarını başlat
 function initFormAnimations() {
     const formControls = document.querySelectorAll('.form-control');
-
-    // Form elemanları için odaklanma efektleri
-    formControls.forEach(control => {
-        control.addEventListener('focus', function () {
-            this.parentElement.classList.add('focused');
-        });
-
-        control.addEventListener('blur', function () {
-            if (this.value === '') {
-                this.parentElement.classList.remove('focused');
-            }
-        });
-
-        if (control.value !== '') {
-            control.parentElement.classList.add('focused');
-        }
-    });
-
-    const submitButton = document.querySelector('form button[type="submit"]');
-    if (submitButton) {
-        submitButton.addEventListener('mouseenter', function () {
-            this.classList.add('pulse');
-        });
-
-        submitButton.addEventListener('mouseleave', function () {
-            this.classList.remove('pulse');
+    const contactForm = document.getElementById('contactForm');
+    
+    // Form gönderimi için event listener
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch('contact.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Form'u temizle
+                contactForm.reset();
+                
+                // Popup'ı göster
+                showPopup();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showPopup(); // Hata durumunda da popup'ı göster
+            });
         });
     }
+    
+    // Diğer form kontrolleri...
 }
+
+// Popup fonksiyonları
+function showPopup() {
+    const popup = document.getElementById('successPopup');
+    if (popup) {
+        popup.style.display = 'flex';
+        // Popup'ı 3 saniye sonra otomatik kapat
+        setTimeout(() => {
+            closePopup();
+        }, 3000);
+    }
+}
+
+function closePopup() {
+    const popup = document.getElementById('successPopup');
+    if (popup) {
+        popup.style.display = 'none';
+    }
+}
+
+// ESC tuşu ile popup'ı kapatma
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closePopup();
+    }
+});
 
 // Kaydırma tetiklemeli animasyonları başlat
 function initScrollTriggeredAnimations() {

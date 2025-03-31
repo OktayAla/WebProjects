@@ -242,16 +242,18 @@
             <h2 class="text-center mb-5 gradient-text section-title" data-aos="fade-up">İletişim</h2>
             <div class="row justify-content-center">
                 <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <form action="contact.php" method="POST" class="contact-form">
+                    <form id="contactForm" action="contact.php" method="POST" class="contact-form">
                         <div class="mb-3">
-                            <input type="text" class="form-control" name="name" placeholder="Adınız" required>
+                            <input type="text" class="form-control" name="name" placeholder="Adınız" 
+                                   maxlength="25" required>
                         </div>
                         <div class="mb-3">
-                            <input type="email" class="form-control" name="email" placeholder="E-posta" required>
+                            <input type="email" class="form-control" name="email" placeholder="E-posta" 
+                                   maxlength="25" required>
                         </div>
                         <div class="mb-3">
                             <textarea class="form-control" name="message" rows="5" placeholder="Mesajınız"
-                                required></textarea>
+                                      maxlength="300" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Gönder</button>
                     </form>
@@ -354,6 +356,15 @@
             });
         });
     </script>
+
+    <!-- Popup için HTML ekleyin (body sonuna) -->
+    <div id="successPopup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <h4>Başarılı!</h4>
+            <p>Mesajınız başarıyla gönderildi.</p>
+            <button onclick="closePopup()" class="btn btn-primary">Tamam</button>
+        </div>
+    </div>
 </body>
 
 </html>
