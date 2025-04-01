@@ -1,6 +1,7 @@
-/* Enhanced Skill Animations CSS */
+/* CSS dosyası, web sayfasındaki beceri kartlarının animasyonlarını ve stillerini tanımlar. */
 
-/* Modern Skill Card Styling */
+
+/* Beceri kartlarının animasyonlarını ve stillerini tanımlar. */
 .skill {
     position: relative;
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -15,7 +16,6 @@
     z-index: 1;
 }
 
-/* Enhanced Skill Hover Effects */
 .skill:hover {
     transform: translateY(-10px) scale(1.02) rotateY(5deg);
     background: rgba(138, 43, 226, 0.1);
@@ -25,16 +25,17 @@
 }
 
 @keyframes skillHoverPulse {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 15px 50px rgba(138, 43, 226, 0.3);
     }
+
     50% {
         box-shadow: 0 20px 60px rgba(138, 43, 226, 0.5);
     }
 }
 
-
-/* Add glow effect on hover */
 .skill::before {
     content: '';
     position: absolute;
@@ -52,7 +53,7 @@
     opacity: 1;
 }
 
-/* Progress bar animations - improved for stability */
+/* Becerilerin progress barlarını tanımlar */
 .progress {
     height: 10px;
     border-radius: 5px;
@@ -71,7 +72,6 @@
     will-change: width;
 }
 
-/* Shimmer effect for progress bars */
 .progress-bar::after {
     content: '';
     position: absolute;
@@ -89,7 +89,6 @@
     }
 }
 
-/* Skill label animations */
 .skill .d-flex {
     transition: all 0.3s ease;
 }
@@ -98,8 +97,6 @@
     transform: translateX(5px);
 }
 
-
-/* Percentage label animation */
 .skill:hover .d-flex span:last-child {
     color: var(--accent-color);
     font-weight: bold;
@@ -107,15 +104,18 @@
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.1);
     }
 }
 
-/* Skill section entrance animations */
+/* Skill bölümündeki animasyonları tanımlar */
 [data-aos="skill-fade-up"] {
     opacity: 0;
     transform: translateY(30px);
@@ -149,7 +149,6 @@
     transform: perspective(400px) rotateX(0);
 }
 
-/* Staggered animation for multiple skills */
 .skills .skill:nth-child(1) {
     transition-delay: 0s;
 }
@@ -174,7 +173,6 @@
     transition-delay: 0.5s;
 }
 
-/* Skill container animations */
 .skills {
     position: relative;
     transition: all 0.5s ease;
@@ -187,7 +185,6 @@
     box-shadow: 0 15px 40px rgba(201, 160, 255, 0.2);
 }
 
-/* Add animated background to skills container */
 .skills::before {
     content: '';
     position: absolute;
@@ -195,12 +192,10 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(
-        to bottom right,
-        rgba(138, 43, 226, 0.05),
-        rgba(0, 191, 255, 0.05),
-        rgba(138, 43, 226, 0.05)
-    );
+    background: linear-gradient(to bottom right,
+            rgba(138, 43, 226, 0.05),
+            rgba(0, 191, 255, 0.05),
+            rgba(138, 43, 226, 0.05));
     transform: rotate(-45deg);
     z-index: -1;
     opacity: 0;
@@ -211,24 +206,22 @@
     opacity: 1;
 }
 
-/* Ensure progress bars maintain their width */
 .skill.animated .progress-bar {
     animation-play-state: running;
 }
 
-/* Fix for progress bars when sorting */
 .skill .progress-bar {
     width: 0;
     transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Ensure progress bars are visible immediately after DOM changes */
 .skill.animated .progress-bar {
     transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Prevent flickering during transitions */
-.skill, .progress, .progress-bar {
+.skill,
+.progress,
+.progress-bar {
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     -webkit-font-smoothing: subpixel-antialiased;
