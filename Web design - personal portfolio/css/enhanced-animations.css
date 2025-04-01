@@ -1,141 +1,216 @@
-/* Enhanced Animations CSS - Optimized for Performance */
+/* Enhanced Animations CSS */
 
 /* Global Animation Variables */
 :root {
     --animation-speed-slow: 1.5s;
     --animation-speed-medium: 0.8s;
     --animation-speed-fast: 0.4s;
-    --animation-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --animation-ease: cubic-bezier(0.68, -0.55, 0.265, 1.55);
     --animation-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --animation-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* Performance Optimization: Reduce animations on mobile */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-}
-
-/* Hardware Accelerated Animations */
-.hardware-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-}
-
-/* Hero Section Animation - Optimized */
+/* Hero Section Animation */
 #home {
-    animation: heroEntrance 1s var(--animation-ease) forwards;
-    will-change: transform, opacity;
+    animation: heroEntrance 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
 .modern-title {
+    font-family: var(--font-family-title);
     font-weight: 700;
     letter-spacing: 2px;
-    animation: titleGlow 3s ease-in-out infinite;
-    will-change: transform, text-shadow;
+    animation: titleGlow 2s ease-in-out infinite alternate;
 }
 
 @keyframes heroEntrance {
-    from {
+    0% {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(40px);
     }
-    to {
+    100% {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
 @keyframes titleGlow {
-    0%, 100% {
-        text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+    0% {
+        text-shadow: 0 0 5px rgba(138, 43, 226, 0.5), 0 0 10px rgba(0, 191, 255, 0.5);
         transform: scale(1);
     }
     50% {
-        text-shadow: 0 0 20px rgba(138, 43, 226, 0.7);
+        text-shadow: 0 0 20px rgba(138, 43, 226, 0.7), 0 0 40px rgba(0, 191, 255, 0.7);
         transform: scale(1.02);
+    }
+    100% {
+        text-shadow: 0 0 15px rgba(138, 43, 226, 0.8), 0 0 30px rgba(0, 191, 255, 0.8);
+        transform: scale(1);
     }
 }
 
-/* Optimized AOS Animations */
+/* Smooth entrance animations */
 [data-aos] {
-    transition: transform 0.6s var(--animation-ease), opacity 0.6s var(--animation-ease);
-    will-change: transform, opacity;
+    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+    transition-duration: 1.2s;
 }
 
-/* Enhanced Button and Card Interactions */
+/* Enhanced hover effects */
 .btn, .project-card, .social-links a {
-    transition: transform 0.3s var(--animation-ease), 
-                box-shadow 0.3s var(--animation-ease);
-    will-change: transform, box-shadow;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.25);
 }
 
-/* Optimized Gradient Text */
+/* Enhanced gradient animations */
 .gradient-text {
     background-size: 200% 100%;
-    animation: gradientMove 8s linear infinite;
-    will-change: background-position;
+    animation: gradient-shift 8s ease infinite;
 }
 
-@keyframes gradientMove {
+@keyframes gradient-shift {
     0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-/* Optimized Social Links */
+/* Social Media Icons Animation */
 .social-links a {
+    display: inline-block;
     position: relative;
-    transition: transform 0.3s var(--animation-ease);
-    will-change: transform;
+    overflow: hidden;
 }
 
 .social-links a:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px);
+    color: var(--secondary-color) !important;
 }
 
 .social-links a::after {
     content: '';
     position: absolute;
-    bottom: -2px;
+    bottom: -3px;
     left: 0;
     width: 0;
     height: 2px;
     background: var(--gradient-primary);
-    transition: width 0.3s var(--animation-ease);
+    transition: width var(--animation-speed-fast) var(--animation-ease);
 }
 
 .social-links a:hover::after {
     width: 100%;
 }
 
-/* Optimized Scroll Animations */
+/* Enhanced Scroll Animations */
+[data-aos] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 [data-aos].aos-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Custom AOS animations */
+[data-aos="fade-up"] {
+    transform: translateY(30px);
+}
+
+[data-aos="fade-up"].aos-animate {
     transform: translateY(0);
     opacity: 1;
 }
 
-/* Simplified AOS Variations */
-[data-aos="fade-up"] { transform: translateY(20px); }
-[data-aos="fade-down"] { transform: translateY(-20px); }
-[data-aos="fade-right"], 
-[data-aos="fade-left"] { transform: translateX(20px); }
-[data-aos="zoom-in"] { transform: scale(0.95); }
+[data-aos="fade-down"] {
+    transform: translateY(-30px);
+}
 
-/* Optimized Progress Bar */
+[data-aos="fade-right"],
+[data-aos="fade-left"] {
+    transform: translateY(20px);
+}
+
+[data-aos="fade-right"].aos-animate,
+[data-aos="fade-left"].aos-animate {
+    transform: translateY(0);
+}
+
+[data-aos="zoom-in"] {
+    transform: scale(0.9);
+}
+
+[data-aos="flip"] {
+    transform: perspective(400px) rotateX(10deg);
+}
+
+/* Kartlar için özel animasyon */
+[data-aos="card-animation"] {
+    transform: perspective(1000px) rotateX(10deg);
+    transform-origin: top;
+    opacity: 0;
+}
+
+[data-aos="card-animation"].aos-animate {
+    transform: perspective(1000px) rotateX(0);
+    opacity: 1;
+}
+
+/* Custom Skill Animations */
+[data-aos="skill-fade-up"] {
+    transform: translateY(20px);
+    opacity: 0;
+}
+
+[data-aos="skill-fade-up"].aos-animate {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+[data-aos="skill-zoom-in"] {
+    transform: scale(0.95);
+    opacity: 0;
+}
+
+[data-aos="skill-zoom-in"].aos-animate {
+    transform: scale(1);
+    opacity: 1;
+}
+
+[data-aos="skill-flip"] {
+    transform: perspective(400px) rotateX(10deg);
+    opacity: 0;
+}
+
+[data-aos="skill-flip"].aos-animate {
+    transform: perspective(400px) rotateX(0);
+    opacity: 1;
+}
+
+/* Enhanced Progress Bar Animation */
 .progress-bar {
     position: relative;
+    overflow: hidden;
     background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
-    transition: width 0.8s var(--animation-ease);
-    will-change: width;
+    background-size: 200% 100%;
+    animation: gradient-shift 3s ease infinite;
+    width: 0%; /* Başlangıçta 0% genişlikte */
+    transition: width 1s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .progress-bar::after {
@@ -145,44 +220,45 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    animation: shimmer 2s linear infinite;
-    will-change: transform;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 2s infinite;
 }
 
 @keyframes shimmer {
-    to { transform: translateX(200%); }
+    100% {
+        left: 100%;
+    }
 }
 
-/* Optimized Floating Animations */
+/* Floating Elements Animation */
 .floating {
     animation: float 6s ease-in-out infinite;
-    will-change: transform;
 }
 
 .floating-slow {
     animation: float 8s ease-in-out infinite;
-    will-change: transform;
 }
 
 .floating-fast {
     animation: float 4s ease-in-out infinite;
-    will-change: transform;
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
 }
 
-/* Optimized Pulse Animation */
+/* Pulse Animation */
 .pulse {
-    animation: pulse 2s ease-in-out infinite;
-    will-change: transform, opacity;
+    animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-    0%, 100% {
+    0% {
         transform: scale(1);
         opacity: 1;
     }
@@ -190,55 +266,65 @@
         transform: scale(1.05);
         opacity: 0.8;
     }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
-/* Optimized Form Interactions */
+/* Enhanced Form Input Animations */
 .form-control {
-    transition: transform 0.3s var(--animation-ease),
-                box-shadow 0.3s var(--animation-ease),
-                background-color 0.3s var(--animation-ease);
-    will-change: transform, box-shadow;
+    transition: all 0.3s var(--animation-ease);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .form-control:focus {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(201, 160, 255, 0.15);
+    box-shadow: 0 5px 15px rgba(201, 160, 255, 0.2);
+    border-color: var(--secondary-color);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Optimized Contact Info */
+/* Contact Info Hover Effects */
 .contact-info .d-flex {
-    transition: transform 0.3s var(--animation-ease);
-    will-change: transform;
+    transition: all 0.3s var(--animation-bounce);
 }
 
 .contact-info .d-flex:hover {
-    transform: translateX(5px);
+    transform: translateX(10px);
+}
+
+.contact-info .d-flex:hover i {
+    transform: scale(1.2);
+    color: var(--accent-color) !important;
 }
 
 .contact-info i {
-    transition: transform 0.3s var(--animation-ease), color 0.3s var(--animation-ease);
-    will-change: transform, color;
+    transition: all 0.3s var(--animation-bounce);
 }
 
-/* Optimized Project Cards */
+/* Project Card Enhanced Animations */
 .project-card {
-    transition: transform 0.4s var(--animation-ease),
-                box-shadow 0.4s var(--animation-ease);
-    will-change: transform, box-shadow;
+    transition: all 0.5s var(--animation-bounce);
+    transform-style: preserve-3d;
 }
 
 .project-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-15px) rotateY(5deg);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
 .project-card::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(201, 160, 255, 0.1), rgba(0, 230, 210, 0.1));
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(201, 160, 255, 0.2), rgba(0, 230, 210, 0.2));
     opacity: 0;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.5s ease;
     border-radius: 15px;
     z-index: 1;
 }
@@ -247,21 +333,41 @@
     opacity: 1;
 }
 
-.project-info {
-    position: relative;
-    z-index: 2;
-    transition: transform 0.3s var(--animation-ease);
-    will-change: transform;
+.project-card img {
+    transition: all 0.5s ease;
 }
 
-/* Optimized Scroll Indicator */
+.project-card:hover img {
+    transform: scale(1.05);
+}
+
+.project-info {
+    transition: all 0.3s ease;
+    z-index: 2;
+    position: relative;
+}
+
+.project-card:hover .project-info {
+    transform: translateY(-5px);
+}
+
+/* Badge Animations */
+.badge {
+    transition: all 0.3s ease;
+}
+
+.project-card:hover .badge {
+    transform: scale(1.1);
+    background-color: var(--secondary-color) !important;
+}
+
+/* Scroll Down Indicator */
 .scroll-down {
     position: absolute;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
     animation: bounce 2s infinite;
-    will-change: transform;
 }
 
 @keyframes bounce {
@@ -269,36 +375,19 @@
         transform: translateY(0) translateX(-50%);
     }
     40% {
-        transform: translateY(-15px) translateX(-50%);
+        transform: translateY(-20px) translateX(-50%);
     }
     60% {
-        transform: translateY(-7px) translateX(-50%);
+        transform: translateY(-10px) translateX(-50%);
     }
 }
 
-/* Optimized Reveal Animation */
+/* Reveal Animation */
 .reveal {
     position: relative;
-    overflow: hidden;
 }
 
-/* Mobile Optimization */
-@media (max-width: 768px) {
-    .floating,
-    .floating-slow,
-    .floating-fast {
-        animation: none;
-    }
-
-    .project-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-    }
-
-    [data-aos] {
-        transition-duration: 0.4s;
-    }
+.reveal::after {
+    display: none;
 }
+

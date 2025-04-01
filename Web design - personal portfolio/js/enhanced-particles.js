@@ -1,335 +1,261 @@
 /*
-* Optimized particle system with improved performance and animations
-* Key improvements:
-* - Frame rate control
-* - Object pooling
-* - Optimized collision detection using spatial partitioning
-* - Reduced calculations
-* - Dynamic quality adjustments
+* Bu JavaScript dosyası, gelişmiş parçacık sistemi için özelleştirilmiş sınıf ve işlevleri içerir.
+* İçerdiği temel işlevler:
+* - Çoklu renk desteği ile gelişmiş parçacık sistemi
+* - Parlaklık ve dalgalanma efektleri
+* - Gelişmiş fare etkileşimleri
+* - Performans optimizasyonları
+* - Özelleştirilebilir parçacık davranışları
 */
 
+// Gelişmiş Parçacık Ağı sınıfı
 class EnhancedParticleNetwork {
     constructor(canvasId, options = {}) {
+        // Canvas elementini al ve kontrol et
         this.canvas = document.getElementById(canvasId);
         if (!this.canvas) {
             console.error('Canvas element not found');
             return;
         }
 
-        // Core settings
+        // Temel ayarları başlat
         this.ctx = this.canvas.getContext('2d');
-        this.particleCount = Math.min(options.particleCount || 120, 200); // Limit max particles
-        this.colors = options.colors || ['#c9a0ff', '#00e6d2', '#d4af37'];
-        this.lineColor = options.lineColor || 'rgba(201, 160, 255, 0.2)';
-        this.maxDistance = options.maxDistance || 150;
-        this.speed = options.speed || 0.8;
-        this.sizeRange = options.sizeRange || { min: 1, max: 4 };
-        this.interactionRadius = options.interactionRadius || 200;
-        this.interactionStrength = options.interactionStrength || 10;
-        this.responsive = options.responsive !== false;
-        this.glowEffect = options.glowEffect || false;
-        this.waveEffect = options.waveEffect || false;
-        this.waveSpeed = options.waveSpeed || 0.05;
-        this.waveHeight = options.waveHeight || 15;
-
-        // Performance optimization
-        this.targetFPS = 60;
-        this.frameInterval = 1000 / this.targetFPS;
-        this.lastFrameTime = 0;
-        this.particles = [];
-        this.particlePool = []; // Object pool for particles
-        this.grid = {}; // Spatial partitioning grid
-        this.cellSize = this.maxDistance; // Grid cell size
-        this.mousePosition = { x: null, y: null };
+        this.particleCount = options.particleCount || 120;  // Parçacık sayısı
+        this.colors = options.colors || ['#c9a0ff', '#00e6d2', '#d4af37'];  // Varsayılan renkler
+        this.lineColor = options.lineColor || 'rgba(201, 160, 255, 0.2)'; // Varsayılan çizgi rengi
+        this.maxDistance = options.maxDistance || 150; // Maksimum mesafe
+        this.speed = options.speed || 0.8; // Parçacıkların hızı
+        this.sizeRange = options.sizeRange || { min: 1, max: 4 }; // Parçacık boyut aralığı
+        this.particles = []; // Parçacık dizisi
+        this.mousePosition = { // Mouse pozisyonu
+            x: null,
+            y: null
+        };
+        this.interactionRadius = options.interactionRadius || 200; // Etkileşim yarıçapı
+        this.interactionStrength = options.interactionStrength || 10; // Etkileşim gücü
+        this.responsive = options.responsive !== false; // Responsive ayarı (varsayılan true)
+        this.glowEffect = options.glowEffect || false; // Parlaklık efekti
+        this.waveEffect = options.waveEffect || false; // Dalgalanma efekti
+        this.waveSpeed = options.waveSpeed || 0.05; // Dalgalanma hızı
+        this.waveHeight = options.waveHeight || 15; // Dalgalanma yüksekliği
         this.frameCount = 0;
-        this.performanceMode = false; // Dynamic quality control
 
-        // Initialize
+        // Canvas boyutunu ayarla
         this.resizeCanvas();
         this.createParticles();
         this.setupEventListeners();
-        this.checkPerformance();
         this.animate();
     }
 
-    // Performance monitoring
-    checkPerformance() {
-        let fpsCounter = 0;
-        let lastCheck = performance.now();
-
-        const checkFPS = () => {
-            const now = performance.now();
-            const delta = now - lastCheck;
-            fpsCounter++;
-
-            if (delta >= 1000) {
-                const fps = (fpsCounter * 1000) / delta;
-                if (fps < 30 && !this.performanceMode) {
-                    this.enablePerformanceMode();
-                }
-                fpsCounter = 0;
-                lastCheck = now;
-            }
-            requestAnimationFrame(checkFPS);
-        };
-        checkFPS();
-    }
-
-    enablePerformanceMode() {
-        this.performanceMode = true;
-        this.particleCount = Math.floor(this.particleCount * 0.7);
-        this.maxDistance = Math.floor(this.maxDistance * 0.8);
-        this.glowEffect = false;
-        this.createParticles();
-    }
-
+    // Canvas boyutunu pencere boyutuna göre ayarla
     resizeCanvas() {
+
+        // Responsive ayarlandıysa
         if (this.responsive) {
-            const dpr = window.devicePixelRatio || 1;
-            const rect = this.canvas.getBoundingClientRect();
-            this.canvas.width = rect.width * dpr;
-            this.canvas.height = rect.height * dpr;
-            this.ctx.scale(dpr, dpr);
+            // Pencere boyutunu al
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
         }
     }
 
-    createParticle() {
-        const color = this.colors[Math.floor(Math.random() * this.colors.length)];
-        const size = Math.random() * (this.sizeRange.max - this.sizeRange.min) + this.sizeRange.min;
-        const opacity = Math.random() * 0.5 + 0.5;
-
-        return {
-            x: Math.random() * this.canvas.width,
-            y: Math.random() * this.canvas.height,
-            vx: Math.random() * this.speed * 2 - this.speed,
-            vy: Math.random() * this.speed * 2 - this.speed,
-            size,
-            color,
-            originalSize: size,
-            opacity,
-            originalOpacity: opacity,
-            gridX: 0,
-            gridY: 0
-        };
-    }
-
+    // Parçacıkları oluştur ve başlangıç değerlerini ata
     createParticles() {
         this.particles = [];
-        this.particlePool = [];
 
+        // Parçacık sayısı kadar döngü yap
         for (let i = 0; i < this.particleCount; i++) {
-            const particle = this.createParticle();
-            this.particles.push(particle);
-            this.updateParticleGrid(particle);
+            const color = this.colors[Math.floor(Math.random() * this.colors.length)];
+            const size = Math.random() * (this.sizeRange.max - this.sizeRange.min) + this.sizeRange.min;
+            const opacity = Math.random() * 0.5 + 0.5;
+
+            // Parçacık nesnesini oluştur ve başlangıç değerlerini ata
+            this.particles.push({
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+                vx: Math.random() * this.speed * 2 - this.speed,
+                vy: Math.random() * this.speed * 2 - this.speed,
+                size: size,
+                color: color,
+                originalSize: size,
+                opacity: opacity,
+                originalOpacity: opacity
+            });
         }
     }
 
-    updateParticleGrid(particle) {
-        const gridX = Math.floor(particle.x / this.cellSize);
-        const gridY = Math.floor(particle.y / this.cellSize);
-
-        if (particle.gridX !== gridX || particle.gridY !== gridY) {
-            // Remove from old cell
-            if (this.grid[`${particle.gridX},${particle.gridY}`]) {
-                const index = this.grid[`${particle.gridX},${particle.gridY}`].indexOf(particle);
-                if (index > -1) {
-                    this.grid[`${particle.gridX},${particle.gridY}`].splice(index, 1);
-                }
-            }
-
-            // Add to new cell
-            const key = `${gridX},${gridY}`;
-            if (!this.grid[key]) {
-                this.grid[key] = [];
-            }
-            this.grid[key].push(particle);
-
-            particle.gridX = gridX;
-            particle.gridY = gridY;
-        }
-    }
-
-    getNeighboringParticles(particle) {
-        const neighbors = [];
-        const gridX = Math.floor(particle.x / this.cellSize);
-        const gridY = Math.floor(particle.y / this.cellSize);
-
-        for (let i = -1; i <= 1; i++) {
-            for (let j = -1; j <= 1; j++) {
-                const key = `${gridX + i},${gridY + j}`;
-                if (this.grid[key]) {
-                    neighbors.push(...this.grid[key]);
-                }
-            }
-        }
-
-        return neighbors;
-    }
-
+    // Olay dinleyicilerini ayarla (mouse, pencere boyutu değişimi vb.)
     setupEventListeners() {
-        const throttledMouseMove = this.throttle((e) => {
+        // Mouse hareketi takibi
+        window.addEventListener('mousemove', (e) => {
             const rect = this.canvas.getBoundingClientRect();
             this.mousePosition = {
                 x: e.clientX - rect.left,
                 y: e.clientY - rect.top
             };
-        }, 16);
-
-        window.addEventListener('mousemove', throttledMouseMove);
-        window.addEventListener('mouseleave', () => {
-            this.mousePosition = { x: null, y: null };
         });
 
+        // Mouse canvas dışına çıktığında
+        window.addEventListener('mouseleave', () => {
+            this.mousePosition = {
+                x: null,
+                y: null
+            };
+        });
+
+        // Pencere boyutu değiştiğinde
         if (this.responsive) {
-            const debouncedResize = this.debounce(() => {
+            window.addEventListener('resize', () => {
                 this.resizeCanvas();
                 this.createParticles();
-            }, 250);
-            window.addEventListener('resize', debouncedResize);
+            });
         }
+
+        // Sayfa kaydırıldığında parçacıkları güncelle
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY || window.pageYOffset;
+            this.particles.forEach(p => {
+                p.y += scrollY * 0.01 * (Math.random() - 0.5);
+
+                // Keep particles within canvas
+                if (p.y < 0) p.y = this.canvas.height;
+                if (p.y > this.canvas.height) p.y = 0;
+            });
+        });
     }
 
-    throttle(func, limit) {
-        let inThrottle;
-        return function(...args) {
-            if (!inThrottle) {
-                func.apply(this, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        };
-    }
-
-    debounce(func, wait) {
-        let timeout;
-        return function(...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    }
-
-    animate(currentTime) {
-        requestAnimationFrame(this.animate.bind(this));
-
-        const elapsed = currentTime - this.lastFrameTime;
-        if (elapsed < this.frameInterval) return;
-
-        this.lastFrameTime = currentTime - (elapsed % this.frameInterval);
+    // Ana animasyon döngüsü
+    animate() {
         this.frameCount++;
-
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.grid = {}; // Reset grid
 
+        // Parçacıkları güncelle ve çiz
         for (let i = 0; i < this.particles.length; i++) {
             const p = this.particles[i];
-            this.updateParticle(p);
-            this.drawParticle(p);
-            this.updateParticleGrid(p);
 
-            if (!this.performanceMode) {
-                const neighbors = this.getNeighboringParticles(p);
-                this.drawConnections(p, neighbors);
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // Dalgalanma efekti varsa, parçacığın y pozisyonunu güncelle
+            if (this.waveEffect) {
+                p.y += Math.sin((p.x * 0.01) + (this.frameCount * this.waveSpeed)) * this.waveHeight * 0.01;
             }
-        }
-    }
 
-    updateParticle(p) {
-        p.x += p.vx;
-        p.y += p.vy;
+            if (p.x < 0) {
+                p.x = 0;
+                p.vx *= -1;
+            } else if (p.x > this.canvas.width) {
+                p.x = this.canvas.width;
+                p.vx *= -1;
+            }
 
-        if (this.waveEffect) {
-            p.y += Math.sin((p.x * 0.01) + (this.frameCount * this.waveSpeed)) * this.waveHeight * 0.01;
-        }
+            if (p.y < 0) {
+                p.y = 0;
+                p.vy *= -1;
+            } else if (p.y > this.canvas.height) {
+                p.y = this.canvas.height;
+                p.vy *= -1;
+            }
 
-        // Boundary checks with optimized bounce
-        if (p.x < 0) { p.x = 0; p.vx *= -1; }
-        else if (p.x > this.canvas.width) { p.x = this.canvas.width; p.vx *= -1; }
-        if (p.y < 0) { p.y = 0; p.vy *= -1; }
-        else if (p.y > this.canvas.height) { p.y = this.canvas.height; p.vy *= -1; }
+            // Etkileşim varsa, parçacıkların boyutunu ve opaklığını güncelle
+            if (this.mousePosition.x !== null && this.mousePosition.y !== null) {
+                const dx = p.x - this.mousePosition.x;
+                const dy = p.y - this.mousePosition.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
 
-        // Mouse interaction
-        if (this.mousePosition.x !== null) {
-            const dx = p.x - this.mousePosition.x;
-            const dy = p.y - this.mousePosition.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+                // Etkileşim yarıçapı içinde ise, parçacığın boyutunu ve opaklığını güncelle
+                if (distance < this.interactionRadius) {
+                    const force = (this.interactionRadius - distance) / this.interactionRadius;
+                    const angle = Math.atan2(dy, dx);
 
-            if (distance < this.interactionRadius) {
-                const force = (this.interactionRadius - distance) / this.interactionRadius;
-                const angle = Math.atan2(dy, dx);
-                p.vx += Math.cos(angle) * force * this.interactionStrength * 0.01;
-                p.vy += Math.sin(angle) * force * this.interactionStrength * 0.01;
-                p.size = p.originalSize * (1 + force);
-                p.opacity = Math.min(1, p.opacity + force * 0.3);
+                    p.vx += Math.cos(angle) * force * this.interactionStrength * 0.01;
+                    p.vy += Math.sin(angle) * force * this.interactionStrength * 0.01;
+
+                    p.size = p.originalSize * (1 + force * 1.5);
+                    p.opacity = Math.min(1, p.opacity + force * 0.3);
+                } else {
+                    p.size = p.originalSize;
+                    p.opacity = p.originalOpacity;
+                }
             } else {
                 p.size = p.originalSize;
                 p.opacity = p.originalOpacity;
             }
-        }
 
-        // Velocity limit
-        const maxVelocity = 2;
-        const velocity = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-        if (velocity > maxVelocity) {
-            const scale = maxVelocity / velocity;
-            p.vx *= scale;
-            p.vy *= scale;
-        }
-    }
+            // Parçacığın boyutunu ve opaklığını sınırla
+            const maxVelocity = 2;
+            const velocity = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+            if (velocity > maxVelocity) {
+                p.vx = (p.vx / velocity) * maxVelocity;
+                p.vy = (p.vy / velocity) * maxVelocity;
+            }
 
-    drawParticle(p) {
-        if (this.glowEffect && !this.performanceMode) {
-            this.ctx.shadowBlur = p.size * 2;
-            this.ctx.shadowColor = p.color;
-        }
+            // Parçacığı çiz
+            this.drawParticle(p);
 
-        this.ctx.beginPath();
-        this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        this.ctx.fillStyle = p.color;
-        this.ctx.globalAlpha = p.opacity;
-        this.ctx.fill();
-        this.ctx.globalAlpha = 1;
+            // Parçacıkların birbirleriyle bağlantılarını çiz
+            for (let j = i + 1; j < this.particles.length; j++) {
+                const p2 = this.particles[j];
+                const dx = p.x - p2.x;
+                const dy = p.y - p2.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (this.glowEffect && !this.performanceMode) {
-            this.ctx.shadowBlur = 0;
-        }
-    }
+                // Eğer mesafe maksimum mesafeden küçükse, çizgi çiz
+                if (distance < this.maxDistance) {
+                    const opacity = 1 - (distance / this.maxDistance);
 
-    drawConnections(p, neighbors) {
-        for (const p2 of neighbors) {
-            if (p === p2) continue;
-            
-            const dx = p.x - p2.x;
-            const dy = p.y - p2.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < this.maxDistance) {
-                const opacity = 1 - (distance / this.maxDistance);
-                this.ctx.beginPath();
-                this.ctx.moveTo(p.x, p.y);
-                this.ctx.lineTo(p2.x, p2.y);
-                this.ctx.strokeStyle = this.lineColor;
-                this.ctx.globalAlpha = opacity * 0.5;
-                this.ctx.stroke();
-                this.ctx.globalAlpha = 1;
+                    // Çizgi rengini ve opaklığını ayarla
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(p.x, p.y);
+                    this.ctx.lineTo(p2.x, p2.y);
+                    this.ctx.strokeStyle = this.lineColor;
+                    this.ctx.globalAlpha = opacity * 0.5;
+                    this.ctx.lineWidth = 0.5;
+                    this.ctx.stroke();
+                    this.ctx.globalAlpha = 1;
+                }
             }
         }
+
+        requestAnimationFrame(this.animate.bind(this));
+    }
+
+    // Tek bir parçacığı çiz
+    drawParticle(particle) {
+        this.ctx.beginPath();
+        this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+
+        if (this.glowEffect) {
+            // Parlaklık efekti ekle
+            this.ctx.shadowBlur = particle.size * 2;
+            this.ctx.shadowColor = particle.color;
+        }
+
+        this.ctx.fillStyle = particle.color;
+        this.ctx.globalAlpha = particle.opacity;
+        this.ctx.fill();
+
+        // Shadow'u sıfırla
+        this.ctx.shadowBlur = 0;
     }
 }
 
-// Initialize particle system
-document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('particles-container');
-    if (!container) return;
+// Sayfa yüklendiğinde parçacık sistemini başlat
+document.addEventListener('DOMContentLoaded', function () {
+    // Parçacık container'ını kontrol et
+    const particlesContainer = document.getElementById('particles-container');
+    if (!particlesContainer) return;
 
-    container.style.display = 'block';
+    particlesContainer.style.display = 'block';
 
+    // Canvas elementini kontrol et ve oluştur
     let canvas = document.getElementById('particles-canvas');
     if (!canvas) {
         canvas = document.createElement('canvas');
         canvas.id = 'particles-canvas';
-        container.appendChild(canvas);
+        particlesContainer.appendChild(canvas);
     }
 
+    // Yeni parçacık ağı oluştur ve özelleştirilmiş ayarları uygula
     new EnhancedParticleNetwork('particles-canvas', {
         particleCount: 150,
         colors: [
