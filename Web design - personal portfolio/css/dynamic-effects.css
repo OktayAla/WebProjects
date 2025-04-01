@@ -1,6 +1,9 @@
-/* Dynamic Effects CSS - Enhanced Website Animations */
+/* Bu CSS dosyası, web sayfasında dinamik efektler ve animasyonlar için kullanılır. */
+/* Arka plan geçişleri, buton efektleri, ilerleme çubukları ve diğer etkileşimli öğeler için tasarlanmıştır. */
 
-/* Advanced Animation Variables */
+
+/* Temanın animasyon süreleri ve eğrileri için CSS değişkenleri. */
+/* Bu değişkenler, animasyonların hızını ve akışını kontrol etmek için kullanılmakta. */
 :root {
     --animation-ultra-slow: 3s;
     --animation-slow: 1.5s;
@@ -14,13 +17,12 @@
     --animation-elastic-in: cubic-bezier(0.7, -0.4, 0.4, 1.4);
 }
 
-/* Enhanced 3D Effects */
+/* Hero bölümünde kullanılan CSS değişkenleri. */
 .perspective-container {
     perspective: 1000px;
     transform-style: preserve-3d;
 }
 
-/* Parallax Scrolling Effect */
 .parallax-bg {
     background-attachment: fixed;
     background-position: center;
@@ -29,29 +31,45 @@
     transition: background-position 0.1s ease-out;
 }
 
-/* Magnetic Hover Effect */
 .magnetic-element {
     transition: transform var(--animation-medium) var(--animation-spring);
     transform-style: preserve-3d;
 }
 
-/* Morphing Background */
+/* Magnetic arka plan efektinde kullanılan CSS değişkenleri. */
 .morphing-bg {
-    background: linear-gradient(-45deg, #6b46c1, #4299e1, #805ad5, #3182ce);
+    background: linear-gradient(-45deg,
+        rgba(138, 43, 226, 0.4),
+        rgba(0, 191, 255, 0.4),
+        rgba(66, 153, 225, 0.4),
+        rgba(212, 55, 196, 0.4)
+    );
     background-size: 400% 400%;
     animation: gradient-morph 15s ease infinite;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
 }
 
 @keyframes gradient-morph {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
-/* Enhanced Hero Section */
 .hero {
     position: relative;
     overflow: hidden;
+    background: var(--dark-bg);
 }
 
 .hero::before {
@@ -65,7 +83,7 @@
     opacity: 0.8;
     animation: pulse-glow 8s ease-in-out infinite alternate;
     pointer-events: none;
-    z-index: 0;
+    z-index: 1;
 }
 
 .hero::after {
@@ -79,12 +97,23 @@
     z-index: 1;
 }
 
+#particles-container {
+    display: block !important;
+    z-index: 2 !important;
+}
+
+.hero .container {
+    position: relative;
+    z-index: 3;
+}
+
+/* Hero bölümündeki metin ve başlık efektleri. */
 @keyframes pulse-glow {
     0% { transform: scale(1); opacity: 0.5; }
     100% { transform: scale(1.1); opacity: 0.8; }
 }
 
-/* Enhanced Button Effects */
+/* Hero bölümündeki butonların efektleri. */
 .btn {
     position: relative;
     overflow: hidden;
@@ -115,7 +144,7 @@
     box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4);
 }
 
-/* Enhanced Skill Cards */
+/* Skill bölümündeki kartların efektleri. */
 .skill {
     transition: all 0.5s var(--animation-spring);
     transform-origin: center bottom;
@@ -129,7 +158,6 @@
     border-color: rgba(138, 43, 226, 0.3);
 }
 
-/* Animated Progress Bars */
 .progress {
     position: relative;
     overflow: hidden;
@@ -164,7 +192,7 @@
     to { left: 130%; }
 }
 
-/* Enhanced Project Cards */
+/* Project bölümündeki kartların efektleri. */
 .project-card {
     transition: all 0.6s var(--animation-elastic-out);
     transform-style: preserve-3d;
@@ -176,7 +204,7 @@
 
 .project-card:hover {
     transform: translateY(-15px) rotateY(8deg) scale(1.03);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2),
                 0 15px 20px rgba(138, 43, 226, 0.2);
 }
 
@@ -188,7 +216,6 @@
     transform: scale(1.1) translateY(-5px);
 }
 
-/* Floating Animation for Hero Elements */
 .hero-float {
     animation: hero-float 6s ease-in-out infinite;
 }
@@ -198,7 +225,7 @@
     50% { transform: translateY(-20px); }
 }
 
-/* Glowing Text Effect */
+/* Hero bölümündeki başlık ve metin efektleri. */
 .glow-text {
     text-shadow: 0 0 10px rgba(138, 43, 226, 0.5), 0 0 20px rgba(0, 191, 255, 0.3);
     animation: text-glow 3s ease-in-out infinite alternate;
@@ -209,7 +236,6 @@
     100% { text-shadow: 0 0 15px rgba(138, 43, 226, 0.8), 0 0 30px rgba(0, 191, 255, 0.6); }
 }
 
-/* Optimized Animations */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
@@ -219,7 +245,7 @@
     }
 }
 
-/* Staggered Animation for Multiple Elements */
+/* Staggered animasyonlar için CSS sınıfları. */
 .stagger-item:nth-child(1) { transition-delay: 0.1s; }
 .stagger-item:nth-child(2) { transition-delay: 0.2s; }
 .stagger-item:nth-child(3) { transition-delay: 0.3s; }
@@ -227,7 +253,7 @@
 .stagger-item:nth-child(5) { transition-delay: 0.5s; }
 .stagger-item:nth-child(6) { transition-delay: 0.6s; }
 
-/* Scroll Indicator Animation */
+/* Scrolldown ok animasyonu. */
 .scroll-down {
     animation: float-bounce 2s ease-in-out infinite;
 }
@@ -237,7 +263,7 @@
     50% { transform: translateY(-15px) translateX(-50%); }
 }
 
-/* Contact Form Enhanced Effects */
+/* Form elemanları için CSS efektleri. */
 .form-control {
     transition: all 0.4s var(--animation-smooth);
     border: 1px solid rgba(138, 43, 226, 0.2);
@@ -249,7 +275,7 @@
     border-color: rgba(138, 43, 226, 0.6);
 }
 
-/* Social Icons Enhanced Animation */
+/* Sosyal medya ikonları için CSS efektleri. */
 .social-icon {
     transition: all 0.4s var(--animation-bounce-out);
     transform-origin: center;
@@ -260,7 +286,7 @@
     color: var(--accent-color) !important;
 }
 
-/* Section Title Animation */
+/* Scroll progress bar için CSS efektleri. */
 .section-title {
     position: relative;
 }
@@ -281,7 +307,7 @@
     width: 100px;
 }
 
-/* Cursor Follower Effect */
+/* Cursor takip efekti*/
 .cursor-follower {
     position: fixed;
     width: 40px;
@@ -295,7 +321,7 @@
     transform: translate(-50%, -50%);
 }
 
-/* Scroll Progress Indicator */
+/* Scroll progress bar efekti */
 .scroll-progress {
     position: fixed;
     top: 0;
