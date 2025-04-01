@@ -1,7 +1,11 @@
+/* Bu CSS dosyası, web sayfasındaki gradient metin efektlerini tanımlar. */
+/* Gradient metin efektleri, metinlerin arka planında geçişli renkler kullanarak animasyon oluşturmak içindir */
+
+
 .neon-gradient-text {
-    background: linear-gradient(135deg, 
-    #00bfff 30%,
-    #d142e1 70%);
+    background: linear-gradient(135deg,
+            #00bfff 30%,
+            #d142e1 70%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -11,11 +15,10 @@
 }
 
 .section-title {
-    background: linear-gradient(135deg, 
-        #8a2be2 0%, 
-        #00bfff 50%, 
-        #4299e1 100%  
-    );
+    background: linear-gradient(135deg,
+            #8a2be2 0%,
+            #00bfff 50%,
+            #4299e1 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -37,6 +40,7 @@
             0 0 20px rgba(138, 43, 226, 0.5),
             0 0 30px rgba(0, 191, 255, 0.3);
     }
+
     100% {
         text-shadow:
             0 0 20px rgba(138, 43, 226, 0.9),
