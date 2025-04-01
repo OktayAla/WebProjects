@@ -1,12 +1,15 @@
 <?php
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Form verilerini al ve temizle
-    $name = strip_tags(trim($_POST["name"]));
-    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
-    $message = strip_tags(trim($_POST["message"]));
+if ($_SERVER["REQUEST_METHOD"] == "POST") { // Eğer istek methodu POST ise
+    // Form verilerini al
+    $name = strip_tags(trim($_POST["name"])); // Adı soyadı
+    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL); // E-postay
+    $message = strip_tags(trim($_POST["message"])); // Mesaj
 
     // Karakter sınırlamalarını kontrol et
+    // Eğer ad, e-posta 25 karakterden uzunsa, 400 yanıt kodu döndür
+    // Eğer ad, e-posta veya mesaj 300 karakterden uzunsa, 400 yanıt kodu döndür
+    // ve çıkış yap
     if (strlen($name) > 25 || strlen($email) > 25 || strlen($message) > 300) {
         http_response_code(400);
         exit;
@@ -25,13 +28,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $log_entry .= "----------------------------------------\n";
 
     // Dosyaya yaz
+
+    // Eğer dosya yazma işlemi başarılıysa, 200 yanıt kodu döndür
+    // ve "success" mesajı gönder
+    // Eğer dosya yazma işlemi başarısızsa, 500 yanıt kodu döndür
     if (file_put_contents($log_file, $log_entry, FILE_APPEND)) {
         http_response_code(200);
         echo "success";
+
+        // Eğer dosya yazma işlemi basarısızsa, 500 yanıt kodu döndür
     } else {
         http_response_code(500);
         echo "error";
     }
+
+    // Eğer dosya yazma işlemi basarısızsa, 403 yanıt kodu döndür
 } else {
     http_response_code(403);
     echo "error";
