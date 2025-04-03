@@ -10,14 +10,9 @@ function checkLogin() {
     }
 }
 
-// Şifreyi hashleyerek güvenli hale getirme
-function hashPassword($password) {
-    return password_hash($password, PASSWORD_BCRYPT);
-}
-
-// Şifreyi doğrulama
-function verifyPassword($password, $hash) {
-    return password_verify($password, $hash);
+// Şifre doğrulama - hash yerine direkt karşılaştırma
+function verifyPassword($password, $stored_password) {
+    return $password === $stored_password;
 }
 
 // Kullanıcı bilgilerini çekme

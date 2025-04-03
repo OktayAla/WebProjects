@@ -1,56 +1,117 @@
 <?php
-require_once 'config/database.php'; // Veritabanı bağlantısı
-require_once 'includes/functions.php'; // Fonksiyonlar
+require_once 'config/database.php';
+require_once 'includes/functions.php';
 
 session_start();
+$error = '';
 
-// Kullanıcı giriş yapmış mı kontrol et
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
+    $password = trim($_POST['password']); // Şifre direkt olarak alınıyor
 
-    // Kullanıcıyı veritabanında ara
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->execute([$email]);
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? AND password = ?");
+    $stmt->execute([$email, $password]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Giriş bilgilerini kontrol et
-    // Eğer kullanıcı varsa ve şifre doğruysa
-    // Kullanıcıyı oturum açtır
-    if ($user && verifyPassword($password, $user['password'])) {
+    if ($user) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['role'] = $user['role'];
-
-        echo "Giriş başarılı, yönlendiriliyorsunuz...";
-        header("Location: dashboard.php"); // Ana sayfaya yönlendir
+        header("Location: dashboard.php");
         exit;
     } else {
-        echo "Geçersiz e-posta veya şifre!";
+        $error = 'Geçersiz e-posta veya şifre!';
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş Yap</title>
+    <title>Giriş Yap - İK Yönetim Sistemi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-header h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        .form-control {
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        .error-message {
+            color: #e74c3c;
+            background: #fdf0ed;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h2>Giriş Yap</h2>
-    <form action="login.php" method="POST">
-        <label>E-Posta:</label>
-        <input type="email" name="email" required>
-        
-        <label>Şifre:</label>
-        <input type="password" name="password" required>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>İK Yönetim Sistemi</h1>
+            <p class="text-muted">Hesabınıza giriş yapın</p>
+        </div>
 
-        <button type="submit">Giriş Yap</button>
-    </form>
+        <?php if ($error): ?>
+            <div class="error-message">
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="login.php" method="POST">
+            <div class="mb-3">
+                <label class="form-label">E-Posta Adresi</label>
+                <input type="email" name="email" class="form-control" required 
+                       placeholder="ornek@sirket.com">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Şifre</label>
+                <input type="password" name="password" class="form-control" required 
+                       placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn btn-login">Giriş Yap</button>
+        </form>
+    </div>
 </body>
 </html>
