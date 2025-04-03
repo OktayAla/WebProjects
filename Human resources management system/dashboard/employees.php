@@ -1,6 +1,6 @@
 <?php
-require_once 'config/database.php'; // Veritabanı bağlantısı
-require_once 'includes/functions.php'; // Fonksiyonlar
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 session_start();
 checkLogin();

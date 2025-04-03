@@ -1,5 +1,6 @@
 Options -Indexes
 RewriteEngine On
+RewriteBase /Human resources management system/
 
 # HTTPS Yönlendirmesi
 RewriteCond %{HTTPS} off
