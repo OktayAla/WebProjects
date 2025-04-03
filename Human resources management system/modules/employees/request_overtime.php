@@ -5,13 +5,21 @@ require_once 'includes/functions.php'; // Fonksiyonlar
 session_start();
 checkLogin();
 
+// Token oluştur
+$token = generateToken();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") { // Form gönderildiğinde çalışacak
+    if (!isset($_POST['token']) || !validateToken($_POST['token'])) {
+        echo "Geçersiz token!";
+        exit;
+    }
     $employee_id = $_SESSION['user_id']; // Çalışan kendi talebini oluşturur
     $overtime_hours = $_POST['overtime_hours']; // Fazla mesai saati
     $overtime_date = $_POST['overtime_date']; // Fazla mesai tarihi
 
     $stmt = $pdo->prepare("INSERT INTO overtime_requests (employee_id, overtime_hours, overtime_date) VALUES (?, ?, ?)");
     if ($stmt->execute([$employee_id, $overtime_hours, $overtime_date])) {
+        logAction("Overtime Request", "Employee $employee_id requested overtime on $overtime_date");
         echo "Fazla mesai talebiniz gönderildi!";
         header("Location: overtime_requests.php");
         exit;
@@ -30,6 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // Form gönderildiğinde çalışac
 <body>
     <h2>Fazla Mesai Talebi</h2>
     <form action="request_overtime.php" method="POST">
+        <input type="hidden" name="token" value="<?php echo $token; ?>">
         <label>Mesai Saati:</label>
         <input type="number" step="0.5" name="overtime_hours" required>
 

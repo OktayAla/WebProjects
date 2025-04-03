@@ -2,14 +2,14 @@
 require_once 'config/database.php'; // Veritabanı bağlantısı
 require_once 'includes/functions.php'; // Fonksiyonlar
 
-
 session_start();
 checkLogin();
 
+$token = generateToken();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $employee_id = $_SESSION['user_id']; // Çalışan kendi talebini oluşturur
-    $leave_type = $_POST['leave_type']; // İzin türü
-    $start_date = $_POST['start_date']; // Başlangıç tarihi
+    if (!isset($_POST['token']) || !validateToken($_POST['token'])) {
+        echo "Geçersiz token!";
     $end_date = $_POST['end_date']; // Bitiş tarihi
 
     $stmt = $pdo->prepare("INSERT INTO leave_requests (employee_id, leave_type, start_date, end_date) VALUES (?, ?, ?, ?)");

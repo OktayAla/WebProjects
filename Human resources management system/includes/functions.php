@@ -39,11 +39,22 @@ function sanitizeInput($data) {
     return htmlspecialchars(strip_tags(trim($data)));
 }
 
+// Güncellenmiş generateToken ve validateToken fonksiyonları
 function generateToken() {
-    return bin2hex(random_bytes(32));
+    if(empty($_SESSION['token'])){
+       $_SESSION['token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['token'];
 }
 
 function validateToken($token) {
     return isset($_SESSION['token']) && hash_equals($_SESSION['token'], $token);
+}
+
+// Yeni loglama fonksiyonu
+function logAction($action, $details = '') {
+    $logFile = __DIR__ . '/../logs/actions.log';
+    $date = date('Y-m-d H:i:s');
+    file_put_contents($logFile, "[$date] $action: $details" . PHP_EOL, FILE_APPEND);
 }
 ?>
