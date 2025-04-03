@@ -6,8 +6,14 @@ session_start();
 checkLogin();
 checkRole(['ik', 'admin']); // Sadece İK ve Admin rolüne sahip kullanıcılar çalışan ekleyebilir
 
+$token = generateToken();
+
 // Kullanıcı bilgilerini al
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!isset($_POST['token']) || !validateToken($_POST['token'])) {
+        echo "Geçersiz token!";
+        exit;
+    }
     $company_id = $_POST['company_id'];
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
@@ -22,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Ekleme işleminden sonra kullanıcıyı employees.php sayfasına yönlendir
     if ($stmt->execute([$company_id, $name, $email, $phone, $position, $salary, $hire_date, $status])) {
+        logAction("Add Employee", "New employee added by user ".$_SESSION['user_id']);
         echo "Çalışan başarıyla eklendi!";
         header("Location: employees.php");
         exit;
@@ -42,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <h2>Yeni Çalışan Ekle</h2>
     <form action="add_employee.php" method="POST">
+        <input type="hidden" name="token" value="<?php echo $token; ?>">
         <label>Şirket ID:</label>
         <input type="number" name="company_id" required>
 

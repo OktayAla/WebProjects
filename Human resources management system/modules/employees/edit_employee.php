@@ -6,6 +6,8 @@ session_start();
 checkLogin();
 checkRole(['ik', 'admin']); // Sadece İnsan Kaynakları ve Admin düzenleyebilir
 
+$token = generateToken();
+
 if (!isset($_GET['id'])) {
     echo "Çalışan ID'si bulunamadı!";
     exit;
@@ -25,6 +27,10 @@ if (!$employee) {
 
 // Güncelleme işlemi
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!isset($_POST['token']) || !validateToken($_POST['token'])) {
+        echo "Geçersiz token!";
+        exit;
+    }
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
@@ -36,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Çalışan bilgilerini güncelle
     $updateStmt = $pdo->prepare("UPDATE employees SET name=?, email=?, phone=?, position=?, salary=?, hire_date=?, status=? WHERE id=?");
     if ($updateStmt->execute([$name, $email, $phone, $position, $salary, $hire_date, $status, $employee_id])) {
+        logAction("Edit Employee", "Employee $employee_id updated by user ".$_SESSION['user_id']);
         echo "Çalışan bilgileri güncellendi!";
         header("Location: employees.php");
         exit;
@@ -54,6 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <h2>Çalışan Bilgilerini Düzenle</h2>
     <form action="edit_employee.php?id=<?php echo $employee_id; ?>" method="POST">
+        <input type="hidden" name="token" value="<?php echo $token; ?>">
         <label>Ad Soyad:</label>
         <input type="text" name="name" value="<?php echo htmlspecialchars($employee['name']); ?>" required>
         
