@@ -27,4 +27,23 @@ function getUserById($id) {
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
+function checkRole($allowed_roles) {
+    if(!isset($_SESSION['role']) || !in_array($_SESSION['role'], $allowed_roles)) {
+        header("Location: error.php?msg=unauthorized");
+        exit;
+    }
+}
+
+function sanitizeInput($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
+
+function generateToken() {
+    return bin2hex(random_bytes(32));
+}
+
+function validateToken($token) {
+    return isset($_SESSION['token']) && hash_equals($_SESSION['token'], $token);
+}
 ?>
