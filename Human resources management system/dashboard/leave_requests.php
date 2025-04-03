@@ -1,13 +1,19 @@
 <?php
-require_once 'config/database.php'; // Veritabanı bağlantısı
-require_once 'includes/functions.php'; // Fonksiyonlar
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 session_start();
 checkLogin();
 checkRole(['ik', 'admin']);
 
 // Kullanıcı bilgilerini al
-$stmt = $pdo->query("SELECT leave_requests.*, employees.name FROM leave_requests JOIN employees ON leave_requests.employee_id = employees.id");
+$stmt = $pdo->query("SELECT lr.*, 
+                            CONCAT(e.first_name, ' ', e.last_name) as employee_name,
+                            d.name as department_name
+                     FROM leave_requests lr
+                     JOIN employees e ON lr.employee_id = e.id
+                     LEFT JOIN departments d ON e.department_id = d.id
+                     ORDER BY lr.created_at DESC");
 $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -34,7 +40,7 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php foreach ($requests as $request) : ?>
         <tr>
             <td><?php echo $request['id']; ?></td>
-            <td><?php echo htmlspecialchars($request['name']); ?></td>
+            <td><?php echo htmlspecialchars($request['employee_name']); ?></td>
             <td><?php echo $request['leave_type']; ?></td>
             <td><?php echo $request['start_date']; ?></td>
             <td><?php echo $request['end_date']; ?></td>

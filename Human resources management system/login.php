@@ -7,15 +7,22 @@ $error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
-    $password = trim($_POST['password']); // Şifre direkt olarak alınıyor
+    $password = trim($_POST['password']);
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? AND password = ?");
+    $stmt = $pdo->prepare("SELECT u.*, c.name as company_name 
+                          FROM users u
+                          LEFT JOIN companies c ON u.company_id = c.id
+                          WHERE u.email = ? AND u.password = ?");
     $stmt->execute([$email, $password]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $user = $stmt->fetch();
 
     if ($user) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['role'] = $user['role'];
+        $_SESSION['company_id'] = $user['company_id'];
+        $_SESSION['company_name'] = $user['company_name'];
+        $_SESSION['user_name'] = $user['name'];
+        
         header("Location: dashboard.php");
         exit;
     } else {

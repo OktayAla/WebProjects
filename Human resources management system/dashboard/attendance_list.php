@@ -6,7 +6,13 @@ session_start();
 checkLogin();
 checkRole(['ik', 'admin']);
 
-$stmt = $pdo->query("SELECT attendance.*, employees.name FROM attendance JOIN employees ON attendance.employee_id = employees.id ORDER BY date DESC");
+$stmt = $pdo->query("SELECT a.*, 
+                            CONCAT(e.first_name, ' ', e.last_name) as employee_name,
+                            d.name as department_name
+                     FROM attendance a 
+                     LEFT JOIN employees e ON a.employee_id = e.id 
+                     LEFT JOIN departments d ON e.department_id = d.id
+                     ORDER BY a.date DESC, a.check_in DESC");
 $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -28,7 +34,7 @@ $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </tr>
         <?php foreach ($records as $record) : ?>
         <tr>
-            <td><?php echo htmlspecialchars($record['name']); ?></td>
+            <td><?php echo htmlspecialchars($record['employee_name']); ?></td>
             <td><?php echo $record['date']; ?></td>
             <td><?php echo $record['check_in'] ?? '-'; ?></td>
             <td><?php echo $record['check_out'] ?? '-'; ?></td>
