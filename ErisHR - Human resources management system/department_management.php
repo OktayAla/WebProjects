@@ -220,7 +220,11 @@ if (file_exists($employeesFile)) {
 // Get managers for dropdown
 $managers = [];
 foreach ($employees as $employee) {
-    if ($employee['role'] === 'manager' || $employee['role'] === 'admin') {
+    // Check if role key exists before accessing it
+    if (isset($employee['role']) && ($employee['role'] === 'manager' || $employee['role'] === 'admin')) {
+        $managers[] = $employee;
+    } else if (isset($employee['position']) && (strpos(strtolower($employee['position']), 'müdür') !== false || strpos(strtolower($employee['position']), 'yönetici') !== false)) {
+        // If role is not set, use position as a fallback to identify managers
         $managers[] = $employee;
     }
 }

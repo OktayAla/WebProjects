@@ -111,7 +111,7 @@ $userName = $_SESSION['name'];
                                         <div class="stat-card-body">
                                             <i class="fas fa-calendar-alt stat-icon"></i>
                                             <div class="stat-content">
-                                                <h4 class="stat-value"><?php echo $_SESSION['remaining_leave']; ?></h4>
+                                                <h4 class="stat-value"><?php echo isset($_SESSION['remaining_leave']) ? $_SESSION['remaining_leave'] : 0; ?></h4>
                                                 <p class="stat-label">Kalan İzin Günü</p>
                                             </div>
                                         </div>
@@ -365,7 +365,7 @@ $userName = $_SESSION['name'];
                                     $notifications = [
                                         [
                                             'icon' => 'fas fa-bell',
-                                            'message' => 'Yeni bir duyuru yayınlandı: "Şirket Pikniği 15 Haziran'da yapılacaktır."',
+                                            'message' => 'Yeni bir duyuru yayınlandı: "Şirket Pikniği 15 Haziran\'da yapılacaktır."',
                                             'date' => date('Y-m-d H:i:s', strtotime('-2 hours')),
                                             'type' => 'info'
                                         ],

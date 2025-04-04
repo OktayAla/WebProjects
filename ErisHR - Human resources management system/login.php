@@ -22,6 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['name'] = $user['name'];
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['department'] = $user['department'];
+                $_SESSION['remaining_leave'] = $user['remaining_leave'];
                 
                 // Redirect to dashboard
                 header("Location: index.php");
