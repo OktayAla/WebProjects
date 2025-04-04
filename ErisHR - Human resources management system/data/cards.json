@@ -61,12 +61,150 @@
     },
     {
         "card_id": "RFID011",
+        "employee_id": 11,
+        "assigned_date": "2025-01-15 11:30:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID012",
+        "employee_id": 12,
+        "assigned_date": "2025-01-15 11:45:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID013",
+        "employee_id": 13,
+        "assigned_date": "2025-01-15 12:00:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID014",
+        "employee_id": 14,
+        "assigned_date": "2025-01-15 12:15:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID015",
+        "employee_id": 15,
+        "assigned_date": "2025-01-15 12:30:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID016",
+        "employee_id": 16,
+        "assigned_date": "2025-01-15 12:45:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID017",
+        "employee_id": 17,
+        "assigned_date": "2025-01-15 13:00:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID018",
+        "employee_id": 18,
+        "assigned_date": "2025-01-15 13:15:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID019",
+        "employee_id": 19,
+        "assigned_date": "2025-01-15 13:30:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID020",
+        "employee_id": 20,
+        "assigned_date": "2025-01-15 13:45:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID021",
+        "employee_id": 21,
+        "assigned_date": "2025-01-15 14:00:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID022",
+        "employee_id": 22,
+        "assigned_date": "2025-01-15 14:15:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID023",
+        "employee_id": 23,
+        "assigned_date": "2025-01-15 14:30:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID024",
+        "employee_id": 24,
+        "assigned_date": "2025-01-15 14:45:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID025",
+        "employee_id": 25,
+        "assigned_date": "2025-01-15 15:00:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID026",
+        "employee_id": 26,
+        "assigned_date": "2025-01-15 15:15:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID027",
+        "employee_id": 27,
+        "assigned_date": "2025-01-15 15:30:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID028",
+        "employee_id": 28,
+        "assigned_date": "2025-01-15 15:45:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID029",
+        "employee_id": 29,
+        "assigned_date": "2025-01-15 16:00:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID030",
+        "employee_id": 30,
+        "assigned_date": "2025-01-15 16:15:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID031",
         "employee_id": null,
         "assigned_date": null,
         "status": "inactive"
     },
     {
-        "card_id": "RFID012",
+        "card_id": "RFID032",
+        "employee_id": null,
+        "assigned_date": null,
+        "status": "inactive"
+    },
+    {
+        "card_id": "RFID033",
+        "employee_id": null,
+        "assigned_date": null,
+        "status": "inactive"
+    },
+    {
+        "card_id": "RFID034",
+        "employee_id": null,
+        "assigned_date": null,
+        "status": "inactive"
+    },
+    {
+        "card_id": "RFID035",
         "employee_id": null,
         "assigned_date": null,
         "status": "inactive"
