@@ -274,316 +274,338 @@ if (file_exists($attendanceFile)) {
             </header>
             
             <div class="content-wrapper">
-                <div class="attendance-page animate__animated animate__fadeIn">
-                    <!-- PDKS Card Reader Simulation -->
-                    <div class="row mb-4">
-                        <div class="col-md-6 mx-auto">
-                            <div class="pdks-reader animate__animated animate__fadeInUp">
-                                <div class="pdks-icon">
-                                    <i class="fas fa-id-card"></i>
+                <div class="container-fluid">
+                    <?php if (!empty($successMessage)): ?>
+                    <div class="alert alert-success">
+                        <?php echo $successMessage; ?>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($errorMessage)): ?>
+                    <div class="alert alert-danger">
+                        <?php echo $errorMessage; ?>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <?php if ($userRole === 'manager' || $userRole === 'admin'): ?>
+                    <!-- Tab navigation for managers to switch between personal and team attendance -->
+                    <ul class="nav nav-tabs mb-4" id="attendanceTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab" aria-controls="personal" aria-selected="true">
+                                <i class="fas fa-user"></i> Kişisel Giriş/Çıkış Kayıtları
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="team-tab" data-bs-toggle="tab" data-bs-target="#team" type="button" role="tab" aria-controls="team" aria-selected="false">
+                                <i class="fas fa-users"></i> Ekip Giriş/Çıkış Kayıtları
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="attendanceTabsContent">
+                        <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
+                    <?php endif; ?>
+                    
+                    <!-- Card Scan Simulation -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">PDKS Kart Okutma Simülasyonu</h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="" method="post" class="row g-3">
+                                <input type="hidden" name="action" value="scan_card">
+                                <div class="col-md-6">
+                                    <label for="card_id" class="form-label">Kart ID</label>
+                                    <input type="text" class="form-control" id="card_id" name="card_id" required>
                                 </div>
-                                <h3 class="pdks-status">PDKS Kart Okuyucu Simülasyonu</h3>
-                                <p class="text-muted mb-4">Giriş veya çıkış kaydı oluşturmak için kart ID'sini girin.</p>
-                                
-                                <?php if ($scanSuccess): ?>
-                                <div class="alert alert-success">
-                                    <i class="fas fa-check-circle me-2"></i>
-                                    <?php echo $scanMessage; ?>
+                                <div class="col-md-6 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-id-card"></i> Kart Okut
+                                    </button>
                                 </div>
-                                <?php elseif (!empty($scanMessage)): ?>
-                                <div class="alert alert-danger">
-                                    <i class="fas fa-exclamation-circle me-2"></i>
-                                    <?php echo $scanMessage; ?>
-                                </div>
-                                <?php endif; ?>
-                                
-                                <form method="post" action="" class="mb-4">
-                                    <input type="hidden" name="action" value="scan_card">
-                                    <div class="input-group pdks-input">
-                                        <input type="text" class="form-control" name="card_id" placeholder="Kart ID girin" required>
-                                        <button class="btn btn-primary" type="submit">
-                                            <i class="fas fa-check me-2"></i>Kart Okut
-                                        </button>
-                                    </div>
-                                </form>
+                            </form>
+                            
+                            <?php if (!empty($scanMessage)): ?>
+                            <div class="alert <?php echo $scanSuccess ? 'alert-success' : 'alert-danger'; ?> mt-3">
+                                <?php echo $scanMessage; ?>
                             </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     
                     <!-- Attendance Records -->
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5><i class="fas fa-history me-2"></i>Giriş/Çıkış Kayıtları</h5>
-                            <div class="header-actions">
-                                <button class="btn btn-sm btn-outline-primary" id="filterButton">
-                                    <i class="fas fa-filter me-2"></i>Filtrele
+                            <h5 class="mb-0">Giriş/Çıkış Kayıtları</h5>
+                            <div>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="filterToday">
+                                    <i class="fas fa-calendar-day"></i> Bugün
                                 </button>
-                                <?php if ($userRole === 'admin'): ?>
-                                <button class="btn btn-sm btn-outline-success ms-2" id="exportButton">
-                                    <i class="fas fa-file-excel me-2"></i>Dışa Aktar
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="filterWeek">
+                                    <i class="fas fa-calendar-week"></i> Bu Hafta
                                 </button>
-                                <?php endif; ?>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="filterMonth">
+                                    <i class="fas fa-calendar-alt"></i> Bu Ay
+                                </button>
                             </div>
                         </div>
                         <div class="card-body">
-                            <!-- Filter Panel (Hidden by default) -->
-                            <div class="filter-panel mb-4" style="display: none;">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <form id="filterForm" class="row g-3">
-                                            <div class="col-md-4">
-                                                <label for="filterDate" class="form-label">Tarih</label>
-                                                <input type="date" class="form-control" id="filterDate">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="filterType" class="form-label">Kayıt Tipi</label>
-                                                <select class="form-select" id="filterType">
-                                                    <option value="">Tümü</option>
-                                                    <option value="entry">Giriş</option>
-                                                    <option value="exit">Çıkış</option>
-                                                </select>
-                                            </div>
-                                            <?php if ($userRole === 'admin' || $userRole === 'manager'): ?>
-                                            <div class="col-md-4">
-                                                <label for="filterEmployee" class="form-label">Personel</label>
-                                                <select class="form-select" id="filterEmployee">
-                                                    <option value="">Tümü</option>
-                                                    <!-- Employee options will be loaded dynamically -->
-                                                </select>
-                                            </div>
-                                            <?php endif; ?>
-                                            <div class="col-12 text-end">
-                                                <button type="button" class="btn btn-secondary me-2" id="resetFilter">
-                                                    <i class="fas fa-undo me-2"></i>Sıfırla
-                                                </button>
-                                                <button type="button" class="btn btn-primary" id="applyFilter">
-                                                    <i class="fas fa-filter me-2"></i>Uygula
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Attendance Table -->
                             <div class="table-responsive">
                                 <table class="table table-hover" id="attendanceTable">
                                     <thead>
                                         <tr>
                                             <th>Tarih</th>
-                                            <th>Saat</th>
-                                            <th>Personel</th>
-                                            <th>Kayıt Tipi</th>
-                                            <th>Kart ID</th>
-                                            <?php if ($userRole === 'admin'): ?>
-                                            <th>İşlemler</th>
-                                            <?php endif; ?>
+                                            <th>Giriş Saati</th>
+                                            <th>Çıkış Saati</th>
+                                            <th>Toplam Süre</th>
+                                            <th>Durum</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if (empty($attendanceRecords)): ?>
-                                        <tr>
-                                            <td colspan="<?php echo ($userRole === 'admin') ? '6' : '5'; ?>" class="text-center">Kayıt bulunamadı.</td>
-                                        </tr>
-                                        <?php else: ?>
-                                        <?php foreach ($attendanceRecords as $record): ?>
-                                        <tr class="record-row" 
-                                            data-date="<?php echo $record['date']; ?>" 
-                                            data-type="<?php echo $record['type']; ?>" 
-                                            data-employee="<?php echo $record['employee_id']; ?>">
-                                            <td><?php echo date('d.m.Y', strtotime($record['date'])); ?></td>
-                                            <td><?php echo $record['time']; ?></td>
-                                            <td><?php echo $record['employee_name']; ?></td>
+                                        <?php foreach ($userAttendanceRecords as $date => $record): ?>
+                                        <tr data-date="<?php echo $date; ?>">
+                                            <td><?php echo date('d.m.Y', strtotime($date)); ?></td>
                                             <td>
-                                                <?php if ($record['type'] === 'entry'): ?>
-                                                <span class="badge bg-success">Giriş</span>
-                                                <?php else: ?>
-                                                <span class="badge bg-danger">Çıkış</span>
-                                                <?php endif; ?>
+                                                <?php 
+                                                if (isset($record['entry'])) {
+                                                    echo date('H:i', strtotime($record['entry']));
+                                                    
+                                                    // Check if late entry (after 9:00 AM)
+                                                    $entryTime = strtotime($record['entry']);
+                                                    $startTime = strtotime('09:00:00');
+                                                    
+                                                    if ($entryTime > $startTime) {
+                                                        echo ' <span class="badge bg-warning">Geç Giriş</span>';
+                                                    }
+                                                } else {
+                                                    echo '-';
+                                                }
+                                                ?>
                                             </td>
-                                            <td><?php echo $record['card_id']; ?></td>
-                                            <?php if ($userRole === 'admin'): ?>
                                             <td>
-                                                <button class="btn btn-sm btn-outline-primary edit-record" data-id="<?php echo $record['id']; ?>">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-danger delete-record" data-id="<?php echo $record['id']; ?>">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
+                                                <?php 
+                                                if (isset($record['exit'])) {
+                                                    echo date('H:i', strtotime($record['exit']));
+                                                    
+                                                    // Check if early exit (before 6:00 PM)
+                                                    $exitTime = strtotime($record['exit']);
+                                                    $endTime = strtotime('18:00:00');
+                                                    
+                                                    if ($exitTime < $endTime) {
+                                                        echo ' <span class="badge bg-warning">Erken Çıkış</span>';
+                                                    }
+                                                } else {
+                                                    echo '-';
+                                                }
+                                                ?>
                                             </td>
-                                            <?php endif; ?>
+                                            <td>
+                                                <?php 
+                                                if (isset($record['entry']) && isset($record['exit'])) {
+                                                    $entry = new DateTime($record['entry']);
+                                                    $exit = new DateTime($record['exit']);
+                                                    $interval = $entry->diff($exit);
+                                                    echo $interval->format('%H:%I');
+                                                } else {
+                                                    echo '-';
+                                                }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php 
+                                                if (isset($record['entry']) && isset($record['exit'])) {
+                                                    echo '<span class="badge bg-success">Tamamlandı</span>';
+                                                } elseif (isset($record['entry'])) {
+                                                    echo '<span class="badge bg-primary">Devam Ediyor</span>';
+                                                } else {
+                                                    echo '<span class="badge bg-secondary">Belirsiz</span>';
+                                                }
+                                                ?>
+                                            </td>
                                         </tr>
                                         <?php endforeach; ?>
-                                        <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                    
+                    <?php if ($userRole === 'manager' || $userRole === 'admin'): ?>
+                        </div>
+                        <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
+                            <!-- Team Attendance Records -->
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Ekip Giriş/Çıkış Kayıtları</h5>
+                                    <div>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" id="teamFilterToday">
+                                            <i class="fas fa-calendar-day"></i> Bugün
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" id="teamFilterWeek">
+                                            <i class="fas fa-calendar-week"></i> Bu Hafta
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" id="teamFilterMonth">
+                                            <i class="fas fa-calendar-alt"></i> Bu Ay
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="teamAttendanceTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Personel</th>
+                                                    <th>Tarih</th>
+                                                    <th>Giriş Saati</th>
+                                                    <th>Çıkış Saati</th>
+                                                    <th>Toplam Süre</th>
+                                                    <th>Durum</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($teamAttendanceRecords as $record): ?>
+                                                <tr data-date="<?php echo $record['date']; ?>">
+                                                    <td><?php echo $record['employee_name']; ?></td>
+                                                    <td><?php echo date('d.m.Y', strtotime($record['date'])); ?></td>
+                                                    <td>
+                                                        <?php 
+                                                        if (isset($record['entry'])) {
+                                                            echo date('H:i', strtotime($record['entry']));
+                                                            
+                                                            // Check if late entry (after 9:00 AM)
+                                                            $entryTime = strtotime($record['entry']);
+                                                            $startTime = strtotime('09:00:00');
+                                                            
+                                                            if ($entryTime > $startTime) {
+                                                                echo ' <span class="badge bg-warning">Geç Giriş</span>';
+                                                            }
+                                                        } else {
+                                                            echo '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php 
+                                                        if (isset($record['exit'])) {
+                                                            echo date('H:i', strtotime($record['exit']));
+                                                            
+                                                            // Check if early exit (before 6:00 PM)
+                                                            $exitTime = strtotime($record['exit']);
+                                                            $endTime = strtotime('18:00:00');
+                                                            
+                                                            if ($exitTime < $endTime) {
+                                                                echo ' <span class="badge bg-warning">Erken Çıkış</span>';
+                                                            }
+                                                        } else {
+                                                            echo '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php 
+                                                        if (isset($record['entry']) && isset($record['exit'])) {
+                                                            $entry = new DateTime($record['entry']);
+                                                            $exit = new DateTime($record['exit']);
+                                                            $interval = $entry->diff($exit);
+                                                            echo $interval->format('%H:%I');
+                                                        } else {
+                                                            echo '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php 
+                                                        if (isset($record['entry']) && isset($record['exit'])) {
+                                                            echo '<span class="badge bg-success">Tamamlandı</span>';
+                                                        } elseif (isset($record['entry'])) {
+                                                            echo '<span class="badge bg-primary">Devam Ediyor</span>';
+                                                        } else {
+                                                            echo '<span class="badge bg-secondary">Belirsiz</span>';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </main>
     </div>
     
-    <!-- Edit Record Modal (Admin Only) -->
-    <?php if ($userRole === 'admin'): ?>
-    <div class="modal fade" id="editRecordModal" tabindex="-1" aria-labelledby="editRecordModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editRecordModalLabel">Kayıt Düzenle</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editRecordForm">
-                        <input type="hidden" id="editRecordId">
-                        <div class="mb-3">
-                            <label for="editDate" class="form-label">Tarih</label>
-                            <input type="date" class="form-control" id="editDate" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editTime" class="form-label">Saat</label>
-                            <input type="time" class="form-control" id="editTime" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editType" class="form-label">Kayıt Tipi</label>
-                            <select class="form-select" id="editType" required>
-                                <option value="entry">Giriş</option>
-                                <option value="exit">Çıkış</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="button" class="btn btn-primary" id="saveRecordChanges">Kaydet</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php endif; ?>
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/main.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Filter panel toggle
-            const filterButton = document.getElementById('filterButton');
-            const filterPanel = document.querySelector('.filter-panel');
-            
-            if (filterButton && filterPanel) {
-                filterButton.addEventListener('click', function() {
-                    filterPanel.style.display = filterPanel.style.display === 'none' ? 'block' : 'none';
-                });
-            }
-            
-            // Apply filter
-            const applyFilter = document.getElementById('applyFilter');
-            const resetFilter = document.getElementById('resetFilter');
-            const filterDate = document.getElementById('filterDate');
-            const filterType = document.getElementById('filterType');
-            const filterEmployee = document.getElementById('filterEmployee');
-            const recordRows = document.querySelectorAll('.record-row');
-            
-            if (applyFilter && resetFilter) {
-                applyFilter.addEventListener('click', function() {
-                    const dateValue = filterDate.value;
-                    const typeValue = filterType.value;
-                    const employeeValue = filterEmployee ? filterEmployee.value : '';
-                    
-                    recordRows.forEach(row => {
-                        let showRow = true;
-                        
-                        if (dateValue && row.dataset.date !== dateValue) {
-                            showRow = false;
-                        }
-                        
-                        if (typeValue && row.dataset.type !== typeValue) {
-                            showRow = false;
-                        }
-                        
-                        if (employeeValue && row.dataset.employee !== employeeValue) {
-                            showRow = false;
-                        }
-                        
-                        row.style.display = showRow ? '' : 'none';
-                    });
-                    
-                    filterPanel.style.display = 'none';
-                });
-                
-                resetFilter.addEventListener('click', function() {
-                    filterDate.value = '';
-                    filterType.value = '';
-                    if (filterEmployee) filterEmployee.value = '';
-                    
-                    recordRows.forEach(row => {
-                        row.style.display = '';
-                    });
-                });
-            }
-            
-            <?php if ($userRole === 'admin'): ?>
-            // Edit record functionality
-            const editButtons = document.querySelectorAll('.edit-record');
-            const editRecordModal = new bootstrap.Modal(document.getElementById('editRecordModal'));
-            const editRecordId = document.getElementById('editRecordId');
-            const editDate = document.getElementById('editDate');
-            const editTime = document.getElementById('editTime');
-            const editType = document.getElementById('editType');
-            const saveRecordChanges = document.getElementById('saveRecordChanges');
-            
-            editButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const recordId = this.dataset.id;
-                    const row = this.closest('tr');
-                    const date = row.querySelector('td:nth-child(1)').textContent.split('.');
-                    const formattedDate = `${date[2]}-${date[1]}-${date[0]}`; // Convert DD.MM.YYYY to YYYY-MM-DD
-                    const time = row.querySelector('td:nth-child(2)').textContent;
-                    const type = row.querySelector('td:nth-child(4) .badge').textContent === 'Giriş' ? 'entry' : 'exit';
-                    
-                    editRecordId.value = recordId;
-                    editDate.value = formattedDate;
-                    editTime.value = time;
-                    editType.value = type;
-                    
-                    editRecordModal.show();
-                });
-            });
-            
-            if (saveRecordChanges) {
-                saveRecordChanges.addEventListener('click', function() {
-                    // In a real application, this would send an AJAX request to update the record
-                    // For this demo, we'll just show a success message and reload the page
-                    alert('Kayıt başarıyla güncellendi.');
-                    location.reload();
-                });
-            }
-            
-            // Delete record functionality
-            const deleteButtons = document.querySelectorAll('.delete-record');
-            
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    if (confirm('Bu kaydı silmek istediğinize emin misiniz?')) {
-                        // In a real application, this would send an AJAX request to delete the record
-                        // For this demo, we'll just show a success message and reload the page
-                        alert('Kayıt başarıyla silindi.');
-                        location.reload();
-                    }
-                });
-            });
-            
-            // Export functionality
-            const exportButton = document.getElementById('exportButton');
-            
-            if (exportButton) {
-                exportButton.addEventListener('click', function() {
-                    alert('Kayıtlar Excel dosyasına aktarıldı.');
-                });
-            }
-            <?php endif; ?>
+        // Date filtering for personal attendance
+        document.getElementById('filterToday').addEventListener('click', function() {
+            filterAttendanceByDate('today', 'attendanceTable');
         });
+        
+        document.getElementById('filterWeek').addEventListener('click', function() {
+            filterAttendanceByDate('week', 'attendanceTable');
+        });
+        
+        document.getElementById('filterMonth').addEventListener('click', function() {
+            filterAttendanceByDate('month', 'attendanceTable');
+        });
+        
+        <?php if ($userRole === 'manager' || $userRole === 'admin'): ?>
+        // Date filtering for team attendance
+        document.getElementById('teamFilterToday').addEventListener('click', function() {
+            filterAttendanceByDate('today', 'teamAttendanceTable');
+        });
+        
+        document.getElementById('teamFilterWeek').addEventListener('click', function() {
+            filterAttendanceByDate('week', 'teamAttendanceTable');
+        });
+        
+        document.getElementById('teamFilterMonth').addEventListener('click', function() {
+            filterAttendanceByDate('month', 'teamAttendanceTable');
+        });
+        <?php endif; ?>
+        
+        function filterAttendanceByDate(period, tableId) {
+            const table = document.getElementById(tableId);
+            const rows = table.querySelectorAll('tbody tr');
+            
+            const today = new Date();
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(today.getDate() - 7);
+            const oneMonthAgo = new Date();
+            oneMonthAgo.setMonth(today.getMonth() - 1);
+            
+            rows.forEach(row => {
+                const dateStr = row.getAttribute('data-date');
+                const rowDate = new Date(dateStr);
+                
+                if (period === 'today') {
+                    if (rowDate.toDateString() === today.toDateString()) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                } else if (period === 'week') {
+                    if (rowDate >= oneWeekAgo) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                } else if (period === 'month') {
+                    if (rowDate >= oneMonthAgo) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
