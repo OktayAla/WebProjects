@@ -151,6 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
 // Load attendance records for display
 $attendanceFile = 'data/attendance.json';
 $attendanceRecords = [];
+$userAttendanceRecords = []; // Initialize the variable to prevent undefined variable warning
 
 if (file_exists($attendanceFile)) {
     $allRecords = json_decode(file_get_contents($attendanceFile), true);
@@ -188,6 +189,25 @@ if (file_exists($attendanceFile)) {
     usort($attendanceRecords, function($a, $b) {
         return strtotime($b['timestamp']) - strtotime($a['timestamp']);
     });
+    
+    // Process attendance records to organize by date for user
+    foreach ($attendanceRecords as $record) {
+        if ($record['employee_id'] == $userId) {
+            $date = $record['date'];
+            
+            if ($record['type'] === 'entry') {
+                if (!isset($userAttendanceRecords[$date])) {
+                    $userAttendanceRecords[$date] = [];
+                }
+                $userAttendanceRecords[$date]['entry'] = $record['time'];
+            } elseif ($record['type'] === 'exit') {
+                if (!isset($userAttendanceRecords[$date])) {
+                    $userAttendanceRecords[$date] = [];
+                }
+                $userAttendanceRecords[$date]['exit'] = $record['time'];
+            }
+        }
+    }
 }
 ?>
 
@@ -542,70 +562,6 @@ if (file_exists($attendanceFile)) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/main.js"></script>
-    <script>
-        // Date filtering for personal attendance
-        document.getElementById('filterToday').addEventListener('click', function() {
-            filterAttendanceByDate('today', 'attendanceTable');
-        });
-        
-        document.getElementById('filterWeek').addEventListener('click', function() {
-            filterAttendanceByDate('week', 'attendanceTable');
-        });
-        
-        document.getElementById('filterMonth').addEventListener('click', function() {
-            filterAttendanceByDate('month', 'attendanceTable');
-        });
-        
-        <?php if ($userRole === 'manager' || $userRole === 'admin'): ?>
-        // Date filtering for team attendance
-        document.getElementById('teamFilterToday').addEventListener('click', function() {
-            filterAttendanceByDate('today', 'teamAttendanceTable');
-        });
-        
-        document.getElementById('teamFilterWeek').addEventListener('click', function() {
-            filterAttendanceByDate('week', 'teamAttendanceTable');
-        });
-        
-        document.getElementById('teamFilterMonth').addEventListener('click', function() {
-            filterAttendanceByDate('month', 'teamAttendanceTable');
-        });
-        <?php endif; ?>
-        
-        function filterAttendanceByDate(period, tableId) {
-            const table = document.getElementById(tableId);
-            const rows = table.querySelectorAll('tbody tr');
-            
-            const today = new Date();
-            const oneWeekAgo = new Date();
-            oneWeekAgo.setDate(today.getDate() - 7);
-            const oneMonthAgo = new Date();
-            oneMonthAgo.setMonth(today.getMonth() - 1);
-            
-            rows.forEach(row => {
-                const dateStr = row.getAttribute('data-date');
-                const rowDate = new Date(dateStr);
-                
-                if (period === 'today') {
-                    if (rowDate.toDateString() === today.toDateString()) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                } else if (period === 'week') {
-                    if (rowDate >= oneWeekAgo) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                } else if (period === 'month') {
-                    if (rowDate >= oneMonthAgo) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                }
-            });
-        }
-    </script>
+    <script src="js/attendance.js"></script>
 </body>
 </html>

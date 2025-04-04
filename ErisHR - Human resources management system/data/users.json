@@ -16,7 +16,7 @@
     {
         "id": 2,
         "name": "Ahmet Yılmaz",
-        "username": "ahmet",
+        "username": "ahmetyilmaz",
         "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
         "role": "manager",
         "department": "Bilgi Teknolojileri",
@@ -30,7 +30,7 @@
     {
         "id": 3,
         "name": "Ayşe Demir",
-        "username": "ayse",
+        "username": "aysedemir",
         "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
         "role": "employee",
         "department": "Bilgi Teknolojileri",
@@ -44,7 +44,7 @@
     {
         "id": 4,
         "name": "Mehmet Kaya",
-        "username": "mehmet",
+        "username": "mehmetkaya",
         "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
         "role": "employee",
         "department": "Muhasebe",
@@ -58,7 +58,7 @@
     {
         "id": 5,
         "name": "Zeynep Şahin",
-        "username": "zeynep",
+        "username": "zeynepsahin",
         "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
         "role": "manager",
         "department": "Muhasebe",

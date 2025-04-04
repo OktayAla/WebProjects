@@ -8,9 +8,9 @@
         "reason": "Acil sağlık giderleri için avans talep ediyorum.",
         "status": "approved",
         "approved_by": 2,
-        "approved_date": "2023-06-08 11:30:45",
-        "payment_date": "2023-06-10",
-        "created_at": "2023-06-07 09:15:22"
+        "approved_date": "2025-06-08 11:30:45",
+        "payment_date": "2025-06-10",
+        "created_at": "2025-06-07 09:15:22"
     },
     {
         "id": "ar002",
@@ -21,9 +21,9 @@
         "reason": "Ev taşıma masrafları için avans talep ediyorum.",
         "status": "approved",
         "approved_by": 5,
-        "approved_date": "2023-06-12 14:20:33",
-        "payment_date": "2023-06-15",
-        "created_at": "2023-06-10 10:45:12"
+        "approved_date": "2025-06-12 14:20:33",
+        "payment_date": "2025-06-15",
+        "created_at": "2025-06-10 10:45:12"
     },
     {
         "id": "ar003",
@@ -36,7 +36,7 @@
         "approved_by": null,
         "approved_date": null,
         "payment_date": null,
-        "created_at": "2023-06-15 15:30:18"
+        "created_at": "2025-06-15 15:30:18"
     },
     {
         "id": "ar004",
@@ -47,9 +47,9 @@
         "reason": "Araç tamiri için avans talep ediyorum.",
         "status": "rejected",
         "approved_by": 8,
-        "approved_date": "2023-06-14 16:15:40",
+        "approved_date": "2025-06-14 16:15:40",
         "payment_date": null,
-        "created_at": "2023-06-13 11:05:22"
+        "created_at": "2025-06-13 11:05:22"
     },
     {
         "id": "ar005",
@@ -62,7 +62,7 @@
         "approved_by": null,
         "approved_date": null,
         "payment_date": null,
-        "created_at": "2023-06-18 09:45:33"
+        "created_at": "2025-06-18 09:45:33"
     },
     {
         "id": "ar006",
@@ -75,7 +75,7 @@
         "approved_by": null,
         "approved_date": null,
         "payment_date": null,
-        "created_at": "2023-06-19 14:10:45"
+        "created_at": "2025-06-19 14:10:45"
     },
     {
         "id": "ar007",
@@ -86,9 +86,9 @@
         "reason": "Ev tadilatı için avans talep ediyorum.",
         "status": "approved",
         "approved_by": 1,
-        "approved_date": "2023-06-05 10:25:18",
-        "payment_date": "2023-06-07",
-        "created_at": "2023-06-03 11:25:18"
+        "approved_date": "2025-06-05 10:25:18",
+        "payment_date": "2025-06-07",
+        "created_at": "2025-06-03 11:25:18"
     },
     {
         "id": "ar008",
@@ -99,8 +99,8 @@
         "reason": "Düğün masrafları için avans talep ediyorum.",
         "status": "approved",
         "approved_by": 1,
-        "approved_date": "2023-05-25 15:05:33",
-        "payment_date": "2023-05-28",
-        "created_at": "2023-05-22 09:05:33"
+        "approved_date": "2025-05-25 15:05:33",
+        "payment_date": "2025-05-28",
+        "created_at": "2025-05-22 09:05:33"
     }
 ]

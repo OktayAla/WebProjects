@@ -478,39 +478,6 @@ foreach ($employees as $employee) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/main.js"></script>
-    <script>
-        // Edit Department Modal
-        document.querySelectorAll('[data-bs-target="#editDepartmentModal"]').forEach(button => {
-            button.addEventListener('click', function() {
-                const name = this.getAttribute('data-name');
-                const managerId = this.getAttribute('data-manager-id');
-                
-                document.getElementById('old_department_name').value = name;
-                document.getElementById('edit_department_name').value = name;
-                document.getElementById('edit_manager_id').value = managerId || '';
-            });
-        });
-        
-        // Delete Department Modal
-        document.querySelectorAll('[data-bs-target="#deleteDepartmentModal"]').forEach(button => {
-            button.addEventListener('click', function() {
-                const name = this.getAttribute('data-name');
-                const count = parseInt(this.getAttribute('data-count'));
-                
-                document.getElementById('delete_department_name').value = name;
-                document.getElementById('delete-department-name').textContent = name;
-                document.getElementById('delete-employee-count').textContent = count;
-                
-                // Show warning and disable delete button if department has employees
-                if (count > 0) {
-                    document.getElementById('delete-warning').style.display = 'block';
-                    document.getElementById('delete-confirm-btn').disabled = true;
-                } else {
-                    document.getElementById('delete-warning').style.display = 'none';
-                    document.getElementById('delete-confirm-btn').disabled = false;
-                }
-            });
-        });
-    </script>
+    <script src="js/department_management.js"></script>
 </body>
 </html>

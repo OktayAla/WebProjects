@@ -436,10 +436,23 @@ if (file_exists($advanceRequestsFile)) {
         </main>
     </div>
     
+    <!-- Hidden elements to store chart data -->
+    <div id="department-data-labels" style="display: none;"><?php echo json_encode(array_keys($departmentEmployeeCounts)); ?></div>
+    <div id="department-data-values" style="display: none;"><?php echo json_encode(array_values($departmentEmployeeCounts)); ?></div>
+    
+    <div id="leave-data-labels" style="display: none;"><?php echo json_encode(array_keys($leaveStatsByMonth)); ?></div>
+    <div id="leave-data-values" style="display: none;"><?php echo json_encode(array_values($leaveStatsByMonth)); ?></div>
+    
+    <div id="attendance-data-labels" style="display: none;"><?php echo json_encode(array_keys($attendanceStatsByMonth)); ?></div>
+    <div id="attendance-data-values" style="display: none;"><?php echo json_encode(array_values($attendanceStatsByMonth)); ?></div>
+    
+    <div id="late-entry-data-labels" style="display: none;"><?php echo json_encode(array_keys($lateEntryStatsByMonth)); ?></div>
+    <div id="late-entry-data-values" style="display: none;"><?php echo json_encode(array_values($lateEntryStatsByMonth)); ?></div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/main.js"></script>
-    <script>
+    <script src="js/reports.js"></script>
         // Department Distribution Chart
         const departmentCtx = document.getElementById('departmentChart').getContext('2d');
         const departmentChart = new Chart(departmentCtx, {
