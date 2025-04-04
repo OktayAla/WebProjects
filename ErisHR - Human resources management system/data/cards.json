@@ -1,0 +1,74 @@
+[
+    {
+        "card_id": "RFID001",
+        "employee_id": 1,
+        "assigned_date": "2023-01-15 09:00:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID002",
+        "employee_id": 2,
+        "assigned_date": "2023-01-15 09:15:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID003",
+        "employee_id": 3,
+        "assigned_date": "2023-01-15 09:30:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID004",
+        "employee_id": 4,
+        "assigned_date": "2023-01-15 09:45:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID005",
+        "employee_id": 5,
+        "assigned_date": "2023-01-15 10:00:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID006",
+        "employee_id": 6,
+        "assigned_date": "2023-01-15 10:15:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID007",
+        "employee_id": 7,
+        "assigned_date": "2023-01-15 10:30:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID008",
+        "employee_id": 8,
+        "assigned_date": "2023-01-15 10:45:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID009",
+        "employee_id": 9,
+        "assigned_date": "2023-01-15 11:00:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID010",
+        "employee_id": 10,
+        "assigned_date": "2023-01-15 11:15:00",
+        "status": "active"
+    },
+    {
+        "card_id": "RFID011",
+        "employee_id": null,
+        "assigned_date": null,
+        "status": "inactive"
+    },
+    {
+        "card_id": "RFID012",
+        "employee_id": null,
+        "assigned_date": null,
+        "status": "inactive"
+    }
+]

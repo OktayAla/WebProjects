@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "name": "Admin User",
+        "username": "admin",
+        "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+        "role": "admin",
+        "department": "İnsan Kaynakları",
+        "email": "admin@example.com",
+        "phone": "555-123-4567",
+        "hire_date": "2020-01-01",
+        "position": "İK Yöneticisi",
+        "annual_leave": 20,
+        "remaining_leave": 15
+    },
+    {
+        "id": 2,
+        "name": "Ahmet Yılmaz",
+        "username": "ahmet",
+        "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+        "role": "manager",
+        "department": "Bilgi Teknolojileri",
+        "email": "ahmet@example.com",
+        "phone": "555-234-5678",
+        "hire_date": "2020-02-15",
+        "position": "BT Müdürü",
+        "annual_leave": 18,
+        "remaining_leave": 12
+    },
+    {
+        "id": 3,
+        "name": "Ayşe Demir",
+        "username": "ayse",
+        "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+        "role": "employee",
+        "department": "Bilgi Teknolojileri",
+        "email": "ayse@example.com",
+        "phone": "555-345-6789",
+        "hire_date": "2021-03-10",
+        "position": "Yazılım Geliştirici",
+        "annual_leave": 14,
+        "remaining_leave": 10
+    },
+    {
+        "id": 4,
+        "name": "Mehmet Kaya",
+        "username": "mehmet",
+        "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+        "role": "employee",
+        "department": "Muhasebe",
+        "email": "mehmet@example.com",
+        "phone": "555-456-7890",
+        "hire_date": "2021-05-20",
+        "position": "Muhasebe Uzmanı",
+        "annual_leave": 14,
+        "remaining_leave": 8
+    },
+    {
+        "id": 5,
+        "name": "Zeynep Şahin",
+        "username": "zeynep",
+        "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+        "role": "manager",
+        "department": "Muhasebe",
+        "email": "zeynep@example.com",
+        "phone": "555-567-8901",
+        "hire_date": "2020-04-05",
+        "position": "Muhasebe Müdürü",
+        "annual_leave": 18,
+        "remaining_leave": 9
+    }
+]
