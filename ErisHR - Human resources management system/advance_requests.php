@@ -1,48 +1,41 @@
 <?php
 session_start();
 
-// Redirect to login page if not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Get user data
 $userId = $_SESSION['user_id'];
 $userName = $_SESSION['name'];
 $userRole = $_SESSION['role'];
 $userDepartment = $_SESSION['department'];
 
-// Process form submission
 $successMessage = '';
 $errorMessage = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $action = isset($_POST['action']) ? $_POST['action'] : '';
-    
-    // Load advance requests data
+
     $advanceRequestsFile = 'data/advance_requests.json';
     $advanceRequests = [];
-    
+
     if (file_exists($advanceRequestsFile)) {
         $advanceRequests = json_decode(file_get_contents($advanceRequestsFile), true);
     }
-    
-    // Process based on action
+
     if ($action === 'create') {
-        // Get form data
         $amount = $_POST['amount'];
         $reason = $_POST['reason'];
-        
-        // Load employees data to get employee details
+
         $employeesFile = 'data/employees.json';
         $employees = [];
         $employeeName = $userName;
         $employeeDepartment = $userDepartment;
-        
+
         if (file_exists($employeesFile)) {
             $employees = json_decode(file_get_contents($employeesFile), true);
-            
+
             foreach ($employees as $employee) {
                 if ($employee['id'] == $userId) {
                     $employeeName = $employee['name'];
@@ -51,8 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         }
-        
-        // Create new advance request
+
         $newRequest = [
             'id' => 'ar' . uniqid(),
             'employee_id' => $userId,
@@ -66,52 +58,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'payment_date' => null,
             'created_at' => date('Y-m-d H:i:s')
         ];
-        
-        // Add request to advance requests data
+
         $advanceRequests[] = $newRequest;
-        
-        // Save updated advance requests data
+
         file_put_contents($advanceRequestsFile, json_encode($advanceRequests, JSON_PRETTY_PRINT));
-        
+
         $successMessage = "Avans talebiniz başarıyla oluşturuldu.";
     } elseif ($action === 'approve' || $action === 'reject') {
-        // Check if user has manager or admin role
         if ($userRole !== 'manager' && $userRole !== 'admin') {
             $errorMessage = "Bu işlemi gerçekleştirmek için yetkiniz yok.";
         } else {
             $requestId = $_POST['request_id'];
-            
-            // Find request by ID
             $requestFound = false;
-            
+
             foreach ($advanceRequests as &$request) {
                 if ($request['id'] === $requestId) {
-                    // Check if manager has permission to approve/reject
                     if ($userRole === 'manager' && $request['department'] !== $userDepartment) {
                         $errorMessage = "Sadece kendi departmanınızdaki talepleri onaylayabilirsiniz.";
                         break;
                     }
-                    
+
                     $request['status'] = ($action === 'approve') ? 'approved' : 'rejected';
                     $request['approved_by'] = $userId;
                     $request['approved_date'] = date('Y-m-d H:i:s');
-                    
-                    // If approved, set payment date (3 days from now)
+
                     if ($action === 'approve') {
                         $paymentDate = new DateTime();
-                        $paymentDate->add(new DateInterval('P3D')); // Add 3 days
+                        $paymentDate->add(new DateInterval('P3D'));
                         $request['payment_date'] = $paymentDate->format('Y-m-d');
                     }
-                    
+
                     $requestFound = true;
                     break;
                 }
             }
-            
+
             if ($requestFound) {
-                // Save updated advance requests data
                 file_put_contents($advanceRequestsFile, json_encode($advanceRequests, JSON_PRETTY_PRINT));
-                
                 $successMessage = "Avans talebi başarıyla " . (($action === 'approve') ? 'onaylandı' : 'reddedildi') . ".";
             } else {
                 $errorMessage = "Avans talebi bulunamadı.";
@@ -119,13 +102,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } elseif ($action === 'delete') {
         $requestId = $_POST['request_id'];
-        
-        // Find request by ID
         $requestIndex = -1;
-        
+
         foreach ($advanceRequests as $index => $request) {
             if ($request['id'] === $requestId) {
-                // Check if user has permission to delete
                 if ($userRole === 'admin' || ($request['employee_id'] == $userId && $request['status'] === 'pending')) {
                     $requestIndex = $index;
                 } else {
@@ -134,14 +114,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 break;
             }
         }
-        
+
         if ($requestIndex >= 0) {
-            // Remove request from array
             array_splice($advanceRequests, $requestIndex, 1);
-            
-            // Save updated advance requests data
             file_put_contents($advanceRequestsFile, json_encode($advanceRequests, JSON_PRETTY_PRINT));
-            
             $successMessage = "Avans talebi başarıyla silindi.";
         } else if (empty($errorMessage)) {
             $errorMessage = "Avans talebi bulunamadı.";
@@ -149,34 +125,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Load advance requests for display
 $advanceRequestsFile = 'data/advance_requests.json';
 $advanceRequests = [];
 
 if (file_exists($advanceRequestsFile)) {
     $allRequests = json_decode(file_get_contents($advanceRequestsFile), true);
-    
-    // Filter requests based on user role
+
     if ($userRole === 'admin') {
-        // Admin sees all requests
         $advanceRequests = $allRequests;
     } elseif ($userRole === 'manager') {
-        // Manager sees requests from their department
         foreach ($allRequests as $request) {
             if ($request['department'] === $userDepartment) {
                 $advanceRequests[] = $request;
             }
         }
     } else {
-        // Regular employee sees only their requests
         foreach ($allRequests as $request) {
             if ($request['employee_id'] == $userId) {
                 $advanceRequests[] = $request;
             }
         }
     }
-    
-    // Sort requests by created_at (newest first)
+
     usort($advanceRequests, function($a, $b) {
         return strtotime($b['created_at']) - strtotime($a['created_at']);
     });
@@ -196,39 +166,38 @@ if (file_exists($advanceRequestsFile)) {
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="img/logo.png" alt="HRMS Logo" class="logo">
                 <h3>HRMS</h3>
             </div>
-            
+
             <div class="user-info">
                 <div class="user-avatar">
                     <img src="img/avatars/default.png" alt="User Avatar">
                 </div>
                 <div class="user-details">
                     <h4><?php echo $userName; ?></h4>
-                    <p><?php 
+                    <p><?php
                     if($userRole == 'admin') echo 'İK Yöneticisi';
                     else if($userRole == 'manager') echo 'Birim Müdürü';
                     else echo 'Personel';
                     ?></p>
                 </div>
             </div>
-            
+
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li>
                     <li><a href="attendance.php"><i class="fas fa-clock"></i> Giriş/Çıkış Kayıtları</a></li>
                     <li><a href="leave_requests.php"><i class="fas fa-calendar-alt"></i> İzin Talepleri</a></li>
                     <li><a href="advance_requests.php" class="active"><i class="fas fa-money-bill-wave"></i> Avans Talepleri</a></li>
-                    
+
                     <?php if($userRole == 'manager'): ?>
                     <li><a href="team_management.php"><i class="fas fa-users"></i> Ekip Yönetimi</a></li>
                     <li><a href="approval_requests.php"><i class="fas fa-tasks"></i> Onay Bekleyen Talepler</a></li>
                     <?php endif; ?>
-                    
+
                     <?php if($userRole == 'admin'): ?>
                     <li><a href="employee_management.php"><i class="fas fa-user-cog"></i> Personel Yönetimi</a></li>
                     <li><a href="department_management.php"><i class="fas fa-building"></i> Departman Yönetimi</a></li>
@@ -237,14 +206,13 @@ if (file_exists($advanceRequestsFile)) {
                     <?php endif; ?>
                 </ul>
             </nav>
-            
+
             <div class="sidebar-footer">
                 <a href="profile.php"><i class="fas fa-user-circle"></i> Profil</a>
                 <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Çıkış</a>
             </div>
         </aside>
-        
-        <!-- Main Content -->
+
         <main class="main-content">
             <header class="header">
                 <div class="header-left">
@@ -264,25 +232,25 @@ if (file_exists($advanceRequestsFile)) {
                     </div>
                 </div>
             </header>
-            
+
             <div class="content-wrapper">
                 <div class="advance-requests-page animate__animated animate__fadeIn">
-                    <?php if (isset($successMessage)): ?>
+                    <?php if (!empty($successMessage)): ?>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <i class="fas fa-check-circle me-2"></i>
                         <?php echo $successMessage; ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <?php endif; ?>
-                    
-                    <?php if (isset($errorMessage)): ?>
+
+                    <?php if (!empty($errorMessage)): ?>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <i class="fas fa-exclamation-circle me-2"></i>
                         <?php echo $errorMessage; ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <?php endif; ?>
-                    
+
                     <div class="row mb-4">
                         <div class="col-md-4">
                             <div class="card">
@@ -299,7 +267,7 @@ if (file_exists($advanceRequestsFile)) {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-8">
                             <div class="card">
                                 <div class="card-header">
@@ -345,7 +313,7 @@ if (file_exists($advanceRequestsFile)) {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5><i class="fas fa-list me-2"></i>Avans Taleplerim</h5>
@@ -356,7 +324,6 @@ if (file_exists($advanceRequestsFile)) {
                             </div>
                         </div>
                         <div class="card-body">
-                            <!-- Filter Panel (Hidden by default) -->
                             <div class="filter-panel mb-4" style="display: none;">
                                 <div class="card">
                                     <div class="card-body">
@@ -384,7 +351,6 @@ if (file_exists($advanceRequestsFile)) {
                                                 <label for="filterEmployee" class="form-label">Personel</label>
                                                 <select class="form-select" id="filterEmployee">
                                                     <option value="">Tümü</option>
-                                                    <!-- Employee options will be loaded dynamically -->
                                                 </select>
                                             </div>
                                             <?php endif; ?>
@@ -400,8 +366,7 @@ if (file_exists($advanceRequestsFile)) {
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Advance Requests List -->
+
                             <div class="advance-requests-list">
                                 <?php if (empty($advanceRequests)): ?>
                                 <div class="text-center py-5">
@@ -411,16 +376,16 @@ if (file_exists($advanceRequestsFile)) {
                                 </div>
                                 <?php else: ?>
                                 <?php foreach ($advanceRequests as $request): ?>
-                                <div class="advance-request-card" 
-                                     data-status="<?php echo $request['status']; ?>" 
-                                     data-amount="<?php echo $request['amount']; ?>" 
+                                <div class="advance-request-card"
+                                     data-status="<?php echo $request['status']; ?>"
+                                     data-amount="<?php echo $request['amount']; ?>"
                                      data-employee="<?php echo $request['employee_id']; ?>">
                                     <div class="advance-request-header">
                                         <h5 class="advance-request-title">
                                             <?php echo number_format($request['amount'], 2, ',', '.'); ?> ₺
                                         </h5>
                                         <span class="advance-request-status status-<?php echo $request['status']; ?>">
-                                            <?php 
+                                            <?php
                                             $statusLabels = [
                                                 'pending' => 'Beklemede',
                                                 'approved' => 'Onaylandı',
@@ -450,7 +415,7 @@ if (file_exists($advanceRequestsFile)) {
                                         <small class="text-muted">Talep Tarihi: <?php echo date('d.m.Y H:i', strtotime($request['created_at'])); ?></small>
                                         <?php if ($request['status'] !== 'pending'): ?>
                                         <small class="text-muted ms-3">
-                                            <?php echo ($request['status'] === 'approved') ? 'Onaylanma' : 'Reddedilme'; ?> Tarihi: 
+                                            <?php echo ($request['status'] === 'approved') ? 'Onaylanma' : 'Reddedilme'; ?> Tarihi:
                                             <?php echo date('d.m.Y H:i', strtotime($request['approved_date'])); ?>
                                         </small>
                                         <?php endif; ?>
@@ -502,8 +467,7 @@ if (file_exists($advanceRequestsFile)) {
             </div>
         </main>
     </div>
-    
-    <!-- New Advance Request Modal -->
+
     <div class="modal fade" id="newAdvanceRequestModal" tabindex="-1" aria-labelledby="newAdvanceRequestModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -533,7 +497,7 @@ if (file_exists($advanceRequestsFile)) {
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/advance_requests.js"></script>
