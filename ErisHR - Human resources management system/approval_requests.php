@@ -1,25 +1,21 @@
 <?php
 session_start();
 
-// Redirect to login page if not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Check if user has manager role
 if ($_SESSION['role'] !== 'manager' && $_SESSION['role'] !== 'admin') {
     header("Location: index.php");
     exit();
 }
 
-// Get user data
 $userId = $_SESSION['user_id'];
 $userName = $_SESSION['name'];
 $userRole = $_SESSION['role'];
 $userDepartment = $_SESSION['department'];
 
-// Process form submission
 $successMessage = '';
 $errorMessage = '';
 
@@ -27,37 +23,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $action = isset($_POST['action']) ? $_POST['action'] : '';
     $requestType = isset($_POST['request_type']) ? $_POST['request_type'] : '';
     $requestId = isset($_POST['request_id']) ? $_POST['request_id'] : '';
-    
+
     if ($requestType === 'leave') {
-        // Handle leave request approval/rejection
         $leaveRequestsFile = 'data/leave_requests.json';
         $leaveRequests = [];
-        
+
         if (file_exists($leaveRequestsFile)) {
             $leaveRequests = json_decode(file_get_contents($leaveRequestsFile), true);
-            
-            // Find request by ID
             $requestFound = false;
-            
+
             foreach ($leaveRequests as &$request) {
                 if ($request['id'] === $requestId) {
-                    // Check if manager has permission to approve/reject
                     if ($userRole === 'manager' && $request['department'] !== $userDepartment) {
                         $errorMessage = "Sadece kendi departmanınızdaki talepleri onaylayabilirsiniz.";
                         break;
                     }
-                    
+
                     $request['status'] = ($action === 'approve') ? 'approved' : 'rejected';
                     $request['approved_by'] = $userId;
                     $request['approved_date'] = date('Y-m-d H:i:s');
-                    
-                    // If approved, update employee's remaining leave
+
                     if ($action === 'approve') {
                         $employeesFile = 'data/employees.json';
-                        
+
                         if (file_exists($employeesFile)) {
                             $employees = json_decode(file_get_contents($employeesFile), true);
-                            
+
                             foreach ($employees as &$employee) {
                                 if ($employee['id'] == $request['employee_id']) {
                                     $employee['remaining_leave'] -= $request['days'];
@@ -67,80 +58,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     break;
                                 }
                             }
-                            
-                            // Save updated employees data
+
                             file_put_contents($employeesFile, json_encode($employees, JSON_PRETTY_PRINT));
-                            
-                            // Update users data as well
+
                             $usersFile = 'data/users.json';
                             if (file_exists($usersFile)) {
                                 $users = json_decode(file_get_contents($usersFile), true);
-                                
+
                                 foreach ($users as &$user) {
                                     if ($user['id'] == $request['employee_id']) {
                                         $user['remaining_leave'] = $employee['remaining_leave'];
                                         break;
                                     }
                                 }
-                                
+
                                 file_put_contents($usersFile, json_encode($users, JSON_PRETTY_PRINT));
                             }
                         }
                     }
-                    
+
                     $requestFound = true;
                     break;
                 }
             }
-            
+
             if ($requestFound) {
-                // Save updated leave requests data
                 file_put_contents($leaveRequestsFile, json_encode($leaveRequests, JSON_PRETTY_PRINT));
-                
                 $successMessage = "İzin talebi başarıyla " . (($action === 'approve') ? 'onaylandı' : 'reddedildi') . ".";
             } else {
                 $errorMessage = "İzin talebi bulunamadı.";
             }
         }
     } elseif ($requestType === 'advance') {
-        // Handle advance request approval/rejection
         $advanceRequestsFile = 'data/advance_requests.json';
         $advanceRequests = [];
-        
+
         if (file_exists($advanceRequestsFile)) {
             $advanceRequests = json_decode(file_get_contents($advanceRequestsFile), true);
-            
-            // Find request by ID
             $requestFound = false;
-            
+
             foreach ($advanceRequests as &$request) {
                 if ($request['id'] === $requestId) {
-                    // Check if manager has permission to approve/reject
                     if ($userRole === 'manager' && $request['department'] !== $userDepartment) {
                         $errorMessage = "Sadece kendi departmanınızdaki talepleri onaylayabilirsiniz.";
                         break;
                     }
-                    
+
                     $request['status'] = ($action === 'approve') ? 'approved' : 'rejected';
                     $request['approved_by'] = $userId;
                     $request['approved_date'] = date('Y-m-d H:i:s');
-                    
-                    // If approved, set payment date (3 days from now)
+
                     if ($action === 'approve') {
                         $paymentDate = new DateTime();
-                        $paymentDate->add(new DateInterval('P3D')); // Add 3 days
+                        $paymentDate->add(new DateInterval('P3D'));
                         $request['payment_date'] = $paymentDate->format('Y-m-d');
                     }
-                    
+
                     $requestFound = true;
                     break;
                 }
             }
-            
+
             if ($requestFound) {
-                // Save updated advance requests data
                 file_put_contents($advanceRequestsFile, json_encode($advanceRequests, JSON_PRETTY_PRINT));
-                
                 $successMessage = "Avans talebi başarıyla " . (($action === 'approve') ? 'onaylandı' : 'reddedildi') . ".";
             } else {
                 $errorMessage = "Avans talebi bulunamadı.";
@@ -149,47 +129,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Load pending leave requests
 $leaveRequestsFile = 'data/leave_requests.json';
 $pendingLeaveRequests = [];
 
 if (file_exists($leaveRequestsFile)) {
     $allLeaveRequests = json_decode(file_get_contents($leaveRequestsFile), true);
-    
-    // Filter pending requests for this manager's department
+
     foreach ($allLeaveRequests as $request) {
         if ($request['status'] === 'pending' && ($userRole === 'admin' || $request['department'] === $userDepartment)) {
             $pendingLeaveRequests[] = $request;
         }
     }
-    
-    // Sort by created_at (newest first)
+
     usort($pendingLeaveRequests, function($a, $b) {
         return strtotime($b['created_at']) - strtotime($a['created_at']);
     });
 }
 
-// Load pending advance requests
 $advanceRequestsFile = 'data/advance_requests.json';
 $pendingAdvanceRequests = [];
 
 if (file_exists($advanceRequestsFile)) {
     $allAdvanceRequests = json_decode(file_get_contents($advanceRequestsFile), true);
-    
-    // Filter pending requests for this manager's department
+
     foreach ($allAdvanceRequests as $request) {
         if ($request['status'] === 'pending' && ($userRole === 'admin' || $request['department'] === $userDepartment)) {
             $pendingAdvanceRequests[] = $request;
         }
     }
-    
-    // Sort by created_at (newest first)
+
     usort($pendingAdvanceRequests, function($a, $b) {
         return strtotime($b['created_at']) - strtotime($a['created_at']);
     });
 }
 
-// Count total pending requests
 $totalPendingRequests = count($pendingLeaveRequests) + count($pendingAdvanceRequests);
 ?>
 
@@ -206,39 +179,38 @@ $totalPendingRequests = count($pendingLeaveRequests) + count($pendingAdvanceRequ
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="img/logo.png" alt="HRMS Logo" class="logo">
                 <h3>HRMS</h3>
             </div>
-            
+
             <div class="user-info">
                 <div class="user-avatar">
                     <img src="img/avatars/default.png" alt="User Avatar">
                 </div>
                 <div class="user-details">
                     <h4><?php echo $userName; ?></h4>
-                    <p><?php 
+                    <p><?php
                     if($userRole == 'admin') echo 'İK Yöneticisi';
                     else if($userRole == 'manager') echo 'Birim Müdürü';
                     else echo 'Personel';
                     ?></p>
                 </div>
             </div>
-            
+
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li>
                     <li><a href="attendance.php"><i class="fas fa-clock"></i> Giriş/Çıkış Kayıtları</a></li>
                     <li><a href="leave_requests.php"><i class="fas fa-calendar-alt"></i> İzin Talepleri</a></li>
                     <li><a href="advance_requests.php"><i class="fas fa-money-bill-wave"></i> Avans Talepleri</a></li>
-                    
+
                     <?php if($userRole == 'manager' || $userRole == 'admin'): ?>
                     <li><a href="team_management.php"><i class="fas fa-users"></i> Ekip Yönetimi</a></li>
                     <li><a href="approval_requests.php" class="active"><i class="fas fa-tasks"></i> Onay Bekleyen Talepler</a></li>
                     <?php endif; ?>
-                    
+
                     <?php if($userRole == 'admin'): ?>
                     <li><a href="employee_management.php"><i class="fas fa-user-cog"></i> Personel Yönetimi</a></li>
                     <li><a href="department_management.php"><i class="fas fa-building"></i> Departman Yönetimi</a></li>
@@ -247,14 +219,13 @@ $totalPendingRequests = count($pendingLeaveRequests) + count($pendingAdvanceRequ
                     <?php endif; ?>
                 </ul>
             </nav>
-            
+
             <div class="sidebar-footer">
                 <a href="profile.php"><i class="fas fa-user-circle"></i> Profil</a>
                 <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Çıkış</a>
             </div>
         </aside>
-        
-        <!-- Main Content -->
+
         <main class="main-content">
             <header class="header">
                 <div class="header-left">
@@ -274,7 +245,7 @@ $totalPendingRequests = count($pendingLeaveRequests) + count($pendingAdvanceRequ
                     </div>
                 </div>
             </header>
-            
+
             <div class="content-wrapper">
                 <div class="container-fluid">
                     <?php if (!empty($successMessage)): ?>
@@ -282,14 +253,13 @@ $totalPendingRequests = count($pendingLeaveRequests) + count($pendingAdvanceRequ
                         <?php echo $successMessage; ?>
                     </div>
                     <?php endif; ?>
-                    
+
                     <?php if (!empty($errorMessage)): ?>
                     <div class="alert alert-danger">
                         <?php echo $errorMessage; ?>
                     </div>
                     <?php endif; ?>
-                    
-                    <!-- Pending Leave Requests Card -->
+
                     <div class="card mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Onay Bekleyen İzin Talepleri</h5>
@@ -323,7 +293,7 @@ $totalPendingRequests = count($pendingLeaveRequests) + count($pendingAdvanceRequ
                                             <td><?php echo $request['end_date']; ?></td>
                                             <td><?php echo $request['days']; ?> gün</td>
                                             <td>
-                                                <?php 
+                                                <?php
                                                 if ($request['type'] === 'annual') echo 'Yıllık İzin';
                                                 elseif ($request['type'] === 'sick') echo 'Hastalık';
                                                 elseif ($request['type'] === 'marriage') echo 'Evlilik';
@@ -361,8 +331,7 @@ $totalPendingRequests = count($pendingLeaveRequests) + count($pendingAdvanceRequ
                             <?php endif; ?>
                         </div>
                     </div>
-                    
-                    <!-- Pending Advance Requests Card -->
+
                     <div class="card mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Onay Bekleyen Avans Talepleri</h5>
@@ -422,7 +391,7 @@ $totalPendingRequests = count($pendingLeaveRequests) + count($pendingAdvanceRequ
             </div>
         </main>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/main.js"></script>
