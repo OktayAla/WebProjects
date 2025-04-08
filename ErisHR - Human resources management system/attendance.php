@@ -1,37 +1,32 @@
 <?php
 session_start();
 
-// Redirect to login page if not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Get user data
 $userId = $_SESSION['user_id'];
 $userName = $_SESSION['name'];
 $userRole = $_SESSION['role'];
 $userDepartment = $_SESSION['department'];
 
-// Process PDKS card scan simulation
 $scanSuccess = false;
 $scanMessage = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] === 'scan_card') {
     $cardId = $_POST['card_id'];
-    
-    // Load cards data
+
     $cardsFile = 'data/cards.json';
     $cards = [];
-    
+
     if (file_exists($cardsFile)) {
         $cards = json_decode(file_get_contents($cardsFile), true);
     }
-    
-    // Check if card exists and is assigned
+
     $cardFound = false;
     $employeeId = null;
-    
+
     foreach ($cards as $card) {
         if ($card['card_id'] === $cardId) {
             $cardFound = true;
@@ -41,20 +36,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
             break;
         }
     }
-    
+
     if (!$cardFound) {
         $scanMessage = "Kart bulunamadı. Lütfen geçerli bir kart ID girin.";
     } elseif (empty($employeeId)) {
         $scanMessage = "Bu kart henüz bir personele atanmamış.";
     } else {
-        // Load employees data to get employee name
         $employeesFile = 'data/employees.json';
         $employees = [];
         $employeeName = "Bilinmeyen Personel";
-        
+
         if (file_exists($employeesFile)) {
             $employees = json_decode(file_get_contents($employeesFile), true);
-            
+
             foreach ($employees as $employee) {
                 if ($employee['id'] == $employeeId) {
                     $employeeName = $employee['name'];
@@ -62,24 +56,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
                 }
             }
         }
-        
-        // Get current date and time
+
         $now = new DateTime();
         $date = $now->format('Y-m-d');
         $time = $now->format('H:i:s');
-        
-        // Load attendance records
+
         $attendanceFile = 'data/attendance.json';
         $attendance = [];
-        
+
         if (file_exists($attendanceFile)) {
             $attendance = json_decode(file_get_contents($attendanceFile), true);
         }
-        
-        // Check if employee already has an entry for today
+
         $hasEntry = false;
         $hasExit = false;
-        
+
         foreach ($attendance as $record) {
             if ($record['employee_id'] == $employeeId && $record['date'] === $date) {
                 if ($record['type'] === 'entry') {
@@ -89,22 +80,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
                 }
             }
         }
-        
-        // Determine record type (entry or exit)
+
         $recordType = 'entry';
         if ($hasEntry && !$hasExit) {
             $recordType = 'exit';
         } elseif ($hasEntry && $hasExit) {
-            // Both entry and exit exist, create another entry/exit based on time
             $hour = (int)$now->format('H');
-            if ($hour < 13) { // Before 1 PM, assume it's an entry
+            if ($hour < 13) {
                 $recordType = 'entry';
-            } else { // After 1 PM, assume it's an exit
+            } else {
                 $recordType = 'exit';
             }
         }
-        
-        // Create new attendance record
+
         $newRecord = [
             'id' => uniqid(),
             'employee_id' => $employeeId,
@@ -115,59 +103,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
             'type' => $recordType,
             'timestamp' => $now->format('Y-m-d H:i:s')
         ];
-        
-        // Add record to attendance data
+
         $attendance[] = $newRecord;
-        
-        // Save updated attendance data
+
         file_put_contents($attendanceFile, json_encode($attendance, JSON_PRETTY_PRINT));
-        
-        // Set success message
+
         $scanSuccess = true;
         $scanMessage = "$employeeName için $recordType kaydı oluşturuldu. Saat: $time";
-        
-        // Create or update the employee's attendance JS file
+
         $employeeAttendanceDir = 'js/users';
         if (!file_exists($employeeAttendanceDir)) {
             mkdir($employeeAttendanceDir, 0777, true);
         }
-        
+
         $employeeAttendanceFile = "$employeeAttendanceDir/$employeeId.js";
-        
-        // Get employee's attendance records
+
         $employeeRecords = [];
         foreach ($attendance as $record) {
             if ($record['employee_id'] == $employeeId) {
                 $employeeRecords[] = $record;
             }
         }
-        
-        // Save employee's attendance records to JS file
+
         $jsContent = json_encode($employeeRecords, JSON_PRETTY_PRINT);
         file_put_contents($employeeAttendanceFile, $jsContent);
     }
 }
 
-// Load attendance records for display
 $attendanceFile = 'data/attendance.json';
 $attendanceRecords = [];
-$userAttendanceRecords = []; // Initialize the variable to prevent undefined variable warning
+$userAttendanceRecords = [];
 
 if (file_exists($attendanceFile)) {
     $allRecords = json_decode(file_get_contents($attendanceFile), true);
-    
-    // Filter records based on user role
+
     if ($userRole === 'admin') {
-        // Admin sees all records
         $attendanceRecords = $allRecords;
     } elseif ($userRole === 'manager') {
-        // Manager sees records from their department
         foreach ($allRecords as $record) {
-            // Load employee data to check department
             $employeesFile = 'data/employees.json';
             if (file_exists($employeesFile)) {
                 $employees = json_decode(file_get_contents($employeesFile), true);
-                
+
                 foreach ($employees as $employee) {
                     if ($employee['id'] == $record['employee_id'] && $employee['department'] === $userDepartment) {
                         $attendanceRecords[] = $record;
@@ -177,24 +154,21 @@ if (file_exists($attendanceFile)) {
             }
         }
     } else {
-        // Regular employee sees only their records
         foreach ($allRecords as $record) {
             if ($record['employee_id'] == $userId) {
                 $attendanceRecords[] = $record;
             }
         }
     }
-    
-    // Sort records by date and time (newest first)
+
     usort($attendanceRecords, function($a, $b) {
         return strtotime($b['timestamp']) - strtotime($a['timestamp']);
     });
-    
-    // Process attendance records to organize by date for user
+
     foreach ($attendanceRecords as $record) {
         if ($record['employee_id'] == $userId) {
             $date = $record['date'];
-            
+
             if ($record['type'] === 'entry') {
                 if (!isset($userAttendanceRecords[$date])) {
                     $userAttendanceRecords[$date] = [];
@@ -209,6 +183,83 @@ if (file_exists($attendanceFile)) {
         }
     }
 }
+
+// Team attendance processing (moved here for clarity and avoid re-reading files)
+$teamAttendanceRecords = [];
+if ($userRole === 'manager' || $userRole === 'admin') {
+    $allEmployees = [];
+    $employeesFile = 'data/employees.json';
+    if (file_exists($employeesFile)) {
+        $allEmployees = json_decode(file_get_contents($employeesFile), true);
+    }
+
+    $employeeMap = [];
+    foreach ($allEmployees as $emp) {
+        $employeeMap[$emp['id']] = $emp;
+    }
+
+    $teamRecordsProcessed = [];
+    $tempTeamAttendance = [];
+
+    if (file_exists($attendanceFile)) {
+        $allRecords = json_decode(file_get_contents($attendanceFile), true);
+
+        foreach ($allRecords as $record) {
+            $employeeId = $record['employee_id'];
+            $employeeData = $employeeMap[$employeeId] ?? null;
+
+            if ($employeeData) {
+                $employeeDepartment = $employeeData['department'];
+                $shouldInclude = false;
+
+                if ($userRole === 'admin') {
+                    $shouldInclude = true;
+                } elseif ($userRole === 'manager' && $employeeDepartment === $userDepartment) {
+                    $shouldInclude = true;
+                }
+
+                if ($shouldInclude) {
+                    $date = $record['date'];
+                    $key = $employeeId . '_' . $date;
+
+                    if (!isset($tempTeamAttendance[$key])) {
+                        $tempTeamAttendance[$key] = [
+                            'employee_id' => $employeeId,
+                            'employee_name' => $record['employee_name'],
+                            'date' => $date,
+                            'entry' => null,
+                            'exit' => null,
+                            'timestamp' => $record['timestamp'] // Use latest timestamp for sorting
+                        ];
+                    }
+
+                    if ($record['type'] === 'entry' && (!isset($tempTeamAttendance[$key]['entry']) || strtotime($record['time']) < strtotime($tempTeamAttendance[$key]['entry']))) {
+                       $tempTeamAttendance[$key]['entry'] = $record['time'];
+                    } elseif ($record['type'] === 'exit' && (!isset($tempTeamAttendance[$key]['exit']) || strtotime($record['time']) > strtotime($tempTeamAttendance[$key]['exit']))) {
+                       $tempTeamAttendance[$key]['exit'] = $record['time'];
+                    }
+                     // Update timestamp if this record is later
+                    if(strtotime($record['timestamp']) > strtotime($tempTeamAttendance[$key]['timestamp'])){
+                         $tempTeamAttendance[$key]['timestamp'] = $record['timestamp'];
+                    }
+                }
+            }
+        }
+    }
+
+    $teamAttendanceRecords = array_values($tempTeamAttendance);
+
+    // Sort team records by date and then employee name
+    usort($teamAttendanceRecords, function($a, $b) {
+         $dateComparison = strtotime($b['date']) - strtotime($a['date']);
+        if ($dateComparison !== 0) {
+            return $dateComparison;
+        }
+        return strcmp($a['employee_name'], $b['employee_name']);
+    });
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -224,39 +275,38 @@ if (file_exists($attendanceFile)) {
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="img/logo.png" alt="HRMS Logo" class="logo">
                 <h3>HRMS</h3>
             </div>
-            
+
             <div class="user-info">
                 <div class="user-avatar">
                     <img src="img/avatars/default.png" alt="User Avatar">
                 </div>
                 <div class="user-details">
                     <h4><?php echo $userName; ?></h4>
-                    <p><?php 
+                    <p><?php
                     if($userRole == 'admin') echo 'İK Yöneticisi';
                     else if($userRole == 'manager') echo 'Birim Müdürü';
                     else echo 'Personel';
                     ?></p>
                 </div>
             </div>
-            
+
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li>
                     <li><a href="attendance.php" class="active"><i class="fas fa-clock"></i> Giriş/Çıkış Kayıtları</a></li>
                     <li><a href="leave_requests.php"><i class="fas fa-calendar-alt"></i> İzin Talepleri</a></li>
                     <li><a href="advance_requests.php"><i class="fas fa-money-bill-wave"></i> Avans Talepleri</a></li>
-                    
-                    <?php if($userRole == 'manager'): ?>
+
+                    <?php if($userRole == 'manager' || $userRole == 'admin'): ?>
                     <li><a href="team_management.php"><i class="fas fa-users"></i> Ekip Yönetimi</a></li>
                     <li><a href="approval_requests.php"><i class="fas fa-tasks"></i> Onay Bekleyen Talepler</a></li>
                     <?php endif; ?>
-                    
+
                     <?php if($userRole == 'admin'): ?>
                     <li><a href="employee_management.php"><i class="fas fa-user-cog"></i> Personel Yönetimi</a></li>
                     <li><a href="department_management.php"><i class="fas fa-building"></i> Departman Yönetimi</a></li>
@@ -265,14 +315,13 @@ if (file_exists($attendanceFile)) {
                     <?php endif; ?>
                 </ul>
             </nav>
-            
+
             <div class="sidebar-footer">
                 <a href="profile.php"><i class="fas fa-user-circle"></i> Profil</a>
                 <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Çıkış</a>
             </div>
         </aside>
-        
-        <!-- Main Content -->
+
         <main class="main-content">
             <header class="header">
                 <div class="header-left">
@@ -292,23 +341,23 @@ if (file_exists($attendanceFile)) {
                     </div>
                 </div>
             </header>
-            
+
             <div class="content-wrapper">
                 <div class="container-fluid">
-                    <?php if (!empty($successMessage)): ?>
-                    <div class="alert alert-success">
-                        <?php echo $successMessage; ?>
+                    <?php if (!empty($scanMessage) && !$scanSuccess): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                         <?php echo $scanMessage; ?>
+                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <?php elseif (!empty($scanMessage) && $scanSuccess): ?>
+                     <div class="alert alert-success alert-dismissible fade show" role="alert">
+                         <?php echo $scanMessage; ?>
+                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <?php endif; ?>
-                    
-                    <?php if (!empty($errorMessage)): ?>
-                    <div class="alert alert-danger">
-                        <?php echo $errorMessage; ?>
-                    </div>
-                    <?php endif; ?>
-                    
+
+
                     <?php if ($userRole === 'manager' || $userRole === 'admin'): ?>
-                    <!-- Tab navigation for managers to switch between personal and team attendance -->
                     <ul class="nav nav-tabs mb-4" id="attendanceTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab" aria-controls="personal" aria-selected="true">
@@ -321,12 +370,11 @@ if (file_exists($attendanceFile)) {
                             </button>
                         </li>
                     </ul>
-                    
+
                     <div class="tab-content" id="attendanceTabsContent">
                         <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
                     <?php endif; ?>
-                    
-                    <!-- Card Scan Simulation -->
+
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="mb-0">PDKS Kart Okutma Simülasyonu</h5>
@@ -344,29 +392,15 @@ if (file_exists($attendanceFile)) {
                                     </button>
                                 </div>
                             </form>
-                            
-                            <?php if (!empty($scanMessage)): ?>
-                            <div class="alert <?php echo $scanSuccess ? 'alert-success' : 'alert-danger'; ?> mt-3">
-                                <?php echo $scanMessage; ?>
-                            </div>
-                            <?php endif; ?>
                         </div>
                     </div>
-                    
-                    <!-- Attendance Records -->
+
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Giriş/Çıkış Kayıtları</h5>
-                            <div>
-                                <button type="button" class="btn btn-sm btn-outline-primary" id="filterToday">
-                                    <i class="fas fa-calendar-day"></i> Bugün
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" id="filterWeek">
-                                    <i class="fas fa-calendar-week"></i> Bu Hafta
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" id="filterMonth">
-                                    <i class="fas fa-calendar-alt"></i> Bu Ay
-                                </button>
+                             <h5 class="mb-0"><?php echo ($userRole === 'manager' || $userRole === 'admin') ? 'Kişisel Kayıtlar' : 'Giriş/Çıkış Kayıtları'; ?></h5>
+                             <div>
+                                <input type="text" id="personalDateFilter" class="form-control form-control-sm d-inline-block w-auto" placeholder="Tarihe Göre Filtrele">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="clearPersonalFilter">Filtreyi Temizle</button>
                             </div>
                         </div>
                         <div class="card-body">
@@ -382,20 +416,25 @@ if (file_exists($attendanceFile)) {
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php
+                                        // Sort userAttendanceRecords by date descending
+                                         uksort($userAttendanceRecords, function ($a, $b) {
+                                            return strtotime($b) - strtotime($a);
+                                        });
+                                        ?>
                                         <?php foreach ($userAttendanceRecords as $date => $record): ?>
                                         <tr data-date="<?php echo $date; ?>">
                                             <td><?php echo date('d.m.Y', strtotime($date)); ?></td>
                                             <td>
-                                                <?php 
+                                                <?php
                                                 if (isset($record['entry'])) {
                                                     echo date('H:i', strtotime($record['entry']));
-                                                    
-                                                    // Check if late entry (after 9:00 AM)
+
                                                     $entryTime = strtotime($record['entry']);
                                                     $startTime = strtotime('09:00:00');
-                                                    
+
                                                     if ($entryTime > $startTime) {
-                                                        echo ' <span class="badge bg-warning">Geç Giriş</span>';
+                                                        echo ' <span class="badge bg-warning text-dark">Geç Giriş</span>';
                                                     }
                                                 } else {
                                                     echo '-';
@@ -403,16 +442,15 @@ if (file_exists($attendanceFile)) {
                                                 ?>
                                             </td>
                                             <td>
-                                                <?php 
+                                                <?php
                                                 if (isset($record['exit'])) {
                                                     echo date('H:i', strtotime($record['exit']));
-                                                    
-                                                    // Check if early exit (before 6:00 PM)
+
                                                     $exitTime = strtotime($record['exit']);
                                                     $endTime = strtotime('18:00:00');
-                                                    
+
                                                     if ($exitTime < $endTime) {
-                                                        echo ' <span class="badge bg-warning">Erken Çıkış</span>';
+                                                        echo ' <span class="badge bg-info text-dark">Erken Çıkış</span>';
                                                     }
                                                 } else {
                                                     echo '-';
@@ -420,53 +458,64 @@ if (file_exists($attendanceFile)) {
                                                 ?>
                                             </td>
                                             <td>
-                                                <?php 
+                                                <?php
                                                 if (isset($record['entry']) && isset($record['exit'])) {
                                                     $entry = new DateTime($record['entry']);
                                                     $exit = new DateTime($record['exit']);
                                                     $interval = $entry->diff($exit);
-                                                    echo $interval->format('%H:%I');
+                                                    echo $interval->format('%H sa %I dk');
                                                 } else {
                                                     echo '-';
                                                 }
                                                 ?>
                                             </td>
                                             <td>
-                                                <?php 
-                                                if (isset($record['entry']) && isset($record['exit'])) {
+                                                <?php
+                                                if (!isset($record['entry']) && !isset($record['exit'])) {
+                                                     echo '<span class="badge bg-danger">Giriş/Çıkış Yok</span>';
+                                                } elseif (isset($record['entry']) && isset($record['exit'])) {
                                                     echo '<span class="badge bg-success">Tamamlandı</span>';
                                                 } elseif (isset($record['entry'])) {
-                                                    echo '<span class="badge bg-primary">Devam Ediyor</span>';
-                                                } else {
-                                                    echo '<span class="badge bg-secondary">Belirsiz</span>';
+                                                    echo '<span class="badge bg-primary">Giriş Yapıldı</span>';
+                                                } elseif (isset($record['exit'])) {
+                                                    echo '<span class="badge bg-secondary">Sadece Çıkış</span>'; // Should not normally happen
                                                 }
                                                 ?>
                                             </td>
                                         </tr>
                                         <?php endforeach; ?>
+                                         <?php if (empty($userAttendanceRecords)): ?>
+                                            <tr>
+                                                <td colspan="5" class="text-center">Kişisel giriş/çıkış kaydı bulunmamaktadır.</td>
+                                            </tr>
+                                        <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    
+
                     <?php if ($userRole === 'manager' || $userRole === 'admin'): ?>
                         </div>
                         <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
-                            <!-- Team Attendance Records -->
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0">Ekip Giriş/Çıkış Kayıtları</h5>
                                     <div>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" id="teamFilterToday">
-                                            <i class="fas fa-calendar-day"></i> Bugün
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" id="teamFilterWeek">
-                                            <i class="fas fa-calendar-week"></i> Bu Hafta
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" id="teamFilterMonth">
-                                            <i class="fas fa-calendar-alt"></i> Bu Ay
-                                        </button>
+                                        <input type="text" id="teamDateFilter" class="form-control form-control-sm d-inline-block w-auto" placeholder="Tarihe Göre Filtrele">
+                                        <select id="teamEmployeeFilter" class="form-select form-select-sm d-inline-block w-auto">
+                                             <option value="">Tüm Personeller</option>
+                                             <?php
+                                                $displayedEmployees = [];
+                                                foreach ($teamAttendanceRecords as $rec) {
+                                                    if (!in_array($rec['employee_id'], $displayedEmployees)) {
+                                                         echo '<option value="' . $rec['employee_id'] . '">' . $rec['employee_name'] . '</option>';
+                                                         $displayedEmployees[] = $rec['employee_id'];
+                                                    }
+                                                }
+                                             ?>
+                                        </select>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" id="clearTeamFilter">Filtreyi Temizle</button>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -484,20 +533,19 @@ if (file_exists($attendanceFile)) {
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($teamAttendanceRecords as $record): ?>
-                                                <tr data-date="<?php echo $record['date']; ?>">
+                                                <tr data-date="<?php echo $record['date']; ?>" data-employee="<?php echo $record['employee_id']; ?>">
                                                     <td><?php echo $record['employee_name']; ?></td>
                                                     <td><?php echo date('d.m.Y', strtotime($record['date'])); ?></td>
                                                     <td>
-                                                        <?php 
+                                                        <?php
                                                         if (isset($record['entry'])) {
                                                             echo date('H:i', strtotime($record['entry']));
-                                                            
-                                                            // Check if late entry (after 9:00 AM)
+
                                                             $entryTime = strtotime($record['entry']);
                                                             $startTime = strtotime('09:00:00');
-                                                            
+
                                                             if ($entryTime > $startTime) {
-                                                                echo ' <span class="badge bg-warning">Geç Giriş</span>';
+                                                                 echo ' <span class="badge bg-warning text-dark">Geç Giriş</span>';
                                                             }
                                                         } else {
                                                             echo '-';
@@ -505,16 +553,15 @@ if (file_exists($attendanceFile)) {
                                                         ?>
                                                     </td>
                                                     <td>
-                                                        <?php 
+                                                        <?php
                                                         if (isset($record['exit'])) {
                                                             echo date('H:i', strtotime($record['exit']));
-                                                            
-                                                            // Check if early exit (before 6:00 PM)
+
                                                             $exitTime = strtotime($record['exit']);
                                                             $endTime = strtotime('18:00:00');
-                                                            
+
                                                             if ($exitTime < $endTime) {
-                                                                echo ' <span class="badge bg-warning">Erken Çıkış</span>';
+                                                                 echo ' <span class="badge bg-info text-dark">Erken Çıkış</span>';
                                                             }
                                                         } else {
                                                             echo '-';
@@ -522,30 +569,37 @@ if (file_exists($attendanceFile)) {
                                                         ?>
                                                     </td>
                                                     <td>
-                                                        <?php 
+                                                        <?php
                                                         if (isset($record['entry']) && isset($record['exit'])) {
                                                             $entry = new DateTime($record['entry']);
                                                             $exit = new DateTime($record['exit']);
                                                             $interval = $entry->diff($exit);
-                                                            echo $interval->format('%H:%I');
+                                                             echo $interval->format('%H sa %I dk');
                                                         } else {
                                                             echo '-';
                                                         }
                                                         ?>
                                                     </td>
                                                     <td>
-                                                        <?php 
-                                                        if (isset($record['entry']) && isset($record['exit'])) {
+                                                         <?php
+                                                        if (!isset($record['entry']) && !isset($record['exit'])) {
+                                                             echo '<span class="badge bg-danger">Giriş/Çıkış Yok</span>';
+                                                        } elseif (isset($record['entry']) && isset($record['exit'])) {
                                                             echo '<span class="badge bg-success">Tamamlandı</span>';
                                                         } elseif (isset($record['entry'])) {
-                                                            echo '<span class="badge bg-primary">Devam Ediyor</span>';
-                                                        } else {
-                                                            echo '<span class="badge bg-secondary">Belirsiz</span>';
+                                                            echo '<span class="badge bg-primary">Giriş Yapıldı</span>';
+                                                        } elseif (isset($record['exit'])) {
+                                                            echo '<span class="badge bg-secondary">Sadece Çıkış</span>'; // Should not normally happen
                                                         }
                                                         ?>
                                                     </td>
                                                 </tr>
                                                 <?php endforeach; ?>
+                                                <?php if (empty($teamAttendanceRecords)): ?>
+                                                    <tr>
+                                                        <td colspan="6" class="text-center">Ekip giriş/çıkış kaydı bulunmamaktadır.</td>
+                                                    </tr>
+                                                <?php endif; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -558,9 +612,12 @@ if (file_exists($attendanceFile)) {
             </div>
         </main>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/tr.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="js/main.js"></script>
     <script src="js/attendance.js"></script>
 </body>
