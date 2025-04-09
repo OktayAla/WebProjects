@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // Eğer istek methodu POST ise
 
     // Dosyaya kaydetme işlemi
     $log_file = 'messages.txt';
-    $timestamp = date('d/m/Y H:i', strtotime('+1 hours'));
+    $timestamp = date('d/m/Y H:i');
     $log_entry = "Tarih: $timestamp\n";
     $log_entry .= "----------------------------------------\n";
     $log_entry .= "İletişim Formu\n";
