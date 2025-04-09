@@ -1,0 +1,76 @@
+{
+    "about": {
+        "text": "Temel IT süreçlerini etkili bir şekilde yönetebilmekte ve sürdürülebilirliğini sağlamaktayım. Kurumların bilgi işlem departmanlarında görev alarak; saha içerisinde son kullanıcı desteğini sağlamakta rol üstlendim. Sistemin kesintisiz hizmet verebilmesi için ağ sistemleri üzerinde gereken aksiyonları alabilmekteyim."
+    },
+    "skills": {
+        "software": [
+            {
+                "name": "HTML/CSS",
+                "percentage": 80
+            },
+            {
+                "name": "JavaScript",
+                "percentage": 60
+            },
+            {
+                "name": "PHP",
+                "percentage": 50
+            },
+            {
+                "name": "Python",
+                "percentage": 45
+            },
+            {
+                "name": "C#",
+                "percentage": 30
+            },
+            {
+                "name": "Java",
+                "percentage": 20
+            }
+        ],
+        "system": [
+            {
+                "name": "MS Windows",
+                "percentage": 95
+            },
+            {
+                "name": "MS Office",
+                "percentage": 80
+            },
+            {
+                "name": "Donanım",
+                "percentage": 70
+            },
+            {
+                "name": "Ağ Sistemleri",
+                "percentage": 60
+            },
+            {
+                "name": "Robotik Sistemler",
+                "percentage": 40
+            },
+            {
+                "name": "Yapay Zeka",
+                "percentage": 20
+            }
+        ]
+    },
+    "projects": [
+        {
+            "title": "AI Tabanlı Borsa Analiz Botu",
+            "description": "Python ile geliştirilen bu proje, Tensorflow ve Sklearn kütüphanelerini kullanarak bir makine öğrenmesi modellemesi oluşturur.",
+            "github": "https://github.com/OktayAla/Python/tree/main/AI%20Stock%20market%20analysis%20app"
+        },
+        {
+            "title": "Talep Bildirim Sistemi",
+            "description": "Kullanıcıların taleplerini ve arızalarını web üzerinden bildirebilecekleri MySQL ve PHP tabanlı bir ticket sistemi.",
+            "github": "https://github.com/OktayAla/WebProjects/tree/main/Ticket%20request%20systems"
+        },
+        {
+            "title": "Nöbetçi Eczaneler",
+            "description": "Denizli ili için tasarlanan bu program, C# ile hazırlanmıştır.",
+            "github": "https://github.com/OktayAla/CSharp/tree/main/NobetciEczaneler"
+        }
+    ]
+}
