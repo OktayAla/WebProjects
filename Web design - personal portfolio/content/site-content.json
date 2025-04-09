@@ -1,11 +1,11 @@
 {
     "about": {
-        "text": "Temel IT süreçlerini etkili bir şekilde yönetebilmekte ve sürdürülebilirliğini sağlamaktayım. Kurumların bilgi işlem departmanlarında görev alarak; saha içerisinde son kullanıcı desteğini sağlamakta rol üstlendim. Sistemin kesintisiz hizmet verebilmesi için ağ sistemleri üzerinde gereken aksiyonları alabilmekteyim."
+        "text": "Temel IT s\u00fcre\u00e7lerini etkili bir \u015fekilde y\u00f6netebilmekte ve s\u00fcrd\u00fcr\u00fclebilirli\u011fini sa\u011flamaktay\u0131m. Kurumlar\u0131n bilgi i\u015flem departmanlar\u0131nda g\u00f6rev alarak; saha i\u00e7erisinde son kullan\u0131c\u0131 deste\u011fini sa\u011flamakta rol \u00fcstlendim. Sistemin kesintisiz hizmet verebilmesi i\u00e7in a\u011f sistemleri \u00fczerinde gereken aksiyonlar\u0131 alabilmekteyim..!!"
     },
     "skills": {
         "software": [
             {
-                "name": "HTML/CSS",
+                "name": "HTML\/CSSdd",
                 "percentage": 80
             },
             {
@@ -39,11 +39,11 @@
                 "percentage": 80
             },
             {
-                "name": "Donanım",
+                "name": "Donan\u0131m",
                 "percentage": 70
             },
             {
-                "name": "Ağ Sistemleri",
+                "name": "A\u011f Sistemleri",
                 "percentage": 60
             },
             {
@@ -58,19 +58,19 @@
     },
     "projects": [
         {
-            "title": "AI Tabanlı Borsa Analiz Botu",
-            "description": "Python ile geliştirilen bu proje, Tensorflow ve Sklearn kütüphanelerini kullanarak bir makine öğrenmesi modellemesi oluşturur.",
-            "github": "https://github.com/OktayAla/Python/tree/main/AI%20Stock%20market%20analysis%20app"
+            "title": "AI Tabanl\u0131 Borsa Analiz Botu..'",
+            "description": "Python ile geli\u015ftirilen bu proje, Tensorflow ve Sklearn k\u00fct\u00fcphanelerini kullanarak bir makine \u00f6\u011frenmesi modellemesi olu\u015fturur.",
+            "github": "https:\/\/github.com\/OktayAla\/Python\/tree\/main\/AI%20Stock%20market%20analysis%20app"
         },
         {
             "title": "Talep Bildirim Sistemi",
-            "description": "Kullanıcıların taleplerini ve arızalarını web üzerinden bildirebilecekleri MySQL ve PHP tabanlı bir ticket sistemi.",
-            "github": "https://github.com/OktayAla/WebProjects/tree/main/Ticket%20request%20systems"
+            "description": "Kullan\u0131c\u0131lar\u0131n taleplerini ve ar\u0131zalar\u0131n\u0131 web \u00fczerinden bildirebilecekleri MySQL ve PHP tabanl\u0131 bir ticket sistemi.",
+            "github": "https:\/\/github.com\/OktayAla\/WebProjects\/tree\/main\/Ticket%20request%20systems"
         },
         {
-            "title": "Nöbetçi Eczaneler",
-            "description": "Denizli ili için tasarlanan bu program, C# ile hazırlanmıştır.",
-            "github": "https://github.com/OktayAla/CSharp/tree/main/NobetciEczaneler"
+            "title": "N\u00f6bet\u00e7i Eczaneler",
+            "description": "Denizli ili i\u00e7in tasarlanan bu program, C# ile haz\u0131rlanm\u0131\u015ft\u0131r.",
+            "github": "https:\/\/github.com\/OktayAla\/CSharp\/tree\/main\/NobetciEczaneler"
         }
     ]
 }
