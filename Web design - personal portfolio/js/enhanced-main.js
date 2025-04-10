@@ -12,10 +12,17 @@
 
 // Sayfa yüklendiğinde tüm başlatma işlemlerini gerçekleştir
 document.addEventListener('DOMContentLoaded', function () {
-    // AOS animasyonlarını devre dışı bırak
-    AOS.init({
-        disable: true
-    });
+    const isMobile = window.innerWidth <= 768;
+
+    // AOS kütüphanesini mobil cihazlarda devre dışı bırak
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            disable: isMobile,
+            duration: isMobile ? 0 : 800,
+            once: true,
+            mirror: false
+        });
+    }
 
     // AOS animasyonlarını hemen uygula
     // Tüm elementlerin başlangıç stillerini ayarla
@@ -58,90 +65,44 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // İlerleme çubuklarını belirlenen değerlere ayarla
 function setProgressBarsImmediately() {
-    // Yazılım Bilgisi - büyükten küçüğe sıralanmış
-    const softwareSkills = [
-        { name: 'HTML/CSS', percentage: '80%' },
-        { name: 'JavaScript', percentage: '60%' },
-        { name: 'PHP', percentage: '50%' },
-        { name: 'Python', percentage: '45%' },
-        { name: 'C#', percentage: '30%' },
-        { name: 'Java', percentage: '20%' }
-    ];
-    
-    // Sistem Bilgisi
-    const systemSkills = [
-        { name: 'MS Windows', percentage: '95%' },
-        { name: 'MS Office', percentage: '80%' },
-        { name: 'Donanım', percentage: '70%' },
-        { name: 'Ağ Sistemleri', percentage: '60%' },
-        { name: 'Robotik Sistemler', percentage: '40%' },
-        { name: 'Yapay Zeka', percentage: '20%' }
-    ];
-
-    // Tüm skill elementlerini seç
     const allSkills = document.querySelectorAll('.skill');
     
-    // Her bir skill için progress bar'ı ayarla
     allSkills.forEach(skill => {
-        // Eğer bu skill zaten işlendiyse, tekrar işleme
-        if (skill.getAttribute('data-progress-set') === 'true') {
-            return;
-        }
+        if (skill.getAttribute('data-progress-set')) return;
         
-        const skillName = skill.querySelector('.d-flex span:first-child').textContent.trim();
         const progressBar = skill.querySelector('.progress-bar');
         const percentageSpan = skill.querySelector('.skill-percentage');
         
-        // Yazılım veya sistem becerisini bul
-        let matchedSkill = [...softwareSkills, ...systemSkills].find(s => s.name === skillName);
-        
-        if (matchedSkill && progressBar) {
-            // Doğrudan genişliği ayarla, animasyon olmadan
-            progressBar.style.width = matchedSkill.percentage;
-            
-            // Yüzde metnini güncelle
-            if (percentageSpan) {
-                percentageSpan.textContent = matchedSkill.percentage;
-            }
-            
-            // Bu skill'in progress bar'ının ayarlandığını işaretle
+        if (progressBar && percentageSpan) {
+            const percentage = percentageSpan.textContent;
+            requestAnimationFrame(() => {
+                progressBar.style.width = percentage;
+            });
             skill.setAttribute('data-progress-set', 'true');
         }
-    });
-
-    // data-percentage özelliği olan diğer progress bar'ları da ayarla
-    const otherProgressBars = document.querySelectorAll('.progress-bar[data-percentage]');
-    otherProgressBars.forEach(bar => {
-        // Eğer bu bar zaten işlendiyse, tekrar işleme
-        if (bar.getAttribute('data-progress-set') === 'true') {
-            return;
-        }
-        
-        const percentage = bar.getAttribute('data-percentage');
-        bar.style.width = percentage + '%';
-        
-        // Bu progress bar'ın ayarlandığını işaretle
-        bar.setAttribute('data-progress-set', 'true');
     });
 }
 
 // Yetenek animasyonlarını başlat
 function initSkillAnimations() {
-    const skills = document.querySelectorAll('.skill');
-
-    skills.forEach(skill => {
-        skill.classList.add('animated');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                requestAnimationFrame(() => {
+                    setProgressBarsImmediately();
+                });
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { 
+        threshold: 0.1,
+        rootMargin: '50px'
     });
 
-    // Progress bar'ları ayarla - sadece bir kez
-    setProgressBarsImmediately();
-    
-    // Sayfa yüklendiğinde progress bar'ları bir kez daha ayarla
-    window.addEventListener('load', function() {
-        setTimeout(setProgressBarsImmediately, 100);
-    });
-    
-    // Scroll event listener'ı kaldırıldı - progress bar'ların sabit kalması için
+    const skillsContainer = document.querySelector('.skills');
+    if (skillsContainer) {
+        observer.observe(skillsContainer);
+    }
 }
 
 // Bir elementin görünür olup olmadığını kontrol et
@@ -154,18 +115,9 @@ function isElementInViewport(el) {
 }
 
 // Sayfa yükleme ve kaydırma olaylarını dinle
-// Sayfa yükleme ve kaydırma olaylarını dinle
 window.addEventListener('load', function () {
     setTimeout(setProgressBarsImmediately, 100);
 });
-
-// Scroll event listener'ı kaldırıldı - progress bar'ların sabit kalması için
-// window.addEventListener('scroll', function () {
-//     const skillsSection = document.querySelector('#about');
-//     if (skillsSection && isElementInViewport(skillsSection)) {
-//         setProgressBarsImmediately();
-//     }
-// });
 
 // Yüzen efektleri ekle
 function addFloatingEffect() {
