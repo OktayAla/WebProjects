@@ -235,39 +235,6 @@ function initEnhancedSkillAnimations() {
     });
 }
 
-// Gelişmiş proje kartı etkileşimlerini başlat
-function initEnhancedProjectCards() {
-    const projectCards = document.querySelectorAll('.project-card');
-
-    // 3D hover efektlerini ekle
-    projectCards.forEach(card => {
-        card.addEventListener('mousemove', function (e) {
-            const rect = this.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            const xPercent = x / rect.width - 0.5;
-            const yPercent = y / rect.height - 0.5;
-
-            this.style.transform = `perspective(1000px) rotateY(${xPercent * 10}deg) rotateX(${-yPercent * 10}deg) translateZ(10px)`;
-
-            const img = this.querySelector('img');
-            if (img) {
-                img.style.transform = `translateX(${-xPercent * 20}px) translateY(${-yPercent * 20}px) scale(1.1)`;
-            }
-        });
-
-        card.addEventListener('mouseleave', function () {
-            this.style.transform = '';
-
-            const img = this.querySelector('img');
-            if (img) {
-                img.style.transform = '';
-            }
-        });
-    });
-}
-
 // Form animasyonlarını başlat
 function initFormAnimations() {
     const formControls = document.querySelectorAll('.form-control');
@@ -298,9 +265,7 @@ function initFormAnimations() {
             });
         });
     }
-    
-    // Diğer form kontrolleri...
-}
+    }
 
 // Popup fonksiyonları
 function showPopup() {

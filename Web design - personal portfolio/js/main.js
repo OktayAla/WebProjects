@@ -91,20 +91,7 @@ function initScrollIndicator() {
 
 // Proje kartlarının hover efektlerini başlat
 function initProjectCards() {
-    const projectCards = document.querySelectorAll('.project-card');
-
-    // Her bir proje kartına mouse giriş ve çıkış olaylarını dinle
-    projectCards.forEach(card => {
-        card.addEventListener('mouseenter', function () {
-            this.style.transform = 'scale(1.05) translateY(-10px)';
-            this.style.boxShadow = '0 15px 30px rgba(201, 160, 255, 0.3)';
-        });
-
-        card.addEventListener('mouseleave', function () {
-            this.style.transform = '';
-            this.style.boxShadow = '';
-        });
-    });
+    // Animasyon ve efektler kaldırıldı: hover efektleri devre dışı
 }
 
 // Yetenek çubuklarının başlangıç animasyonlarını ayarla
