@@ -8,7 +8,6 @@
 * - İyileştirilmiş proje kartı animasyonları
 * - Parallax efektleri
 * - Özelleştirilmiş metin animasyonları
-* - Proje slider fonksiyonları
 */
 
 // Sayfa yüklendiğinde tüm başlatma işlemlerini gerçekleştir
@@ -44,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
     enhanceContactInfo(); // İletişim bilgilerini geliştir
     initParallaxEffect(); // Parallax efektini başlat
     initTextAnimations(); // Metin animasyonlarını başlat
-    initProjectSlider(); // Proje slider fonksiyonlarını başlat
 
     // Bölüm görünürlük gözlemcisini oluştur
     const sectionObserver = new IntersectionObserver((entries) => {
@@ -299,59 +297,3 @@ function initTextAnimations() {
         }
     }
 }
-
-// Proje slider fonksiyonları
-function initProjectSlider() {
-    const wrapper = document.querySelector('.project-wrapper');
-    const prevBtn = document.querySelector('.prev-arrow');
-    const nextBtn = document.querySelector('.next-arrow');
-    let currentPage = 0;
-    const totalSlides = 2;
-
-    if (!wrapper || !prevBtn || !nextBtn) return;
-
-    // İlk yüklemede butonları ayarla
-    updateButtons();
-
-    function updateSlider() {
-        wrapper.style.transform = `translateX(-${currentPage * 50}%)`;
-        updateButtons();
-    }
-
-    function updateButtons() {
-        // Prev buton kontrolü
-        if (currentPage === 0) {
-            prevBtn.style.opacity = "0.3";
-            prevBtn.disabled = true;
-        } else {
-            prevBtn.style.opacity = "0.7";
-            prevBtn.disabled = false;
-        }
-
-        // Next buton kontrolü
-        if (currentPage === totalSlides - 1) {
-            nextBtn.style.opacity = "0.3";
-            nextBtn.disabled = true;
-        } else {
-            nextBtn.style.opacity = "0.7";
-            nextBtn.disabled = false;
-        }
-    }
-
-    prevBtn.addEventListener('click', () => {
-        if (currentPage > 0) {
-            currentPage--;
-            updateSlider();
-        }
-    });
-
-    nextBtn.addEventListener('click', () => {
-        if (currentPage < totalSlides - 1) {
-            currentPage++;
-            updateSlider();
-        }
-    });
-}
-
-// DOM yüklendiğinde slider'ı başlat
-document.addEventListener('DOMContentLoaded', initProjectSlider);
