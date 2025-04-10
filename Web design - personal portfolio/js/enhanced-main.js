@@ -328,30 +328,53 @@ function initProjectSlider() {
     const wrapper = document.querySelector('.project-wrapper');
     const prevBtn = document.querySelector('.prev-arrow');
     const nextBtn = document.querySelector('.next-arrow');
-    let currentSlide = 0;
-    const totalSlides = 2; // 6 proje / 3 görünür proje
+    let currentPage = 0;
+    const totalSlides = 2;
+
+    if (!wrapper || !prevBtn || !nextBtn) return;
+
+    // İlk yüklemede butonları ayarla
+    updateButtons();
 
     function updateSlider() {
-        const slideWidth = wrapper.clientWidth;
-        wrapper.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+        wrapper.style.transform = `translateX(-${currentPage * 50}%)`;
+        updateButtons();
     }
 
-    if (prevBtn && nextBtn && wrapper) {
-        prevBtn.addEventListener('click', () => {
-            if (currentSlide > 0) {
-                currentSlide--;
-                updateSlider();
-            }
-        });
+    function updateButtons() {
+        // Prev buton kontrolü
+        if (currentPage === 0) {
+            prevBtn.style.opacity = "0.3";
+            prevBtn.disabled = true;
+        } else {
+            prevBtn.style.opacity = "0.7";
+            prevBtn.disabled = false;
+        }
 
-        nextBtn.addEventListener('click', () => {
-            if (currentSlide < totalSlides - 1) {
-                currentSlide++;
-                updateSlider();
-            }
-        });
-
-        // Pencere boyutu değiştiğinde slider'ı güncelle
-        window.addEventListener('resize', updateSlider);
+        // Next buton kontrolü
+        if (currentPage === totalSlides - 1) {
+            nextBtn.style.opacity = "0.3";
+            nextBtn.disabled = true;
+        } else {
+            nextBtn.style.opacity = "0.7";
+            nextBtn.disabled = false;
+        }
     }
+
+    prevBtn.addEventListener('click', () => {
+        if (currentPage > 0) {
+            currentPage--;
+            updateSlider();
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        if (currentPage < totalSlides - 1) {
+            currentPage++;
+            updateSlider();
+        }
+    });
 }
+
+// DOM yüklendiğinde slider'ı başlat
+document.addEventListener('DOMContentLoaded', initProjectSlider);
