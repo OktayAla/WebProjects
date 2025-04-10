@@ -3,7 +3,7 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") { // Eğer istek methodu POST ise
     // Form verilerini al
     $name = strip_tags(trim($_POST["name"])); // Adı soyadı
-    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL); // E-postay
+    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL); // E-posta
     $message = strip_tags(trim($_POST["message"])); // Mesaj
 
     // Karakter sınırlamalarını kontrol et
@@ -17,17 +17,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // Eğer istek methodu POST ise
 
     // Dosyaya kaydetme işlemi
     $log_file = 'messages.txt';
-    $timestamp = date('d/m/Y H:i', strtotime('+1 hours'));
+    $timestamp = date('d/m/Y H:i');
     $log_entry = "Tarih: $timestamp\n";
-    $log_entry .= "----------------------------------------\n";
-    $log_entry .= "İletişim Formu\n";
-    $log_entry .= "----------------------------------------\n";
     $log_entry .= "Ad Soyad: $name\n";
     $log_entry .= "E-posta: $email\n";
-    $log_entry .= "Mesaj: $message\n";
-    $log_entry .= "----------------------------------------\n";
-
-    // Dosyaya yaz
+    $log_entry .= "Mesaj: $message\n\n";
 
     // Eğer dosya yazma işlemi başarılıysa, 200 yanıt kodu döndür
     // ve "success" mesajı gönder
