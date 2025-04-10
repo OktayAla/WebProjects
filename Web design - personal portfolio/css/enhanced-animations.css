@@ -243,9 +243,6 @@
     }
 }
 
-.floating {
-    animation: float 6s ease-in-out infinite;
-}
 
 .floating-slow {
     animation: float 8s ease-in-out infinite;
