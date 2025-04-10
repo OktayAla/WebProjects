@@ -280,12 +280,12 @@
 }
 
 .project-card {
-    transition: transform .4s var(--animation-bounce), box-shadow .4s ease, background-color .4s ease
+    transition: none;
 }
 
 .project-card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, .4)
+    transform: none;
+    box-shadow: none;
 }
 
 .project-card img {

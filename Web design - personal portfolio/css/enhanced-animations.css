@@ -156,21 +156,6 @@
     transform: scale(0.9);
 }
 
-[data-aos="flip"] {
-    transform: perspective(400px) rotateX(10deg);
-}
-
-[data-aos="card-animation"] {
-    transform: perspective(1000px) rotateX(10deg);
-    transform-origin: top;
-    opacity: 0;
-}
-
-[data-aos="card-animation"].aos-animate {
-    transform: perspective(1000px) rotateX(0);
-    opacity: 1;
-}
-
 [data-aos="skill-fade-up"] {
     transform: translateY(20px);
     opacity: 0;
@@ -191,15 +176,6 @@
     opacity: 1;
 }
 
-[data-aos="skill-flip"] {
-    transform: perspective(400px) rotateX(10deg);
-    opacity: 0;
-}
-
-[data-aos="skill-flip"].aos-animate {
-    transform: perspective(400px) rotateX(0);
-    opacity: 1;
-}
 
 /* Progress bar stilleri */
 .progress-bar {
@@ -323,8 +299,8 @@
 }
 
 .project-card:hover {
-    transform: translateY(-15px) rotateY(5deg);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    transform: none;
+    box-shadow: none;
 }
 
 .project-card::before {
@@ -357,10 +333,6 @@
     transition: all 0.3s ease;
     z-index: 2;
     position: relative;
-}
-
-.project-card:hover .project-info {
-    transform: translateY(-5px);
 }
 
 .badge {
