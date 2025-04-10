@@ -145,6 +145,15 @@ function initCursorFollower() {
             cursor.style.background = 'rgba(138, 43, 226, 0.2)';
         });
     });
+
+    // Mouse tıklama olayını dinle
+    document.addEventListener('mousedown', function() {
+        cursor.classList.add('clicked');
+    });
+
+    document.addEventListener('mouseup', function() {
+        cursor.classList.remove('clicked');
+    });
 }
 
 // Metin açılış animasyonlarını başlat
