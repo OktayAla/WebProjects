@@ -175,18 +175,6 @@
     position: relative;
 }
 
-.progress::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 30px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    animation: progress-shine 2s infinite linear;
-    transform: skewX(-20deg);
-}
-
 @keyframes progress-shine {
     from { left: -30px; }
     to { left: 130%; }
@@ -317,8 +305,33 @@
     pointer-events: none;
     mix-blend-mode: difference;
     z-index: 9999;
-    transition: transform 0.1s, width 0.3s, height 0.3s;
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
     transform: translate(-50%, -50%);
+}
+
+.cursor-follower.clicked {
+    animation: cursorClick 0.5s var(--animation-elastic-out);
+    background: rgba(138, 43, 226, 0.4);
+}
+
+@keyframes cursorClick {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(0.7);
+        background: rgba(138, 43, 226, 0.6);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Mobil cihazlarda cursor-follower'ı gizle */
+@media (max-width: 768px), (pointer: coarse) {
+    .cursor-follower {
+        display: none;
+    }
 }
 
 /* Scroll progress bar efekti */
