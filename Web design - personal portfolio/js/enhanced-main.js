@@ -8,6 +8,7 @@
 * - İyileştirilmiş proje kartı animasyonları
 * - Parallax efektleri
 * - Özelleştirilmiş metin animasyonları
+* - Proje slider fonksiyonları
 */
 
 // Sayfa yüklendiğinde tüm başlatma işlemlerini gerçekleştir
@@ -43,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
     enhanceContactInfo(); // İletişim bilgilerini geliştir
     initParallaxEffect(); // Parallax efektini başlat
     initTextAnimations(); // Metin animasyonlarını başlat
+    initProjectSlider(); // Proje slider fonksiyonlarını başlat
 
     // Bölüm görünürlük gözlemcisini oluştur
     const sectionObserver = new IntersectionObserver((entries) => {
@@ -318,5 +320,38 @@ function initTextAnimations() {
 
             bouncingTextElement.innerHTML = newHtml;
         }
+    }
+}
+
+// Proje slider fonksiyonları
+function initProjectSlider() {
+    const wrapper = document.querySelector('.project-wrapper');
+    const prevBtn = document.querySelector('.prev-arrow');
+    const nextBtn = document.querySelector('.next-arrow');
+    let currentSlide = 0;
+    const totalSlides = 2; // 6 proje / 3 görünür proje
+
+    function updateSlider() {
+        const slideWidth = wrapper.clientWidth;
+        wrapper.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+    }
+
+    if (prevBtn && nextBtn && wrapper) {
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlider();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlider();
+            }
+        });
+
+        // Pencere boyutu değiştiğinde slider'ı güncelle
+        window.addEventListener('resize', updateSlider);
     }
 }
