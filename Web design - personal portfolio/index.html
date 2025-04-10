@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
-
+<!--09.04.2025 OA-->
 <head>
+    <!-- Google Analytics Tag -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-7GN0K642BZ"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -11,18 +12,24 @@
         gtag('config', 'G-7GN0K642BZ');
     </script>
 
-    <!--09.04.2025 OA-->
+    <!-- Meta tagları -->  
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Oktay Ala - Kişisel Web Sitesi. IT Specialist & Software Developer">
     <meta name="keywords"
-        content="Oktay Ala, kod kampüsü, yazılım, yazılım geliştirme, web tasarım, robotik kodlama,oktay ala, kişisel web sitesi, yazılım uzmanı, yazılım geliştirici, IT uzmanı, IT specialist, software developer,oktay ala denizli">
+          content="Oktay Ala, kod kampüsü, yazılım, yazılım geliştirme, 
+          web tasarım, robotik kodlama,oktay ala, kişisel web sitesi, 
+          yazılım uzmanı, yazılım geliştirici, IT uzmanı, IT specialist, 
+          software developer,oktay ala denizli,yönetim bilişim sistemleri">
     <meta name="author" content="Oktay Ala">
     <meta name="theme-color" content="#1a202c">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
     <meta name="language" content="Turkish">
+
     <title>Oktay Ala - Kişisel Web Sitesi</title>
+
+    <!-- CSS dosyaları -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> <!-- Bootstrap için CSS dosyası -->
     <link rel="stylesheet" href="css/style.css"> <!-- Ana CSS dosyası -->
     <link rel="stylesheet" href="css/enhanced-animations.css"> <!-- Animasyonları etkileyecek CSS dosyası -->
@@ -34,6 +41,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"> <!-- AOS için CSS dosyası -->
 </head>
 
+<!-- Hero bölümü -->
 <body class="dark-theme">
     <div id="particles-container" class="enhanced-particles morphing-bg"
         style="pointer-events: none; position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; opacity: 0.8;">
@@ -46,6 +54,8 @@
             <p class="lead mt-4 mb-5 hero-float" data-aos="fade-up" data-aos-delay="200">
                 <span class="typing-text">IT Specialist & Software Developer</span>
             </p>
+
+            <!-- Hero butonları -->
             <div class="hero-buttons" data-aos="fade-up" data-aos-delay="400">
                 <a href="#about" class="btn btn-primary me-3 magnetic-element">Hakkımda</a>
                 <a href="#projects" class="btn btn-primary me-3 magnetic-element">Projelerim</a>
@@ -334,7 +344,7 @@
                                 <i class="fab fa-instagram"></i>
                             </div>
                             <div>
-                                <p class="text-center"><a href="https://instagram.com/oktayala">Instagram</a></p>
+                                <p class="text-center"><a href="https://instagram.com/oktay_ala">Instagram</a></p>
                             </div>
                         </div>
 
@@ -346,10 +356,18 @@
                                 <p class="text-center"><a href="https://x.com/oktayala">Twitter</a></p>
                             </div>
                         </div>
+
+                        <div class="d-flex justify-content-right align-items-center mb-4">
+                            <div class="icon-box me-3">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            <div>
+                                <p class="text-center"><a href="https://github.com/OktayAla">GitHub</a></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
 
 
@@ -359,57 +377,15 @@
     </footer>
 
     <!-- JavaScript dosyaları -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="js/particles.js"></script>
-    <script src="js/enhanced-particles.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/enhanced-main.js"></script>
-    <script src="js/text-animation.js"></script>
-    <script src="js/dynamic-interactions.js"></script>
-    <script>
-        // AOS (Animate On Scroll) ayarlar
-        AOS.init({
-            duration: 600,
-            easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-            once: true,
-            offset: 50,
-            delay: 0,
-            mirror: false,
-            anchorPlacement: 'top-bottom'
-        });
-
-        // Sayfa yüklenince tüm animasyonları başlat
-        window.addEventListener('load', function () {
-            setTimeout(() => {
-                document.body.style.opacity = '1';
-                document.body.style.transform = 'none';
-            }, 100);
-        });
-
-        // Partikül efektleri
-        document.addEventListener('DOMContentLoaded', function () {
-
-            // Partikül alanını oluştur
-            const particlesContainer = document.getElementById('particles-container'); // Partikül alanı için div oluşturma
-            const canvas = document.createElement('canvas'); // Canvas öğesini oluşturma
-            canvas.id = 'particles-canvas'; // Canvas id
-            particlesContainer.appendChild(canvas); // Canvas'ı div'e ekleme
-
-            // Partikül ağı oluşturma
-            new EnhancedParticleNetwork('particles-canvas', {
-                particleCount: 100,
-                colors: ['#c9a0ff', '#00e6d2', '#d4af37'],
-                lineColor: 'rgba(201, 160, 255, 0.2)',
-                maxDistance: 150,
-                speed: 0.5,
-                sizeRange: { min: 1, max: 3 },
-                responsive: true,
-                interactionRadius: 200,
-                interactionStrength: 10
-            });
-        });
-    </script>
+    <script src="js/aos-effect.js"></script> <!-- AOS için JavaScript dosyası -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> <!-- Bootstrap'in JavaScript dosyası -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script> <!-- AOS için JavaScript dosyası -->
+    <script src="js/particles.js"></script> <!-- Partikül efektleri için JavaScript dosyası -->
+    <script src="js/enhanced-particles.js"></script> <!-- Partikül efektleri için JavaScript dosyası -->
+    <script src="js/main.js"></script> <!-- Ana JavaScript dosyası -->
+    <script src="js/enhanced-main.js"></script> <!-- Ana JavaScript dosyası -->
+    <script src="js/text-animation.js"></script> <!-- Yazı animasyonları için JavaScript dosyası -->
+    <script src="js/dynamic-interactions.js"></script> <!-- Dinamik etkileşimler için JavaScript dosyası -->
 
     <!-- İletişim formu popup-->
     <div id="successPopup" class="popup" style="display: none;">
