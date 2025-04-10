@@ -241,13 +241,11 @@ class EnhancedParticleNetwork {
 
 // Sayfa yüklendiğinde parçacık sistemini başlat
 document.addEventListener('DOMContentLoaded', function () {
-    // Parçacık container'ını kontrol et
     const particlesContainer = document.getElementById('particles-container');
     if (!particlesContainer) return;
 
     particlesContainer.style.display = 'block';
 
-    // Canvas elementini kontrol et ve oluştur
     let canvas = document.getElementById('particles-canvas');
     if (!canvas) {
         canvas = document.createElement('canvas');
@@ -255,9 +253,9 @@ document.addEventListener('DOMContentLoaded', function () {
         particlesContainer.appendChild(canvas);
     }
 
-    // Yeni parçacık ağı oluştur ve özelleştirilmiş ayarları uygula
+    // Yeni parçacık ağı oluşturulurken ayarları optimize ediyoruz.
     new EnhancedParticleNetwork('particles-canvas', {
-        particleCount: 150,
+        particleCount: 80, // performans için azaltıldı
         colors: [
             'rgba(201, 160, 255, 0.7)',
             'rgba(0, 230, 210, 0.6)',
@@ -270,8 +268,8 @@ document.addEventListener('DOMContentLoaded', function () {
         responsive: true,
         interactionRadius: 250,
         interactionStrength: 15,
-        glowEffect: true,
-        waveEffect: true,
+        glowEffect: false, // ekstradan gelen hesaplama kaldırıldı
+        waveEffect: false, // dalgalanma efekti kaldırıldı
         waveSpeed: 0.03,
         waveHeight: 20
     });
