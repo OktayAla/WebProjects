@@ -297,6 +297,15 @@
     position: relative
 }
 
+.project-info h3 {
+    transition: color 0.3s, transform 0.3s;
+}
+
+.project-info:hover h3 {
+    color: var(--accent-color); 
+    transform: scale(1.05);
+}
+
 .project-card:hover .badge {
     transform: scale(1.1);
     background-color: var(--secondary-color) !important
