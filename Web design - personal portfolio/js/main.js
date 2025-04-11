@@ -78,42 +78,16 @@ function initScrollIndicator() {
     const scrollIndicator = document.querySelector('.scroll-down');
 
     // Eğer kaydırma göstergesi varsa, tıklama olayını dinle
-    // ve tıklandığında sıradaki bölüme kaydır
+    // ve tıklandığında "Hakkımda" bölümüne kaydır
     if (scrollIndicator) {
         scrollIndicator.addEventListener('click', () => {
-            scrollToNextSection();
-        });
-    }
-}
-
-// Sıradaki bölüme kaydırma işlevi
-function scrollToNextSection() {
-    const sections = document.querySelectorAll('section');
-    const scrollPosition = window.scrollY + window.innerHeight / 2; // Adjusted to consider the middle of the viewport
-    let nextSection = null;
-
-    // Mevcut konumdan sonraki ilk bölümü bul
-    for (let i = 0; i < sections.length; i++) {
-        const section = sections[i];
-        const sectionTop = section.offsetTop;
-        
-        if (sectionTop > scrollPosition) {
-            nextSection = section;
-            break;
-        }
-    }
-
-    // Eğer sonraki bölüm bulunduysa, o bölüme kaydır
-    if (nextSection) {
-        window.scrollTo({
-            top: nextSection.offsetTop,
-            behavior: 'smooth'
-        });
-    } else {
-        // Eğer sonraki bölüm bulunamadıysa, ilk bölüme kaydır (sayfa başına dön)
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+            const aboutSection = document.querySelector('#about');
+            if (aboutSection) {
+                window.scrollTo({
+                    top: aboutSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            }
         });
     }
 }
@@ -159,13 +133,12 @@ function initProjectSlider() {
     const totalSlides = slideGroups.length;
 
     if (!wrapper || !prevBtn || !nextBtn) return;
-    
-    // Slider'ı başlangıç durumuna getir
+
     updateSlider();
 
     function updateSlider() {
         // Smooth scroll animation with transform
-        wrapper.style.transform = `translateX(-${currentPage * 100 / totalSlides}%)`;
+        wrapper.style.transform = `translateX(-${currentPage * (100 / 3)}%)`;
         updateButtons();
     }
 
@@ -190,50 +163,27 @@ function initProjectSlider() {
         }
     });
 
-    // Touch events için geliştirilmiş swipe desteği
+    // Touch events için swipe desteği
     let touchStartX = 0;
     let touchEndX = 0;
-    let touchStartTime = 0;
-    let touchEndTime = 0;
 
     wrapper.addEventListener('touchstart', (e) => {
         touchStartX = e.touches[0].clientX;
-        touchStartTime = new Date().getTime();
     });
-
-    wrapper.addEventListener('touchmove', (e) => {
-        // Sayfa kaydırma davranışını engelle
-        e.preventDefault();
-    }, { passive: false });
 
     wrapper.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].clientX;
-        touchEndTime = new Date().getTime();
-        
         const difference = touchStartX - touchEndX;
-        const timeDiff = touchEndTime - touchStartTime;
         
-        // Hızlı swipe için daha düşük eşik değeri, yavaş swipe için daha yüksek
-        const swipeThreshold = timeDiff < 300 ? 30 : 50;
-        
-        if (Math.abs(difference) > swipeThreshold) {
+        if (Math.abs(difference) > 50) { // minimum swipe mesafesi
             if (difference > 0 && currentPage < totalSlides - 1) {
-                // Sağa swipe
                 currentPage++;
                 updateSlider();
             } else if (difference < 0 && currentPage > 0) {
-                // Sola swipe
                 currentPage--;
                 updateSlider();
             }
         }
-    });
-    
-    // Pencere boyutu değiştiğinde slider'ı güncelle
-    window.addEventListener('resize', () => {
-        // Sayfa yeniden boyutlandırıldığında slider'ı sıfırla
-        currentPage = 0;
-        updateSlider();
     });
 }
 
