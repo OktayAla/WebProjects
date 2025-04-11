@@ -163,20 +163,29 @@ function initProjectSlider() {
     // Mobil cihaz kontrolü
     const isMobile = window.innerWidth <= 576;
     
-    // Set the width of the wrapper dynamically based on the number of slide groups
-    wrapper.style.width = `${totalSlides * 100}%`;
-    
-    // Ensure each slide group has the correct width
-    slideGroups.forEach(group => {
-        group.style.width = `${100 / totalSlides}%`;
-    });
+    // Only set these dynamically for non-mobile devices
+    // For mobile devices, we use CSS to handle the width
+    if (!isMobile) {
+        // Set the width of the wrapper dynamically based on the number of slide groups
+        wrapper.style.width = `${totalSlides * 100}%`;
+        
+        // Ensure each slide group has the correct width
+        slideGroups.forEach(group => {
+            group.style.width = `${100 / totalSlides}%`;
+        });
+    }
     
     // Slider'ı başlangıç durumuna getir
     updateSlider();
 
     function updateSlider() {
-        // Smooth scroll animation with transform
-        wrapper.style.transform = `translateX(-${currentPage * (100 / totalSlides)}%)`;
+        // For mobile, we use a simpler transform since CSS handles the widths
+        if (isMobile) {
+            wrapper.style.transform = `translateX(-${currentPage * 33.333}%)`;
+        } else {
+            // For desktop, use the dynamic calculation
+            wrapper.style.transform = `translateX(-${currentPage * (100 / totalSlides)}%)`;
+        }
         updateButtons();
     }
 
@@ -248,6 +257,13 @@ function initProjectSlider() {
     
     // Pencere boyutu değiştiğinde slider'ı güncelle
     window.addEventListener('resize', () => {
+        const newIsMobile = window.innerWidth <= 576;
+        
+        // If switching between mobile and desktop, reload to apply correct styling
+        if (newIsMobile !== isMobile) {
+            location.reload();
+        }
+        
         // Sayfa yeniden boyutlandırıldığında slider'ı sıfırla
         currentPage = 0;
         updateSlider();
