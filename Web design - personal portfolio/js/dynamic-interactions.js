@@ -25,7 +25,6 @@ function initDynamicInteractions() {
     initCursorFollower();
     initRevealTextAnimations();
     initEnhancedSkillAnimations();
-    initEnhancedProjectCards();
     initFormAnimations();
     initScrollTriggeredAnimations();
 }

@@ -4,7 +4,6 @@
 * - Sayfa içi yumuşak kaydırma
 * - Yetenek çubuklarının animasyonları
 * - Aşağı kaydırma göstergesi
-* - Proje kartları hover efektleri
 * - Sayfa yükleme ve başlatma işlemleri
 */
 
@@ -19,12 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Aşağı kaydırma göstergesini başlat
     initScrollIndicator();
-
-    // Proje kartlarının hover efektlerini başlat
-    initProjectCards();
-
-    // Proje slider'ını başlat
-    initProjectSlider();
 });
 
 // Sayfa içi yumuşak kaydırma işlemini başlat
@@ -92,11 +85,6 @@ function initScrollIndicator() {
     }
 }
 
-// Proje kartlarının hover efektlerini başlat
-function initProjectCards() {
-    // Animasyon ve efektler kaldırıldı: hover efektleri devre dışı
-}
-
 // Yetenek çubuklarının başlangıç animasyonlarını ayarla
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.progress-bar').forEach(bar => {
@@ -120,70 +108,6 @@ if (typeof AOS !== 'undefined') {
         easing: 'ease-out',
         once: false,
         mirror: true
-    });
-}
-
-// Proje slider'ını başlat
-function initProjectSlider() {
-    const wrapper = document.querySelector('.project-wrapper');
-    const prevBtn = document.querySelector('.prev-arrow');
-    const nextBtn = document.querySelector('.next-arrow');
-    const slideGroups = wrapper.querySelectorAll('.slide-group');
-    let currentPage = 0;
-    const totalSlides = slideGroups.length;
-
-    if (!wrapper || !prevBtn || !nextBtn) return;
-
-    updateSlider();
-
-    function updateSlider() {
-        // Smooth scroll animation with transform
-        wrapper.style.transform = `translateX(-${currentPage * (100 / 3)}%)`;
-        updateButtons();
-    }
-
-    function updateButtons() {
-        prevBtn.style.opacity = currentPage === 0 ? "0.3" : "1";
-        prevBtn.disabled = currentPage === 0;
-        nextBtn.style.opacity = currentPage === totalSlides - 1 ? "0.3" : "1";
-        nextBtn.disabled = currentPage === totalSlides - 1;
-    }
-
-    prevBtn.addEventListener('click', () => {
-        if (currentPage > 0) {
-            currentPage--;
-            updateSlider();
-        }
-    });
-
-    nextBtn.addEventListener('click', () => {
-        if (currentPage < totalSlides - 1) {
-            currentPage++;
-            updateSlider();
-        }
-    });
-
-    // Touch events için swipe desteği
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    wrapper.addEventListener('touchstart', (e) => {
-        touchStartX = e.touches[0].clientX;
-    });
-
-    wrapper.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].clientX;
-        const difference = touchStartX - touchEndX;
-        
-        if (Math.abs(difference) > 50) { // minimum swipe mesafesi
-            if (difference > 0 && currentPage < totalSlides - 1) {
-                currentPage++;
-                updateSlider();
-            } else if (difference < 0 && currentPage > 0) {
-                currentPage--;
-                updateSlider();
-            }
-        }
     });
 }
 

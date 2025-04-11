@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
     addGradientTextEffect(); // Gradyan metin efektini ekle
     addRevealAnimations(); // Açılış animasyonlarını ekle
     enhanceFormInteractions(); // Form etkileşimlerini geliştir
-    enhanceProjectCards(); // Proje kartlarını geliştir
     enhanceContactInfo(); // İletişim bilgilerini geliştir
     initParallaxEffect(); // Parallax efektini başlat
     initTextAnimations(); // Metin animasyonlarını başlat
