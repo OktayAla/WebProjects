@@ -163,12 +163,20 @@ function initProjectSlider() {
     // Mobil cihaz kontrolü
     const isMobile = window.innerWidth <= 576;
     
+    // Set the width of the wrapper dynamically based on the number of slide groups
+    wrapper.style.width = `${totalSlides * 100}%`;
+    
+    // Ensure each slide group has the correct width
+    slideGroups.forEach(group => {
+        group.style.width = `${100 / totalSlides}%`;
+    });
+    
     // Slider'ı başlangıç durumuna getir
     updateSlider();
 
     function updateSlider() {
         // Smooth scroll animation with transform
-        wrapper.style.transform = `translateX(-${currentPage * 100}%)`;
+        wrapper.style.transform = `translateX(-${currentPage * (100 / totalSlides)}%)`;
         updateButtons();
     }
 
