@@ -142,7 +142,7 @@ function initProjectSlider() {
 
     function updateSlider() {
         // Smooth scroll animation with transform
-        wrapper.style.transform = `translateX(-${currentPage * (100 / 3)}%)`;
+        wrapper.style.transform = `translateX(-${currentPage * 100}%)`;
         updateButtons();
     }
 
