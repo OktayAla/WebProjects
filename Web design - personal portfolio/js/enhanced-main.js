@@ -165,13 +165,43 @@ function addScrollIndicator() {
         heroSection.appendChild(scrollIndicator);
 
         scrollIndicator.addEventListener('click', function () {
-            const aboutSection = document.querySelector('#about');
-            if (aboutSection) {
-                window.scrollTo({
-                    top: aboutSection.offsetTop,
-                    behavior: 'smooth'
-                });
-            }
+            scrollToNextSection();
+        });
+    } else if (existingIndicator) {
+        existingIndicator.addEventListener('click', function () {
+            scrollToNextSection();
+        });
+    }
+}
+
+// Sıradaki bölüme kaydırma işlevi
+function scrollToNextSection() {
+    const sections = document.querySelectorAll('section');
+    const scrollPosition = window.scrollY;
+    let nextSection = null;
+    
+    // Mevcut konumdan sonraki ilk bölümü bul
+    for (let i = 0; i < sections.length; i++) {
+        const section = sections[i];
+        const sectionTop = section.offsetTop;
+        
+        if (sectionTop > scrollPosition + 50) {
+            nextSection = section;
+            break;
+        }
+    }
+    
+    // Eğer sonraki bölüm bulunduysa, o bölüme kaydır
+    if (nextSection) {
+        window.scrollTo({
+            top: nextSection.offsetTop - 50,
+            behavior: 'smooth'
+        });
+    } else {
+        // Eğer sonraki bölüm bulunamadıysa, ilk bölüme kaydır (sayfa başına dön)
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
         });
     }
 }

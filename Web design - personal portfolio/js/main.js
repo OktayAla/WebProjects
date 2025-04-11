@@ -78,16 +78,42 @@ function initScrollIndicator() {
     const scrollIndicator = document.querySelector('.scroll-down');
 
     // Eğer kaydırma göstergesi varsa, tıklama olayını dinle
-    // ve tıklandığında "Hakkımda" bölümüne kaydır
+    // ve tıklandığında sıradaki bölüme kaydır
     if (scrollIndicator) {
         scrollIndicator.addEventListener('click', () => {
-            const aboutSection = document.querySelector('#about');
-            if (aboutSection) {
-                window.scrollTo({
-                    top: aboutSection.offsetTop,
-                    behavior: 'smooth'
-                });
-            }
+            scrollToNextSection();
+        });
+    }
+}
+
+// Sıradaki bölüme kaydırma işlevi
+function scrollToNextSection() {
+    const sections = document.querySelectorAll('section');
+    const scrollPosition = window.scrollY + window.innerHeight / 2; // Adjusted to consider the middle of the viewport
+    let nextSection = null;
+
+    // Mevcut konumdan sonraki ilk bölümü bul
+    for (let i = 0; i < sections.length; i++) {
+        const section = sections[i];
+        const sectionTop = section.offsetTop;
+        
+        if (sectionTop > scrollPosition) {
+            nextSection = section;
+            break;
+        }
+    }
+
+    // Eğer sonraki bölüm bulunduysa, o bölüme kaydır
+    if (nextSection) {
+        window.scrollTo({
+            top: nextSection.offsetTop,
+            behavior: 'smooth'
+        });
+    } else {
+        // Eğer sonraki bölüm bulunamadıysa, ilk bölüme kaydır (sayfa başına dön)
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
         });
     }
 }
