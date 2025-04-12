@@ -237,6 +237,7 @@ function initEnhancedSkillAnimations() {
 // Form animasyonlarını başlat
 function initFormAnimations() {
     const contactForm = document.getElementById('contactForm');
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
     
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
@@ -250,8 +251,13 @@ function initFormAnimations() {
             })
             .then(response => response.text())
             .then(data => {
-                showPopup();
                 this.reset(); // Formu temizle
+                successModal.show(); // Modal'ı göster
+                
+                // 3 saniye sonra modal'ı kapat
+                setTimeout(() => {
+                    successModal.hide();
+                }, 3000);
             })
             .catch(error => {
                 console.error('Error:', error);
