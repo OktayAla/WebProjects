@@ -654,71 +654,97 @@ footer {
             opacity: 1;
         }
     }
+}
 
-    .modal-content {
-        background: var(--dark-card-bg);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-color);
-    }
+/* Modal Styles - Yeni */
+.modal {
+    z-index: 99999;
+}
 
-    .modal-header {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
+.modal-content {
+    background: var(--dark-card-bg); /* Arka plan rengi */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-color); /* Metin rengi */
+}
 
-    .modal-footer {
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
+.modal-header {
+    background: var(--dark-bg); /* Başlık arka plan rengi */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-    .btn-close {
-        color: var(--text-color);
-        filter: invert(1) grayscale(100%) brightness(200%);
-    }
+.modal-footer {
+    background: var(--dark-bg); /* Alt kısım arka plan rengi */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-    /* Modal Styles */
-    .modal {
-        z-index: 99999;
-    }
+.modal-title {
+    color: var(--accent-color); /* Başlık metin rengi */
+}
 
-    .modal-content {
-        background: var(--dark-bg) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-color) !important;
-    }
+.modal-body {
+    color: var(--text-color); /* Gövde metin rengi */
+}
 
-    .modal-header {
-        background: var(--dark-bg);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
+.modal-body p {
+    color: var(--text-color); /* Paragraf metin rengi */
+}
 
-    .modal-footer {
-        background: var(--dark-bg);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
+.btn-close {
+    filter: invert(1) brightness(200%); /* Kapatma butonu rengi */
+}
 
-    .modal-title {
-        color: var(--accent-color) !important;
-    }
+.modal-backdrop.show {
+    opacity: 0.8;
+    background-color: rgba(0, 0, 0, 0.8); /* Arka plan karartma rengi */
+}
 
-    .modal-body {
-        background: var(--dark-bg);
-        color: var(--text-color) !important;
-    }
+/* Bootstrap Modal stillerini geçersiz kılmak için daha spesifik bir selector kullanın */
+#successModal .modal-content {
+    background: var(--dark-card-bg);
+    color: var(--text-color);
+}
 
-    .modal-body p {
-        color: var(--text-color) !important;
-    }
+#successModal .modal-header {
+    background: var(--dark-bg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-    .btn-close {
-        background-color: var(--text-color) !important;
-        opacity: 0.5;
-    }
+#successModal .modal-footer {
+    background: var(--dark-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-    .btn-close:hover {
-        opacity: 1;
-    }
+#successModal .modal-title {
+    color: var(--accent-color);
+}
 
-    .modal-backdrop.show {
-        opacity: 0.8;
-        background-color: rgba(0, 0, 0, 0.8);
-    }
+#successModal .modal-body {
+    color: var(--text-color);
+}
+
+#successModal .modal-body p {
+    color: var(--text-color);
+}
+
+.modal-header {
+    background: var(--dark-bg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-footer {
+    background: var(--dark-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-title {
+    color: var(--accent-color) !important;
+}
+
+.modal-body {
+    background: var(--dark-bg);
+    color: var(--text-color) !important;
+}
+
+.modal-body p {
+    color: var(--text-color) !important;
 }
