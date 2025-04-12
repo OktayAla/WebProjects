@@ -278,6 +278,7 @@ function showPopup() {
     }
 }
 
+
 function closePopup() {
     const popup = document.getElementById('successPopup');
     if (popup) {
