@@ -236,10 +236,8 @@ function initEnhancedSkillAnimations() {
 
 // Form animasyonlarını başlat
 function initFormAnimations() {
-    const formControls = document.querySelectorAll('.form-control');
     const contactForm = document.getElementById('contactForm');
     
-    // Form gönderimi için event listener
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -252,26 +250,25 @@ function initFormAnimations() {
             })
             .then(response => response.text())
             .then(data => {
-                // Form'u temizle
-                contactForm.reset();
-                
-                // Popup'ı göster
-                showPopup();
+                if (data.trim() === 'success') {
+                    showPopup();
+                } else {
+                    alert('Mesaj gönderilirken bir hata oluştu.');
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showPopup(); // Hata durumunda da popup'ı göster
+                alert('Mesaj gönderilirken bir hata oluştu.');
             });
         });
     }
-    }
+}
 
 // Popup fonksiyonları
 function showPopup() {
     const popup = document.getElementById('successPopup');
     if (popup) {
         popup.style.display = 'flex';
-        // Popup'ı 3 saniye sonra otomatik kapat
         setTimeout(() => {
             closePopup();
         }, 3000);
