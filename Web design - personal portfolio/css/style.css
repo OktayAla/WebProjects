@@ -188,12 +188,6 @@ section {
     letter-spacing: 2px
 }
 
-.scroll-down,
-.section-title::after {
-    left: 50%;
-    transform: translateX(-50%)
-}
-
 .section-title::after {
     content: '';
     position: absolute;
@@ -435,15 +429,6 @@ footer {
     background-color: rgba(102, 126, 234, .1);
     color: var(--accent-color);
     border-color: var(--accent-color)
-}
-
-.scroll-down {
-    position: absolute;
-    bottom: 40px;
-    color: var(--accent-color);
-    cursor: pointer;
-    animation: 2.2s infinite bounce;
-    z-index: 2
 }
 
 .popup,

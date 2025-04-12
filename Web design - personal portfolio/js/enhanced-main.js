@@ -1,13 +1,5 @@
 /*
 * Bu JavaScript dosyası, web sitesinin gelişmiş özelliklerini ve animasyonlarını yöneten ana dosyadır.
-* İçerdiği temel işlevler:
-* - Gelişmiş sayfa yükleme optimizasyonları
-* - AOS (Animate on Scroll) entegrasyonu
-* - Yüzen efektler ve gradyan metin efektleri
-* - Gelişmiş form etkileşimleri
-* - İyileştirilmiş proje kartı animasyonları
-* - Parallax efektleri
-* - Özelleştirilmiş metin animasyonları
 */
 
 // Sayfa yüklendiğinde tüm başlatma işlemlerini gerçekleştir
@@ -18,9 +10,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (typeof AOS !== 'undefined') {
         AOS.init({
             disable: isMobile,
-            duration: isMobile ? 0 : 800,
+            duration: isMobile ? 0 : 600,
+            easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
             once: true,
-            mirror: false
+            mirror: false,
+            offset: 50,
+            anchorPlacement: 'top-bottom'
         });
     }
 
@@ -60,6 +55,54 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // İlerleme çubuklarını hemen ayarla
     setProgressBarsImmediately();
+});
+
+// AOS (Animate On Scroll) ve EnhancedParticleNetwork kütüphanelerini kullanarak sayfa yükleme ve animasyon efektleri ekleme
+// Bu kütüphaneler, sayfa yüklenirken ve kaydırıldığında animasyonlar ve partikül efektleri oluşturmak için kullanılır.
+
+// AOS (Animate On Scroll) ayarlar
+if (typeof AOS !== 'undefined') {
+    AOS.init({
+        duration: 600,
+        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        once: true,
+        offset: 50,
+        delay: 0,
+        mirror: false,
+        anchorPlacement: 'top-bottom'
+    });
+}
+
+// Sayfa yüklenince tüm animasyonları başlat
+window.addEventListener('load', function () {
+    setTimeout(() => {
+        // Sayfa yüklendiğinde body'yi görünür yap
+        document.body.style.opacity = '1';
+        document.body.style.transform = 'none';
+    }, 100);
+});
+
+// Partikül efektleri
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Partikül alanını oluştur
+    const particlesContainer = document.getElementById('particles-container'); // Partikül alanı için div oluşturma
+    const canvas = document.createElement('canvas'); // Canvas öğesini oluşturma
+    canvas.id = 'particles-canvas'; // Canvas id
+    particlesContainer.appendChild(canvas); // Canvas'ı div'e ekleme
+
+    // Partikül ağı oluşturma
+    new EnhancedParticleNetwork('particles-canvas', {
+        particleCount: 100,
+        colors: ['#c9a0ff', '#00e6d2', '#d4af37'],
+        lineColor: 'rgba(201, 160, 255, 0.2)',
+        maxDistance: 150,
+        speed: 0.5,
+        sizeRange: { min: 1, max: 3 },
+        responsive: true,
+        interactionRadius: 200,
+        interactionStrength: 10
+    });
 });
 
 // İlerleme çubuklarını belirlenen değerlere ayarla
@@ -150,29 +193,6 @@ function initSmoothScroll() {
             }
         });
     });
-}
-
-// Aşağı kaydırma göstergesini ekle
-function addScrollIndicator() {
-    const heroSection = document.querySelector('.hero');
-    const existingIndicator = document.querySelector('.scroll-down');
-
-    if (heroSection && !existingIndicator) {
-        const scrollIndicator = document.createElement('div');
-        scrollIndicator.className = 'scroll-down';
-        scrollIndicator.innerHTML = '<i class="fas fa-chevron-down fa-2x pulse"></i>';
-        heroSection.appendChild(scrollIndicator);
-
-        scrollIndicator.addEventListener('click', function () {
-            const aboutSection = document.querySelector('#about');
-            if (aboutSection) {
-                window.scrollTo({
-                    top: aboutSection.offsetTop,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    }
 }
 
 // Gradyan metin efektini ekle
@@ -288,7 +308,7 @@ function initTextAnimations() {
                 if (char === ' ') {
                     newHtml += ' ';
                 } else {
-                    newHtml += `<span style="animation-delay: ${(beforeHighlight.length + i) * 0.05}s">${char}</span>`;
+                    newHtml += `<span style="animation-delay: ${i * 0.05}s">${char}</span>`;
                 }
             }
 

@@ -66,25 +66,6 @@ function initSkillAnimations() {
     }
 }
 
-// Aşağı kaydırma göstergesini başlat
-function initScrollIndicator() {
-    const scrollIndicator = document.querySelector('.scroll-down');
-
-    // Eğer kaydırma göstergesi varsa, tıklama olayını dinle
-    // ve tıklandığında "Hakkımda" bölümüne kaydır
-    if (scrollIndicator) {
-        scrollIndicator.addEventListener('click', () => {
-            const aboutSection = document.querySelector('#about');
-            if (aboutSection) {
-                window.scrollTo({
-                    top: aboutSection.offsetTop,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    }
-}
-
 // Yetenek çubuklarının başlangıç animasyonlarını ayarla
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.progress-bar').forEach(bar => {
