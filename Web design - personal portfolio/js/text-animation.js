@@ -1,7 +1,0 @@
-// Bu JavaScript dosyası, web sitesindeki metinsel öğeler için özel animasyonları kontrol eder.
-
-document.addEventListener('DOMContentLoaded',function(){const bouncingTextElement=document.querySelector('.bouncing-text');if(bouncingTextElement){const originalText=bouncingTextElement.innerHTML;const highlightRegex=/<span class="([^"]*)">([^<]*)<\/span>/g;const matches=[...originalText.matchAll(highlightRegex)];if(matches.length>0){const beforeHighlight=originalText.split(matches[0][0])[0];const afterHighlight=originalText.split(matches[matches.length-1][0])[1];let newHtml='';for(let i=0;i<beforeHighlight.length;i++){const char=beforeHighlight[i];if(char===' '){newHtml+=' '}else{newHtml+=`<span style="animation-delay: ${i * 0.05}s">${char}</span>`}}
-matches.forEach(match=>{newHtml+=`<span class="${match[1]}">${match[2]}</span>`});for(let i=0;i<afterHighlight.length;i++){const char=afterHighlight[i];if(char===' '){newHtml+=' '}else{newHtml+=`<span style="animation-delay: ${(beforeHighlight.length + i) * 0.05}s">${char}</span>`}}
-bouncingTextElement.innerHTML=newHtml}
-const waveTextElements=document.querySelectorAll('.wave-text');waveTextElements.forEach(element=>{const text=element.textContent;let newHtml='';for(let i=0;i<text.length;i++){if(text[i]===' '){newHtml+=' '}else{newHtml+=`<span style="animation-delay: ${i * 0.1}s">${text[i]}</span>`}}
-element.innerHTML=newHtml})}})
