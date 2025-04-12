@@ -257,7 +257,7 @@ function initFormAnimations() {
                 // 3 saniye sonra modal'ı kapat
                 setTimeout(() => {
                     successModal.hide();
-                }, 10000);
+                }, 100000);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -274,7 +274,7 @@ function showPopup() {
         popup.style.display = 'flex';
         setTimeout(() => {
             closePopup();
-        }, 10000);
+        }, 100000);
     }
 }
 

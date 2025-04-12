@@ -680,33 +680,41 @@ footer {
     }
 
     .modal-content {
-        background: var(--dark-card-bg);
+        background: var(--dark-bg) !important;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        color: var(--text-color);
+        color: var(--text-color) !important;
     }
 
     .modal-header {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         background: var(--dark-bg);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .modal-footer {
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
         background: var(--dark-bg);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .modal-title {
-        color: var(--accent-color);
+        color: var(--accent-color) !important;
     }
 
     .modal-body {
         background: var(--dark-bg);
-        color: var(--text-color);
+        color: var(--text-color) !important;
     }
 
-    .modal .btn-close {
-        filter: invert(1) brightness(200%);
+    .modal-body p {
+        color: var(--text-color) !important;
+    }
+
+    .btn-close {
+        background-color: var(--text-color) !important;
+        opacity: 0.5;
+    }
+
+    .btn-close:hover {
+        opacity: 1;
     }
 
     .modal-backdrop.show {
