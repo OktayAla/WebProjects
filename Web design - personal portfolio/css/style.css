@@ -676,6 +676,10 @@ footer {
         }
 
         /* Modal Styles */
+        .modal {
+            z-index: 99999;
+        }
+
         .modal-content {
             background: var(--dark-card-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -685,20 +689,30 @@ footer {
 
         .modal-header {
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--dark-bg);
         }
 
         .modal-footer {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--dark-bg);
         }
 
         .modal-title {
             color: var(--accent-color);
         }
 
+        .modal-body {
+            background: var(--dark-bg);
+            color: var(--text-color);
+        }
+
         .modal .btn-close {
             filter: invert(1) brightness(200%);
         }
 
-        .modal-backdrop {
-            background-color: rgba(0, 0, 0, 0.7);
+        .modal-backdrop.show {
+            opacity: 0.8;
+            background-color: rgba(0, 0, 0, 0.8);
         }
+    }
+}
