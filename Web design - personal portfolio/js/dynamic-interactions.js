@@ -250,11 +250,8 @@ function initFormAnimations() {
             })
             .then(response => response.text())
             .then(data => {
-                if (data.trim() === 'success') {
-                    showPopup();
-                } else {
-                    alert('Mesaj gönderilirken bir hata oluştu.');
-                }
+                showPopup();
+                this.reset(); // Formu temizle
             })
             .catch(error => {
                 console.error('Error:', error);
