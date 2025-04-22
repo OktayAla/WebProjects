@@ -22,6 +22,14 @@ function calculateLayout() {
     if (brickOffsetLeft < 0) {
         brickOffsetLeft = 10; // Minimum kenar boşluğu
     }
+    
+    // Tuğlaların konumlarını güncelle
+    for(let c=0; c<brickColumnCount; c++){
+        for(let r=0; r<brickRowCount; r++){
+            bricks[c][r].x = (c*(brickWidth+brickPadding))+brickOffsetLeft;
+            bricks[c][r].y = (r*(brickHeight+brickPadding))+brickOffsetTop;
+        }
+    }
 }
 
 function resizeCanvas() {
@@ -110,10 +118,9 @@ function drawBricks() {
     for(let c=0; c<brickColumnCount; c++){
         for(let r=0; r<brickRowCount; r++){
             if(bricks[c][r].status == 1){
-                let brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
-                let brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
-                bricks[c][r].x = brickX;
-                bricks[c][r].y = brickY;
+                // Tuğlaların konumlarını calculateLayout'ta hesapladığımız için doğrudan kullanabiliriz
+                const brickX = bricks[c][r].x;
+                const brickY = bricks[c][r].y;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
                 ctx.fillStyle = `hsl(${(r*60+c*20)%360}, 80%, 55%)`;
@@ -315,10 +322,17 @@ function createStartPopup() {
     
     // Önce varsa eski popup'ları temizle
     const oldPopups = document.querySelectorAll('.popup');
-    oldPopups.forEach(popup => document.body.removeChild(popup));
+    oldPopups.forEach(popup => {
+        try {
+            document.body.removeChild(popup);
+        } catch (e) {
+            console.log('Popup kaldırılırken hata:', e);
+        }
+    });
     
     const popup = document.createElement('div');
     popup.className = 'popup';
+    popup.style.display = 'flex'; // Görünürlüğü garantile
     popup.innerHTML = `
         <div class="popup-content">
             <h2>Tuğla Kırma Oyunu</h2>
@@ -329,20 +343,37 @@ function createStartPopup() {
     `;
     document.body.appendChild(popup);
     
-    document.getElementById('startGameBtn').addEventListener('click', function() {
-        document.body.removeChild(popup);
-        startGame();
-    });
+    // Popup'ın DOM'a eklenmesini garantilemek için timeout kullan
+    setTimeout(() => {
+        const startBtn = document.getElementById('startGameBtn');
+        if (startBtn) {
+            startBtn.addEventListener('click', function() {
+                document.body.removeChild(popup);
+                startGame();
+            });
+        } else {
+            console.error('Başlat butonu bulunamadı!');
+        }
+    }, 50);
 }
 
 // Sayfa yüklendiğinde popup'ı göster
 window.addEventListener('load', function() {
+    // Oyun değişkenlerini başlangıçta ayarla
+    calculateLayout(); // Tuğlaların konumlarını hesapla
+    
+    // Başlangıç ekranını çiz
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBricks();
+    drawPaddle();
+    drawBall();
     drawScore();
     drawLives();
+    
     // Oyun başlangıç popup'ını göster
     setTimeout(function() {
         createStartPopup();
-    }, 500); // Sayfanın tam yüklenmesi için kısa bir gecikme
+    }, 300); // Sayfanın tam yüklenmesi için kısa bir gecikme
 });
 
 document.getElementById('fullscreenBtn').addEventListener('click', function(){
