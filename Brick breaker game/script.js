@@ -75,26 +75,26 @@ function resizeCanvas() {
 
 // Oyun değişkenleri
 const paddleHeight = 16;
-const paddleWidth = 100; // Paddle biraz daha geniş
-let paddleX = 0; // Başlangıç değeri daha sonra ayarlanacak
-let paddleY = 0; // Başlangıç değeri daha sonra ayarlanacak
+const paddleWidth = 120; // Paddle genişliği artırıldı
+let paddleX = 0;
+let paddleY = 0;
 let rightPressed = false;
 let leftPressed = false;
 let mouseX = 0;
 
 const ballRadius = 10;
-let x = 0; // Başlangıç değeri daha sonra ayarlanacak
-let y = 0; // Başlangıç değeri daha sonra ayarlanacak
-let dx = 4; // Hız artırıldı
-let dy = -4; // Hız artırıldı
+let x = 0;
+let y = 0;
+let dx = 5; // Başlangıç hızı artırıldı
+let dy = -5;
 
 const brickRowCount = 5;
-const brickColumnCount = 9; // Daha fazla tuğla sütunu
-const brickWidth = 70; // Tuğla genişliği ayarlandı
-const brickHeight = 24; // Tuğla yüksekliği ayarlandı
-const brickPadding = 12; // Dolgu ayarlandı
-const brickOffsetTop = 60; // Üst boşluk ayarlandı
-let brickOffsetLeft = 0; // Dinamik olarak hesaplanacak
+const brickColumnCount = 9;
+const brickWidth = 70;
+const brickHeight = 24;
+const brickPadding = 12;
+const brickOffsetTop = 60;
+let brickOffsetLeft = 0;
 
 let score = 0;
 let lives = 3;
@@ -207,20 +207,18 @@ function draw() {
 
     // Topun kenarlara çarpması
     if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
-        dx = -dx;
+        dx = -dx * 1.02; // Hız artışı eklendi
     }
     if(y + dy < ballRadius){
-        dy = -dy;
-    // Paddle çarpışma kontrolü (paddleY dinamik olduğu için)
-    } else if(y + dy > paddleY - ballRadius && y + dy < paddleY + ballRadius && y < paddleY + paddleHeight) { // Daha hassas çarpışma
-        if(x > paddleX && x < paddleX + paddleWidth){
-            // Paddle'a çarpınca açı ver
-            let collidePoint = x - (paddleX + paddleWidth/2);
-            collidePoint = collidePoint / (paddleWidth/2);
-            let angle = collidePoint * Math.PI/3;
-            // Hız sınırlaması ekle
+        dy = -dy * 1.02; // Hız artışı eklendi
+    // Paddle çarpışma kontrolü - geliştirilmiş hassasiyet
+    } else if(y + dy > paddleY - ballRadius && y + dy < paddleY + paddleHeight) {
+        if(x > paddleX - ballRadius && x < paddleX + paddleWidth + ballRadius){
+            // Paddle'a çarpınca açı ver - geliştirilmiş fizik
+            let collidePoint = (x - (paddleX + paddleWidth/2)) / (paddleWidth/2);
+            let angle = collidePoint * Math.PI/2.5; // Açı aralığı daraltıldı
             let speed = Math.sqrt(dx*dx + dy*dy);
-            speed = Math.min(speed, 7); // Maksimum hız
+            speed = Math.min(speed * 1.05, 9); // Maksimum hız artırıldı
             dx = speed * Math.sin(angle);
             dy = -speed * Math.cos(angle);
         }
@@ -269,6 +267,13 @@ function draw() {
     // Paddle'ı mouse ile daha duyarlı hareket ettir
     paddleX = mouseX - paddleWidth / 2;
     // Paddle'ın sınırlar içinde kalmasını sağla
+    const targetX = mouseX - paddleWidth / 2;
+    const paddleSpeed = Math.abs(targetX - paddleX) * 0.2; // Yumuşak hareket
+    if(Math.abs(targetX - paddleX) > 1) {
+        paddleX += (targetX - paddleX) > 0 ? paddleSpeed : -paddleSpeed;
+    }
+    
+    // Paddle sınırları
     if(paddleX < 0) paddleX = 0;
     if(paddleX + paddleWidth > canvas.width) paddleX = canvas.width - paddleWidth;
 
