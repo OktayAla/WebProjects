@@ -88,10 +88,11 @@ let y = 0;
 let dx = 5; // Başlangıç hızı artırıldı
 let dy = -5;
 
-const brickRowCount = 5;
-const brickColumnCount = 9;
-const brickWidth = 70;
-const brickHeight = 24;
+const brickRowCount = 6;
+const brickColumnCount = 11;
+const brickWidth = 65;
+const brickHeight = 20;
+const brickDurability = [1,1,2,1,3,2]; // Her satır için dayanıklılık
 const brickPadding = 12;
 const brickOffsetTop = 60;
 let brickOffsetLeft = 0;
@@ -106,7 +107,7 @@ const bricks = [];
 for(let c=0; c<brickColumnCount; c++){
     bricks[c] = [];
     for(let r=0; r<brickRowCount; r++){
-        bricks[c][r] = { x: 0, y: 0, status: 1 };
+        bricks[c][r] = { x: 0, y: 0, status: brickDurability[r] || 1 };
     }
 }
 
@@ -123,7 +124,7 @@ function drawBricks() {
                 const brickY = bricks[c][r].y;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = `hsl(${(r*60+c*20)%360}, 80%, 55%)`;
+                ctx.fillStyle = b.status === 3 ? '#FFD700' : b.status === 2 ? '#CD5C5C' : `hsl(${(r*60+c*20)%360}, 80%, 55%)`;
                 ctx.fill();
                 ctx.closePath();
             }
@@ -216,9 +217,9 @@ function draw() {
         if(x > paddleX - ballRadius && x < paddleX + paddleWidth + ballRadius){
             // Paddle'a çarpınca açı ver - geliştirilmiş fizik
             let collidePoint = (x - (paddleX + paddleWidth/2)) / (paddleWidth/2);
-            let angle = collidePoint * Math.PI/2.5; // Açı aralığı daraltıldı
+            let angle = collidePoint * Math.PI/3; // Daha dengeli açı aralığı
             let speed = Math.sqrt(dx*dx + dy*dy);
-            speed = Math.min(speed * 1.05, 9); // Maksimum hız artırıldı
+            speed = Math.min(speed * 1.02, 8); // Kontrollü hız artışı
             dx = speed * Math.sin(angle);
             dy = -speed * Math.cos(angle);
         }
@@ -254,8 +255,8 @@ function draw() {
             calculateLayout();
             x = canvas.width/2;
             y = canvas.height-40;
-            dx = 4 * (Math.random() > 0.5 ? 1 : -1); // Random initial horizontal direction
-            dy = -4;
+            dx = 3 * (Math.random() > 0.5 ? 1 : -1); // Başlangıç hızı ayarı
+            dy = -3;
             paddleX = (canvas.width-paddleWidth)/2;
             mouseX = paddleX + paddleWidth / 2;
         }
@@ -268,7 +269,7 @@ function draw() {
     paddleX = mouseX - paddleWidth / 2;
     // Paddle'ın sınırlar içinde kalmasını sağla
     const targetX = mouseX - paddleWidth / 2;
-    const paddleSpeed = Math.abs(targetX - paddleX) * 0.2; // Yumuşak hareket
+    const paddleSpeed = Math.abs(targetX - paddleX) * 0.3; // Daha hassas kontrol
     if(Math.abs(targetX - paddleX) > 1) {
         paddleX += (targetX - paddleX) > 0 ? paddleSpeed : -paddleSpeed;
     }
@@ -381,10 +382,2206 @@ window.addEventListener('load', function() {
     }, 300); // Sayfanın tam yüklenmesi için kısa bir gecikme
 });
 
-document.getElementById('fullscreenBtn').addEventListener('click', function(){
-    if (document.fullscreenElement) {
-        document.exitFullscreen();
-    } else {
-        document.querySelector('.game-container').requestFullscreen();
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
     }
 });
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener('click', function(){
+    if(!isGameStarted || isGameOver){
+        startGame();
+    }
+});
+
+canvas.addEventListener
