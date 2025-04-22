@@ -1,53 +1,42 @@
 body {
-    background: linear-gradient(135deg, #232526, #414345);
     margin: 0;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    overflow: hidden;
-    animation: gradientBG 10s ease infinite;
-    height: 100vh;
+    padding: 0;
     width: 100vw;
-}
-@keyframes gradientBG {
-    0% { background: linear-gradient(135deg, #232526, #414345); }
-    50% { background: linear-gradient(135deg, #414345, #232526); }
-    100% { background: linear-gradient(135deg, #232526, #414345); }
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #232526, #414345);
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 .game-container {
     position: relative;
-    background: #222;
-    border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    width: 95vw;
-    height: 95vh;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
     display: flex;
-    justify-content: center;
     align-items: center;
-    overflow: hidden;
+    justify-content: center;
 }
 canvas {
-    background: #111;
-    border: 3px solid #f9d423;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px #0007;
     width: 100%;
     height: 100%;
+    display: block;
 }
 .score-panel {
     position: absolute;
     top: 20px;
     right: 20px;
-    background: rgba(51,51,51,0.8);
-    padding: 8px 16px;
+    background: rgba(0,0,0,0.5);
+    padding: 10px 20px;
     border-radius: 8px;
-    display: flex;
-    gap: 12px;
     color: #fff;
-    font-size: 1rem;
-    z-index: 2;
+    font-size: 1.2rem;
+    z-index: 10;
+    display: flex;
+    gap: 20px;
 }
-#restartBtn, #fullscreenBtn {
+#restartBtn {
     margin-top: 12px;
-    padding: 10px 28px;
+    padding: 12px 24px;
     background: #f9d423;
     color: #222;
     border: none;
@@ -55,10 +44,10 @@ canvas {
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 2px 8px #0003;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     transition: background 0.2s, color 0.2s;
 }
-#restartBtn:hover, #fullscreenBtn:hover {
+#restartBtn:hover {
     background: #f83600;
     color: #fff;
 }
@@ -68,19 +57,19 @@ canvas {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0,0,0,0.7);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 .popup-content {
-    background-color: #fff;
+    background: #fff;
     padding: 30px;
     border-radius: 10px;
     text-align: center;
     max-width: 500px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 .popup-content h2 {
     color: #f83600;
@@ -93,7 +82,7 @@ canvas {
 #startGameBtn {
     background: linear-gradient(to right, #fe8c00, #f83600);
     border: none;
-    color: white;
+    color: #fff;
     padding: 12px 25px;
     border-radius: 25px;
     font-size: 1.1rem;
@@ -103,23 +92,18 @@ canvas {
 }
 #startGameBtn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(248, 54, 0, 0.4);
+    box-shadow: 0 5px 15px rgba(248,54,0,0.4);
 }
-@media (max-width: 600px) {
-    .game-container {
-        width: 100vw;
-        height: 100vh;
-        border-radius: 0;
-    }
+@media (max-width: 768px) {
     .score-panel {
         top: 10px;
         right: 10px;
-        font-size: 0.9rem;
-        padding: 6px 12px;
+        font-size: 1rem;
+        padding: 8px 16px;
     }
-    #restartBtn, #fullscreenBtn {
+    #restartBtn {
         font-size: 0.9rem;
-        padding: 8px 20px;
+        padding: 10px 20px;
     }
     .popup-content {
         width: 90%;
