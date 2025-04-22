@@ -51,34 +51,19 @@ canvas {
     color: #111;
     border: none;
     border-radius: 25px;
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-#restartBtn {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 15px 40px;
-    background: linear-gradient(45deg, #f9d423, #ff4e50);
-    color: #fff;
-    border: none;
-    border-radius: 25px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(249, 212, 35, 0.3);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(249, 212, 35, 0.2);
+    transition: all 0.2s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 #restartBtn:hover {
-    transform: translateX(-50%) translateY(-3px);
-    box-shadow: 0 8px 25px rgba(249, 212, 35, 0.5);
+    transform: translateX(-50%) translateY(-2px);
+    background: #f83600;
+    color: #fff;
 }
 
 .popup {
