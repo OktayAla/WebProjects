@@ -124,15 +124,27 @@ function drawLives() {
     document.getElementById('lives').textContent = `Can: ${lives}`;
 }
 function collisionDetection() {
-    for(let c=0; c<brickColumnCount; c++){
-        for(let r=0; r<brickRowCount; r++){
+    for(let c = 0; c < brickColumnCount; c++){
+        for(let r = 0; r < brickRowCount; r++){
             let b = bricks[c][r];
             if(b.status == 1){
-                if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight){
-                    dy = -dy;
+                if(x + ballRadius > b.x && x - ballRadius < b.x + brickWidth &&
+                   y + ballRadius > b.y && y - ballRadius < b.y + brickHeight){
+                    
+                    let overlapLeft = (x + ballRadius) - b.x;
+                    let overlapRight = (b.x + brickWidth) - (x - ballRadius);
+                    let overlapTop = (y + ballRadius) - b.y;
+                    let overlapBottom = (b.y + brickHeight) - (y - ballRadius);
+                    let minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+                    
+                    if(minOverlap === overlapLeft || minOverlap === overlapRight){
+                        dx = -dx;
+                    } else {
+                        dy = -dy;
+                    }
                     b.status = 0;
                     score++;
-                    if(score == brickRowCount*brickColumnCount){
+                    if(score === brickRowCount * brickColumnCount){
                         setTimeout(()=>{
                             const popup = document.createElement('div');
                             popup.className = 'popup';
@@ -145,7 +157,7 @@ function collisionDetection() {
                                 </div>
                             `;
                             document.body.appendChild(popup);
-                            document.getElementById('playAgainBtn').addEventListener('click', function() {
+                            document.getElementById('playAgainBtn').addEventListener('click', function(){
                                 document.body.removeChild(popup);
                                 startGame();
                             });
@@ -166,21 +178,22 @@ function draw() {
     drawScore();
     drawLives();
     collisionDetection();
+
     if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
-        dx = -dx * 1.02;
+        dx = -dx;
     }
     if(y + dy < ballRadius){
-        dy = -dy * 1.02;
+        dy = -dy;
     } else if(y + dy > paddleY - ballRadius && y + dy < paddleY + paddleHeight) {
         if(x > paddleX - ballRadius && x < paddleX + paddleWidth + ballRadius){
             let collidePoint = (x - (paddleX + paddleWidth/2)) / (paddleWidth/2);
             let angle = collidePoint * Math.PI/3;
             let speed = Math.sqrt(dx*dx + dy*dy);
-            speed = Math.min(speed * 1.02, 8);
             dx = speed * Math.sin(angle);
             dy = -speed * Math.cos(angle);
         }
     }
+    
     if(y + dy > canvas.height - ballRadius) {
         lives--;
         if(!lives){
@@ -196,33 +209,37 @@ function draw() {
                     </div>
                 `;
                 document.body.appendChild(popup);
-                document.getElementById('playAgainBtn').addEventListener('click', function() {
+                document.getElementById('playAgainBtn').addEventListener('click', function(){
                     document.body.removeChild(popup);
                     startGame();
                 });
             }, 100);
             isGameOver = true;
         } else {
-            x = canvas.width/2;
+            x = canvas.width / 2;
             calculateLayout();
-            x = canvas.width/2;
-            y = canvas.height-40;
+            x = canvas.width / 2;
+            y = canvas.height - 40;
             dx = 3 * (Math.random() > 0.5 ? 1 : -1);
             dy = -3;
-            paddleX = (canvas.width-paddleWidth)/2;
+            paddleX = (canvas.width - paddleWidth) / 2;
             mouseX = paddleX + paddleWidth / 2;
         }
     }
+
     x += dx;
     y += dy;
+
     paddleX = mouseX - paddleWidth / 2;
     const targetX = mouseX - paddleWidth / 2;
     const paddleSpeed = Math.abs(targetX - paddleX) * 0.3;
     if(Math.abs(targetX - paddleX) > 1) {
         paddleX += (targetX - paddleX) > 0 ? paddleSpeed : -paddleSpeed;
     }
+    
     if(paddleX < 0) paddleX = 0;
     if(paddleX + paddleWidth > canvas.width) paddleX = canvas.width - paddleWidth;
+
     if(!isGameOver && isGameStarted){
         requestAnimationFrame(draw);
     }
