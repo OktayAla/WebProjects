@@ -81,14 +81,55 @@ function generateBricks() {
     let rows = baseBrickRowCount + level - 1;
     const bricksArray = [];
     for (let c = 0; c < brickColumnCount; c++) {
+        bricksArray[c] = [];
+        for (let r = 0; r < rows; r++) {
+            let durability = Math.floor(Math.random() * level) + 1;
+            let surprise = false;
+            if(level > 1 && Math.random() < 0.15) {
+                surprise = true;
+            }
+            bricksArray[c][r] = { x: 0, y: 0, status: durability, surprise: surprise };
+        }
+    }
+    return bricksArray;
+}
+let bricks = generateBricks();
+
+function levelUp() {
+    level++;
+    bricks = generateBricks();
+    calculateLayout();
+    x = canvas.width / 2;
+    y = canvas.height - 40;
+    dx = Math.sign(dx) * 4 || 4;
+    dy = -4;
+    paddleX = (canvas.width - paddleWidth) / 2;
+    mouseX = paddleX + paddleWidth / 2;
+    draw();
+}
+
+function checkLevelCompletion() {
+    let allCleared = true;
+    for(let c = 0; c < brickColumnCount; c++){
+        for(let r = 0; r < bricks[c].length; r++){
+            if(bricks[c][r].status > 0){
+                allCleared = false;
+                break;
+            }
+        }
+        if(!allCleared) break;
+    }
+    if(allCleared){
+        setTimeout(() => { levelUp(); }, 500);
     }
 }
+
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 function drawBricks() {
     for(let c=0; c<brickColumnCount; c++){
-        for(let r=0; r<brickRowCount; r++){
-            if(bricks[c][r].status == 1){
+        for(let r=0; r<bricks[c].length; r++){
+            if(bricks[c][r].status > 0){
                 const brickX = bricks[c][r].x;
                 const brickY = bricks[c][r].y;
                 ctx.beginPath();
@@ -125,9 +166,9 @@ function drawLives() {
 }
 function collisionDetection() {
     for(let c = 0; c < brickColumnCount; c++){
-        for(let r = 0; r < brickRowCount; r++){
+        for(let r = 0; r < bricks[c].length; r++){
             let b = bricks[c][r];
-            if(b.status == 1){
+            if(b.status > 0){
                 if(x + ballRadius > b.x && x - ballRadius < b.x + brickWidth &&
                    y + ballRadius > b.y && y - ballRadius < b.y + brickHeight){
                     
@@ -142,29 +183,13 @@ function collisionDetection() {
                     } else {
                         dy = -dy;
                     }
+                    if(b.surprise) {
+                        lives++;
+                        b.surprise = false;
+                    }
                     b.status = 0;
                     score++;
-                    if(score === brickRowCount * brickColumnCount){
-                        setTimeout(()=>{
-                            const popup = document.createElement('div');
-                            popup.className = 'popup';
-                            popup.innerHTML = `
-                                <div class="popup-content">
-                                    <h2>Tebrikler!</h2>
-                                    <p>Tüm tuğlaları kırdınız!</p>
-                                    <p>Skorunuz: ${score}</p>
-                                    <button id="playAgainBtn">Tekrar Oyna</button>
-                                </div>
-                            `;
-                            document.body.appendChild(popup);
-                            document.getElementById('playAgainBtn').addEventListener('click', function(){
-                                document.body.removeChild(popup);
-                                startGame();
-                            });
-                            document.getElementById('restartBtn').style.display = 'block';
-                        }, 100);
-                        isGameOver = true;
-                    }
+                    checkLevelCompletion();
                 }
             }
         }
@@ -258,7 +283,9 @@ function startGame(){
     isGameStarted = true;
     isGameOver = false;
     score = 0;
-    lives = 3;
+    lives = 5;
+    level = 1;
+    bricks = generateBricks();
     calculateLayout();
     x = canvas.width/2;
     y = canvas.height-40;
@@ -266,11 +293,6 @@ function startGame(){
     dy = -4;
     paddleX = (canvas.width-paddleWidth)/2;
     mouseX = paddleX + paddleWidth / 2;
-    for(let c=0; c<brickColumnCount; c++){
-        for(let r=0; r<brickRowCount; r++){
-            bricks[c][r].status = 1;
-        }
-    }
     document.getElementById('restartBtn').style.display = 'none';
     draw();
 }
