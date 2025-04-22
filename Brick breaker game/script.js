@@ -123,8 +123,7 @@ function drawBricks() {
                 const brickY = bricks[c][r].y;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = b.status === 3 ? '#FFD700' : b.status === 2 ? '#CD5C5C' : `hsl(${(r*60+c*20)%360}, 80%, 55%)`;
+                ctx.fillStyle = bricks[c][r].status === 3 ? '#FFD700' : bricks[c][r].status === 2 ? '#CD5C5C' : `hsl(${(r*60+c*20)%360}, 80%, 55%)`;
                 ctx.fill();
                 ctx.closePath();
             }
@@ -139,6 +138,7 @@ function drawBall() {
     ctx.shadowColor = '#f9d423';
     ctx.shadowBlur = 10;
     ctx.fill();
+    ctx.closePath();
     ctx.closePath();
     ctx.shadowBlur = 0;
 }
