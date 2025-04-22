@@ -299,25 +299,7 @@ function startGame(){
 document.getElementById('restartBtn').addEventListener('click', function(){
     startGame();
 });
-const fullscreenBtn = document.getElementById('fullscreenBtn');
-fullscreenBtn.addEventListener('click', function(){
-    const gameContainer = document.querySelector('.game-container');
-    if (!document.fullscreenElement) {
-        if(gameContainer.requestFullscreen) {
-            gameContainer.requestFullscreen();
-        } else if(gameContainer.mozRequestFullScreen) {
-            gameContainer.mozRequestFullScreen();
-        } else if(gameContainer.webkitRequestFullscreen) {
-            gameContainer.webkitRequestFullscreen();
-        } else if(gameContainer.msRequestFullscreen) {
-            gameContainer.msRequestFullscreen();
-        }
-    } else {
-        if(document.exitFullscreen) {
-            document.exitFullscreen();
-        }
-    }
-});
+
 function createStartPopup() {
     if (isPopupShown) return;
     isPopupShown = true;
