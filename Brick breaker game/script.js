@@ -119,10 +119,10 @@ function drawBricks() {
     for(let c=0; c<brickColumnCount; c++){
         for(let r=0; r<brickRowCount; r++){
             if(bricks[c][r].status == 1){
-                // Tuğlaların konumlarını calculateLayout'ta hesapladığımız için doğrudan kullanabiliriz
                 const brickX = bricks[c][r].x;
                 const brickY = bricks[c][r].y;
                 ctx.beginPath();
+                ctx.rect(brickX, brickY, brickWidth, brickHeight);
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
                 ctx.fillStyle = b.status === 3 ? '#FFD700' : b.status === 2 ? '#CD5C5C' : `hsl(${(r*60+c*20)%360}, 80%, 55%)`;
                 ctx.fill();
