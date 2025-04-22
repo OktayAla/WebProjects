@@ -1,35 +1,92 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// Tuğla ve oyun alanı hesaplamaları için yardımcı fonksiyon
+function calculateLayout() {
+    // Tuğlaların toplam genişliğini hesapla
+    const totalBricksWidth = brickColumnCount * (brickWidth + brickPadding) - brickPadding;
+    // Tuğlaları ekranın ortasına yerleştir
+    brickOffsetLeft = Math.max(0, (canvas.width - totalBricksWidth) / 2);
+    // Paddle'ı alt kenara yerleştir
+    paddleY = canvas.height - paddleHeight - 20; // Alt kenara biraz daha boşluk
+    
+    // Başlangıç değerlerini ayarla
+    if (!isGameStarted || isGameOver) {
+        paddleX = (canvas.width - paddleWidth) / 2;
+        x = canvas.width / 2;
+        y = canvas.height - 40;
+        mouseX = paddleX + paddleWidth / 2;
+    }
+    
+    // Tuğlaların ekran dışına taşmasını engelle
+    if (brickOffsetLeft < 0) {
+        brickOffsetLeft = 10; // Minimum kenar boşluğu
+    }
+}
+
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    calculateLayout();
+    // Oyun yeniden boyutlandırıldığında paddle ve topu ortala (opsiyonel, oyun durumuna göre ayarlanabilir)
+    if (!isGameStarted || isGameOver) {
+        paddleX = (canvas.width - paddleWidth) / 2;
+        x = canvas.width / 2;
+        y = canvas.height - 40;
+    }
+    // Eğer oyun devam ediyorsa, paddle'ın ekran dışına taşmasını engelle
+    if (paddleX + paddleWidth > canvas.width) {
+        paddleX = canvas.width - paddleWidth;
+    }
+    if (paddleX < 0) {
+        paddleX = 0;
+    }
+    // Topun ekran dışına taşmasını engelle (daha kapsamlı kontrol eklenebilir)
+    if (x + ballRadius > canvas.width) x = canvas.width - ballRadius;
+    if (x - ballRadius < 0) x = ballRadius;
+    if (y + ballRadius > canvas.height) y = canvas.height - ballRadius; // Can kaybı zaten var
+    if (y - ballRadius < 0) y = ballRadius;
+
+    // Mouse pozisyonunu güncelle (paddle'ın aniden zıplamasını önlemek için)
+    mouseX = paddleX + paddleWidth / 2;
+
+    // Yeniden çizim yap (eğer oyun çalışıyorsa)
+    if (isGameStarted && !isGameOver) {
+         // Mevcut çizim döngüsü zaten devam ediyor, ekstra çizime gerek yok
+         // Ancak bazı durumlarda anlık güncellemeler için draw() çağrılabilir.
+    } else {
+        // Oyun başlamadıysa veya bittiyse, statik elemanları çiz
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawBricks();
+        drawPaddle();
+        if (!isGameStarted) drawBall(); // Başlangıçta topu göster
+        drawScore();
+        drawLives();
+    }
 }
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
 
 // Oyun değişkenleri
 const paddleHeight = 16;
-const paddleWidth = 90;
-let paddleX = (canvas.width - paddleWidth) / 2;
-const paddleY = canvas.height - paddleHeight - 10;
+const paddleWidth = 100; // Paddle biraz daha geniş
+let paddleX = 0; // Başlangıç değeri daha sonra ayarlanacak
+let paddleY = 0; // Başlangıç değeri daha sonra ayarlanacak
 let rightPressed = false;
 let leftPressed = false;
-let mouseX = paddleX;
+let mouseX = 0;
 
 const ballRadius = 10;
-let x = canvas.width / 2;
-let y = canvas.height - 40;
-let dx = 3;
-let dy = -3;
+let x = 0; // Başlangıç değeri daha sonra ayarlanacak
+let y = 0; // Başlangıç değeri daha sonra ayarlanacak
+let dx = 4; // Hız artırıldı
+let dy = -4; // Hız artırıldı
 
 const brickRowCount = 5;
-const brickColumnCount = 7;
-const brickWidth = 60;
-const brickHeight = 22;
-const brickPadding = 10;
-const brickOffsetTop = 50;
-const brickOffsetLeft = 18;
+const brickColumnCount = 9; // Daha fazla tuğla sütunu
+const brickWidth = 70; // Tuğla genişliği ayarlandı
+const brickHeight = 24; // Tuğla yüksekliği ayarlandı
+const brickPadding = 12; // Dolgu ayarlandı
+const brickOffsetTop = 60; // Üst boşluk ayarlandı
+let brickOffsetLeft = 0; // Dinamik olarak hesaplanacak
 
 let score = 0;
 let lives = 3;
@@ -44,6 +101,10 @@ for(let c=0; c<brickColumnCount; c++){
         bricks[c][r] = { x: 0, y: 0, status: 1 };
     }
 }
+
+// İlk kurulum
+resizeCanvas(); // Canvas boyutunu ayarla ve düzeni hesapla
+window.addEventListener('resize', resizeCanvas);
 
 function drawBricks() {
     for(let c=0; c<brickColumnCount; c++){
@@ -143,7 +204,8 @@ function draw() {
     }
     if(y + dy < ballRadius){
         dy = -dy;
-    } else if(y + dy > paddleY - ballRadius && y < paddleY + paddleHeight/2){
+    // Paddle çarpışma kontrolü (paddleY dinamik olduğu için)
+    } else if(y + dy > paddleY - ballRadius && y + dy < paddleY + ballRadius && y < paddleY + paddleHeight) { // Daha hassas çarpışma
         if(x > paddleX && x < paddleX + paddleWidth){
             // Paddle'a çarpınca açı ver
             let collidePoint = x - (paddleX + paddleWidth/2);
@@ -183,18 +245,23 @@ function draw() {
             isGameOver = true;
         } else {
             x = canvas.width/2;
+            // Reset positions after losing a life
+            calculateLayout();
+            x = canvas.width/2;
             y = canvas.height-40;
-            dx = 3;
-            dy = -3;
+            dx = 4 * (Math.random() > 0.5 ? 1 : -1); // Random initial horizontal direction
+            dy = -4;
             paddleX = (canvas.width-paddleWidth)/2;
+            mouseX = paddleX + paddleWidth / 2;
         }
     }
 
     x += dx;
     y += dy;
 
-    // Paddle'ı mouse ile hareket ettir
-    paddleX += (mouseX - paddleX - paddleWidth/2) * 0.2;
+    // Paddle'ı mouse ile daha duyarlı hareket ettir
+    paddleX = mouseX - paddleWidth / 2;
+    // Paddle'ın sınırlar içinde kalmasını sağla
     if(paddleX < 0) paddleX = 0;
     if(paddleX + paddleWidth > canvas.width) paddleX = canvas.width - paddleWidth;
 
@@ -214,11 +281,14 @@ function startGame(){
     isGameOver = false;
     score = 0;
     lives = 3;
+    // Reset positions based on current canvas size
+    calculateLayout(); // Ensure layout variables are up-to-date
     x = canvas.width/2;
     y = canvas.height-40;
-    dx = 3;
-    dy = -3;
+    dx = Math.sign(dx) * 4 || 4; // Keep direction but reset speed
+    dy = -4; // Always launch upwards
     paddleX = (canvas.width-paddleWidth)/2;
+    mouseX = paddleX + paddleWidth / 2; // Reset mouseX sync
     for(let c=0; c<brickColumnCount; c++){
         for(let r=0; r<brickRowCount; r++){
             bricks[c][r].status = 1;
@@ -243,6 +313,10 @@ function createStartPopup() {
     if (isPopupShown) return;
     isPopupShown = true;
     
+    // Önce varsa eski popup'ları temizle
+    const oldPopups = document.querySelectorAll('.popup');
+    oldPopups.forEach(popup => document.body.removeChild(popup));
+    
     const popup = document.createElement('div');
     popup.className = 'popup';
     popup.innerHTML = `
@@ -265,7 +339,10 @@ function createStartPopup() {
 window.addEventListener('load', function() {
     drawScore();
     drawLives();
-    createStartPopup();
+    // Oyun başlangıç popup'ını göster
+    setTimeout(function() {
+        createStartPopup();
+    }, 500); // Sayfanın tam yüklenmesi için kısa bir gecikme
 });
 
 document.getElementById('fullscreenBtn').addEventListener('click', function(){
