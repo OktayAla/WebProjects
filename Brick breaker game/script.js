@@ -1,108 +1,81 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Tuğla ve oyun alanı hesaplamaları için yardımcı fonksiyon
 function calculateLayout() {
-    // Tuğlaların toplam genişliğini hesapla
     const totalBricksWidth = brickColumnCount * (brickWidth + brickPadding) - brickPadding;
-    // Tuğlaları ekranın ortasına yerleştir
     brickOffsetLeft = Math.max(0, (canvas.width - totalBricksWidth) / 2);
-    // Paddle'ı alt kenara yerleştir
-    paddleY = canvas.height - paddleHeight - 20; // Alt kenara biraz daha boşluk
-    
-    // Başlangıç değerlerini ayarla
+    paddleY = canvas.height - paddleHeight - 20;
     if (!isGameStarted || isGameOver) {
         paddleX = (canvas.width - paddleWidth) / 2;
         x = canvas.width / 2;
         y = canvas.height - 40;
         mouseX = paddleX + paddleWidth / 2;
     }
-    
-    // Tuğlaların ekran dışına taşmasını engelle
     if (brickOffsetLeft < 0) {
-        brickOffsetLeft = 10; // Minimum kenar boşluğu
+        brickOffsetLeft = 10;
     }
-    
-    // Tuğlaların konumlarını güncelle
     for(let c=0; c<brickColumnCount; c++){
         for(let r=0; r<brickRowCount; r++){
-            bricks[c][r].x = (c*(brickWidth+brickPadding))+brickOffsetLeft;
-            bricks[c][r].y = (r*(brickHeight+brickPadding))+brickOffsetTop;
+            bricks[c][r].x = (c*(brickWidth+brickPadding)) + brickOffsetLeft;
+            bricks[c][r].y = (r*(brickHeight+brickPadding)) + brickOffsetTop;
         }
     }
 }
-
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     calculateLayout();
-    // Oyun yeniden boyutlandırıldığında paddle ve topu ortala (opsiyonel, oyun durumuna göre ayarlanabilir)
     if (!isGameStarted || isGameOver) {
         paddleX = (canvas.width - paddleWidth) / 2;
         x = canvas.width / 2;
         y = canvas.height - 40;
     }
-    // Eğer oyun devam ediyorsa, paddle'ın ekran dışına taşmasını engelle
     if (paddleX + paddleWidth > canvas.width) {
         paddleX = canvas.width - paddleWidth;
     }
     if (paddleX < 0) {
         paddleX = 0;
     }
-    // Topun ekran dışına taşmasını engelle (daha kapsamlı kontrol eklenebilir)
     if (x + ballRadius > canvas.width) x = canvas.width - ballRadius;
     if (x - ballRadius < 0) x = ballRadius;
-    if (y + ballRadius > canvas.height) y = canvas.height - ballRadius; // Can kaybı zaten var
+    if (y + ballRadius > canvas.height) y = canvas.height - ballRadius;
     if (y - ballRadius < 0) y = ballRadius;
-
-    // Mouse pozisyonunu güncelle (paddle'ın aniden zıplamasını önlemek için)
     mouseX = paddleX + paddleWidth / 2;
-
-    // Yeniden çizim yap (eğer oyun çalışıyorsa)
     if (isGameStarted && !isGameOver) {
-         // Mevcut çizim döngüsü zaten devam ediyor, ekstra çizime gerek yok
-         // Ancak bazı durumlarda anlık güncellemeler için draw() çağrılabilir.
     } else {
-        // Oyun başlamadıysa veya bittiyse, statik elemanları çiz
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawBricks();
         drawPaddle();
-        if (!isGameStarted) drawBall(); // Başlangıçta topu göster
+        if (!isGameStarted) drawBall();
         drawScore();
         drawLives();
     }
 }
-
-// Oyun değişkenleri
 const paddleHeight = 16;
-const paddleWidth = 120; // Paddle genişliği artırıldı
+const paddleWidth = 120;
 let paddleX = 0;
 let paddleY = 0;
 let rightPressed = false;
 let leftPressed = false;
 let mouseX = 0;
-
 const ballRadius = 10;
 let x = 0;
 let y = 0;
-let dx = 5; // Başlangıç hızı artırıldı
+let dx = 5;
 let dy = -5;
-
 const brickRowCount = 6;
 const brickColumnCount = 11;
 const brickWidth = 65;
 const brickHeight = 20;
-const brickDurability = [1,1,2,1,3,2]; // Her satır için dayanıklılık
+const brickDurability = [1,1,2,1,3,2];
 const brickPadding = 12;
 const brickOffsetTop = 60;
 let brickOffsetLeft = 0;
-
 let score = 0;
 let lives = 3;
 let isGameOver = false;
 let isGameStarted = false;
 let isPopupShown = false;
-
 const bricks = [];
 for(let c=0; c<brickColumnCount; c++){
     bricks[c] = [];
@@ -110,11 +83,8 @@ for(let c=0; c<brickColumnCount; c++){
         bricks[c][r] = { x: 0, y: 0, status: brickDurability[r] || 1 };
     }
 }
-
-// İlk kurulum
-resizeCanvas(); // Canvas boyutunu ayarla ve düzeni hesapla
+resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
-
 function drawBricks() {
     for(let c=0; c<brickColumnCount; c++){
         for(let r=0; r<brickRowCount; r++){
@@ -130,7 +100,6 @@ function drawBricks() {
         }
     }
 }
-
 function drawBall() {
     ctx.beginPath();
     ctx.arc(x, y, ballRadius, 0, Math.PI*2);
@@ -141,7 +110,6 @@ function drawBall() {
     ctx.closePath();
     ctx.shadowBlur = 0;
 }
-
 function drawPaddle() {
     ctx.beginPath();
     ctx.roundRect(paddleX, paddleY, paddleWidth, paddleHeight, 8);
@@ -149,15 +117,12 @@ function drawPaddle() {
     ctx.fill();
     ctx.closePath();
 }
-
 function drawScore() {
     document.getElementById('score').textContent = `Skor: ${score}`;
 }
-
 function drawLives() {
     document.getElementById('lives').textContent = `Can: ${lives}`;
 }
-
 function collisionDetection() {
     for(let c=0; c<brickColumnCount; c++){
         for(let r=0; r<brickRowCount; r++){
@@ -169,7 +134,6 @@ function collisionDetection() {
                     score++;
                     if(score == brickRowCount*brickColumnCount){
                         setTimeout(()=>{
-                            // Kazanma popup'ı
                             const popup = document.createElement('div');
                             popup.className = 'popup';
                             popup.innerHTML = `
@@ -181,7 +145,6 @@ function collisionDetection() {
                                 </div>
                             `;
                             document.body.appendChild(popup);
-                            
                             document.getElementById('playAgainBtn').addEventListener('click', function() {
                                 document.body.removeChild(popup);
                                 startGame();
@@ -195,7 +158,6 @@ function collisionDetection() {
         }
     }
 }
-
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBricks();
@@ -204,33 +166,26 @@ function draw() {
     drawScore();
     drawLives();
     collisionDetection();
-
-    // Topun kenarlara çarpması
     if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
-        dx = -dx * 1.02; // Hız artışı eklendi
+        dx = -dx * 1.02;
     }
     if(y + dy < ballRadius){
-        dy = -dy * 1.02; // Hız artışı eklendi
-    // Paddle çarpışma kontrolü - geliştirilmiş hassasiyet
+        dy = -dy * 1.02;
     } else if(y + dy > paddleY - ballRadius && y + dy < paddleY + paddleHeight) {
         if(x > paddleX - ballRadius && x < paddleX + paddleWidth + ballRadius){
-            // Paddle'a çarpınca açı ver - geliştirilmiş fizik
             let collidePoint = (x - (paddleX + paddleWidth/2)) / (paddleWidth/2);
-            let angle = collidePoint * Math.PI/3; // Daha dengeli açı aralığı
+            let angle = collidePoint * Math.PI/3;
             let speed = Math.sqrt(dx*dx + dy*dy);
-            speed = Math.min(speed * 1.02, 8); // Kontrollü hız artışı
+            speed = Math.min(speed * 1.02, 8);
             dx = speed * Math.sin(angle);
             dy = -speed * Math.cos(angle);
         }
     }
-    
-    // Topun alt kenara çarpması (can kaybı)
     if(y + dy > canvas.height - ballRadius) {
         lives--;
         if(!lives){
             setTimeout(()=>{
                 document.getElementById('restartBtn').style.display = 'block';
-                // Oyun bitti popup'ı
                 const popup = document.createElement('div');
                 popup.className = 'popup';
                 popup.innerHTML = `
@@ -241,7 +196,6 @@ function draw() {
                     </div>
                 `;
                 document.body.appendChild(popup);
-                
                 document.getElementById('playAgainBtn').addEventListener('click', function() {
                     document.body.removeChild(popup);
                     startGame();
@@ -250,63 +204,51 @@ function draw() {
             isGameOver = true;
         } else {
             x = canvas.width/2;
-            // Reset positions after losing a life
             calculateLayout();
             x = canvas.width/2;
             y = canvas.height-40;
-            dx = 3 * (Math.random() > 0.5 ? 1 : -1); // Başlangıç hızı ayarı
+            dx = 3 * (Math.random() > 0.5 ? 1 : -1);
             dy = -3;
             paddleX = (canvas.width-paddleWidth)/2;
             mouseX = paddleX + paddleWidth / 2;
         }
     }
-
     x += dx;
     y += dy;
-
-    // Paddle'ı mouse ile daha duyarlı hareket ettir
     paddleX = mouseX - paddleWidth / 2;
-    // Paddle'ın sınırlar içinde kalmasını sağla
     const targetX = mouseX - paddleWidth / 2;
-    const paddleSpeed = Math.abs(targetX - paddleX) * 0.3; // Daha hassas kontrol
+    const paddleSpeed = Math.abs(targetX - paddleX) * 0.3;
     if(Math.abs(targetX - paddleX) > 1) {
         paddleX += (targetX - paddleX) > 0 ? paddleSpeed : -paddleSpeed;
     }
-    
-    // Paddle sınırları
     if(paddleX < 0) paddleX = 0;
     if(paddleX + paddleWidth > canvas.width) paddleX = canvas.width - paddleWidth;
-
     if(!isGameOver && isGameStarted){
         requestAnimationFrame(draw);
     }
 }
-
 canvas.addEventListener('mousemove', function(e){
     let rect = canvas.getBoundingClientRect();
     mouseX = e.clientX - rect.left;
 });
-
 canvas.addEventListener('click', function(){
     if(!isGameStarted || isGameOver){
         startGame();
     }
 });
-
 function startGame(){
     if(isGameStarted) return;
     isGameStarted = true;
     isGameOver = false;
     score = 0;
     lives = 3;
-    // Reset positions based on current canvas size
-    calculateLayout(); // Ensure layout variables are up-to-date
+    calculateLayout();
     x = canvas.width/2;
     y = canvas.height-40;
-    dx = Math.sign(dx) * 4 || 4; // Keep direction but reset speed
-    dy = -4; // Always launch upwards
+    dx = Math.sign(dx) * 4 || 4;
+    dy = -4;
     paddleX = (canvas.width-paddleWidth)/2;
-    mouseX = paddleX + paddleWidth / 2; // Reset mouseX sync
+    mouseX = paddleX + paddleWidth / 2;
     for(let c=0; c<brickColumnCount; c++){
         for(let r=0; r<brickRowCount; r++){
             bricks[c][r].status = 1;
@@ -315,23 +257,20 @@ function startGame(){
     document.getElementById('restartBtn').style.display = 'none';
     draw();
 }
-
 document.getElementById('restartBtn').addEventListener('click', function(){
     startGame();
 });
-
-// Tam ekran butonuna işlev ekleniyor:
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 fullscreenBtn.addEventListener('click', function(){
     const gameContainer = document.querySelector('.game-container');
     if (!document.fullscreenElement) {
         if(gameContainer.requestFullscreen) {
             gameContainer.requestFullscreen();
-        } else if(gameContainer.mozRequestFullScreen) { /* Firefox */
+        } else if(gameContainer.mozRequestFullScreen) {
             gameContainer.mozRequestFullScreen();
-        } else if(gameContainer.webkitRequestFullscreen) { /* Chrome, Safari ve Opera */
+        } else if(gameContainer.webkitRequestFullscreen) {
             gameContainer.webkitRequestFullscreen();
-        } else if(gameContainer.msRequestFullscreen) { /* IE/Edge */
+        } else if(gameContainer.msRequestFullscreen) {
             gameContainer.msRequestFullscreen();
         }
     } else {
@@ -340,25 +279,20 @@ fullscreenBtn.addEventListener('click', function(){
         }
     }
 });
-
-// Oyun başlangıç popup'ını oluştur
 function createStartPopup() {
     if (isPopupShown) return;
     isPopupShown = true;
-    
-    // Önce varsa eski popup'ları temizle
     const oldPopups = document.querySelectorAll('.popup');
     oldPopups.forEach(popup => {
         try {
             document.body.removeChild(popup);
         } catch (e) {
-            console.log('Popup kaldırılırken hata:', e);
+            console.log(e);
         }
     });
-    
     const popup = document.createElement('div');
     popup.className = 'popup';
-    popup.style.display = 'flex'; // Görünürlüğü garantile
+    popup.style.display = 'flex';
     popup.innerHTML = `
         <div class="popup-content">
             <h2>Tuğla Kırma Oyunu</h2>
@@ -368,8 +302,6 @@ function createStartPopup() {
         </div>
     `;
     document.body.appendChild(popup);
-    
-    // Popup'ın DOM'a eklenmesini garantilemek için timeout kullan
     setTimeout(() => {
         const startBtn = document.getElementById('startGameBtn');
         if (startBtn) {
@@ -382,22 +314,15 @@ function createStartPopup() {
         }
     }, 50);
 }
-
-// Sayfa yüklendiğinde popup'ı göster
 window.addEventListener('load', function() {
-    // Oyun değişkenlerini başlangıçta ayarla
-    calculateLayout(); // Tuğlaların konumlarını hesapla
-    
-    // Başlangıç ekranını çiz
+    calculateLayout();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBricks();
     drawPaddle();
     drawBall();
     drawScore();
     drawLives();
-    
-    // Oyun başlangıç popup'ını göster
     setTimeout(function() {
         createStartPopup();
-    }, 300); // Sayfanın tam yüklenmesi için kısa bir gecikme
+    }, 300);
 });
