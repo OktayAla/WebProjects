@@ -1,15 +1,11 @@
 body {
     background: linear-gradient(135deg, #232526, #414345);
-    min-height: 100vh;
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-family: 'Segoe UI', Arial, sans-serif;
-    height: 100vh;
-    width: 100vw;
     overflow: hidden;
     animation: gradientBG 10s ease infinite;
+    height: 100vh;
+    width: 100vw;
 }
 @keyframes gradientBG {
     0% { background: linear-gradient(135deg, #232526, #414345); }
@@ -17,45 +13,37 @@ body {
     100% { background: linear-gradient(135deg, #232526, #414345); }
 }
 .game-container {
+    position: relative;
     background: #222;
-    padding: 32px 32px 24px 32px;
     border-radius: 18px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    width: 95vw;
+    height: 95vh;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
     justify-content: center;
-    box-sizing: border-box;
+    align-items: center;
+    overflow: hidden;
 }
 canvas {
     background: #111;
     border: 3px solid #f9d423;
     border-radius: 10px;
-    display: block;
-    margin-bottom: 18px;
     box-shadow: 0 4px 16px #0007;
-    width: 100vw;
-    height: 100vh;
-    max-width: 100vw;
-    max-height: 100vh;
+    width: 100%;
+    height: 100%;
 }
-.score-board {
-    display: flex;
-    justify-content: space-between;
-    width: 320px;
-    margin-bottom: 10px;
-    color: #fff;
-    font-size: 1.1rem;
-}
-#score, #lives {
-    background: #333;
-    padding: 6px 16px;
+.score-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(51,51,51,0.8);
+    padding: 8px 16px;
     border-radius: 8px;
-    margin: 0 6px;
-    min-width: 80px;
-    text-align: center;
+    display: flex;
+    gap: 12px;
+    color: #fff;
+    font-size: 1rem;
+    z-index: 2;
 }
 #restartBtn, #fullscreenBtn {
     margin-top: 12px;
@@ -119,15 +107,19 @@ canvas {
 }
 @media (max-width: 600px) {
     .game-container {
-        padding: 0;
-    }
-    .score-board {
-        width: 90vw;
-        font-size: 1rem;
-    }
-    canvas {
         width: 100vw;
         height: 100vh;
+        border-radius: 0;
+    }
+    .score-panel {
+        top: 10px;
+        right: 10px;
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+    #restartBtn, #fullscreenBtn {
+        font-size: 0.9rem;
+        padding: 8px 20px;
     }
     .popup-content {
         width: 90%;
