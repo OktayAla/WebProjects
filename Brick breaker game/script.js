@@ -15,7 +15,7 @@ function calculateLayout() {
         brickOffsetLeft = 10;
     }
     for(let c=0; c<brickColumnCount; c++){
-        for(let r=0; r<brickRowCount; r++){
+        for(let r=0; r<bricks[c].length; r++){
             bricks[c][r].x = (c*(brickWidth+brickPadding)) + brickOffsetLeft;
             bricks[c][r].y = (r*(brickHeight+brickPadding)) + brickOffsetTop;
         }
@@ -63,24 +63,24 @@ let x = 0;
 let y = 0;
 let dx = 5;
 let dy = -5;
-const brickRowCount = 6;
 const brickColumnCount = 11;
 const brickWidth = 65;
 const brickHeight = 20;
-const brickDurability = [1,1,2,1,3,2];
 const brickPadding = 12;
 const brickOffsetTop = 60;
 let brickOffsetLeft = 0;
 let score = 0;
-let lives = 3;
+let lives = 5;
+let level = 1;
 let isGameOver = false;
 let isGameStarted = false;
 let isPopupShown = false;
-const bricks = [];
-for(let c=0; c<brickColumnCount; c++){
-    bricks[c] = [];
-    for(let r=0; r<brickRowCount; r++){
-        bricks[c][r] = { x: 0, y: 0, status: brickDurability[r] || 1 };
+const baseBrickRowCount = 6;
+
+function generateBricks() {
+    let rows = baseBrickRowCount + level - 1;
+    const bricksArray = [];
+    for (let c = 0; c < brickColumnCount; c++) {
     }
 }
 resizeCanvas();
