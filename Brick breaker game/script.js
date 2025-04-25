@@ -202,7 +202,6 @@ function setupPowerUps() {
     // Artık butonlar olmadığı için bu fonksiyon sadece oyun başlangıcında çağrılacak
     // Güç artırımları yeşil tuğlalarda olacak
 }
-}
 
 function showPowerUpNotification(powerUpType) {
     // Güç artırımı bildirimini göster
