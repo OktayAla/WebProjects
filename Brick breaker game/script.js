@@ -26,7 +26,8 @@ let gameState = {
     isPaused: false,
     difficulty: 'medium',
     activePowerUps: new Map(),
-    highScores: JSON.parse(localStorage.getItem('highScores')) || []
+    highScores: JSON.parse(localStorage.getItem('highScores')) || [],
+    sounds: {}
 };
 
 const canvas = document.getElementById('gameCanvas');
@@ -218,15 +219,28 @@ function updateHighScores() {
 }
 
 function loadSounds() {
-    // Sound loading logic here
+    // Create audio elements
+    const sounds = {
+        brickHit: new Audio(),
+        paddleHit: new Audio(),
+        powerUp: new Audio(),
+        levelComplete: new Audio(),
+        gameOver: new Audio()
+    };
+
+    // Store sounds in gameState
+    gameState.sounds = sounds;
 }
 
 function playSound(soundId) {
-    const sound = document.getElementById(soundId);
-    if (sound) {
-        sound.currentTime = 0;
-        sound.play();
-    }
+    // For now, just log the sound that would be played
+    console.log(`Playing sound: ${soundId}`);
+    // In the future, when we have actual sound files:
+    // const sound = gameState.sounds[soundId];
+    // if (sound) {
+    //     sound.currentTime = 0;
+    //     sound.play();
+    // }
 }
 
 function resetBall() {
