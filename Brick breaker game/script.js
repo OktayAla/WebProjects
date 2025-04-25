@@ -19,6 +19,7 @@ const POWER_UPS = {
 
 let gameState = {
     score: 0,
+    lastScore: 0, // Son skoru takip etmek için
     lives: 3,
     level: 1,
     isGameOver: false,
@@ -27,7 +28,8 @@ let gameState = {
     difficulty: 'medium',
     activePowerUps: new Map(),
     highScores: JSON.parse(localStorage.getItem('highScores')) || [],
-    sounds: {}
+    sounds: {},
+    particles: [] // Parçacık efektleri için
 };
 
 const canvas = document.getElementById('gameCanvas');
@@ -188,20 +190,61 @@ function setupPowerUps() {
     const powerUpButtons = document.querySelectorAll('.power-up');
     powerUpButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const powerUpType = this.id.toUpperCase().replace('-', '_');
+            const powerUpType = this.id;
             if (!this.classList.contains('disabled')) {
+                // Güç artırımı etkinleştirme animasyonu ve ses efekti
                 activatePowerUp(powerUpType);
                 this.classList.add('active');
+                
+                // Güç artırımı etkinleştiğinde ekranda bildirim göster
+                showPowerUpNotification(powerUpType);
+                
+                // Güç artırımı sona erdiğinde devre dışı bırak ve yeniden etkinleştir
                 setTimeout(() => {
                     this.classList.remove('active');
                     this.classList.add('disabled');
                     setTimeout(() => {
                         this.classList.remove('disabled');
-                    }, 10000); // 10 seconds cooldown
-                }, POWER_UPS[powerUpType].duration);
+                    }, 10000); // 10 saniye bekleme süresi
+                }, POWER_UPS[powerUpType].duration || 1000);
             }
         });
     });
+}
+
+function showPowerUpNotification(powerUpType) {
+    // Güç artırımı bildirimini göster
+    const notification = document.createElement('div');
+    notification.className = 'power-up-notification';
+    
+    let message = '';
+    let icon = '';
+    
+    switch(powerUpType) {
+        case 'WIDE_PADDLE':
+            message = 'Geniş Raket!';
+            icon = 'arrows-alt-h';
+            break;
+        case 'SLOW_MOTION':
+            message = 'Yavaş Hareket!';
+            icon = 'clock';
+            break;
+        case 'EXTRA_BALL':
+            message = 'Ekstra Top!';
+            icon = 'plus-circle';
+            break;
+    }
+    
+    notification.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+    document.body.appendChild(notification);
+    
+    // Animasyon sonrası bildirimi kaldır
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 500);
+    }, 2000);
 }
 
 function activatePowerUp(type) {
@@ -266,7 +309,7 @@ function updateHighScores() {
 }
 
 function loadSounds() {
-    // Create audio elements
+    // Ses dosyalarını oluştur
     const sounds = {
         brickHit: new Audio(),
         paddleHit: new Audio(),
@@ -275,8 +318,15 @@ function loadSounds() {
         gameOver: new Audio()
     };
 
-    // Store sounds in gameState
+    // Ses dosyalarını gameState'e kaydet
     gameState.sounds = sounds;
+    
+    // Ses dosyaları için URL'ler (gelecekte eklenecek)
+    // sounds.brickHit.src = 'sounds/brick-hit.mp3';
+    // sounds.paddleHit.src = 'sounds/paddle-hit.mp3';
+    // sounds.powerUp.src = 'sounds/power-up.mp3';
+    // sounds.levelComplete.src = 'sounds/level-complete.mp3';
+    // sounds.gameOver.src = 'sounds/game-over.mp3';
 }
 
 function playSound(soundId) {
@@ -469,29 +519,91 @@ function drawBricks() {
             let brick = bricks[c][r];
             if (brick.durability > 0) {
                 ctx.beginPath();
-                ctx.rect(brick.x, brick.y, brick.width, brick.height);
-                ctx.fillStyle = brick.type.color;
+                ctx.roundRect(brick.x, brick.y, brick.width, brick.height, 4);
+                
+                // Tuğla tipine göre farklı görsel efektler
+                if (brick.type === BRICK_TYPES.STRONG && brick.durability === 2) {
+                    // Güçlü tuğla için gradient efekti
+                    const gradient = ctx.createLinearGradient(brick.x, brick.y, brick.x, brick.y + brick.height);
+                    gradient.addColorStop(0, '#ff4e50');
+                    gradient.addColorStop(1, '#ff0000');
+                    ctx.fillStyle = gradient;
+                } else if (brick.type === BRICK_TYPES.BONUS) {
+                    // Bonus tuğla için parlama efekti
+                    ctx.fillStyle = brick.type.color;
+                    ctx.shadowColor = brick.type.color;
+                    ctx.shadowBlur = 10;
+                } else if (brick.type === BRICK_TYPES.LIFE) {
+                    // Can tuğlası için nabız efekti
+                    const pulseIntensity = Math.sin(Date.now() / 200) * 0.2 + 0.8;
+                    ctx.fillStyle = brick.type.color;
+                    ctx.globalAlpha = pulseIntensity;
+                } else {
+                    ctx.fillStyle = brick.type.color;
+                }
+                
                 ctx.fill();
+                
+                // Tuğla kenarları için ince çizgi
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                
                 ctx.closePath();
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
             }
         }
     }
 }
 
 function drawPaddle() {
+    // Raket için gradient ve gölge efektleri ekle
     ctx.beginPath();
     ctx.roundRect(paddle.x, paddle.y, paddle.width, paddle.height, 8);
-    ctx.fillStyle = '#f83600';
+    
+    // Gradient renk geçişi
+    const gradient = ctx.createLinearGradient(paddle.x, paddle.y, paddle.x, paddle.y + paddle.height);
+    gradient.addColorStop(0, '#ff4e50');
+    gradient.addColorStop(1, '#f83600');
+    
+    ctx.fillStyle = gradient;
+    ctx.shadowColor = '#f83600';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetY = 5;
+    ctx.fill();
+    
+    // Raket üzerinde parlaklık efekti
+    ctx.beginPath();
+    ctx.roundRect(paddle.x, paddle.y, paddle.width, paddle.height/2, 8);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
     ctx.fill();
     ctx.closePath();
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
 }
 
 function drawBall() {
+    // Top çizimi için gölge ve parlaklık efektleri ekle
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
     ctx.fillStyle = '#f9d423';
     ctx.shadowColor = '#f9d423';
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 15;
+    ctx.fill();
+    
+    // Top üzerinde parlaklık efekti
+    const gradient = ctx.createRadialGradient(
+        ball.x - ball.radius/3, ball.y - ball.radius/3, 1,
+        ball.x, ball.y, ball.radius
+    );
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+    gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.2)');
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fillStyle = gradient;
     ctx.fill();
     ctx.closePath();
     ctx.shadowBlur = 0;
@@ -512,9 +624,19 @@ function drawPowerUps() {
 }
 
 function updateUI() {
+    // Skor, can ve level bilgilerini güncelle
     scoreElement.textContent = `Skor: ${gameState.score}`;
     livesElement.textContent = `Can: ${gameState.lives}`;
     levelElement.textContent = `Level: ${gameState.level}`;
+    
+    // Skor değiştiğinde animasyon efekti ekle
+    if (gameState.score > 0 && gameState.lastScore !== gameState.score) {
+        scoreElement.classList.add('score-updated');
+        setTimeout(() => {
+            scoreElement.classList.remove('score-updated');
+        }, 300);
+        gameState.lastScore = gameState.score;
+    }
 }
 
 function handleMouseMove(e) {
@@ -581,16 +703,32 @@ function gameOver() {
     playSound('gameOver');
     restartButton.style.display = 'block';
     
+    // Oyun sonu ekranı için gelişmiş popup
     const gameOverPopup = document.createElement('div');
     gameOverPopup.className = 'popup';
+    
+    // Yüksek skor kontrolü
+    const isHighScore = gameState.highScores.length === 0 || gameState.score > Math.min(...gameState.highScores);
+    const highScoreMessage = isHighScore ? '<div class="high-score-badge">Yeni Yüksek Skor!</div>' : '';
+    
     gameOverPopup.innerHTML = `
         <div class="popup-content">
             <h2>Oyun Bitti!</h2>
-            <p>Skorunuz: ${gameState.score}</p>
+            ${highScoreMessage}
+            <p>Skorunuz: <span class="final-score">${gameState.score}</span></p>
+            <p>Ulaştığınız Seviye: ${gameState.level}</p>
             <button id="playAgainBtn">Tekrar Oyna</button>
         </div>
     `;
     document.body.appendChild(gameOverPopup);
+    
+    // Skor animasyonu
+    setTimeout(() => {
+        const finalScore = document.querySelector('.final-score');
+        if (finalScore) {
+            finalScore.classList.add('highlight');
+        }
+    }, 500);
     
     document.getElementById('playAgainBtn').addEventListener('click', function() {
         document.body.removeChild(gameOverPopup);
