@@ -22,56 +22,16 @@ body {
     position: relative;
 }
 
-/* Dinamik arkaplan animasyonu */
-.game-container::before {
-    content: '';
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-    z-index: 0;
-    background: 
-        radial-gradient(circle at 20% 35%, rgba(76, 0, 255, 0.15) 0%, transparent 25%),
-        radial-gradient(circle at 85% 25%, rgba(255, 78, 80, 0.15) 0%, transparent 25%),
-        radial-gradient(circle at 50% 80%, rgba(249, 212, 35, 0.15) 0%, transparent 25%);
-    animation: backgroundShift 15s ease-in-out infinite alternate;
+/* Basit gradient animasyonu */
+.game-container {
+    background: linear-gradient(125deg, #2b1331 0%, #1a1a2e 50%, #16213e 100%);
+    animation: softGradient 15s ease-in-out infinite alternate;
 }
 
-/* Hareketli parıltı efektleri */
-.game-container::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 0;
-    background-image: 
-        radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.8) 50%, transparent 100%),
-        radial-gradient(2px 2px at 90px 40px, rgba(255, 255, 255, 0.7) 50%, transparent 100%),
-        radial-gradient(2px 2px at 140px 90px, rgba(255, 255, 255, 0.6) 50%, transparent 100%),
-        radial-gradient(2px 2px at 190px 150px, rgba(255, 255, 255, 0.7) 50%, transparent 100%),
-        radial-gradient(2px 2px at 230px 90px, rgba(255, 255, 255, 0.8) 50%, transparent 100%),
-        radial-gradient(2px 2px at 270px 40px, rgba(255, 255, 255, 0.7) 50%, transparent 100%),
-        radial-gradient(2px 2px at 320px 80px, rgba(255, 255, 255, 0.6) 50%, transparent 100%),
-        radial-gradient(2px 2px at 370px 120px, rgba(255, 255, 255, 0.7) 50%, transparent 100%),
-        radial-gradient(2px 2px at 420px 70px, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
-    background-repeat: repeat;
-    background-size: 500px 500px;
-    animation: twinkle 10s linear infinite;
-    opacity: 0.3;
-}
-
-/* Dalgalı arka plan animasyonu */
-.game-container .wave {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: transparent;
-    z-index: 0;
+@keyframes softGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .game-container .wave:nth-child(1) {
@@ -95,21 +55,7 @@ body {
     opacity: 0.2;
 }
 
-@keyframes backgroundShift {
-    0% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(1deg) scale(1.05); }
-    100% { transform: rotate(-1deg) scale(1.1); }
-}
 
-@keyframes twinkle {
-    from { background-position: 0 0; }
-    to { background-position: 500px 500px; }
-}
-
-@keyframes wave {
-    0% { background-position-x: 0; }
-    100% { background-position-x: 1440px; }
-}
 
 canvas {
     position: absolute;
