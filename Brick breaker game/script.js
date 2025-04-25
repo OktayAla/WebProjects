@@ -65,6 +65,7 @@ let mouseX = 0;
 function initGame() {
     resizeCanvas();
     setupEventListeners();
+    setupPowerUps();
     createStartScreen();
     loadSounds();
     drawInitialScreen();
@@ -119,6 +120,7 @@ function gameLoop() {
 function update() {
     updatePaddle();
     updateBall();
+    updateExtraBalls();
     updatePowerUps();
     checkCollisions();
     checkLevelCompletion();
@@ -182,6 +184,26 @@ function spawnPowerUp(x, y) {
     };
 }
 
+function setupPowerUps() {
+    const powerUpButtons = document.querySelectorAll('.power-up');
+    powerUpButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const powerUpType = this.id.toUpperCase().replace('-', '_');
+            if (!this.classList.contains('disabled')) {
+                activatePowerUp(powerUpType);
+                this.classList.add('active');
+                setTimeout(() => {
+                    this.classList.remove('active');
+                    this.classList.add('disabled');
+                    setTimeout(() => {
+                        this.classList.remove('disabled');
+                    }, 10000); // 10 seconds cooldown
+                }, POWER_UPS[powerUpType].duration);
+            }
+        });
+    });
+}
+
 function activatePowerUp(type) {
     const powerUp = POWER_UPS[type];
     gameState.activePowerUps.set(type, Date.now() + powerUp.duration);
@@ -189,9 +211,15 @@ function activatePowerUp(type) {
     switch (type) {
         case 'WIDE_PADDLE':
             paddle.width = 180;
+            setTimeout(() => {
+                paddle.width = 120;
+            }, powerUp.duration);
             break;
         case 'SLOW_MOTION':
             ball.speed = ball.speed / 2;
+            setTimeout(() => {
+                ball.speed = ball.speed * 2;
+            }, powerUp.duration);
             break;
         case 'EXTRA_BALL':
             spawnExtraBall();
@@ -199,6 +227,25 @@ function activatePowerUp(type) {
     }
     
     playSound('powerUp');
+}
+
+function spawnExtraBall() {
+    const extraBall = {
+        x: ball.x,
+        y: ball.y,
+        radius: ball.radius,
+        dx: -ball.dx,
+        dy: ball.dy,
+        speed: ball.speed
+    };
+    extraBalls.push(extraBall);
+    
+    setTimeout(() => {
+        const index = extraBalls.indexOf(extraBall);
+        if (index > -1) {
+            extraBalls.splice(index, 1);
+        }
+    }, 10000); // Extra ball lasts for 10 seconds
 }
 
 function updateScore(points) {
@@ -284,6 +331,76 @@ function updateBall() {
             resetBall();
         }
     }
+}
+
+function updateExtraBalls() {
+    extraBalls.forEach(extraBall => {
+        extraBall.x += extraBall.dx;
+        extraBall.y += extraBall.dy;
+
+        // Wall collision
+        if (extraBall.x + extraBall.radius > canvas.width || extraBall.x - extraBall.radius < 0) {
+            extraBall.dx = -extraBall.dx;
+        }
+        if (extraBall.y - extraBall.radius < 0) {
+            extraBall.dy = -extraBall.dy;
+        }
+
+        // Paddle collision
+        if (extraBall.y + extraBall.radius > paddle.y && extraBall.y + extraBall.radius < paddle.y + paddle.height) {
+            if (extraBall.x > paddle.x - extraBall.radius && extraBall.x < paddle.x + paddle.width + extraBall.radius) {
+                let collidePoint = (extraBall.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
+                let angle = collidePoint * Math.PI / 3;
+                let speed = Math.sqrt(extraBall.dx * extraBall.dx + extraBall.dy * extraBall.dy);
+                extraBall.dx = speed * Math.sin(angle);
+                extraBall.dy = -speed * Math.cos(angle);
+                playSound('paddleHit');
+            }
+        }
+
+        // Bottom collision
+        if (extraBall.y + extraBall.radius > canvas.height) {
+            const index = extraBalls.indexOf(extraBall);
+            if (index > -1) {
+                extraBalls.splice(index, 1);
+            }
+        }
+
+        // Brick collision
+        for (let c = 0; c < 11; c++) {
+            for (let r = 0; r < bricks[c].length; r++) {
+                let brick = bricks[c][r];
+                if (brick.durability > 0) {
+                    if (extraBall.x + extraBall.radius > brick.x && extraBall.x - extraBall.radius < brick.x + brick.width &&
+                        extraBall.y + extraBall.radius > brick.y && extraBall.y - extraBall.radius < brick.y + brick.height) {
+                        
+                        let overlapLeft = (extraBall.x + extraBall.radius) - brick.x;
+                        let overlapRight = (brick.x + brick.width) - (extraBall.x - extraBall.radius);
+                        let overlapTop = (extraBall.y + extraBall.radius) - brick.y;
+                        let overlapBottom = (brick.y + brick.height) - (extraBall.y - extraBall.radius);
+                        let minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+                        
+                        if (minOverlap === overlapLeft || minOverlap === overlapRight) {
+                            extraBall.dx = -extraBall.dx;
+                        } else {
+                            extraBall.dy = -extraBall.dy;
+                        }
+                        
+                        brick.durability--;
+                        updateScore(brick.type.points);
+                        playSound('brickHit');
+                        
+                        if (brick.durability === 0) {
+                            if (brick.type === BRICK_TYPES.LIFE) {
+                                gameState.lives++;
+                            }
+                            bricks[c].splice(r, 1);
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 function updatePowerUps() {
