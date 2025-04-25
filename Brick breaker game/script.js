@@ -59,12 +59,14 @@ let ball = {
 
 let bricks = [];
 let extraBalls = [];
+let mouseX = 0;
 
 function initGame() {
     resizeCanvas();
     setupEventListeners();
     createStartScreen();
     loadSounds();
+    drawInitialScreen();
 }
 
 function resizeCanvas() {
@@ -230,9 +232,8 @@ function playSound(soundId) {
 function resetBall() {
     ball.x = canvas.width / 2;
     ball.y = canvas.height - 40;
-    ball.dx = Math.sign(Math.random() - 0.5) * 4;
-    ball.dy = -4;
-    ball.speed = 4;
+    ball.dx = Math.sign(Math.random() - 0.5) * ball.speed;
+    ball.dy = -ball.speed;
 }
 
 function updatePaddle() {
@@ -242,45 +243,29 @@ function updatePaddle() {
 }
 
 function updateBall() {
-    ball.x += ball.dx * ball.speed;
-    ball.y += ball.dy * ball.speed;
+    ball.x += ball.dx;
+    ball.y += ball.dy;
 
     if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
         ball.dx = -ball.dx;
     }
     if (ball.y - ball.radius < 0) {
         ball.dy = -ball.dy;
-    } else if (ball.y + ball.radius > paddle.y - paddle.height && ball.y + ball.radius < paddle.y + paddle.height) {
+    } else if (ball.y + ball.radius > paddle.y && ball.y + ball.radius < paddle.y + paddle.height) {
         if (ball.x > paddle.x - ball.radius && ball.x < paddle.x + paddle.width + ball.radius) {
             let collidePoint = (ball.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
             let angle = collidePoint * Math.PI / 3;
             let speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
             ball.dx = speed * Math.sin(angle);
             ball.dy = -speed * Math.cos(angle);
+            playSound('paddleHit');
         }
     }
 
     if (ball.y + ball.radius > canvas.height) {
         gameState.lives--;
         if (gameState.lives <= 0) {
-            setTimeout(() => {
-                document.getElementById('restartBtn').style.display = 'block';
-                const popup = document.createElement('div');
-                popup.className = 'popup';
-                popup.innerHTML = `
-                    <div class="popup-content">
-                        <h2>Oyun Bitti!</h2>
-                        <p>Skorunuz: ${gameState.score}</p>
-                        <button id="playAgainBtn">Tekrar Oyna</button>
-                    </div>
-                `;
-                document.body.appendChild(popup);
-                document.getElementById('playAgainBtn').addEventListener('click', function () {
-                    document.body.removeChild(popup);
-                    startGame();
-                });
-            }, 100);
-            gameState.isGameOver = true;
+            gameOver();
         } else {
             resetBall();
         }
@@ -310,9 +295,15 @@ function checkCollisions() {
                     } else {
                         ball.dy = -ball.dy;
                     }
+                    
                     brick.durability--;
                     updateScore(brick.type.points);
+                    playSound('brickHit');
+                    
                     if (brick.durability === 0) {
+                        if (brick.type === BRICK_TYPES.LIFE) {
+                            gameState.lives++;
+                        }
                         bricks[c].splice(r, 1);
                     }
                 }
@@ -336,9 +327,9 @@ function checkLevelCompletion() {
 
 function levelUp() {
     gameState.level++;
+    playSound('levelComplete');
     generateBricks();
     resetBall();
-    draw();
 }
 
 function drawBricks() {
@@ -348,7 +339,7 @@ function drawBricks() {
             if (brick.durability > 0) {
                 ctx.beginPath();
                 ctx.rect(brick.x, brick.y, brick.width, brick.height);
-                ctx.fillStyle = brick.type === BRICK_TYPES.STRONG ? '#ff4e50' : brick.type === BRICK_TYPES.BONUS ? '#00ff00' : brick.type === BRICK_TYPES.LIFE ? '#00ffff' : '#f9d423';
+                ctx.fillStyle = brick.type.color;
                 ctx.fill();
                 ctx.closePath();
             }
@@ -376,7 +367,13 @@ function drawBall() {
 }
 
 function drawExtraBalls() {
-    // Implementation of drawExtraBalls function
+    extraBalls.forEach(extraBall => {
+        ctx.beginPath();
+        ctx.arc(extraBall.x, extraBall.y, extraBall.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#f9d423';
+        ctx.fill();
+        ctx.closePath();
+    });
 }
 
 function drawPowerUps() {
@@ -402,61 +399,72 @@ function handleCanvasClick() {
 
 function togglePause() {
     gameState.isPaused = !gameState.isPaused;
+    if (!gameState.isPaused) {
+        gameLoop();
+    }
 }
 
 function restartGame() {
-    startGame();
+    gameState.isGameOver = false;
+    gameState.score = 0;
+    gameState.lives = 3;
+    gameState.level = 1;
+    gameState.activePowerUps.clear();
+    extraBalls = [];
+    generateBricks();
+    resetBall();
+    gameLoop();
 }
 
 function updateDifficulty() {
     gameState.difficulty = difficultySelect.value;
-    generateBricks();
-    resetBall();
+    if (gameState.isGameStarted) {
+        generateBricks();
+        resetBall();
+    }
 }
 
 function createStartScreen() {
-    const oldPopups = document.querySelectorAll('.popup');
-    oldPopups.forEach(popup => {
-        try {
-            document.body.removeChild(popup);
-        } catch (e) {
-            console.log(e);
-        }
-    });
-    const popup = document.createElement('div');
-    popup.className = 'popup';
-    popup.style.display = 'flex';
-    popup.innerHTML = `
-        <div class="popup-content">
-            <h2>Tuğla Kırma Oyunu</h2>
-            <p>Tuğlaları kırmak için topu paddle ile yönlendirin.</p>
-            <p>Tüm tuğlaları kırmaya çalışın ve canlarınızı koruyun!</p>
-            <button id="startGameBtn">Oyunu Başlat</button>
-        </div>
-    `;
-    document.body.appendChild(popup);
-    setTimeout(() => {
-        const startBtn = document.getElementById('startGameBtn');
-        if (startBtn) {
-            startBtn.addEventListener('click', function() {
-                document.body.removeChild(popup);
-                startGame();
-            });
-        } else {
-            console.error('Başlat butonu bulunamadı!');
-        }
-    }, 50);
+    startScreen.style.display = 'flex';
+    const highScoresList = document.getElementById('highScoresList');
+    highScoresList.innerHTML = gameState.highScores
+        .map((score, index) => `<div>${index + 1}. ${score}</div>`)
+        .join('');
 }
 
-window.addEventListener('load', function() {
-    initGame();
+function drawInitialScreen() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBricks();
-    drawPaddle();
-    drawBall();
-    drawScore();
-    drawLives();
-    setTimeout(function() {
-        createStartScreen();
-    }, 300);
-});
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = '#fff';
+    ctx.font = '30px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Tuğla Kırma Oyunu', canvas.width / 2, canvas.height / 2 - 50);
+    ctx.font = '20px Arial';
+    ctx.fillText('Başlamak için tıklayın', canvas.width / 2, canvas.height / 2);
+}
+
+function gameOver() {
+    gameState.isGameOver = true;
+    playSound('gameOver');
+    restartButton.style.display = 'block';
+    
+    const gameOverPopup = document.createElement('div');
+    gameOverPopup.className = 'popup';
+    gameOverPopup.innerHTML = `
+        <div class="popup-content">
+            <h2>Oyun Bitti!</h2>
+            <p>Skorunuz: ${gameState.score}</p>
+            <button id="playAgainBtn">Tekrar Oyna</button>
+        </div>
+    `;
+    document.body.appendChild(gameOverPopup);
+    
+    document.getElementById('playAgainBtn').addEventListener('click', function() {
+        document.body.removeChild(gameOverPopup);
+        restartGame();
+    });
+}
+
+window.addEventListener('load', initGame);
