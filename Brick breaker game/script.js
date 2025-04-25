@@ -151,35 +151,100 @@ function generateBricks() {
     let powerUpCount = 0;
     const maxPowerUps = 5;
     
+    // Seviye bazlı farklı tuğla dizilimleri
+    const patterns = [
+        'full',      // Seviye 1: Tam dolu
+        'u_shape',   // Seviye 2: U şekli
+        'v_shape',   // Seviye 3: V şekli
+        'h_shape',   // Seviye 4: H şekli
+        'x_shape',   // Seviye 5: X şekli
+        'pyramid',   // Seviye 6: Piramit
+        'zigzag',    // Seviye 7: Zigzag
+        'diamond',   // Seviye 8: Elmas
+        'random'     // Seviye 9+: Rastgele
+    ];
+    
+    // Seviye için pattern seçimi (9. seviyeden sonra rastgele pattern)
+    const patternIndex = Math.min(gameState.level - 1, patterns.length - 1);
+    const currentPattern = patterns[patternIndex];
+    
     for (let c = 0; c < 11; c++) {
         bricks[c] = [];
         for (let r = 0; r < settings.brickRows; r++) {
-            const brickX = c * (brickWidth + padding) + offsetLeft;
-            const brickY = r * (brickHeight + padding) + offsetTop;
+            // Pattern'e göre tuğla yerleştirme kontrolü
+            let shouldPlaceBrick = true;
             
-            const random = Math.random();
-            let type;
-            if (random < 0.6) type = BRICK_TYPES.NORMAL;
-            else if (random < 0.8) type = BRICK_TYPES.STRONG;
-            else if (random < 0.95) {
-                type = BRICK_TYPES.BONUS;
-                // Yeşil tuğlalara rastgele güç artırımı ekle (en fazla 5 tane)
-                if (powerUpCount < maxPowerUps && Math.random() < 0.5) {
-                    type = {...BRICK_TYPES.BONUS, hasPowerUp: true};
-                    powerUpCount++;
-                }
+            switch(currentPattern) {
+                case 'u_shape':
+                    // U şekli: Kenarlar ve alt kısım
+                    shouldPlaceBrick = (c === 0 || c === 10 || r === settings.brickRows - 1);
+                    break;
+                case 'v_shape':
+                    // V şekli
+                    shouldPlaceBrick = (c === r || c === 10 - r);
+                    break;
+                case 'h_shape':
+                    // H şekli
+                    shouldPlaceBrick = (c === 0 || c === 10 || r === Math.floor(settings.brickRows / 2));
+                    break;
+                case 'x_shape':
+                    // X şekli
+                    shouldPlaceBrick = (c === r || c === 10 - r);
+                    break;
+                case 'pyramid':
+                    // Piramit şekli
+                    shouldPlaceBrick = (r >= settings.brickRows - 1 - c && c <= 5) || 
+                                      (r >= settings.brickRows - 1 - (10 - c) && c > 5);
+                    break;
+                case 'zigzag':
+                    // Zigzag şekli
+                    shouldPlaceBrick = ((r % 2 === 0 && c < 6) || (r % 2 === 1 && c >= 6));
+                    break;
+                case 'diamond':
+                    // Elmas şekli
+                    const centerC = 5;
+                    const centerR = Math.floor(settings.brickRows / 2);
+                    shouldPlaceBrick = (Math.abs(c - centerC) + Math.abs(r - centerR) <= 4);
+                    break;
+                case 'random':
+                    // Rastgele şekil
+                    shouldPlaceBrick = Math.random() > 0.3; // %70 ihtimalle tuğla yerleştir
+                    break;
+                case 'full':
+                default:
+                    // Tam dolu (varsayılan)
+                    shouldPlaceBrick = true;
+                    break;
             }
-            else type = BRICK_TYPES.LIFE;
             
-            bricks[c][r] = {
-                x: brickX,
-                y: brickY,
-                width: brickWidth,
-                height: brickHeight,
-                type: type,
-                durability: type.durability,
-                hasPowerUp: type.hasPowerUp || false
-            };
+            if (shouldPlaceBrick) {
+                const brickX = c * (brickWidth + padding) + offsetLeft;
+                const brickY = r * (brickHeight + padding) + offsetTop;
+                
+                const random = Math.random();
+                let type;
+                if (random < 0.6) type = BRICK_TYPES.NORMAL;
+                else if (random < 0.8) type = BRICK_TYPES.STRONG;
+                else if (random < 0.95) {
+                    type = BRICK_TYPES.BONUS;
+                    // Yeşil tuğlalara rastgele güç artırımı ekle (en fazla 5 tane)
+                    if (powerUpCount < maxPowerUps && Math.random() < 0.5) {
+                        type = {...BRICK_TYPES.BONUS, hasPowerUp: true};
+                        powerUpCount++;
+                    }
+                }
+                else type = BRICK_TYPES.LIFE;
+                
+                bricks[c][r] = {
+                    x: brickX,
+                    y: brickY,
+                    width: brickWidth,
+                    height: brickHeight,
+                    type: type,
+                    durability: type.durability,
+                    hasPowerUp: type.hasPowerUp || false
+                };
+            }
         }
     }
 }
@@ -515,9 +580,32 @@ function checkLevelCompletion() {
 
 function levelUp() {
     gameState.level++;
+    // Seviye atlandığında canları 3'e yenile
+    gameState.lives = 3;
+    // Seviye bilgisini güncelle
+    levelElement.textContent = gameState.level;
+    // Can bilgisini güncelle
+    livesElement.textContent = gameState.lives;
+    // Seviye tamamlandı sesini çal
     playSound('levelComplete');
+    // Yeni seviye için tuğlaları oluştur
     generateBricks();
+    // Topu başlangıç pozisyonuna getir
     resetBall();
+    
+    // Seviye geçişi bildirimi göster
+    const notification = document.createElement('div');
+    notification.className = 'power-up-notification';
+    notification.innerHTML = `<i class="fas fa-level-up-alt"></i> Seviye ${gameState.level}!`;
+    document.body.appendChild(notification);
+    
+    // Animasyon sonrası bildirimi kaldır
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 500);
+    }, 2000);
 }
 
 function drawBricks() {
