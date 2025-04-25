@@ -7,7 +7,7 @@ const GAME_SETTINGS = {
 const BRICK_TYPES = {
     NORMAL: { color: '#f9d423', points: 10, durability: 1 },
     STRONG: { color: '#ff4e50', points: 20, durability: 2 },
-    BONUS: { color: '#00ff00', points: 50, durability: 1 },
+    BONUS: { color: '#00ff00', points: 50, durability: 1, hasPowerUp: false },
     LIFE: { color: '#00ffff', points: 0, durability: 1 }
 };
 
@@ -147,6 +147,10 @@ function generateBricks() {
     const offsetTop = 60;
     const offsetLeft = (canvas.width - (11 * (brickWidth + padding))) / 2;
     
+    // Yeşil tuğlalara güç artırımı eklemek için sayaç
+    let powerUpCount = 0;
+    const maxPowerUps = 5;
+    
     for (let c = 0; c < 11; c++) {
         bricks[c] = [];
         for (let r = 0; r < settings.brickRows; r++) {
@@ -157,7 +161,14 @@ function generateBricks() {
             let type;
             if (random < 0.6) type = BRICK_TYPES.NORMAL;
             else if (random < 0.8) type = BRICK_TYPES.STRONG;
-            else if (random < 0.95) type = BRICK_TYPES.BONUS;
+            else if (random < 0.95) {
+                type = BRICK_TYPES.BONUS;
+                // Yeşil tuğlalara rastgele güç artırımı ekle (en fazla 5 tane)
+                if (powerUpCount < maxPowerUps && Math.random() < 0.5) {
+                    type = {...BRICK_TYPES.BONUS, hasPowerUp: true};
+                    powerUpCount++;
+                }
+            }
             else type = BRICK_TYPES.LIFE;
             
             bricks[c][r] = {
@@ -166,7 +177,8 @@ function generateBricks() {
                 width: brickWidth,
                 height: brickHeight,
                 type: type,
-                durability: type.durability
+                durability: type.durability,
+                hasPowerUp: type.hasPowerUp || false
             };
         }
     }
@@ -187,29 +199,9 @@ function spawnPowerUp(x, y) {
 }
 
 function setupPowerUps() {
-    const powerUpButtons = document.querySelectorAll('.power-up');
-    powerUpButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const powerUpType = this.id;
-            if (!this.classList.contains('disabled')) {
-                // Güç artırımı etkinleştirme animasyonu ve ses efekti
-                activatePowerUp(powerUpType);
-                this.classList.add('active');
-                
-                // Güç artırımı etkinleştiğinde ekranda bildirim göster
-                showPowerUpNotification(powerUpType);
-                
-                // Güç artırımı sona erdiğinde devre dışı bırak ve yeniden etkinleştir
-                setTimeout(() => {
-                    this.classList.remove('active');
-                    this.classList.add('disabled');
-                    setTimeout(() => {
-                        this.classList.remove('disabled');
-                    }, 10000); // 10 saniye bekleme süresi
-                }, POWER_UPS[powerUpType].duration || 1000);
-            }
-        });
-    });
+    // Artık butonlar olmadığı için bu fonksiyon sadece oyun başlangıcında çağrılacak
+    // Güç artırımları yeşil tuğlalarda olacak
+}
 }
 
 function showPowerUpNotification(powerUpType) {
@@ -440,6 +432,14 @@ function updateExtraBalls() {
                         updateScore(brick.type.points);
                         playSound('brickHit');
                         
+                        // Eğer tuğlada güç artırımı varsa, aktifleştir
+                        if (brick.hasPowerUp) {
+                            const types = Object.keys(POWER_UPS);
+                            const randomType = types[Math.floor(Math.random() * types.length)];
+                            activatePowerUp(randomType);
+                            showPowerUpNotification(randomType);
+                        }
+                        
                         if (brick.durability === 0) {
                             if (brick.type === BRICK_TYPES.LIFE) {
                                 gameState.lives++;
@@ -480,6 +480,14 @@ function checkCollisions() {
                     brick.durability--;
                     updateScore(brick.type.points);
                     playSound('brickHit');
+                    
+                    // Eğer tuğlada güç artırımı varsa, aktifleştir
+                    if (brick.hasPowerUp) {
+                        const types = Object.keys(POWER_UPS);
+                        const randomType = types[Math.floor(Math.random() * types.length)];
+                        activatePowerUp(randomType);
+                        showPowerUpNotification(randomType);
+                    }
                     
                     if (brick.durability === 0) {
                         if (brick.type === BRICK_TYPES.LIFE) {
