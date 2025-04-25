@@ -5,17 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brick Breaker Game</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="game-container">
         <canvas id="gameCanvas"></canvas>
-        <!-- Yeni skor paneli (sabit konumda sağ üst köşe) -->
-        <div class="score-panel">
-            <span id="score">Skor: 0</span>
-            <span id="lives">Can: 3</span>
+        
+        <div class="game-ui">
+            <div class="score-panel">
+                <div class="score-item">
+                    <i class="fas fa-star"></i>
+                    <span id="score">0</span>
+                </div>
+                <div class="score-item">
+                    <i class="fas fa-heart"></i>
+                    <span id="lives">3</span>
+                </div>
+                <div class="score-item">
+                    <i class="fas fa-level-up-alt"></i>
+                    <span id="level">1</span>
+                </div>
+            </div>
+            
+            <div class="power-ups">
+                <div class="power-up" id="wide-paddle">
+                    <i class="fas fa-arrows-alt-h"></i>
+                </div>
+                <div class="power-up" id="slow-motion">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="power-up" id="extra-ball">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+            </div>
         </div>
-        <button id="restartBtn" style="display:none;">Yeniden Başlat</button>
+
+        <div class="game-controls">
+            <button id="pauseBtn">
+                <i class="fas fa-pause"></i>
+            </button>
+            <button id="restartBtn" style="display:none;">
+                <i class="fas fa-redo"></i>
+            </button>
+        </div>
     </div>
+
+    <div class="game-overlay" id="startScreen">
+        <div class="overlay-content">
+            <h1>Brick Breaker</h1>
+            <div class="high-scores">
+                <h2>En Yüksek Skorlar</h2>
+                <div id="highScoresList"></div>
+            </div>
+            <button id="startGameBtn">Oyunu Başlat</button>
+            <div class="game-settings">
+                <div class="setting">
+                    <label for="difficulty">Zorluk:</label>
+                    <select id="difficulty">
+                        <option value="easy">Kolay</option>
+                        <option value="medium" selected>Orta</option>
+                        <option value="hard">Zor</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="brickHit" src="sounds/brick_hit.mp3"></audio>
+    <audio id="paddleHit" src="sounds/paddle_hit.mp3"></audio>
+    <audio id="powerUp" src="sounds/power_up.mp3"></audio>
+    <audio id="levelComplete" src="sounds/level_complete.mp3"></audio>
+    <audio id="gameOver" src="sounds/game_over.mp3"></audio>
+
     <script src="script.js"></script>
 </body>
 </html>
