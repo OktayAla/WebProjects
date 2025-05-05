@@ -19,7 +19,7 @@ const POWER_UPS = {
 
 let gameState = {
     score: 0,
-    lastScore: 0, // Son skoru takip etmek için
+    lastScore: 0,
     lives: 3,
     level: 1,
     isGameOver: false,
@@ -27,9 +27,8 @@ let gameState = {
     isPaused: false,
     difficulty: 'medium',
     activePowerUps: new Map(),
-    highScores: JSON.parse(localStorage.getItem('highScores')) || [],
     sounds: {},
-    particles: [] // Parçacık efektleri için
+    particles: []
 };
 
 const canvas = document.getElementById('gameCanvas');
@@ -147,72 +146,59 @@ function generateBricks() {
     const offsetTop = 60;
     const offsetLeft = (canvas.width - (11 * (brickWidth + padding))) / 2;
     
-    // Yeşil tuğlalara güç artırımı eklemek için sayaç
     let powerUpCount = 0;
     const maxPowerUps = 5;
     
-    // Seviye bazlı farklı tuğla dizilimleri
     const patterns = [
-        'full',      // Seviye 1: Tam dolu
-        'u_shape',   // Seviye 2: U şekli
-        'v_shape',   // Seviye 3: V şekli
-        'h_shape',   // Seviye 4: H şekli
-        'x_shape',   // Seviye 5: X şekli
-        'pyramid',   // Seviye 6: Piramit
-        'zigzag',    // Seviye 7: Zigzag
-        'diamond',   // Seviye 8: Elmas
-        'random'     // Seviye 9+: Rastgele
+        'full',
+        'u_shape',
+        'v_shape',
+        'h_shape',
+        'x_shape',
+        'pyramid',
+        'zigzag',
+        'diamond',
+        'random'
     ];
     
-    // Seviye için pattern seçimi (9. seviyeden sonra rastgele pattern)
     const patternIndex = Math.min(gameState.level - 1, patterns.length - 1);
     const currentPattern = patterns[patternIndex];
     
     for (let c = 0; c < 11; c++) {
         bricks[c] = [];
         for (let r = 0; r < settings.brickRows; r++) {
-            // Pattern'e göre tuğla yerleştirme kontrolü
             let shouldPlaceBrick = true;
             
             switch(currentPattern) {
                 case 'u_shape':
-                    // U şekli: Kenarlar ve alt kısım
                     shouldPlaceBrick = (c === 0 || c === 10 || r === settings.brickRows - 1);
                     break;
                 case 'v_shape':
-                    // V şekli
                     shouldPlaceBrick = (c === r || c === 10 - r);
                     break;
                 case 'h_shape':
-                    // H şekli
                     shouldPlaceBrick = (c === 0 || c === 10 || r === Math.floor(settings.brickRows / 2));
                     break;
                 case 'x_shape':
-                    // X şekli
                     shouldPlaceBrick = (c === r || c === 10 - r);
                     break;
                 case 'pyramid':
-                    // Piramit şekli
                     shouldPlaceBrick = (r >= settings.brickRows - 1 - c && c <= 5) || 
                                       (r >= settings.brickRows - 1 - (10 - c) && c > 5);
                     break;
                 case 'zigzag':
-                    // Zigzag şekli
                     shouldPlaceBrick = ((r % 2 === 0 && c < 6) || (r % 2 === 1 && c >= 6));
                     break;
                 case 'diamond':
-                    // Elmas şekli
                     const centerC = 5;
                     const centerR = Math.floor(settings.brickRows / 2);
                     shouldPlaceBrick = (Math.abs(c - centerC) + Math.abs(r - centerR) <= 4);
                     break;
                 case 'random':
-                    // Rastgele şekil
-                    shouldPlaceBrick = Math.random() > 0.3; // %70 ihtimalle tuğla yerleştir
+                    shouldPlaceBrick = Math.random() > 0.3;
                     break;
                 case 'full':
                 default:
-                    // Tam dolu (varsayılan)
                     shouldPlaceBrick = true;
                     break;
             }
@@ -227,7 +213,6 @@ function generateBricks() {
                 else if (random < 0.8) type = BRICK_TYPES.STRONG;
                 else if (random < 0.95) {
                     type = BRICK_TYPES.BONUS;
-                    // Yeşil tuğlalara rastgele güç artırımı ekle (en fazla 5 tane)
                     if (powerUpCount < maxPowerUps && Math.random() < 0.5) {
                         type = {...BRICK_TYPES.BONUS, hasPowerUp: true};
                         powerUpCount++;
@@ -264,12 +249,9 @@ function spawnPowerUp(x, y) {
 }
 
 function setupPowerUps() {
-    // Artık butonlar olmadığı için bu fonksiyon sadece oyun başlangıcında çağrılacak
-    // Güç artırımları yeşil tuğlalarda olacak
 }
 
 function showPowerUpNotification(powerUpType) {
-    // Güç artırımı bildirimini göster
     const notification = document.createElement('div');
     notification.className = 'power-up-notification';
     
@@ -294,7 +276,6 @@ function showPowerUpNotification(powerUpType) {
     notification.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
     document.body.appendChild(notification);
     
-    // Animasyon sonrası bildirimi kaldır
     setTimeout(() => {
         notification.classList.add('fade-out');
         setTimeout(() => {
@@ -344,28 +325,16 @@ function spawnExtraBall() {
         if (index > -1) {
             extraBalls.splice(index, 1);
         }
-    }, 10000); // Extra ball lasts for 10 seconds
+    }, 10000);
 }
 
 function updateScore(points) {
     gameState.score += points;
     const multiplier = gameState.level * (gameState.difficulty === 'hard' ? 2 : 1);
     gameState.score += points * multiplier;
-    
-    if (gameState.score > Math.max(...gameState.highScores)) {
-        updateHighScores();
-    }
-}
-
-function updateHighScores() {
-    gameState.highScores.push(gameState.score);
-    gameState.highScores.sort((a, b) => b - a);
-    gameState.highScores = gameState.highScores.slice(0, 5);
-    localStorage.setItem('highScores', JSON.stringify(gameState.highScores));
 }
 
 function loadSounds() {
-    // Ses dosyalarını oluştur
     const sounds = {
         brickHit: new Audio(),
         paddleHit: new Audio(),
@@ -374,26 +343,11 @@ function loadSounds() {
         gameOver: new Audio()
     };
 
-    // Ses dosyalarını gameState'e kaydet
     gameState.sounds = sounds;
-    
-    // Ses dosyaları için URL'ler (gelecekte eklenecek)
-    // sounds.brickHit.src = 'sounds/brick-hit.mp3';
-    // sounds.paddleHit.src = 'sounds/paddle-hit.mp3';
-    // sounds.powerUp.src = 'sounds/power-up.mp3';
-    // sounds.levelComplete.src = 'sounds/level-complete.mp3';
-    // sounds.gameOver.src = 'sounds/game-over.mp3';
 }
 
 function playSound(soundId) {
-    // For now, just log the sound that would be played
     console.log(`Playing sound: ${soundId}`);
-    // In the future, when we have actual sound files:
-    // const sound = gameState.sounds[soundId];
-    // if (sound) {
-    //     sound.currentTime = 0;
-    //     sound.play();
-    // }
 }
 
 function resetBall() {
@@ -415,6 +369,52 @@ function updateBall() {
 
     if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
         ball.dx = -ball.dx;
+    }
+    if (ball.y - ball.radius < 0) {
+        ball.dy = -ball.dy;
+    } else if (ball.y + ball.radius > paddle.y && ball.y + ball.radius < paddle.y + paddle.height) {
+        if (ball.x > paddle.x - ball.radius && ball.x < paddle.x + paddle.width + ball.radius) {
+            let collidePoint = (ball.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
+            let angle = collidePoint * Math.PI / 3;
+            let speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+            ball.dx = speed * Math.sin(angle);
+            ball.dy = -speed * Math.cos(angle);
+            playSound('paddleHit');
+        }
+    }
+
+    if (ball.y + ball.radius > canvas.height) {
+        gameState.lives--;
+        if (gameState.lives <= 0) {
+            gameOver();
+        } else {
+            resetBall();
+        }
+    }
+}
+
+function updateExtraBalls() {
+    extraBalls.forEach(extraBall => {
+        extraBall.x += extraBall.dx;
+        extraBall.y += extraBall.dy;
+
+        if (extraBall.x + extraBall.radius > canvas.width || extraBall.x - extraBall.radius < 0) {
+            extraBall.dx = -extraBall.dx;
+        }
+        if (extraBall.y - extraBall.radius < 0) {
+            extraBall.dy = -extraBall.dy;
+        }
+
+        if (extraBall.y + extraBall.radius > paddle.y && extraBall.y + extraBall.radius < paddle.y + paddle.height) {
+            if (extraBall.x > paddle.x - extraBall.radius && extraBall.x < paddle.x + paddle.width + extraBall.radius) {
+                let collidePoint = (extraBall.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
+                let angle = collidePoint * Math.PI / 3;
+                let speed = Math.sqrt(extraBall.dx * extraBall.dx + extraBall.dy * extraBall.dy);
+                extraBall.dx = speed * Math.sin(angle);
+                extraBall.dy = -speed * Math.cos(angle);
+                playSound('paddleHit');
+            }
+        }
     }
     if (ball.y - ball.radius < 0) {
         ball.dy = -ball.dy;
