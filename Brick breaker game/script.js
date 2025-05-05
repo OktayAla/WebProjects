@@ -415,56 +415,7 @@ function updateExtraBalls() {
                 playSound('paddleHit');
             }
         }
-    }
-    if (ball.y - ball.radius < 0) {
-        ball.dy = -ball.dy;
-    } else if (ball.y + ball.radius > paddle.y && ball.y + ball.radius < paddle.y + paddle.height) {
-        if (ball.x > paddle.x - ball.radius && ball.x < paddle.x + paddle.width + ball.radius) {
-            let collidePoint = (ball.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
-            let angle = collidePoint * Math.PI / 3;
-            let speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
-            ball.dx = speed * Math.sin(angle);
-            ball.dy = -speed * Math.cos(angle);
-            playSound('paddleHit');
-        }
-    }
 
-    if (ball.y + ball.radius > canvas.height) {
-        gameState.lives--;
-        if (gameState.lives <= 0) {
-            gameOver();
-        } else {
-            resetBall();
-        }
-    }
-}
-
-function updateExtraBalls() {
-    extraBalls.forEach(extraBall => {
-        extraBall.x += extraBall.dx;
-        extraBall.y += extraBall.dy;
-
-        // Wall collision
-        if (extraBall.x + extraBall.radius > canvas.width || extraBall.x - extraBall.radius < 0) {
-            extraBall.dx = -extraBall.dx;
-        }
-        if (extraBall.y - extraBall.radius < 0) {
-            extraBall.dy = -extraBall.dy;
-        }
-
-        // Paddle collision
-        if (extraBall.y + extraBall.radius > paddle.y && extraBall.y + extraBall.radius < paddle.y + paddle.height) {
-            if (extraBall.x > paddle.x - extraBall.radius && extraBall.x < paddle.x + paddle.width + extraBall.radius) {
-                let collidePoint = (extraBall.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
-                let angle = collidePoint * Math.PI / 3;
-                let speed = Math.sqrt(extraBall.dx * extraBall.dx + extraBall.dy * extraBall.dy);
-                extraBall.dx = speed * Math.sin(angle);
-                extraBall.dy = -speed * Math.cos(angle);
-                playSound('paddleHit');
-            }
-        }
-
-        // Bottom collision
         if (extraBall.y + extraBall.radius > canvas.height) {
             const index = extraBalls.indexOf(extraBall);
             if (index > -1) {
@@ -472,7 +423,6 @@ function updateExtraBalls() {
             }
         }
 
-        // Brick collision
         for (let c = 0; c < 11; c++) {
             for (let r = 0; r < bricks[c].length; r++) {
                 let brick = bricks[c][r];
@@ -496,7 +446,6 @@ function updateExtraBalls() {
                         updateScore(brick.type.points);
                         playSound('brickHit');
                         
-                        // Eğer tuğlada güç artırımı varsa, aktifleştir
                         if (brick.hasPowerUp) {
                             const types = Object.keys(POWER_UPS);
                             const randomType = types[Math.floor(Math.random() * types.length)];
@@ -518,7 +467,6 @@ function updateExtraBalls() {
 }
 
 function updatePowerUps() {
-    // Implementation of updatePowerUps function
 }
 
 function checkCollisions() {
@@ -545,7 +493,6 @@ function checkCollisions() {
                     updateScore(brick.type.points);
                     playSound('brickHit');
                     
-                    // Eğer tuğlada güç artırımı varsa, aktifleştir
                     if (brick.hasPowerUp) {
                         const types = Object.keys(POWER_UPS);
                         const randomType = types[Math.floor(Math.random() * types.length)];
@@ -585,28 +532,20 @@ function checkLevelCompletion() {
 }
 
 function levelUp() {
-    // Mevcut seviyeyi bir artır
     gameState.level++;
     
-    // Oyun değerlerini yenile
     gameState.lives = 3;
     extraBalls = [];
     gameState.activePowerUps.clear();
     
-    // UI güncelleme
     levelElement.textContent = gameState.level;
     livesElement.textContent = gameState.lives;
     
-    // Yeni seviye için tuğlaları oluştur
     generateBricks();
-    
-    // Topu başlangıç pozisyonuna getir
     resetBall();
     
-    // Seviye tamamlandı sesini çal
     playSound('levelComplete');
     
-    // Seviye geçiş bildirimi
     const notification = document.createElement('div');
     notification.className = 'power-up-notification';
     notification.innerHTML = `<i class="fas fa-level-up-alt"></i> Seviye ${gameState.level}!`;
@@ -628,20 +567,16 @@ function drawBricks() {
                 ctx.beginPath();
                 ctx.roundRect(brick.x, brick.y, brick.width, brick.height, 4);
                 
-                // Tuğla tipine göre farklı görsel efektler
                 if (brick.type === BRICK_TYPES.STRONG && brick.durability === 2) {
-                    // Güçlü tuğla için gradient efekti
                     const gradient = ctx.createLinearGradient(brick.x, brick.y, brick.x, brick.y + brick.height);
                     gradient.addColorStop(0, '#ff4e50');
                     gradient.addColorStop(1, '#ff0000');
                     ctx.fillStyle = gradient;
                 } else if (brick.type === BRICK_TYPES.BONUS) {
-                    // Bonus tuğla için parlama efekti
                     ctx.fillStyle = brick.type.color;
                     ctx.shadowColor = brick.type.color;
                     ctx.shadowBlur = 10;
                 } else if (brick.type === BRICK_TYPES.LIFE) {
-                    // Can tuğlası için nabız efekti
                     const pulseIntensity = Math.sin(Date.now() / 200) * 0.2 + 0.8;
                     ctx.fillStyle = brick.type.color;
                     ctx.globalAlpha = pulseIntensity;
@@ -651,7 +586,6 @@ function drawBricks() {
                 
                 ctx.fill();
                 
-                // Tuğla kenarları için ince çizgi
                 ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
                 ctx.lineWidth = 1;
                 ctx.stroke();
@@ -665,11 +599,9 @@ function drawBricks() {
 }
 
 function drawPaddle() {
-    // Raket için gradient ve gölge efektleri ekle
     ctx.beginPath();
     ctx.roundRect(paddle.x, paddle.y, paddle.width, paddle.height, 8);
     
-    // Gradient renk geçişi
     const gradient = ctx.createLinearGradient(paddle.x, paddle.y, paddle.x, paddle.y + paddle.height);
     gradient.addColorStop(0, '#ff4e50');
     gradient.addColorStop(1, '#f83600');
@@ -680,7 +612,6 @@ function drawPaddle() {
     ctx.shadowOffsetY = 5;
     ctx.fill();
     
-    // Raket üzerinde parlaklık efekti
     ctx.beginPath();
     ctx.roundRect(paddle.x, paddle.y, paddle.width, paddle.height/2, 8);
     ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
@@ -691,7 +622,6 @@ function drawPaddle() {
 }
 
 function drawBall() {
-    // Top çizimi için gölge ve parlaklık efektleri ekle
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
     ctx.fillStyle = '#f9d423';
@@ -699,7 +629,6 @@ function drawBall() {
     ctx.shadowBlur = 15;
     ctx.fill();
     
-    // Top üzerinde parlaklık efekti
     const gradient = ctx.createRadialGradient(
         ball.x - ball.radius/3, ball.y - ball.radius/3, 1,
         ball.x, ball.y, ball.radius
@@ -727,16 +656,13 @@ function drawExtraBalls() {
 }
 
 function drawPowerUps() {
-    // Implementation of drawPowerUps function
 }
 
 function updateUI() {
-    // Skor, can ve level bilgilerini güncelle
     scoreElement.textContent = `Skor: ${gameState.score}`;
     livesElement.textContent = `Can: ${gameState.lives}`;
     levelElement.textContent = `Level: ${gameState.level}`;
     
-    // Skor değiştiğinde animasyon efekti ekle
     if (gameState.score > 0 && gameState.lastScore !== gameState.score) {
         scoreElement.classList.add('score-updated');
         setTimeout(() => {
@@ -786,10 +712,6 @@ function updateDifficulty() {
 
 function createStartScreen() {
     startScreen.style.display = 'flex';
-    const highScoresList = document.getElementById('highScoresList');
-    highScoresList.innerHTML = gameState.highScores
-        .map((score, index) => `<div>${index + 1}. ${score}</div>`)
-        .join('');
 }
 
 function drawInitialScreen() {
@@ -810,18 +732,12 @@ function gameOver() {
     playSound('gameOver');
     restartButton.style.display = 'block';
     
-    // Oyun sonu ekranı için gelişmiş popup
     const gameOverPopup = document.createElement('div');
     gameOverPopup.className = 'popup';
-    
-    // Yüksek skor kontrolü
-    const isHighScore = gameState.highScores.length === 0 || gameState.score > Math.min(...gameState.highScores);
-    const highScoreMessage = isHighScore ? '<div class="high-score-badge">Yeni Yüksek Skor!</div>' : '';
     
     gameOverPopup.innerHTML = `
         <div class="popup-content">
             <h2>Oyun Bitti!</h2>
-            ${highScoreMessage}
             <p>Skorunuz: <span class="final-score">${gameState.score}</span></p>
             <p>Ulaştığınız Seviye: ${gameState.level}</p>
             <button id="playAgainBtn">Tekrar Oyna</button>
@@ -829,7 +745,6 @@ function gameOver() {
     `;
     document.body.appendChild(gameOverPopup);
     
-    // Skor animasyonu
     setTimeout(() => {
         const finalScore = document.querySelector('.final-score');
         if (finalScore) {
