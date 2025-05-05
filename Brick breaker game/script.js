@@ -522,12 +522,7 @@ function checkLevelCompletion() {
     }
     
     if (allCleared && !gameState.isGameOver) {
-        gameState.isPaused = true;
-        setTimeout(() => { 
-            levelUp();
-            gameState.isPaused = false;
-            gameLoop();
-        }, 1000);
+        levelUp();
     }
 }
 
