@@ -567,39 +567,51 @@ function checkCollisions() {
 
 function checkLevelCompletion() {
     let allCleared = true;
-    for (let c = 0; c < 11; c++) {
-        if (bricks[c].length > 0) {
+    for (let c = 0; c < bricks.length; c++) {
+        if (bricks[c] && bricks[c].length > 0) {
             allCleared = false;
             break;
         }
     }
-    if (allCleared) {
-        setTimeout(() => { levelUp(); }, 500);
+    
+    if (allCleared && !gameState.isGameOver) {
+        gameState.isPaused = true;
+        setTimeout(() => { 
+            levelUp();
+            gameState.isPaused = false;
+            gameLoop();
+        }, 1000);
     }
 }
 
 function levelUp() {
+    // Mevcut seviyeyi bir artır
     gameState.level++;
-    // Seviye atlandığında canları 3'e yenile
+    
+    // Oyun değerlerini yenile
     gameState.lives = 3;
-    // Seviye bilgisini güncelle
+    extraBalls = [];
+    gameState.activePowerUps.clear();
+    
+    // UI güncelleme
     levelElement.textContent = gameState.level;
-    // Can bilgisini güncelle
     livesElement.textContent = gameState.lives;
-    // Seviye tamamlandı sesini çal
-    playSound('levelComplete');
+    
     // Yeni seviye için tuğlaları oluştur
     generateBricks();
+    
     // Topu başlangıç pozisyonuna getir
     resetBall();
     
-    // Seviye geçişi bildirimi göster
+    // Seviye tamamlandı sesini çal
+    playSound('levelComplete');
+    
+    // Seviye geçiş bildirimi
     const notification = document.createElement('div');
     notification.className = 'power-up-notification';
     notification.innerHTML = `<i class="fas fa-level-up-alt"></i> Seviye ${gameState.level}!`;
     document.body.appendChild(notification);
     
-    // Animasyon sonrası bildirimi kaldır
     setTimeout(() => {
         notification.classList.add('fade-out');
         setTimeout(() => {
