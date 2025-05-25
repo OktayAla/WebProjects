@@ -1,25 +1,79 @@
 /* Premium tema stilleri */
+/* CSS Değişkenleri */
+:root {
+    --primary-color: #0072ff;
+    --primary-hover: #0056d2;
+    --gradient-start: #00c6ff;
+    --gradient-end: #0072ff;
+    --body-bg: #f5f7fa;
+    --body-bg-gradient: #c3cfe2;
+}
+
+/* Genel stiller */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    background: linear-gradient(135deg, var(--body-bg), var(--body-bg-gradient));
+    transition: background 0.5s;
 }
+
+/* Kart stilleri */
 .card {
     border: none;
     border-radius: 15px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
 }
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Kart başlığı */
 .card-header {
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
+
+/* Butonlar */
 .btn-primary {
-    background-color: #0072ff;
+    background-color: var(--primary-color);
     border: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, transform 0.3s;
 }
 .btn-primary:hover {
-    background-color: #0056d2;
+    background-color: var(--primary-hover);
+    transform: scale(1.05);
 }
+
+/* Hava durumu bilgileri */
 .weather-info h1.display-4 {
     font-weight: bold;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Animasyonlar */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Dinamik etkileşim */
+a {
+    transition: color 0.3s;
+}
+a:hover {
+    color: var(--primary-color);
+}
+
+/* Responsive düzenlemeler */
+@media (max-width: 768px) {
+    .card {
+        margin: 20px;
+    }
+    .btn-primary {
+        width: 100%;
+    }
 }
