@@ -1,91 +1,35 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="text-center"><i class="fas fa-cloud-sun"></i> Premium Hava Durumu</h3>
-                </div>
-                <div class="card-body">
-                    <form method="POST">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="city" placeholder="Şehir adı girin...">
-                            <button class="btn btn-primary" type="submit">Sorgula</button>
-                        </div>
-                    </form>
-
-                    {% if weather %}
-                    <div class="weather-info text-center">
-                        <h2>{{ weather.name }}, {{ weather.sys.country }}</h2>
-                        <img src="http://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@4x.png" alt="icon">
-                        <h1 class="display-4">{{ weather.main.temp }}°C</h1>
-                        <p class="lead">{{ weather.weather[0].description | capitalize }}</p>
-                        <div class="row mt-4">
-                            <div class="col-md-4">
-                                <p><i class="fas fa-temperature-high"></i> Max: {{ weather.main.temp_max }}°C</p>
-                            </div>
-                            <div class="col-md-4">
-                                <p><i class="fas fa-temperature-low"></i> Min: {{ weather.main.temp_min }}°C</p>
-                            </div>
-                            <div class="col-md-4">
-                                <p><i class="fas fa-tint"></i> Nem: {{ weather.main.humidity }}%</p>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% if forecast %}
-                    <div class="mt-5">
-                        <h4 class="text-center">Önümüzdeki Saatlerin Sıcaklık Grafiği</h4>
-                        <canvas id="forecastChart"></canvas>
-                    </div>
-                    <!-- Forecast verilerini frontend'e aktarıyoruz -->
-                    <script>
-                        const forecastData = {{ forecast|tojson }};
-                    </script>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row mt-5">
+<div class="container-fluid mt-3">
+    <div class="row">
         <div class="col-12">
             <div class="card shadow-lg">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="text-center"><i class="fas fa-map-marked-alt"></i> Türkiye Hava Durumu Haritası</h3>
+                    <h3 class="text-center"><i class="fas fa-map-marked-alt"></i> Türkiye Hava Durumu</h3>
                 </div>
                 <div class="card-body p-0">
-                    <div id="turkeyMap" style="height: 600px;"></div>
+                    <div id="turkey-map-container" class="position-relative">
+                        <!-- SVG harita buraya yerleştirilecek -->
+                    </div>
+                    <!-- Hava durumu popup'ı -->
+                    <div id="weather-popup" class="weather-popup">
+                        <div class="weather-content">
+                            <h5 class="city-name"></h5>
+                            <div class="weather-icon"></div>
+                            <div class="temperature"></div>
+                            <div class="description"></div>
+                            <div class="details"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    {% if cities_weather %}
-    <script>
-        const citiesWeather = {{ cities_weather|tojson }};
-        const map = L.map('turkeyMap').setView([39.1667, 35.6667], 6);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        citiesWeather.forEach(city => {
-            if(city.coord) {
-                const marker = L.marker([city.coord.lat, city.coord.lon])
-                    .addTo(map)
-                    .bindPopup(`
-                        <div class="text-center">
-                            <h5>${city.name}</h5>
-                            <img src="http://openweathermap.org/img/wn/${city.weather[0].icon}.png" alt="hava durumu">
-                            <h4>${Math.round(city.main.temp)}°C</h4>
-                            <p>${city.weather[0].description}</p>
-                            <small>Nem: ${city.main.humidity}%</small>
-                        </div>
-                    `);
-            }
-        });
-    </script>
-    {% endif %}
 </div>
+
+{% if cities_weather %}
+<script>
+    const citiesWeather = {{ cities_weather|tojson }};
+</script>
+{% endif %}
 {% endblock %}

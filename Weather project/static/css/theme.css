@@ -77,3 +77,107 @@ a:hover {
         width: 100%;
     }
 }
+
+/* Harita Stilleri */
+#turkeyMap {
+    border-radius: 0 0 15px 15px;
+    z-index: 1;
+}
+
+#turkey-map-container {
+    width: 100%;
+    height: 80vh;
+    background: #f8f9fa;
+}
+
+.province {
+    fill: #e0e0e0;
+    stroke: #fff;
+    stroke-width: 1;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.province:hover {
+    fill: var(--primary-color);
+    filter: brightness(1.1);
+}
+
+.leaflet-popup-content {
+    text-align: center;
+    min-width: 150px;
+}
+
+.leaflet-popup-content h5 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.leaflet-popup-content img {
+    margin: 5px 0;
+    width: 50px;
+    height: 50px;
+}
+
+.leaflet-popup-content h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.leaflet-popup-content p {
+    margin: 5px 0;
+    color: #666;
+}
+
+/* Harita Marker Hover Efekti */
+.leaflet-marker-icon:hover {
+    transform: scale(1.2);
+    transition: transform 0.3s ease;
+}
+
+/* Hava Durumu Popup Stilleri */
+.weather-popup {
+    display: none;
+    position: absolute;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 15px;
+    min-width: 200px;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.weather-popup.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.weather-content {
+    text-align: center;
+}
+
+.weather-content .city-name {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.weather-content .temperature {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.weather-content .description {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.weather-content .details {
+    font-size: 0.9rem;
+    color: #888;
+}
