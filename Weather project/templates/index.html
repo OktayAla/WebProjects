@@ -48,27 +48,41 @@
             </div>
         </div>
     </div>
-    <!-- Türkiye Haritası Bölümü -->
-    {% if cities_weather %}
-    <div class="mt-5">
-        <h4 class="text-center">Türkiye Haritası Üzerinde Şehirlerin Anlık Hava Durumları</h4>
-        <div id="turkeyMap" style="height: 500px;"></div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="text-center"><i class="fas fa-map-marked-alt"></i> Türkiye Hava Durumu Haritası</h3>
+                </div>
+                <div class="card-body p-0">
+                    <div id="turkeyMap" style="height: 600px;"></div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    {% if cities_weather %}
     <script>
-        // Sunucudan gelen şehir hava durumu verileri
         const citiesWeather = {{ cities_weather|tojson }};
-        // Haritanın başlangıç koordinatları (Türkiye merkez)
-        const map = L.map('turkeyMap').setView([39, 35], 6);
+        const map = L.map('turkeyMap').setView([39.1667, 35.6667], 6);
+        
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
-        
-        // Her şehir için marker ekle
+
         citiesWeather.forEach(city => {
-            // Koordinat varsa marker ekleniyor
             if(city.coord) {
-                const marker = L.marker([city.coord.lat, city.coord.lon]).addTo(map);
-                marker.bindPopup(`<strong>${city.name}</strong><br>${city.main.temp}°C<br>${city.weather[0].description}`);
+                const marker = L.marker([city.coord.lat, city.coord.lon])
+                    .addTo(map)
+                    .bindPopup(`
+                        <div class="text-center">
+                            <h5>${city.name}</h5>
+                            <img src="http://openweathermap.org/img/wn/${city.weather[0].icon}.png" alt="hava durumu">
+                            <h4>${Math.round(city.main.temp)}°C</h4>
+                            <p>${city.weather[0].description}</p>
+                            <small>Nem: ${city.main.humidity}%</small>
+                        </div>
+                    `);
             }
         });
     </script>

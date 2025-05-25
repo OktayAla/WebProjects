@@ -8,20 +8,35 @@ load_dotenv()  # .env dosyasından API key yükle
 app = Flask(__name__)
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
-# Yeni: Türk şehirlerinin listesi
-TURKISH_CITIES = ["Istanbul", "Ankara", "Izmir", "Bursa", "Adana", "Antalya", "Konya", "Gaziantep", "Kayseri", "Mersin"]
+# Türkiye'nin tüm il merkezleri
+TURKISH_CITIES = [
+    "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", "Antalya", "Artvin", 
+    "Aydın", "Balıkesir", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale",
+    "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Edirne", "Elazığ", "Erzincan", "Erzurum", 
+    "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Isparta", "Mersin",
+    "İstanbul", "İzmir", "Kars", "Kastamonu", "Kayseri", "Kırklareli", "Kırşehir", "Kocaeli",
+    "Konya", "Kütahya", "Malatya", "Manisa", "Kahramanmaraş", "Mardin", "Muğla", "Muş", "Nevşehir",
+    "Niğde", "Ordu", "Rize", "Sakarya", "Samsun", "Siirt", "Sinop", "Sivas", "Tekirdağ", "Tokat",
+    "Trabzon", "Tunceli", "Şanlıurfa", "Uşak", "Van", "Yozgat", "Zonguldak", "Aksaray", "Bayburt",
+    "Karaman", "Kırıkkale", "Batman", "Şırnak", "Bartın", "Ardahan", "Iğdır", "Yalova", "Karabük",
+    "Kilis", "Osmaniye", "Düzce"
+]
 
 @app.route("/", methods=["GET", "POST"])
 def home():
+    cities_weather = get_cities_weather(TURKISH_CITIES)
     weather_data = None
     forecast_data = None
+    
     if request.method == "POST":
         city = request.form.get("city")
         weather_data = get_weather(city)
         forecast_data = get_forecast(city)
-    # Tüm şehirler için hava durumu verileri
-    cities_weather = get_cities_weather(TURKISH_CITIES)
-    return render_template("index.html", weather=weather_data, forecast=forecast_data, cities_weather=cities_weather)
+        
+    return render_template("index.html", 
+                         weather=weather_data, 
+                         forecast=forecast_data, 
+                         cities_weather=cities_weather)
     
 def get_weather(city):
     base_url = "http://api.openweathermap.org/data/2.5/weather"
