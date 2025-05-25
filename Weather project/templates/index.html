@@ -1,1 +1,42 @@
- 
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="text-center"><i class="fas fa-cloud-sun"></i> Premium Hava Durumu</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="city" placeholder="Şehir adı girin...">
+                            <button class="btn btn-primary" type="submit">Sorgula</button>
+                        </div>
+                    </form>
+
+                    {% if weather %}
+                    <div class="weather-info text-center">
+                        <h2>{{ weather.name }}, {{ weather.sys.country }}</h2>
+                        <img src="http://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@4x.png" alt="icon">
+                        <h1 class="display-4">{{ weather.main.temp }}°C</h1>
+                        <p class="lead">{{ weather.weather[0].description | capitalize }}</p>
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <p><i class="fas fa-temperature-high"></i> Max: {{ weather.main.temp_max }}°C</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><i class="fas fa-temperature-low"></i> Min: {{ weather.main.temp_min }}°C</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><i class="fas fa-tint"></i> Nem: {{ weather.main.humidity }}%</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
