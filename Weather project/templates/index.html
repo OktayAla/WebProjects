@@ -48,5 +48,30 @@
             </div>
         </div>
     </div>
+    <!-- Türkiye Haritası Bölümü -->
+    {% if cities_weather %}
+    <div class="mt-5">
+        <h4 class="text-center">Türkiye Haritası Üzerinde Şehirlerin Anlık Hava Durumları</h4>
+        <div id="turkeyMap" style="height: 500px;"></div>
+    </div>
+    <script>
+        // Sunucudan gelen şehir hava durumu verileri
+        const citiesWeather = {{ cities_weather|tojson }};
+        // Haritanın başlangıç koordinatları (Türkiye merkez)
+        const map = L.map('turkeyMap').setView([39, 35], 6);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+        
+        // Her şehir için marker ekle
+        citiesWeather.forEach(city => {
+            // Koordinat varsa marker ekleniyor
+            if(city.coord) {
+                const marker = L.marker([city.coord.lat, city.coord.lon]).addTo(map);
+                marker.bindPopup(`<strong>${city.name}</strong><br>${city.main.temp}°C<br>${city.weather[0].description}`);
+            }
+        });
+    </script>
+    {% endif %}
 </div>
 {% endblock %}
