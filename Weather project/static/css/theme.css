@@ -1,0 +1,25 @@
+/* Premium tema stilleri */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+}
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+.card-header {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+}
+.btn-primary {
+    background-color: #0072ff;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #0056d2;
+}
+.weather-info h1.display-4 {
+    font-weight: bold;
+}

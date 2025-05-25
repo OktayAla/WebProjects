@@ -13,9 +13,10 @@ def home():
     if request.method == "POST":
         city = request.form.get("city")
         weather_data = get_weather(city)
-        return render_template("index.html", weather=weather_data)
+        forecast_data = get_forecast(city)
+        return render_template("index.html", weather=weather_data, forecast=forecast_data)
     return render_template("index.html")
-
+    
 def get_weather(city):
     base_url = "http://api.openweathermap.org/data/2.5/weather"
     params = {
@@ -26,6 +27,21 @@ def get_weather(city):
     }
     response = requests.get(base_url, params=params)
     return response.json() if response.status_code == 200 else None
+
+def get_forecast(city):
+    base_url = "http://api.openweathermap.org/data/2.5/forecast"
+    params = {
+        "q": city,
+        "appid": API_KEY,
+        "units": "metric",
+        "lang": "tr"
+    }
+    response = requests.get(base_url, params=params)
+    # Basitlik için ilk 5 veri noktasını alıyoruz
+    if response.status_code == 200:
+        data = response.json()
+        return data.get("list", [])[:5]
+    return None
 
 if __name__ == "__main__":
     app.run(debug=True)
