@@ -128,25 +128,12 @@ export class Player {
   draw(ctx,camera){
     const sx = this.x - camera.x;
     const sy = this.y - camera.y;
-    // simple character drawing with head + body
-    ctx.save();
-    ctx.translate(sx, sy);
-    // shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.15)';
-    ctx.fillRect(5, this.h-8, this.w-10, 6);
-    // body
     ctx.fillStyle = '#ff4757';
-    ctx.fillRect(6, 8, this.w-12, this.h-16);
-    // head
-    ctx.fillStyle = '#ffd9b3';
-    ctx.beginPath();
-    ctx.ellipse(this.w/2, 8, 18, 12, 0, 0, Math.PI*2);
-    ctx.fill();
-    // eyes
-    ctx.fillStyle = '#333';
-    ctx.fillRect(this.w/2 - 6, 4, 4, 6);
-    ctx.fillRect(this.w/2 + 4, 4, 4, 6);
-    ctx.restore();
+    ctx.fillRect(sx, sy, this.w, this.h);
+    // oyuncu yönünü belli eden indicator
+    ctx.fillStyle = 'white';
+    const dir = this.vx >= 0 ? 1 : -1;
+    ctx.fillRect(sx + (dir > 0 ? this.w-10 : 0), sy + 10, 10, 10);
   }
 }
 
@@ -166,23 +153,36 @@ export class Coin {
     if(this.picked) return;
     const sx = this.x - camera.x;
     const sy = this.y - camera.y;
-    ctx.save();
-    ctx.translate(sx,sy);
-    ctx.beginPath();
     ctx.fillStyle = '#ffd700';
-    ctx.ellipse(16,16,14,12,0,0,Math.PI*2);
-    ctx.fill();
-    ctx.strokeStyle = '#b8860b';
-    ctx.stroke();
-    ctx.restore();
+    ctx.fillRect(sx, sy, this.w, this.h);
   }
 }
 
 export class Enemy {
   constructor(x,y){
-    this.type='enemy';
-    this.x = x; this.y = y; this.w=56; this.h=48;
+    this.type = 'enemy';
+    this.x = x; this.y = y; this.w = 56; this.h = 48;
     this.vx = -60;
+    this.vy = 0;
+    this.solid = true;
+    this.physics = true;
+    this.dead = false;
+    this.onGround = false;
+  }
+  update(dt,input,physics,level,manager){
+    if(this.dead) return;
+    if(!this.onGround || this.vx === 0){
+      this.vx = -this.vx;
+    }
+  }
+  draw(ctx,camera){
+    if(this.dead) return;
+    const sx = this.x - camera.x;
+    const sy = this.y - camera.y;
+    ctx.fillStyle = '#2f3542';
+    ctx.fillRect(sx, sy, this.w, this.h);
+  }
+}
     this.vy = 0;
     this.solid = true;
     this.physics = true;

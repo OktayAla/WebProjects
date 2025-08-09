@@ -55,12 +55,17 @@ export default class Level {
     const endX = Math.floor((camera.x + camera.viewW) / ts)+1;
     const startY = Math.floor(camera.y / ts);
     const endY = Math.floor((camera.y + camera.viewH) / ts)+1;
-    ctx.fillStyle='#7ec0ff';
+    
     for(let y = startY; y < endY; y++){
       for(let x = startX; x < endX; x++){
         const t = this.getTile(x,y);
         if(t){
-          t.draw(ctx, camera);
+          const sx = x * ts - camera.x;
+          const sy = y * ts - camera.y;
+          ctx.fillStyle = '#5f8a44';
+          ctx.fillRect(sx, sy, ts, ts);
+          ctx.strokeStyle = '#2f5a22';
+          ctx.strokeRect(sx, sy, ts, ts);
         }
       }
     }
