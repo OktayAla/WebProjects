@@ -168,42 +168,42 @@ export class Enemy {
     this.physics = true;
     this.dead = false;
     this.onGround = false;
+    this.patrolTimer = 0;
   }
   update(dt,input,physics,level,manager){
     if(this.dead) return;
+    // Kenardan düşmesin, basit patrol
+    if(this.onGround) {
+      // Önündeki tile'ı kontrol et
+      const dir = this.vx < 0 ? -1 : 1;
+      const aheadX = this.x + (dir < 0 ? -2 : this.w + 2);
+      const footY = this.y + this.h + 1;
+      const tileX = Math.floor(aheadX / level.tileSize);
+      const tileY = Math.floor(footY / level.tileSize);
+      const tile = level.getTile(tileX, tileY);
+      if (!tile) {
+        this.vx = -this.vx;
+      }
+    }
+    // Eğer bir yere çarptıysa yön değiştir
     if(!this.onGround || this.vx === 0){
-      this.vx = -this.vx;
+      this.vx = -this.vx || 60;
     }
   }
   draw(ctx,camera){
     if(this.dead) return;
     const sx = this.x - camera.x;
     const sy = this.y - camera.y;
+    ctx.save();
+    ctx.translate(sx,sy);
     ctx.fillStyle = '#2f3542';
-    ctx.fillRect(sx, sy, this.w, this.h);
+    ctx.fillRect(0,0,this.w,this.h);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(8,12,10,10);
+    ctx.fillRect(this.w-18,12,10,10);
+    ctx.restore();
   }
 }
-    this.vy = 0;
-    this.solid = true;
-    this.physics = true;
-    this.dead = false;
-    this.onGround = false;
-  }
-  update(dt,input,physics,level,manager){
-    // basic patrol
-    if(this.dead) return;
-    // if hits edge or tile in front reverse
-    // simple lookahead
-    const aheadX = this.vx < 0 ? this.x - 5 : this.x + this.w + 5;
-    // gravity handled by physics integrate
-    // simple collision with tiles will zero vx; we reverse if vx==0
-    // but since integration comes later we do check approximate
-    // simple flip based on a timer or random
-    // keep vx constant
-  }
-  draw(ctx,camera){
-    if(this.dead) return;
-    const sx = this.x - camera.x;
     const sy = this.y - camera.y;
     ctx.save();
     ctx.translate(sx,sy);
