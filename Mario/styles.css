@@ -1,0 +1,64 @@
+:root{
+  --bg1:#74b9ff;
+  --bg2:#a29bfe;
+  --ui-bg: rgba(0,0,0,0.4);
+  --ui-color: #fff;
+  --font: "Segoe UI", Roboto, Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{
+  height:100%;
+  margin:0;
+  background: linear-gradient(180deg,var(--bg1),var(--bg2));
+  font-family:var(--font);
+}
+#game{
+  display:block;
+  margin: 20px auto;
+  background: linear-gradient(#87ceeb 0%, #7ec0ee 50%, #66b2ff 100%);
+  border-radius:10px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.35);
+  max-width:95vw;
+  width:1280px;
+  height:720px;
+}
+#ui{
+  position: absolute;
+  top:12px;
+  left:12px;
+  display:flex;
+  gap:10px;
+  z-index:10;
+}
+#ui > div{
+  background:var(--ui-bg);
+  color:var(--ui-color);
+  padding:8px 12px;
+  border-radius:8px;
+  font-weight:600;
+  text-shadow:0 1px 0 rgba(0,0,0,0.3);
+}
+#controls{
+  position: fixed;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  z-index:20;
+}
+#controls.hidden{display:none}
+#controls button{
+  width:64px;
+  height:64px;
+  border-radius:8px;
+  border:none;
+  font-size:24px;
+  background:rgba(0,0,0,0.45);
+  color:white;
+  box-shadow:0 6px 12px rgba(0,0,0,0.3);
+}
+@media (max-width:700px){
+  #game{ width:100vw; height:56vw; border-radius:0; }
+  #controls.hidden{ display:flex }
+}
