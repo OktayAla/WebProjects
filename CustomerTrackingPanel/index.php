@@ -1,73 +1,71 @@
-<?php require_once __DIR__ . '/includes/auth.php'; require_login(); require_once __DIR__ . '/includes/header.php'; ?>
-<?php
-	$pdo = get_pdo_connection();
-	$totalCustomers = (int)$pdo->query('SELECT COUNT(*) FROM customers')->fetchColumn();
-	$totalSales = (float)$pdo->query("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE type = 'debit'")->fetchColumn();
-	$totalCollections = (float)$pdo->query("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE type = 'credit'")->fetchColumn();
-	$totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM customers')->fetchColumn();
+<?php 
+require_once __DIR__ . '/includes/auth.php'; 
+require_login(); 
+require_once __DIR__ . '/includes/header.php'; 
+
+$pdo = get_pdo_connection();
+$totalCustomers = (int)$pdo->query('SELECT COUNT(*) FROM customers')->fetchColumn();
+$totalSales = (float)$pdo->query("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE type = 'debit'")->fetchColumn();
+$totalCollections = (float)$pdo->query("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE type = 'credit'")->fetchColumn();
+$totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM customers')->fetchColumn();
 ?>
 
-	<nav aria-label="breadcrumb" class="mb-6">
-		<ol class="flex items-center space-x-2 text-sm text-gray-600">
-			<li><a href="index.php" class="hover:text-primary-600 transition-colors duration-200">Panel</a></li>
-			<li class="flex items-center">
-				<svg class="w-4 h-4 mx-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-				<span class="font-medium text-gray-900">Genel Bakış</span>
-			</li>
-		</ol>
-	</nav>
+<!-- Floating background elements -->
+<div class="floating-element"></div>
+<div class="floating-element"></div>
+<div class="floating-element"></div>
 
+<div class="dashboard-header">
+	<div class="container mx-auto px-4">
+		<h1 class="dashboard-title">Genel Bakış</h1>
+		<p class="dashboard-subtitle">Sistem istatistikleriniz ve son işlemler</p>
+	</div>
+</div>
+
+<div class="container mx-auto px-4 py-6">
 	<!-- Stats Cards -->
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 		<!-- Total Customers Card -->
-		<div class="bg-white rounded-xl shadow-sm p-6 card-hover animate-slideInUp" style="animation-delay: 0.1s">
-			<div class="flex items-center">
-				<div class="flex-shrink-0 bg-primary-100 p-3 rounded-full">
-					<i class="bi bi-people-fill text-primary-600 text-xl"></i>
-				</div>
-				<div class="ml-4">
-					<p class="text-sm font-medium text-gray-500">Toplam Müşteri</p>
-					<p class="text-2xl font-semibold text-gray-900"><?php echo $totalCustomers; ?></p>
-				</div>
+		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.1s">
+			<div class="stat-icon">
+				<i class="bi bi-people-fill"></i>
+			</div>
+			<div class="stat-info">
+				<span class="stat-label">Toplam Müşteri</span>
+				<span class="stat-value"><?php echo $totalCustomers; ?></span>
 			</div>
 		</div>
 
 		<!-- Total Sales Card -->
-		<div class="bg-white rounded-xl shadow-sm p-6 card-hover animate-slideInUp" style="animation-delay: 0.2s">
-			<div class="flex items-center">
-				<div class="flex-shrink-0 bg-primary-100 p-3 rounded-full">
-					<i class="bi bi-bag-fill text-primary-600 text-xl"></i>
-				</div>
-				<div class="ml-4">
-					<p class="text-sm font-medium text-gray-500">Toplam Satış</p>
-					<p class="text-2xl font-semibold text-gray-900"><?php echo number_format($totalSales, 2, ',', '.'); ?> ₺</p>
-				</div>
+		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.2s">
+			<div class="stat-icon">
+				<i class="bi bi-bag-fill"></i>
+			</div>
+			<div class="stat-info">
+				<span class="stat-label">Toplam Satış</span>
+				<span class="stat-value"><?php echo number_format($totalSales, 2, ',', '.'); ?> ₺</span>
 			</div>
 		</div>
 
 		<!-- Total Collections Card -->
-		<div class="bg-white rounded-xl shadow-sm p-6 card-hover animate-slideInUp" style="animation-delay: 0.3s">
-			<div class="flex items-center">
-				<div class="flex-shrink-0 bg-success-100 p-3 rounded-full">
-					<i class="bi bi-cash-coin text-success-600 text-xl"></i>
-				</div>
-				<div class="ml-4">
-					<p class="text-sm font-medium text-gray-500">Toplam Tahsilat</p>
-					<p class="text-2xl font-semibold text-gray-900"><?php echo number_format($totalCollections, 2, ',', '.'); ?> ₺</p>
-				</div>
+		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.3s">
+			<div class="stat-icon" style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);">
+				<i class="bi bi-cash-coin"></i>
+			</div>
+			<div class="stat-info">
+				<span class="stat-label">Toplam Tahsilat</span>
+				<span class="stat-value"><?php echo number_format($totalCollections, 2, ',', '.'); ?> ₺</span>
 			</div>
 		</div>
 
 		<!-- Total Receivables Card -->
-		<div class="bg-white rounded-xl shadow-sm p-6 card-hover animate-slideInUp" style="animation-delay: 0.4s">
-			<div class="flex items-center">
-				<div class="flex-shrink-0 bg-danger-100 p-3 rounded-full">
-					<i class="bi bi-clipboard2-data-fill text-danger-600 text-xl"></i>
-				</div>
-				<div class="ml-4">
-					<p class="text-sm font-medium text-gray-500">Toplam Alacak</p>
-					<p class="text-2xl font-semibold text-gray-900"><?php echo number_format($totalReceivables, 2, ',', '.'); ?> ₺</p>
-				</div>
+		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.4s">
+			<div class="stat-icon" style="background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);">
+				<i class="bi bi-clipboard2-data-fill"></i>
+			</div>
+			<div class="stat-info">
+				<span class="stat-label">Toplam Alacak</span>
+				<span class="stat-value"><?php echo number_format($totalReceivables, 2, ',', '.'); ?> ₺</span>
 			</div>
 		</div>
 	</div>
@@ -76,50 +74,52 @@
 	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 		<!-- Recent Sales Table -->
 		<div class="lg:col-span-2">
-			<div class="bg-white rounded-xl shadow-sm overflow-hidden animate-fadeIn" style="animation-delay: 0.5s">
-				<div class="p-6">
-					<div class="flex justify-between items-center mb-4">
-						<h3 class="text-lg font-semibold text-gray-900">Son Satışlar</h3>
-						<a href="transactions.php" class="text-sm text-primary-600 hover:text-primary-800 flex items-center transition-colors duration-200">
+			<div class="card-hover animate-fadeIn" style="animation-delay: 0.5s">
+				<div class="card-header">
+					<div class="flex justify-between items-center">
+						<h3 class="card-title">Son Satışlar</h3>
+						<a href="transactions.php" class="btn btn-outline btn-sm">
 							Tümünü Gör <i class="bi bi-chevron-right ml-1"></i>
 						</a>
 					</div>
-					<div class="overflow-x-auto">
-						<table class="min-w-full divide-y divide-gray-200">
-							<thead class="bg-gray-50">
+				</div>
+				<div class="p-0">
+					<div class="table-container">
+						<table class="table">
+							<thead>
 								<tr>
-									<th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-									<th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Müşteri</th>
-									<th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
-									<th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tutar</th>
-									<th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Not</th>
-									<th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">İşlem</th>
+									<th>#</th>
+									<th>Müşteri</th>
+									<th>Tarih</th>
+									<th>Tutar</th>
+									<th>Not</th>
+									<th>İşlem</th>
 								</tr>
 							</thead>
-							<tbody class="bg-white divide-y divide-gray-200">
+							<tbody>
 								<?php
 									$stmt = $pdo->query("SELECT t.id, t.customer_id, c.name AS customer_name, t.amount, t.note, t.created_at FROM transactions t JOIN customers c ON c.id = t.customer_id WHERE t.type='debit' ORDER BY t.created_at DESC LIMIT 10");
 									$i = 0;
 									foreach ($stmt as $row):
 									$i++;
 								?>
-								<tr class="hover:bg-gray-50 animate-fadeIn" style="animation-delay: <?php echo 0.5 + ($i * 0.05); ?>s">
-									<td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500"><?php echo $row['id']; ?></td>
-									<td class="px-4 py-3 whitespace-nowrap">
+								<tr class="animate-fadeIn" style="animation-delay: <?php echo 0.5 + ($i * 0.05); ?>s">
+									<td><?php echo $row['id']; ?></td>
+									<td>
 										<a href="customer_report.php?customer=<?php echo (int)$row['customer_id']; ?>" class="text-primary-600 hover:text-primary-900 transition-colors duration-200">
 											<?php echo htmlspecialchars($row['customer_name']); ?>
 										</a>
 									</td>
-									<td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+									<td>
 										<?php echo date('d.m.Y H:i', strtotime($row['created_at'])); ?>
 									</td>
-									<td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+									<td class="font-medium">
 										<?php echo number_format($row['amount'], 2, ',', '.'); ?> ₺
 									</td>
-									<td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+									<td>
 										<?php echo htmlspecialchars($row['note']); ?>
 									</td>
-									<td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+									<td>
 										<a href="print.php?id=<?php echo $row['id']; ?>" class="text-gray-600 hover:text-gray-900 transition-colors duration-200" data-tooltip="Yazdır">
 											<i class="bi bi-printer"></i>
 										</a>
@@ -128,7 +128,7 @@
 								<?php endforeach; ?>
 								<?php if ($i === 0): ?>
 								<tr>
-									<td colspan="6" class="px-4 py-8 text-center text-gray-500">
+									<td colspan="6" class="text-center py-8 text-gray-500">
 										<i class="bi bi-inbox text-3xl mb-2 block"></i>
 										Henüz satış kaydı bulunmuyor.
 									</td>
@@ -143,14 +143,16 @@
 
 		<!-- Customers with Debt -->
 		<div class="lg:col-span-1">
-			<div class="bg-white rounded-xl shadow-sm overflow-hidden animate-fadeIn" style="animation-delay: 0.6s">
-				<div class="p-6">
-					<div class="flex justify-between items-center mb-4">
-						<h3 class="text-lg font-semibold text-gray-900">Borçlu Müşteriler</h3>
-						<a href="customers.php" class="text-sm text-primary-600 hover:text-primary-800 flex items-center transition-colors duration-200">
+			<div class="card-hover animate-fadeIn" style="animation-delay: 0.6s">
+				<div class="card-header">
+					<div class="flex justify-between items-center">
+						<h3 class="card-title">Borçlu Müşteriler</h3>
+						<a href="customers.php" class="btn btn-outline btn-sm">
 							Tümünü Gör <i class="bi bi-chevron-right ml-1"></i>
 						</a>
 					</div>
+				</div>
+				<div class="p-4">
 					<div class="space-y-3">
 						<?php 
 						$debtors = $pdo->query('SELECT id, name, balance FROM customers WHERE balance > 0 ORDER BY balance DESC LIMIT 10');
@@ -164,7 +166,7 @@
 							<a href="customer_report.php?customer=<?php echo $debtor['id']; ?>" class="text-gray-800 hover:text-primary-600 font-medium transition-colors duration-200">
 								<?php echo htmlspecialchars($debtor['name']); ?>
 							</a>
-							<span class="bg-danger-500 text-white text-xs px-2 py-1 rounded-full">
+							<span class="badge-danger">
 								<?php echo number_format($debtor['balance'], 2, ',', '.'); ?> ₺
 							</span>
 						</div>
@@ -181,10 +183,12 @@
 			</div>
 
 			<!-- Quick Actions -->
-			<div class="bg-white rounded-xl shadow-sm overflow-hidden mt-6 animate-fadeIn" style="animation-delay: 0.7s">
-				<div class="p-6">
-					<h3 class="text-lg font-semibold text-gray-900 mb-4">Hızlı Erişim</h3>
-					<div class="grid grid-cols-2 gap-3">
+			<div class="card-hover mt-6 animate-fadeIn" style="animation-delay: 0.7s">
+				<div class="card-header">
+					<h3 class="card-title">Hızlı Erişim</h3>
+				</div>
+				<div class="p-4">
+					<div class="grid grid-cols-2 gap-4">
 						<a href="customers.php" class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-200">
 							<i class="bi bi-person-plus text-2xl text-primary-600 mb-2"></i>
 							<span class="text-sm font-medium text-gray-700">Yeni Müşteri</span>
@@ -206,6 +210,6 @@
 			</div>
 		</div>
 	</div>
+</div>
+
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-
-
