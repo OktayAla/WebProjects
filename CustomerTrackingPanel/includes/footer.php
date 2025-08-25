@@ -1,7 +1,7 @@
 </main>
 	<footer class="bg-white py-4 mt-8 border-t border-gray-200">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<p class="text-center text-gray-500 text-sm">OA Grafik Tasarım tarafından ❤️ ile geliştirilmiştir. - Tüm hakları saklıdır.</p>
+			<p class="text-center text-gray-500 text-sm">OA Grafik Tasarım tarafından ❤️ ile geliştirilmiştir.</p>
 		</div>
 	</footer>
 	<script src="assets/js/main.js"></script>
