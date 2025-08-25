@@ -59,22 +59,29 @@
 		}
 	</script>
 </head>
-<body class="bg-gray-50">
-	<nav class="bg-primary-800 shadow-lg">
+<body class="bg-gray-50 min-h-screen flex flex-col">
+	<!-- Floating background elements -->
+	<div class="floating-element"></div>
+	<div class="floating-element"></div>
+	<div class="floating-element"></div>
+	
+	<nav class="navbar-gradient shadow-lg z-10">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="flex justify-between h-16">
 				<div class="flex">
 					<div class="flex-shrink-0 flex items-center">
-						<a href="index.php" class="text-white text-lg font-bold"><?php echo APP_NAME; ?></a>
+						<a href="index.php" class="text-white text-xl font-bold flex items-center">
+							<i class="bi bi-wallet2 mr-2"></i> <?php echo APP_NAME; ?>
+						</a>
 					</div>
-					<div class="hidden md:ml-6 md:flex md:space-x-4">
-						<a href="index.php" class="text-white hover:bg-primary-700 px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors duration-200">
+					<div class="hidden md:ml-6 md:flex md:space-x-1">
+						<a href="index.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
 							<i class="bi bi-speedometer2 mr-2"></i> Panel
 						</a>
-						<a href="customers.php" class="text-white hover:bg-primary-700 px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors duration-200">
+						<a href="customers.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
 							<i class="bi bi-people mr-2"></i> Müşteriler
 						</a>
-						<a href="transactions.php" class="text-white hover:bg-primary-700 px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors duration-200">
+						<a href="transactions.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
 							<i class="bi bi-cash-stack mr-2"></i> İşlemler
 						</a>
 					</div>
@@ -89,7 +96,7 @@
 							</button>
 						</div>
 						<div class="hidden group-hover:block absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50">
-							<a href="logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+							<a href="logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
 								<i class="bi bi-box-arrow-right mr-2"></i> Çıkış
 							</a>
 						</div>
@@ -97,7 +104,7 @@
 					<?php endif; ?>
 				</div>
 				<div class="-mr-2 flex md:hidden">
-					<button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-primary-700 focus:outline-none">
+					<button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-primary-700 focus:outline-none transition-colors duration-200">
 						<i class="bi bi-list text-2xl"></i>
 					</button>
 				</div>
@@ -106,14 +113,14 @@
 		
 		<!-- Mobile menu, show/hide based on menu state. -->
 		<div class="hidden md:hidden" id="mobile-menu">
-			<div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-				<a href="index.php" class="text-white hover:bg-primary-700 block px-3 py-2 rounded-md text-base font-medium">
+			<div class="px-2 pt-2 pb-3 space-y-1">
+				<a href="index.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
 					<i class="bi bi-speedometer2 mr-2"></i> Panel
 				</a>
-				<a href="customers.php" class="text-white hover:bg-primary-700 block px-3 py-2 rounded-md text-base font-medium">
+				<a href="customers.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
 					<i class="bi bi-people mr-2"></i> Müşteriler
 				</a>
-				<a href="transactions.php" class="text-white hover:bg-primary-700 block px-3 py-2 rounded-md text-base font-medium">
+				<a href="transactions.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
 					<i class="bi bi-cash-stack mr-2"></i> İşlemler
 				</a>
 			</div>
@@ -127,14 +134,7 @@
 					</div>
 				</div>
 				<div class="mt-3 px-2 space-y-1">
-					<div class="flex items-center px-3 py-2">
-						<span class="text-white text-sm mr-2">Otomatik Yenileme</span>
-						<label class="relative inline-flex items-center cursor-pointer">
-							<input type="checkbox" id="autoRefreshToggleMobile" class="sr-only peer">
-							<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
-						</label>
-					</div>
-					<a href="logout.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-700">
+					<a href="logout.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-700 transition-colors duration-200">
 						<i class="bi bi-box-arrow-right mr-2"></i> Çıkış
 					</a>
 				</div>
@@ -142,4 +142,5 @@
 		</div>
 	</nav>
 	
-	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+	<main class="flex-grow">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
