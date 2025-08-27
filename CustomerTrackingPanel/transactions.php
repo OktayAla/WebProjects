@@ -100,11 +100,11 @@ if ($customerId) {
                     <select name="product_id" class="form-select">
                         <option value="">Ürün Seçiniz</option>
                         <?php 
-                        $products = $pdo->query('SELECT id, name, price FROM products ORDER BY name ASC')->fetchAll();
+                        $products = $pdo->query('SELECT id, name FROM products ORDER BY name ASC')->fetchAll();
                         foreach ($products as $product): 
                         ?>
-                        <option value="<?php echo $product['id']; ?>" data-price="<?php echo $product['price']; ?>">
-                            <?php echo htmlspecialchars($product['name']); ?> - <?php echo number_format($product['price'], 2, ',', '.'); ?> ₺
+                        <option value="<?php echo $product['id']; ?>">
+                            <?php echo htmlspecialchars($product['name']); ?>
                         </option>
                         <?php endforeach; ?>
                     </select>
@@ -236,15 +236,16 @@ if ($customerId) {
 </div>
 
 <script>
-// Auto-fill amount when product is selected
+// Product selection handling
 document.querySelector('select[name="product_id"]').addEventListener('change', function() {
     const selectedOption = this.options[this.selectedIndex];
     const amountField = document.querySelector('input[name="amount"]');
     
-    if (selectedOption.value && selectedOption.dataset.price) {
-        const price = parseFloat(selectedOption.dataset.price);
-        amountField.value = price.toFixed(2).replace('.', ',');
+    if (selectedOption.value) {
+        // Product selected, clear amount field for manual input
+        amountField.value = '';
     } else {
+        // No product selected
         amountField.value = '';
     }
 });
