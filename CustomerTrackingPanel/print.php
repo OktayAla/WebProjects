@@ -132,11 +132,9 @@
 				<div class="border-t border-gray-200 mt-6 pt-6">
 					<h5 class="text-base font-semibold text-gray-900 mb-2">Ürün Bilgisi</h5>
 					<div class="bg-blue-50 p-4 rounded-lg">
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<div>
-								<span class="text-sm font-medium text-gray-500">Ürün Adı</span>
-								<div class="text-base font-medium"><?php echo htmlspecialchars($tx['product_name']); ?></div>
-							</div>
+						<div>
+							<span class="text-sm font-medium text-gray-500">Ürün Adı</span>
+							<div class="text-base font-medium"><?php echo htmlspecialchars($tx['product_name']); ?></div>
 						</div>
 					</div>
 				</div>
