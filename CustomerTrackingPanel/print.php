@@ -2,7 +2,7 @@
 <?php
 	$pdo = get_pdo_connection();
 	$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-	$stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, c.phone, c.address FROM transactions t JOIN customers c ON c.id = t.customer_id WHERE t.id = ?');
+	$stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, c.phone, c.address, p.name AS product_name, p.price AS product_price FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.id = ?');
 	$stmt->execute([$id]);
 	$tx = $stmt->fetch();
 	if (!$tx) {
@@ -127,6 +127,24 @@
 						<?php echo htmlspecialchars($tx['note'] ?: 'Açıklama bulunmuyor.'); ?>
 					</div>
 				</div>
+				
+				<?php if ($tx['product_name']): ?>
+				<div class="border-t border-gray-200 mt-6 pt-6">
+					<h5 class="text-base font-semibold text-gray-900 mb-2">Ürün Bilgisi</h5>
+					<div class="bg-blue-50 p-4 rounded-lg">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div>
+								<span class="text-sm font-medium text-gray-500">Ürün Adı</span>
+								<div class="text-base font-medium"><?php echo htmlspecialchars($tx['product_name']); ?></div>
+							</div>
+							<div>
+								<span class="text-sm font-medium text-gray-500">Ürün Fiyatı</span>
+								<div class="text-base font-medium"><?php echo number_format($tx['product_price'], 2, ',', '.'); ?> ₺</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php endif; ?>
 				<div class="mt-8 text-center text-sm text-gray-500">
 					Bu belge <?php echo APP_NAME; ?> tarafından <?php echo date('d.m.Y H:i'); ?> tarihinde oluşturulmuştur.
 				</div>
