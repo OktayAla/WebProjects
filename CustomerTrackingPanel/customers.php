@@ -45,13 +45,6 @@ if (isset($_GET['edit'])) {
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 
-<div class="dashboard-header">
-    <div class="container mx-auto px-4">
-        <h1 class="dashboard-title">Müşteri Yönetimi</h1>
-        <p class="dashboard-subtitle">Müşteri ekleme, düzenleme ve listeleme</p>
-    </div>
-</div>
-
 <div class="container mx-auto px-4 py-6">
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
