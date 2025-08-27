@@ -179,7 +179,7 @@ if (isset($_GET['edit'])) {
 <?php if ($editCustomer): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // showModal(); // This line is causing the modal to open automatically
+        // showModal(); 
     });
 </script>
 <?php endif; ?>
