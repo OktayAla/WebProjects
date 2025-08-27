@@ -10,16 +10,13 @@ $totalCollections = (float)$pdo->query("SELECT COALESCE(SUM(amount),0) FROM tran
 $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM customers')->fetchColumn();
 ?>
 
-<!-- Floating background elements -->
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 
 
 <div class="container mx-auto px-4 py-6">
-	<!-- Stats Cards -->
 	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 dashboard-stats">
-		<!-- Total Customers Card -->
 		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.1s">
 			<div class="stat-icon">
 				<i class="bi bi-people-fill"></i>
@@ -30,7 +27,6 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 			</div>
 		</div>
 
-		<!-- Total Sales Card -->
 		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.2s">
 			<div class="stat-icon">
 				<i class="bi bi-bag-fill"></i>
@@ -41,7 +37,6 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 			</div>
 		</div>
 
-		<!-- Total Collections Card -->
 		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.3s">
 			<div class="stat-icon" style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);">
 				<i class="bi bi-cash-coin"></i>
@@ -52,7 +47,6 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 			</div>
 		</div>
 
-		<!-- Total Receivables Card -->
 		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.4s">
 			<div class="stat-icon" style="background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);">
 				<i class="bi bi-clipboard2-data-fill"></i>
@@ -64,9 +58,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 		</div>
 	</div>
 
-	<!-- Dashboard Content -->
 	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-		<!-- Recent Sales Table -->
 		<div class="lg:col-span-2">
 			<div class="card-hover animate-fadeIn" style="animation-delay: 0.5s">
 				<div class="card-header">
@@ -135,7 +127,6 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 			</div>
 		</div>
 
-		<!-- Customers with Debt -->
 		<div class="lg:col-span-1">
 			<div class="card-hover animate-fadeIn" style="animation-delay: 0.6s">
 				<div class="card-header">
