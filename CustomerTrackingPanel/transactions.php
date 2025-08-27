@@ -5,7 +5,6 @@ require_login();
 $pdo = get_pdo_connection();
 $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
 
-// Add transaction
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $customer_id = (int)$_POST['customer_id'];
     $product_id = !empty($_POST['product_id']) ? (int)$_POST['product_id'] : null;
@@ -23,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$amount, $customer_id]);
         }
         $pdo->commit();
-        header('Location: transactions.php?customer=' . $customer_id);
+        header('Location: transactions.php');
         exit;
     } catch (Exception $e) {
         $pdo->rollBack();
@@ -34,35 +33,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/includes/header.php'; 
 
 $customers = $pdo->query('SELECT id, name FROM customers ORDER BY name ASC')->fetchAll();
+$products = $pdo->query('SELECT id, name FROM products ORDER BY name ASC')->fetchAll();
 $selectedCustomer = null;
 if ($customerId) {
     $st = $pdo->prepare('SELECT * FROM customers WHERE id = ?');
     $st->execute([$customerId]);
     $selectedCustomer = $st->fetch();
 }
+
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$perPage = 5;
+$offset = ($page - 1) * $perPage;
+
+if ($customerId) {
+    $countStmt = $pdo->prepare('SELECT COUNT(*) FROM transactions WHERE customer_id = ?');
+    $countStmt->execute([$customerId]);
+    $totalRows = (int)$countStmt->fetchColumn();
+} else {
+    $totalRows = (int)$pdo->query('SELECT COUNT(*) FROM transactions')->fetchColumn();
+}
+$totalPages = max(1, ceil($totalRows / $perPage));
+
+try {
+    if ($customerId) {
+        $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.customer_id = ? ORDER BY t.created_at DESC LIMIT ? OFFSET ?');
+        $stmt->bindValue(1, $customerId, PDO::PARAM_INT);
+        $stmt->bindValue(2, $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(3, $offset, PDO::PARAM_INT);
+        $stmt->execute();
+    } else {
+        $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id ORDER BY t.created_at DESC LIMIT ? OFFSET ?');
+        $stmt->bindValue(1, $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+} catch (PDOException $e) {
+    if ($customerId) {
+        $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
+        $stmt->execute([$customerId]);
+    } else {
+        $stmt = $pdo->query('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id ORDER BY t.created_at DESC');
+    }
+}
+
 ?>
 
-<!-- Floating background elements -->
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 
-<div class="dashboard-header">
-    <div class="container mx-auto px-4">
-        <h1 class="dashboard-title">İşlem Yönetimi</h1>
-        <p class="dashboard-subtitle">Yeni işlem ekleme ve işlem geçmişi</p>
-    </div>
-</div>
 
 <div class="container mx-auto px-4 py-6">
-    <!-- Breadcrumb -->
     <div class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
         <a href="index.php" class="hover:text-primary-600 transition-colors duration-200">Panel</a>
         <span class="text-gray-400">/</span>
         <span class="text-gray-700 font-medium">İşlemler</span>
     </div>
 
-    <!-- Action Buttons -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
             <h2 class="text-xl font-semibold text-gray-900">İşlemler</h2>
@@ -73,7 +100,6 @@ if ($customerId) {
         </a>
     </div>
 
-    <!-- Add Transaction Form -->
     <div class="card-hover animate-fadeIn mb-6">
         <div class="card-header">
             <h3 class="card-title">Yeni İşlem Ekle</h3>
@@ -95,22 +121,17 @@ if ($customerId) {
                         <?php endforeach; ?>
                     </select>
                 </div>
-                
                 <div class="md:col-span-3 col-span-1">
                     <label class="form-label">Ürün</label>
                     <select name="product_id" class="form-select">
                         <option value="">Ürün Seçiniz</option>
-                        <?php 
-                        $products = $pdo->query('SELECT id, name FROM products ORDER BY name ASC')->fetchAll();
-                        foreach ($products as $product): 
-                        ?>
+                        <?php foreach ($products as $product): ?>
                         <option value="<?php echo $product['id']; ?>">
                             <?php echo htmlspecialchars($product['name']); ?>
                         </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
-                
                 <div class="md:col-span-2 col-span-1">
                     <label class="form-label">Tür</label>
                     <select name="type" class="form-select">
@@ -138,7 +159,6 @@ if ($customerId) {
         </div>
     </div>
 
-    <!-- Transactions List -->
     <div class="card-hover animate-fadeIn" style="animation-delay: 0.2s">
         <div class="card-header">
             <div class="flex justify-between items-center">
@@ -173,22 +193,6 @@ if ($customerId) {
                     </thead>
                     <tbody>
                         <?php
-                            try {
-                                if ($customerId) {
-                                    $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
-                                    $stmt->execute([$customerId]);
-                                } else {
-                                    $stmt = $pdo->query('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id ORDER BY t.created_at DESC');
-                                }
-                            } catch (PDOException $e) {
-                                // Eğer id kolonu yoksa, eski sorguyu kullan
-                                if ($customerId) {
-                                    $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name FROM transactions t JOIN customers c ON c.id = t.customer_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
-                                    $stmt->execute([$customerId]);
-                                } else {
-                                    $stmt = $pdo->query('SELECT t.*, c.name AS customer_name FROM transactions t JOIN customers c ON c.id = t.customer_id ORDER BY t.created_at DESC');
-                                }
-                            }
                             $hasTransactions = false;
                             $index = 0;
                             foreach ($stmt as $row):
@@ -244,17 +248,24 @@ if ($customerId) {
             </div>
         </div>
     </div>
+
+    <?php if ($totalPages > 1): ?>
+    <div class="flex justify-center mt-6">
+        <nav class="inline-flex space-x-1" aria-label="Sayfalama">
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <a href="transactions.php<?php echo $customerId ? '?customer=' . $customerId . '&' : '?'; ?>page=<?php echo $i; ?>"
+                   class="px-3 py-1 rounded <?php echo $i == $page ? 'bg-primary-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'; ?>">
+                    <?php echo $i; ?>
+                </a>
+            <?php endfor; ?>
+        </nav>
+    </div>
+    <?php endif; ?>
 </div>
 
 <script>
-// Product selection handling
 document.querySelector('select[name="product_id"]').addEventListener('change', function() {
-    const selectedOption = this.options[this.selectedIndex];
-    const amountField = document.querySelector('input[name="amount"]');
-    amountField.value = '';
 });
-
-// Amount formatting
 document.querySelector('input[name="amount"]').addEventListener('input', function(e) {
     let value = e.target.value.replace(/[^\d,]/g, '');
     value = value.replace(',', '.');
@@ -268,5 +279,4 @@ document.querySelector('input[name="amount"]').addEventListener('input', functio
     e.target.value = value;
 });
 </script>
-
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
