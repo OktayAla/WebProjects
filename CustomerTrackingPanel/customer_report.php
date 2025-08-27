@@ -141,6 +141,7 @@ $history = $historyStmt->fetchAll();
                             <th>#</th>
                             <th>Tarih</th>
                             <th>Tür</th>
+                            <th>Ürün</th>
                             <th>Tutar (₺)</th>
                             <th>Not</th>
                             <th class="text-right">İşlem</th>
@@ -159,6 +160,13 @@ $history = $historyStmt->fetchAll();
                                     <span class="badge-credit">Tahsilat</span>
                                     <?php endif; ?>
                                 </td>
+                                <td>
+                                    <?php if ($row['product_name']): ?>
+                                        <span class="badge badge-outline"><?php echo htmlspecialchars($row['product_name']); ?></span>
+                                    <?php else: ?>
+                                        <span class="text-gray-400">-</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="font-medium"><?php echo number_format($row['amount'], 2, ',', '.'); ?></td>
                                 <td><?php echo htmlspecialchars($row['note']); ?></td>
                                 <td class="text-right">
@@ -170,7 +178,7 @@ $history = $historyStmt->fetchAll();
                             <?php endforeach; ?>
                         <?php else: ?>
                         <tr>
-                            <td colspan="6" class="text-center py-8 text-gray-500">
+                            <td colspan="7" class="text-center py-8 text-gray-500">
                                 <i class="bi bi-inbox text-3xl mb-2 block"></i>
                                 Henüz işlem kaydı bulunmuyor
                             </td>
