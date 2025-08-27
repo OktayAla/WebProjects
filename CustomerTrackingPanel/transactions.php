@@ -172,11 +172,21 @@ if ($customerId) {
                     </thead>
                     <tbody>
                         <?php
-                            if ($customerId) {
-                                $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
-                                $stmt->execute([$customerId]);
-                            } else {
-                                $stmt = $pdo->query('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id ORDER BY t.created_at DESC');
+                            try {
+                                if ($customerId) {
+                                    $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
+                                    $stmt->execute([$customerId]);
+                                } else {
+                                    $stmt = $pdo->query('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id ORDER BY t.created_at DESC');
+                                }
+                            } catch (PDOException $e) {
+                                // Eğer product_id kolonu yoksa, eski sorguyu kullan
+                                if ($customerId) {
+                                    $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name FROM transactions t JOIN customers c ON c.id = t.customer_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
+                                    $stmt->execute([$customerId]);
+                                } else {
+                                    $stmt = $pdo->query('SELECT t.*, c.name AS customer_name FROM transactions t JOIN customers c ON c.id = t.customer_id ORDER BY t.created_at DESC');
+                                }
                             }
                             $hasTransactions = false;
                             $index = 0;
@@ -196,7 +206,7 @@ if ($customerId) {
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <?php if ($row['product_name']): ?>
+                                <?php if (isset($row['product_name']) && $row['product_name']): ?>
                                     <span class="badge badge-outline"><?php echo htmlspecialchars($row['product_name']); ?></span>
                                 <?php else: ?>
                                     <span class="text-gray-400">-</span>
