@@ -2,7 +2,7 @@
 <?php
 	$pdo = get_pdo_connection();
 	$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-	$stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, c.phone, c.address, p.name AS product_name, p.price AS product_price FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.id = ?');
+	$stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, c.phone, c.address, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.id = ?');
 	$stmt->execute([$id]);
 	$tx = $stmt->fetch();
 	if (!$tx) {
@@ -136,10 +136,6 @@
 							<div>
 								<span class="text-sm font-medium text-gray-500">Ürün Adı</span>
 								<div class="text-base font-medium"><?php echo htmlspecialchars($tx['product_name']); ?></div>
-							</div>
-							<div>
-								<span class="text-sm font-medium text-gray-500">Ürün Fiyatı</span>
-								<div class="text-base font-medium"><?php echo number_format($tx['product_price'], 2, ',', '.'); ?> ₺</div>
 							</div>
 						</div>
 					</div>
