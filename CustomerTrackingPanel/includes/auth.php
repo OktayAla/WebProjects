@@ -20,7 +20,6 @@
 
 	function login($identifier, $password) {
 		$pdo = get_pdo_connection();
-		// Check if users.username column exists
 		$hasUsername = false;
 		try {
 			$colStmt = $pdo->query("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'username' LIMIT 1");
@@ -35,12 +34,10 @@
 			$stmt->execute([$identifier]);
 			$user = $stmt->fetch();
 			if (!$user) {
-				// Fallback to email if not found by username
 				$stmt = $pdo->prepare('SELECT id, name, email, username, password_hash, role FROM users WHERE email = ? LIMIT 1');
 				$stmt->execute([$identifier]);
 				$user = $stmt->fetch();
 				if (!$user) {
-					// Fallback to name if not found by email
 					$stmt = $pdo->prepare('SELECT id, name, email, username, password_hash, role FROM users WHERE name = ? LIMIT 1');
 					$stmt->execute([$identifier]);
 					$user = $stmt->fetch();
@@ -51,7 +48,6 @@
 			$stmt->execute([$identifier]);
 			$user = $stmt->fetch();
 			if (!$user) {
-				// Fallback to name if not found by email
 				$stmt = $pdo->prepare('SELECT id, name, email, password_hash, role FROM users WHERE name = ? LIMIT 1');
 				$stmt->execute([$identifier]);
 				$user = $stmt->fetch();
@@ -63,7 +59,6 @@
 		if (strpos($hash, '$2y$') === 0 || strpos($hash, '$argon2') === 0) {
 			$verified = password_verify($password, $hash);
 		} else {
-			// Fallback for plaintext (not recommended) for first-time setups only
 			$verified = hash_equals($hash, $password);
 		}
 		if ($verified) {
@@ -83,5 +78,3 @@
 		session_destroy();
 	}
 ?>
-
-

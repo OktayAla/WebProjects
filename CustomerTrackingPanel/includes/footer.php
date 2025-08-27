@@ -24,13 +24,11 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="assets/js/main.js"></script>
 	<script>
-		// Mobile menu toggle
 		document.getElementById('mobile-menu-button').addEventListener('click', function() {
 			const menu = document.getElementById('mobile-menu');
 			menu.classList.toggle('hidden');
 		});
 		
-		// Close mobile menu when clicking outside
 		document.addEventListener('click', function(event) {
 			const menu = document.getElementById('mobile-menu');
 			const menuButton = document.getElementById('mobile-menu-button');
@@ -42,24 +40,20 @@
 			}
 		});
 		
-		// Sync mobile toggle with desktop toggle
 		const desktopToggle = document.getElementById('autoRefreshToggle');
 		const mobileToggle = document.getElementById('autoRefreshToggleMobile');
 		
 		if (desktopToggle && mobileToggle) {
 			desktopToggle.addEventListener('change', function() {
 				mobileToggle.checked = desktopToggle.checked;
-				// Save preference to localStorage
 				localStorage.setItem('autoRefresh', desktopToggle.checked);
 			});
 			
 			mobileToggle.addEventListener('change', function() {
 				desktopToggle.checked = mobileToggle.checked;
-				// Save preference to localStorage
 				localStorage.setItem('autoRefresh', mobileToggle.checked);
 			});
 			
-			// Load saved preference
 			document.addEventListener('DOMContentLoaded', function() {
 				const autoRefresh = localStorage.getItem('autoRefresh') === 'true';
 				if (desktopToggle) desktopToggle.checked = autoRefresh;
@@ -67,7 +61,6 @@
 			});
 		}
 		
-		// Auto refresh functionality
 		function setupAutoRefresh() {
 			const toggle = document.getElementById('autoRefreshToggle') || document.getElementById('autoRefreshToggleMobile');
 			if (!toggle) return;
@@ -76,12 +69,11 @@
 			
 			function startAutoRefresh() {
 				refreshInterval = setInterval(() => {
-					// Only refresh if on index page
 					if (window.location.pathname.endsWith('index.php') || 
 						window.location.pathname.endsWith('/')) {
 						window.location.reload();
 					}
-				}, 30000); // 30 seconds
+				}, 30000);
 			}
 			
 			function stopAutoRefresh() {
@@ -98,17 +90,14 @@
 				}
 			});
 			
-			// Initialize
 			if (toggle.checked) {
 				startAutoRefresh();
 			}
 		}
 		
-		// Initialize when document is ready
 		document.addEventListener('DOMContentLoaded', function() {
 			setupAutoRefresh();
 			
-			// Add smooth scrolling for anchor links
 			document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 				anchor.addEventListener('click', function (e) {
 					e.preventDefault();
@@ -122,7 +111,6 @@
 				});
 			});
 			
-			// Add loading animation to forms
 			document.querySelectorAll('form').forEach(form => {
 				form.addEventListener('submit', function() {
 					const submitBtn = this.querySelector('button[type="submit"]');

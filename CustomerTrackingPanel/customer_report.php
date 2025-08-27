@@ -26,14 +26,12 @@ $historyStmt->execute([$customerId]);
 $history = $historyStmt->fetchAll();
 ?>
 
-<!-- Floating background elements -->
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 
 
 <div class="container mx-auto px-4 py-6">
-    <!-- Breadcrumb -->
     <div class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
         <a href="index.php" class="hover:text-primary-600 transition-colors duration-200">Panel</a>
         <span class="text-gray-400">/</span>
@@ -42,7 +40,6 @@ $history = $historyStmt->fetchAll();
         <span class="text-gray-700 font-medium"><?php echo htmlspecialchars($customer['name']); ?></span>
     </div>
 
-    <!-- Action Buttons -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
             <h2 class="text-xl font-semibold text-gray-900">Müşteri Detayları</h2>
@@ -59,7 +56,6 @@ $history = $historyStmt->fetchAll();
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
-        <!-- Customer Info -->
         <div class="md:col-span-5">
             <div class="card-hover animate-fadeIn">
                 <div class="card-header">
@@ -84,7 +80,6 @@ $history = $historyStmt->fetchAll();
             </div>
         </div>
         
-        <!-- Stats -->
         <div class="md:col-span-7">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="stat-card card-hover animate-fadeIn" style="animation-delay: 0.1s">
@@ -120,7 +115,6 @@ $history = $historyStmt->fetchAll();
         </div>
     </div>
 
-    <!-- Transaction History -->
     <div class="card-hover animate-fadeIn" style="animation-delay: 0.4s">
         <div class="card-header">
             <div class="flex justify-between items-center">
