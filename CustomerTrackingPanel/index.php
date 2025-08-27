@@ -90,7 +90,6 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 								<tr>
 									<th>#</th>
 									<th>Müşteri</th>
-									<th>Ürün</th>
 									<th>Tarih</th>
 									<th>Tutar</th>
 									<th>Not</th>
@@ -99,7 +98,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 							</thead>
 							<tbody>
 								<?php
-									$stmt = $pdo->query("SELECT t.id, t.customer_id, c.name AS customer_name, p.name AS product_name, t.amount, t.note, t.created_at FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.type='debit' ORDER BY t.created_at DESC LIMIT 10");
+									$stmt = $pdo->query("SELECT t.id, t.customer_id, c.name AS customer_name, t.amount, t.note, t.created_at FROM transactions t JOIN customers c ON c.id = t.customer_id WHERE t.type='debit' ORDER BY t.created_at DESC LIMIT 10");
 									$i = 0;
 									foreach ($stmt as $row):
 									$i++;
@@ -110,13 +109,6 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 										<a href="customer_report.php?customer=<?php echo (int)$row['customer_id']; ?>" class="text-primary-600 hover:text-primary-900 transition-colors duration-200">
 											<?php echo htmlspecialchars($row['customer_name']); ?>
 										</a>
-									</td>
-									<td>
-										<?php if ($row['product_name']): ?>
-											<span class="badge badge-outline"><?php echo htmlspecialchars($row['product_name']); ?></span>
-										<?php else: ?>
-											<span class="text-gray-400">-</span>
-										<?php endif; ?>
 									</td>
 									<td>
 										<?php echo date('d.m.Y H:i', strtotime($row['created_at'])); ?>
@@ -136,7 +128,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 								<?php endforeach; ?>
 								<?php if ($i === 0): ?>
 								<tr>
-									<td colspan="7" class="text-center py-8 text-gray-500">
+									<td colspan="6" class="text-center py-8 text-gray-500">
 										<i class="bi bi-inbox text-3xl mb-2 block"></i>
 										Henüz satış kaydı bulunmuyor.
 									</td>
