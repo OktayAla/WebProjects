@@ -176,28 +176,19 @@ if (isset($_GET['edit'])) {
     </div>
 </div>
 
-<?php if ($editCustomer): ?>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // showModal(); 
-    });
-</script>
-<?php endif; ?>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Removed the auto-opening of the modal
     const modal = document.getElementById('customerModal');
     const newCustomerBtn = document.getElementById('newCustomerBtn');
     
-    // Open modal on button click
+    // Modalı sadece butona tıklanınca aç
     if (newCustomerBtn) {
         newCustomerBtn.addEventListener('click', function() {
             showModal();
         });
     }
     
-    // Close modal on outside click
+    // Modal dışına tıklayınca kapat
     if (modal) {
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
@@ -206,14 +197,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Close modal with ESC key
+    // ESC ile kapat
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal.classList.contains('show')) {
             closeModal();
         }
     });
-    
-    // Setup search functionality
+
+    // Arama ve aktif sayfa vurgusu
     const setupSearch = () => {
         const input = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearSearch');
@@ -271,6 +262,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Tüm kurulumları çalıştır
     setupSearch();
     highlightActivePage();
+
+    // Eğer düzenleme modundaysa modalı otomatik aç
+    <?php if ($editCustomer): ?>
+        showModal();
+    <?php endif; ?>
 });
 
 // Modal fonksiyonları
@@ -279,7 +275,6 @@ function showModal() {
     if (modal) {
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
-        
         // İlk input'a focus
         const firstInput = modal.querySelector('input, textarea');
         if (firstInput) {
@@ -293,7 +288,6 @@ function closeModal() {
     if (modal) {
         modal.classList.remove('show');
         document.body.style.overflow = '';
-        
         // Form'u temizle (düzenleme modunda değilse)
         const form = modal.querySelector('form');
         if (form && !form.querySelector('input[name="id"]').value) {
