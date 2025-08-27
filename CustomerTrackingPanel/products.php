@@ -5,7 +5,6 @@ require_once __DIR__ . '/includes/header.php';
 
 $pdo = get_pdo_connection();
 
-// Add product
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'add') {
         $name = trim($_POST['name']);
@@ -32,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $id = (int)$_POST['id'];
         
         try {
-            // Check if product is used in transactions
             $stmt = $pdo->prepare('SELECT COUNT(*) FROM transactions WHERE product_id = ?');
             $stmt->execute([$id]);
             $usageCount = $stmt->fetchColumn();
@@ -50,24 +48,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-// Get products
 $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
 ?>
 
-<!-- Floating background elements -->
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 
 <div class="container mx-auto px-4 py-6">
-    <!-- Breadcrumb -->
     <div class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
         <a href="index.php" class="hover:text-primary-600 transition-colors duration-200">Panel</a>
         <span class="text-gray-400">/</span>
         <span class="text-gray-700 font-medium">Ürünler</span>
     </div>
 
-    <!-- Action Buttons -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
             <h2 class="text-xl font-semibold text-gray-900">Ürünler</h2>
@@ -78,7 +72,6 @@ $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
         </button>
     </div>
 
-    <!-- Messages -->
     <?php if (!empty($success)): ?>
         <div class="alert alert-success mb-4"><?php echo htmlspecialchars($success); ?></div>
     <?php endif; ?>
@@ -86,7 +79,6 @@ $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
         <div class="alert alert-danger mb-4"><?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
 
-    <!-- Products List -->
     <div class="card-hover animate-fadeIn">
         <div class="card-header">
             <h3 class="card-title">Ürün Listesi</h3>
@@ -135,7 +127,6 @@ $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
     </div>
 </div>
 
-<!-- Add/Edit Product Modal -->
 <div id="productModal" class="modal hidden">
     <div class="modal-overlay" onclick="hideProductModal()"></div>
     <div class="modal-content">
@@ -162,7 +153,6 @@ $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
 <div id="deleteModal" class="modal hidden">
     <div class="modal-overlay" onclick="hideDeleteModal()"></div>
     <div class="modal-content">
