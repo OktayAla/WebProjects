@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (linkHref === filename || 
             (filename === '' && linkHref === 'index.php') || 
             (filename === 'index.php' && linkHref === 'index.php')) {
-            link.classList.add('bg-primary-700', 'text-white', 'rounded-md');
+            link.classList.add('text-white', 'rounded-md');
             link.classList.remove('hover:bg-primary-700');
         }
     });
