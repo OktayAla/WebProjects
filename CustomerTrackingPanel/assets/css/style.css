@@ -1,6 +1,3 @@
-/* Custom styles that extend Tailwind - Geliştirilmiş Versiyon */
-
-/* Premium styling improvements */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --primary-light: #8a9eff;
@@ -14,7 +11,6 @@
   --glass-border: rgba(255, 255, 255, 0.2);
 }
 
-/* Genel stiller */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f8f9fa;
@@ -23,7 +19,6 @@ body {
   min-height: 100vh;
 }
 
-/* Enhanced body background */
 body::before {
   content: "";
   position: fixed;
@@ -38,7 +33,6 @@ body::before {
   z-index: -1;
 }
 
-/* Navbar stilleri */
 .navbar-gradient {
   background: var(--primary-gradient);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -60,7 +54,6 @@ body::before {
   transform: translateY(-2px);
 }
 
-/* Premium card styling */
 .card-hover {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
@@ -71,13 +64,11 @@ body::before {
   border: 1px solid var(--glass-border);
 }
 
-/* Dashboard stats için hover efekti */
 .dashboard-stats .stat-card:hover {
   transform: translateY(-8px);
   box-shadow: var(--premium-shadow-hover);
 }
 
-/* Diğer kartlar için hover efekti yok */
 .card-hover:hover {
   transform: none;
   box-shadow: var(--premium-shadow);
@@ -109,7 +100,6 @@ body::before {
   border-radius: 3px;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -147,7 +137,6 @@ body::before {
   animation: float 5s ease-in-out infinite;
 }
 
-/* Badge styles */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -178,7 +167,6 @@ body::before {
   border: 1px solid #bbf7d0;
 }
 
-/* Modal styles */
 .modal {
   position: fixed;
   top: 0;
@@ -205,7 +193,6 @@ body::before {
   backdrop-filter: blur(4px);
 }
 
-/* Enhanced modal styling */
 .modal-content {
   border-radius: 20px;
   box-shadow: 0 32px 64px rgba(0, 0, 0, 0.3);
@@ -275,7 +262,6 @@ body::before {
   padding-top: 1rem;
 }
 
-/* Form group spacing */
 .form-group {
   margin-bottom: 1rem;
 }
@@ -336,7 +322,6 @@ body::before {
   margin-bottom: 0.5rem;
 }
 
-/* Button styles */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -352,8 +337,6 @@ body::before {
   position: relative;
   overflow: hidden;
 }
-
-
 
 .btn::before {
   content: '';
@@ -434,7 +417,6 @@ body::before {
   border-radius: 10px;
 }
 
-/* Table styles */
 .table-container {
   border-radius: 16px;
   overflow: hidden;
@@ -498,7 +480,6 @@ body::before {
   color: #4a5568;
 }
 
-/* Stat card styles */
 .stat-card {
   display: flex;
   align-items: center;
@@ -543,7 +524,6 @@ body::before {
   color: #2d3748;
 }
 
-/* Dashboard specific styles */
 .dashboard-header {
   padding: 2rem 0;
   margin-bottom: 0;
@@ -589,7 +569,6 @@ body::before {
   font-weight: 300;
 }
 
-/* Floating elements for background */
 .floating-element {
   position: fixed;
   border-radius: 50%;
@@ -626,7 +605,6 @@ body::before {
   background: rgba(102, 126, 234, 0.15);
 }
 
-/* Print styles */
 @media print {
   nav, button, .no-print { 
     display: none !important; 
@@ -663,7 +641,6 @@ body::before {
   }
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .stat-card {
     flex-direction: column;
@@ -701,7 +678,6 @@ body::before {
   }
 }
 
-/* Additional utility classes */
 .text-primary-600 {
   color: #2563eb;
 }
@@ -738,7 +714,6 @@ body::before {
   color: #7f1d1d;
 }
 
-/* Form improvements */
 .form-input:invalid {
   border-color: #ef4444;
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
@@ -748,12 +723,10 @@ body::before {
   border-color: #10b981;
 }
 
-/* Table improvements */
 .table tbody tr:nth-child(even) {
   background-color: rgba(102, 126, 234, 0.02);
 }
 
-/* Alert styles */
 .alert {
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
@@ -779,7 +752,6 @@ body::before {
   color: #1e40af;
 }
 
-/* Loading states */
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -791,18 +763,15 @@ body::before {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Focus improvements */
 .btn:focus {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
 
-/* Smooth transitions */
 * {
   transition: all 0.2s ease-in-out;
 }
 
-/* Print improvements */
 @media print {
   .modal {
     display: none !important;
@@ -817,7 +786,6 @@ body::before {
   }
 }
 
-/* Responsive modal */
 @media (max-width: 640px) {
   .modal-content {
     width: 95%;
