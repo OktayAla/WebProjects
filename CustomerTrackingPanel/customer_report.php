@@ -31,12 +31,6 @@ $history = $historyStmt->fetchAll();
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 
-<div class="dashboard-header">
-    <div class="container mx-auto px-4">
-        <h1 class="dashboard-title"><?php echo htmlspecialchars($customer['name']); ?> - Müşteri Raporu</h1>
-        <p class="dashboard-subtitle">Müşteri detayları ve işlem geçmişi</p>
-    </div>
-</div>
 
 <div class="container mx-auto px-4 py-6">
     <!-- Breadcrumb -->
