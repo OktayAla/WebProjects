@@ -15,12 +15,6 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 
-<div class="dashboard-header">
-	<div class="container mx-auto px-4">
-		<h1 class="dashboard-title">Genel Bakış</h1>
-		<p class="dashboard-subtitle">Sistem istatistikleriniz ve son işlemler</p>
-	</div>
-</div>
 
 <div class="container mx-auto px-4 py-6">
 	<!-- Stats Cards -->
