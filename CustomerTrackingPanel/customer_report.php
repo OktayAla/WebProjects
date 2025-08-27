@@ -21,7 +21,7 @@ $totalSales = (float)$pdo->prepare("SELECT COALESCE(SUM(amount),0) FROM transact
 $totalPaid  = (float)$pdo->prepare("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE customer_id = ? AND type='credit'")->execute([$customerId]) ? $pdo->query("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE customer_id = $customerId AND type='credit'")->fetchColumn() : 0.0;
 $remaining  = (float)$customer['balance'];
 
-$historyStmt = $pdo->prepare('SELECT id, type, amount, note, created_at FROM transactions WHERE customer_id = ? ORDER BY created_at DESC');
+$historyStmt = $pdo->prepare('SELECT t.id, t.type, t.amount, t.note, t.created_at, p.name AS product_name FROM transactions t LEFT JOIN products p ON p.id = t.product_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
 $historyStmt->execute([$customerId]);
 $history = $historyStmt->fetchAll();
 ?>
