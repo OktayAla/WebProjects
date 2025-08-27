@@ -105,14 +105,13 @@ $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
                         <tr>
                             <th>#</th>
                             <th>Ürün Adı</th>
-                            <th>Eklenme Tarihi</th>
                             <th class="text-right">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($products)): ?>
                         <tr>
-                            <td colspan="4" class="text-center py-8 text-gray-500">
+                            <td colspan="3" class="text-center py-8 text-gray-500">
                                 <i class="bi bi-box text-4xl mb-2 block"></i>
                                 <p>Henüz ürün eklenmemiş</p>
                                 <button type="button" onclick="showAddProductModal()" class="btn btn-outline btn-sm mt-2">
@@ -125,7 +124,6 @@ $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
                             <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.1 + ($index * 0.05); ?>s">
                                 <td><?php echo $product['id']; ?></td>
                                 <td class="font-medium"><?php echo htmlspecialchars($product['name']); ?></td>
-                                <td><?php echo date('d.m.Y H:i', strtotime($product['created_at'])); ?></td>
                                 <td class="text-right">
                                     <button type="button" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)" class="btn btn-outline btn-sm mr-2">
                                         <i class="bi bi-pencil mr-1"></i> Düzenle
