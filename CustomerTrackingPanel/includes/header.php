@@ -84,6 +84,9 @@
 						<a href="transactions.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
 							<i class="bi bi-cash-stack mr-2"></i> İşlemler
 						</a>
+						<a href="products.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
+							<i class="bi bi-box mr-2"></i> Ürünler
+						</a>
 					</div>
 				</div>
 				<div class="hidden md:flex items-center">
@@ -122,6 +125,9 @@
 				</a>
 				<a href="transactions.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
 					<i class="bi bi-cash-stack mr-2"></i> İşlemler
+				</a>
+				<a href="products.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
+					<i class="bi bi-box mr-2"></i> Ürünler
 				</a>
 			</div>
 			<div class="pt-4 pb-3 border-t border-gray-600">
