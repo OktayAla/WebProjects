@@ -58,7 +58,7 @@ if (isset($_GET['edit'])) {
             <h2 class="text-xl font-semibold text-gray-900">Müşteri Listesi</h2>
             <p class="text-sm text-gray-600 mt-1">Sistemde kayıtlı tüm müşteriler</p>
         </div>
-        <button id="newCustomerBtn" class="btn btn-primary flex items-center justify-center" data-bs-toggle="modal" data-bs-target="#customerModal">
+        <button id="newCustomerBtn" class="btn btn-primary flex items-center justify-center">
             <i class="bi bi-person-plus mr-2"></i> Yeni Müşteri
         </button>
     </div>
@@ -134,7 +134,7 @@ if (isset($_GET['edit'])) {
 </div>
 
 <!-- Customer Modal -->
-<div class="modal fade" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
+<div class="modal" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form method="post" class="w-full">
@@ -142,7 +142,7 @@ if (isset($_GET['edit'])) {
                     <h5 class="modal-title" id="customerModalLabel">
                         <?php echo $editCustomer ? 'Müşteriyi Düzenle' : 'Yeni Müşteri'; ?>
                     </h5>
-                    <button type="button" class="text-gray-400 hover:text-gray-500" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="text-gray-400 hover:text-gray-500" onclick="closeModal()" aria-label="Close">
                         <i class="bi bi-x-lg"></i>
                     </button>
                 </div>
@@ -166,7 +166,7 @@ if (isset($_GET['edit'])) {
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Kapat</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Kapat</button>
                     <button type="submit" class="btn btn-primary">
                         <?php echo $editCustomer ? 'Kaydet' : 'Ekle'; ?>
                     </button>
@@ -179,14 +179,40 @@ if (isset($_GET['edit'])) {
 <?php if ($editCustomer): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var modal = new bootstrap.Modal(document.getElementById('customerModal'));
-        modal.show();
+        showModal();
     });
 </script>
 <?php endif; ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Modal işlemleri
+    const modal = document.getElementById('customerModal');
+    const newCustomerBtn = document.getElementById('newCustomerBtn');
+    
+    // Yeni müşteri butonuna tıklandığında modal'ı aç
+    if (newCustomerBtn) {
+        newCustomerBtn.addEventListener('click', function() {
+            showModal();
+        });
+    }
+    
+    // Modal dışına tıklandığında kapat
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    }
+    
+    // ESC tuşu ile modal'ı kapat
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+            closeModal();
+        }
+    });
+    
     // Müşteri arama fonksiyonu
     const setupSearch = () => {
         const input = document.getElementById('searchInput');
@@ -246,6 +272,35 @@ document.addEventListener('DOMContentLoaded', function() {
     setupSearch();
     highlightActivePage();
 });
+
+// Modal fonksiyonları
+function showModal() {
+    const modal = document.getElementById('customerModal');
+    if (modal) {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        
+        // İlk input'a focus
+        const firstInput = modal.querySelector('input, textarea');
+        if (firstInput) {
+            setTimeout(() => firstInput.focus(), 100);
+        }
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('customerModal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+        
+        // Form'u temizle (düzenleme modunda değilse)
+        const form = modal.querySelector('form');
+        if (form && !form.querySelector('input[name="id"]').value) {
+            form.reset();
+        }
+    }
+}
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
