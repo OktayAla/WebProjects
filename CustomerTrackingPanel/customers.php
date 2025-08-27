@@ -179,25 +179,25 @@ if (isset($_GET['edit'])) {
 <?php if ($editCustomer): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Modal otomatik açılmasını kaldırdık
+        // showModal(); // This line is causing the modal to open automatically
     });
 </script>
 <?php endif; ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Modal işlemleri
+    // Removed the auto-opening of the modal
     const modal = document.getElementById('customerModal');
     const newCustomerBtn = document.getElementById('newCustomerBtn');
     
-    // Yeni müşteri butonuna tıklandığında modal'ı aç
+    // Open modal on button click
     if (newCustomerBtn) {
         newCustomerBtn.addEventListener('click', function() {
             showModal();
         });
     }
     
-    // Modal dışına tıklandığında kapat
+    // Close modal on outside click
     if (modal) {
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
@@ -206,14 +206,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ESC tuşu ile modal'ı kapat
+    // Close modal with ESC key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal.classList.contains('show')) {
             closeModal();
         }
     });
     
-    // Müşteri arama fonksiyonu
+    // Setup search functionality
     const setupSearch = () => {
         const input = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearSearch');
