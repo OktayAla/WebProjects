@@ -489,7 +489,7 @@ body::before {
 /* Dashboard specific styles */
 .dashboard-header {
   padding: 2rem 0;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
   background: var(--primary-gradient);
   color: white;
   border-radius: 0 0 20px 20px;
