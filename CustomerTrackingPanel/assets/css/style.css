@@ -153,16 +153,9 @@ body::before {
   align-items: center;
   padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
-  font-weight: 500;
-  border-radius: 9999px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Premium badge styling */
-.badge {
-  border-radius: 12px;
   font-weight: 600;
+  border-radius: 12px;
+  text-transform: uppercase;
   letter-spacing: 0.025em;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -360,12 +353,7 @@ body::before {
   overflow: hidden;
 }
 
-.btn:focus {
-  outline: none;
-  ring: 2px;
-  ring-offset: 2px;
-  ring-color: rgba(102, 126, 234, 0.5);
-}
+
 
 .btn::before {
   content: '';
@@ -515,16 +503,6 @@ body::before {
   display: flex;
   align-items: center;
   padding: 1.5rem;
-  background: var(--glass-bg);
-  border-radius: 16px;
-  box-shadow: var(--premium-shadow);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Enhanced stat cards */
-.stat-card {
   border-radius: 16px;
   box-shadow: var(--premium-shadow);
   background: var(--glass-bg);
@@ -539,17 +517,12 @@ body::before {
   justify-content: center;
   width: 3rem;
   height: 3rem;
-  border-radius: 12px;
+  border-radius: 16px;
   background: var(--primary-gradient);
   color: white;
   font-size: 1.5rem;
   margin-right: 1rem;
   flex-shrink: 0;
-}
-
-/* Enhanced stat cards */
-.stat-icon {
-  border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
@@ -574,15 +547,10 @@ body::before {
 .dashboard-header {
   padding: 2rem 0;
   margin-bottom: 0;
-  background: var(--primary-gradient);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border-radius: 0 0 20px 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-/* Premium dashboard header */
-.dashboard-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
   overflow: hidden;
 }
@@ -628,10 +596,6 @@ body::before {
   background: rgba(102, 126, 234, 0.1);
   animation: float 8s ease-in-out infinite;
   z-index: -1;
-}
-
-/* Enhanced floating elements */
-.floating-element {
   filter: blur(1px);
   opacity: 0.8;
 }
@@ -789,10 +753,6 @@ body::before {
   background-color: rgba(102, 126, 234, 0.02);
 }
 
-.table tbody tr:hover {
-  background-color: #f3f4f6;
-}
-
 /* Alert styles */
 .alert {
   padding: 0.75rem 1rem;
@@ -833,8 +793,7 @@ body::before {
 
 /* Focus improvements */
 .btn:focus,
-.form-input:focus,
-.form-select:focus {
+.form-input:focus {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
