@@ -124,7 +124,7 @@
 					<i class="bi bi-cash-stack mr-2"></i> İşlemler
 				</a>
 			</div>
-			<div class="pt-4 pb-3 border-t border-primary-700">
+			<div class="pt-4 pb-3 border-t border-gray-600">
 				<div class="flex items-center px-5">
 					<div class="flex-shrink-0">
 						<i class="bi bi-person-circle text-xl text-white"></i>
