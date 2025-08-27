@@ -4,7 +4,6 @@ require_login();
 
 $pdo = get_pdo_connection();
 
-// Create / Update customer
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
     $name = trim($_POST['name']);
@@ -21,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Delete customer
 if (isset($_GET['delete'])) {
     $delId = (int)$_GET['delete'];
     $pdo->prepare('DELETE FROM transactions WHERE customer_id = ?')->execute([$delId]);
@@ -40,13 +38,11 @@ if (isset($_GET['edit'])) {
 }
 ?>
 
-<!-- Floating background elements -->
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 
 <div class="container mx-auto px-4 py-6">
-    <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
             <h2 class="text-xl font-semibold text-gray-900">Müşteri Listesi</h2>
@@ -57,13 +53,11 @@ if (isset($_GET['edit'])) {
         </button>
     </div>
 
-    <!-- Customer List Card -->
     <div class="card-hover animate-fadeIn">
         <div class="card-header">
             <h3 class="card-title">Müşteriler</h3>
         </div>
         <div class="p-4">
-            <!-- Search Bar -->
             <div class="flex flex-col md:flex-row gap-3 mb-6">
                 <div class="relative flex-grow">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -76,7 +70,6 @@ if (isset($_GET['edit'])) {
                 </button>
             </div>
 
-            <!-- Table -->
             <div class="table-container">
                 <table id="customersTable" class="table">
                     <thead>
@@ -127,9 +120,7 @@ if (isset($_GET['edit'])) {
     </div>
 </div>
 
-<!-- Modal için gerekli CSS -->
 <style>
-/* Modal başlangıçta gizli */
 .modal {
     display: none;
     position: fixed;
@@ -151,7 +142,6 @@ if (isset($_GET['edit'])) {
 }
 </style>
 
-<!-- Customer Modal -->
 <div class="modal" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -199,14 +189,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('customerModal');
     const newCustomerBtn = document.getElementById('newCustomerBtn');
     
-    // Modalı sadece butona tıklanınca aç
     if (newCustomerBtn) {
         newCustomerBtn.addEventListener('click', function() {
             showModal();
         });
     }
     
-    // Modal dışına tıklayınca kapat
     if (modal) {
         modal.addEventListener('mousedown', function(e) {
             if (e.target === modal) {
@@ -215,14 +203,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ESC ile kapat
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal.classList.contains('show')) {
             closeModal();
         }
     });
 
-    // Arama ve aktif sayfa vurgusu
     const setupSearch = () => {
         const input = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearSearch');
@@ -231,10 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!input || !table) return;
         
-        // Kaydedilmiş filtreyi yükle
         input.value = localStorage.getItem(key) || '';
         
-        // Filtreleme fonksiyonu
         function applyFilter() {
             const q = input.value.toLowerCase();
             const rows = table.tBodies[0].rows;
@@ -251,7 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem(key, q);
         }
         
-        // Event listeners
         input.addEventListener('input', applyFilter);
         if (clearBtn) {
             clearBtn.addEventListener('click', function() { 
@@ -261,11 +244,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        // İlk yüklemede filtreyi uygula
         applyFilter();
     };
     
-    // Aktif sayfayı vurgula
     const highlightActivePage = () => {
         const currentPath = window.location.pathname;
         const navLinks = document.querySelectorAll('nav a');
@@ -277,23 +258,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
     
-    // Tüm kurulumları çalıştır
     setupSearch();
     highlightActivePage();
 
-    // Eğer düzenleme modundaysa modalı otomatik aç
     <?php if ($editCustomer): ?>
         showModal();
     <?php endif; ?>
 });
 
-// Modal fonksiyonları
 function showModal() {
     const modal = document.getElementById('customerModal');
     if (modal) {
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
-        // İlk input'a focus
         const firstInput = modal.querySelector('input, textarea');
         if (firstInput) {
             setTimeout(() => firstInput.focus(), 100);
@@ -306,7 +283,6 @@ function closeModal() {
     if (modal) {
         modal.classList.remove('show');
         document.body.style.overflow = '';
-        // Form'u temizle (düzenleme modunda değilse)
         const form = modal.querySelector('form');
         if (form && !form.querySelector('input[name="id"]').value) {
             form.reset();
