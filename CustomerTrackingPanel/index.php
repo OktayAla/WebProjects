@@ -24,7 +24,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 
 <div class="container mx-auto px-4 py-6">
 	<!-- Stats Cards -->
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 dashboard-stats">
 		<!-- Total Customers Card -->
 		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.1s">
 			<div class="stat-icon">
@@ -90,6 +90,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 								<tr>
 									<th>#</th>
 									<th>Müşteri</th>
+									<th>Ürün</th>
 									<th>Tarih</th>
 									<th>Tutar</th>
 									<th>Not</th>
@@ -98,7 +99,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 							</thead>
 							<tbody>
 								<?php
-									$stmt = $pdo->query("SELECT t.id, t.customer_id, c.name AS customer_name, t.amount, t.note, t.created_at FROM transactions t JOIN customers c ON c.id = t.customer_id WHERE t.type='debit' ORDER BY t.created_at DESC LIMIT 10");
+									$stmt = $pdo->query("SELECT t.id, t.customer_id, c.name AS customer_name, p.name AS product_name, t.amount, t.note, t.created_at FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.type='debit' ORDER BY t.created_at DESC LIMIT 10");
 									$i = 0;
 									foreach ($stmt as $row):
 									$i++;
@@ -109,6 +110,13 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 										<a href="customer_report.php?customer=<?php echo (int)$row['customer_id']; ?>" class="text-primary-600 hover:text-primary-900 transition-colors duration-200">
 											<?php echo htmlspecialchars($row['customer_name']); ?>
 										</a>
+									</td>
+									<td>
+										<?php if ($row['product_name']): ?>
+											<span class="badge badge-outline"><?php echo htmlspecialchars($row['product_name']); ?></span>
+										<?php else: ?>
+											<span class="text-gray-400">-</span>
+										<?php endif; ?>
 									</td>
 									<td>
 										<?php echo date('d.m.Y H:i', strtotime($row['created_at'])); ?>
@@ -128,7 +136,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 								<?php endforeach; ?>
 								<?php if ($i === 0): ?>
 								<tr>
-									<td colspan="6" class="text-center py-8 text-gray-500">
+									<td colspan="7" class="text-center py-8 text-gray-500">
 										<i class="bi bi-inbox text-3xl mb-2 block"></i>
 										Henüz satış kaydı bulunmuyor.
 									</td>
@@ -178,33 +186,6 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 							Borçlu müşteri bulunmuyor.
 						</div>
 						<?php endif; ?>
-					</div>
-				</div>
-			</div>
-
-			<!-- Quick Actions -->
-			<div class="card-hover mt-6 animate-fadeIn" style="animation-delay: 0.7s">
-				<div class="card-header">
-					<h3 class="card-title">Hızlı Erişim</h3>
-				</div>
-				<div class="p-4">
-					<div class="grid grid-cols-2 gap-4">
-						<a href="customers.php" class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-200">
-							<i class="bi bi-person-plus text-2xl text-primary-600 mb-2"></i>
-							<span class="text-sm font-medium text-gray-700">Yeni Müşteri</span>
-						</a>
-						<a href="transactions.php" class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-200">
-							<i class="bi bi-cart-plus text-2xl text-primary-600 mb-2"></i>
-							<span class="text-sm font-medium text-gray-700">Yeni Satış</span>
-						</a>
-						<a href="transactions.php" class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-200">
-							<i class="bi bi-cash text-2xl text-success-600 mb-2"></i>
-							<span class="text-sm font-medium text-gray-700">Tahsilat</span>
-						</a>
-						<a href="customers.php" class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 hover:scale-105 transition-all duration-200">
-							<i class="bi bi-search text-2xl text-primary-600 mb-2"></i>
-							<span class="text-sm font-medium text-gray-700">Müşteri Ara</span>
-						</a>
 					</div>
 				</div>
 			</div>
