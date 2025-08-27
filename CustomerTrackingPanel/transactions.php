@@ -9,14 +9,15 @@ $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
 // Add transaction
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $customer_id = (int)$_POST['customer_id'];
+    $product_id = !empty($_POST['product_id']) ? (int)$_POST['product_id'] : null;
     $type = $_POST['type'] === 'debit' ? 'debit' : 'credit';
     $amount = (float)str_replace([',', ' '], ['.', ''], $_POST['amount']);
     $note = trim($_POST['note']);
 
     $pdo->beginTransaction();
     try {
-        $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, type, amount, note) VALUES (?, ?, ?, ?)');
-        $stmt->execute([$customer_id, $type, $amount, $note]);
+        $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, product_id, type, amount, note) VALUES (?, ?, ?, ?, ?)');
+        $stmt->execute([$customer_id, $product_id, $type, $amount, $note]);
         if ($type === 'debit') {
             $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$amount, $customer_id]);
         } else {
@@ -82,7 +83,7 @@ if ($customerId) {
             <?php endif; ?>
             
             <form method="post" class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                <div class="md:col-span-4">
+                <div class="md:col-span-3 col-span-1">
                     <label class="form-label">Müşteri</label>
                     <select name="customer_id" class="form-select" required>
                         <option value="">Seçiniz</option>
@@ -94,7 +95,22 @@ if ($customerId) {
                     </select>
                 </div>
                 
-                <div class="md:col-span-2">
+                <div class="md:col-span-3 col-span-1">
+                    <label class="form-label">Ürün</label>
+                    <select name="product_id" class="form-select">
+                        <option value="">Ürün Seçiniz</option>
+                        <?php 
+                        $products = $pdo->query('SELECT id, name, price FROM products ORDER BY name ASC')->fetchAll();
+                        foreach ($products as $product): 
+                        ?>
+                        <option value="<?php echo $product['id']; ?>" data-price="<?php echo $product['price']; ?>">
+                            <?php echo htmlspecialchars($product['name']); ?> - <?php echo number_format($product['price'], 2, ',', '.'); ?> ₺
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
+                <div class="md:col-span-2 col-span-1">
                     <label class="form-label">Tür</label>
                     <select name="type" class="form-select">
                         <option value="debit">Borç</option>
@@ -102,17 +118,17 @@ if ($customerId) {
                     </select>
                 </div>
                 
-                <div class="md:col-span-2">
+                <div class="md:col-span-2 col-span-1">
                     <label class="form-label">Tutar (₺)</label>
                     <input type="text" name="amount" class="form-input" placeholder="0,00" required>
                 </div>
                 
-                <div class="md:col-span-4">
+                <div class="md:col-span-2 col-span-1">
                     <label class="form-label">Açıklama</label>
                     <input type="text" name="note" class="form-input" placeholder="İşlem açıklaması">
                 </div>
                 
-                <div class="md:col-span-12">
+                <div class="md:col-span-12 col-span-1">
                     <button type="submit" class="btn btn-primary flex items-center">
                         <i class="bi bi-plus-lg mr-2"></i> Ekle
                     </button>
@@ -146,6 +162,7 @@ if ($customerId) {
                         <tr>
                             <th>#</th>
                             <th>Müşteri</th>
+                            <th>Ürün</th>
                             <th>Tarih</th>
                             <th>Tutar (₺)</th>
                             <th>Tür</th>
@@ -156,10 +173,10 @@ if ($customerId) {
                     <tbody>
                         <?php
                             if ($customerId) {
-                                $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name FROM transactions t JOIN customers c ON c.id = t.customer_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
+                                $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
                                 $stmt->execute([$customerId]);
                             } else {
-                                $stmt = $pdo->query('SELECT t.*, c.name AS customer_name FROM transactions t JOIN customers c ON c.id = t.customer_id ORDER BY t.created_at DESC');
+                                $stmt = $pdo->query('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id ORDER BY t.created_at DESC');
                             }
                             $hasTransactions = false;
                             $index = 0;
@@ -176,6 +193,13 @@ if ($customerId) {
                                 </a>
                                 <?php else: ?>
                                     <?php echo htmlspecialchars($row['customer_name']); ?>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($row['product_name']): ?>
+                                    <span class="badge badge-outline"><?php echo htmlspecialchars($row['product_name']); ?></span>
+                                <?php else: ?>
+                                    <span class="text-gray-400">-</span>
                                 <?php endif; ?>
                             </td>
                             <td><?php echo date('d.m.Y H:i', strtotime($row['created_at'])); ?></td>
@@ -198,9 +222,9 @@ if ($customerId) {
                         
                         <?php if (!$hasTransactions): ?>
                         <tr>
-                            <td colspan="7" class="text-center py-8 text-gray-500">
-                                <i class="bi bi-inbox text-3xl mb-2 block"></i>
-                                Henüz işlem kaydı bulunmuyor
+                            <td colspan="8" class="text-center py-8 text-gray-500">
+                                <i class="bi bi-cash-stack text-4xl mb-2 block"></i>
+                                <p>Henüz işlem bulunmuyor</p>
                             </td>
                         </tr>
                         <?php endif; ?>
@@ -210,5 +234,34 @@ if ($customerId) {
         </div>
     </div>
 </div>
+
+<script>
+// Auto-fill amount when product is selected
+document.querySelector('select[name="product_id"]').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const amountField = document.querySelector('input[name="amount"]');
+    
+    if (selectedOption.value && selectedOption.dataset.price) {
+        const price = parseFloat(selectedOption.dataset.price);
+        amountField.value = price.toFixed(2).replace('.', ',');
+    } else {
+        amountField.value = '';
+    }
+});
+
+// Amount formatting
+document.querySelector('input[name="amount"]').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/[^\d,]/g, '');
+    value = value.replace(',', '.');
+    if (value.includes('.')) {
+        const parts = value.split('.');
+        if (parts[1].length > 2) {
+            parts[1] = parts[1].substring(0, 2);
+        }
+        value = parts.join('.');
+    }
+    e.target.value = value;
+});
+</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
