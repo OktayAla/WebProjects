@@ -58,27 +58,27 @@
 <body class="bg-gray-50">
 	<div class="container mx-auto px-4 py-8 max-w-4xl">
 		<div class="flex justify-between items-center mb-6 no-print">
-			<a href="javascript:window.print();" class="btn-primary flex items-center space-x-2">
+			<a href="javascript:window.print();" class="btn btn-primary flex items-center space-x-2">
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
 					<path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
 					<path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
 				</svg>
 				<span>Yazdır</span>
 			</a>
-			<a href="index.php" class="btn-outline-secondary flex items-center space-x-2">
+			<a href="index.php" class="btn btn-outline flex items-center space-x-2">
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
 					<path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
 				</svg>
 				<span>Panele Dön</span>
 			</a>
 		</div>
-		<div class="card">
+		<div class="card-hover">
 			<div class="card-header border-b border-gray-200 bg-white py-3 px-4">
 				<h4 class="text-lg font-semibold text-gray-900">
 					<?php echo $tx['type'] === 'debit' ? 'Borç Dekontu' : 'Tahsilat Dekontu'; ?>
 				</h4>
 			</div>
-			<div class="card-body p-6">
+			<div class="p-6">
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div>
 						<h5 class="text-base font-semibold text-gray-900 mb-3">Müşteri Bilgileri</h5>
@@ -110,7 +110,7 @@
 							</div>
 							<div class="flex flex-col md:items-end">
 								<span class="text-sm font-medium text-gray-500">Tür</span>
-								<span class="<?php echo $tx['type'] === 'debit' ? 'badge-debit' : 'badge-credit'; ?>">
+								<span class="<?php echo $tx['type'] === 'debit' ? 'badge badge-debit' : 'badge badge-credit'; ?>">
 									<?php echo $tx['type'] === 'debit' ? 'Borç' : 'Tahsilat'; ?>
 								</span>
 							</div>
