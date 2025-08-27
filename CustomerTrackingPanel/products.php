@@ -9,13 +9,10 @@ $pdo = get_pdo_connection();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'add') {
         $name = trim($_POST['name']);
-        $description = trim($_POST['description']);
-        $price = (float)str_replace([',', ' '], ['.', ''], $_POST['price']);
-        $category = trim($_POST['category']);
 
         try {
-            $stmt = $pdo->prepare('INSERT INTO products (name, description, price, category) VALUES (?, ?, ?, ?)');
-            $stmt->execute([$name, $description, $price, $category]);
+            $stmt = $pdo->prepare('INSERT INTO products (name) VALUES (?)');
+            $stmt->execute([$name]);
             $success = 'Ürün başarıyla eklendi.';
         } catch (Exception $e) {
             $error = 'Ürün eklenemedi: ' . $e->getMessage();
@@ -23,13 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     } elseif ($_POST['action'] === 'edit') {
         $id = (int)$_POST['id'];
         $name = trim($_POST['name']);
-        $description = trim($_POST['description']);
-        $price = (float)str_replace([',', ' '], ['.', ''], $_POST['price']);
-        $category = trim($_POST['category']);
 
         try {
-            $stmt = $pdo->prepare('UPDATE products SET name = ?, description = ?, price = ?, category = ? WHERE id = ?');
-            $stmt->execute([$name, $description, $price, $category, $id]);
+            $stmt = $pdo->prepare('UPDATE products SET name = ? WHERE id = ?');
+            $stmt->execute([$name, $id]);
             $success = 'Ürün başarıyla güncellendi.';
         } catch (Exception $e) {
             $error = 'Ürün güncellenemedi: ' . $e->getMessage();
@@ -58,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
 // Get products
 $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
-$categories = $pdo->query('SELECT DISTINCT category FROM products WHERE category IS NOT NULL AND category != "" ORDER BY category')->fetchAll();
 ?>
 
 <!-- Floating background elements -->
@@ -112,9 +105,6 @@ $categories = $pdo->query('SELECT DISTINCT category FROM products WHERE category
                         <tr>
                             <th>#</th>
                             <th>Ürün Adı</th>
-                            <th>Açıklama</th>
-                            <th>Fiyat (₺)</th>
-                            <th>Kategori</th>
                             <th>Eklenme Tarihi</th>
                             <th class="text-right">İşlemler</th>
                         </tr>
@@ -122,7 +112,7 @@ $categories = $pdo->query('SELECT DISTINCT category FROM products WHERE category
                     <tbody>
                         <?php if (empty($products)): ?>
                         <tr>
-                            <td colspan="7" class="text-center py-8 text-gray-500">
+                            <td colspan="4" class="text-center py-8 text-gray-500">
                                 <i class="bi bi-box text-4xl mb-2 block"></i>
                                 <p>Henüz ürün eklenmemiş</p>
                                 <button type="button" onclick="showAddProductModal()" class="btn btn-outline btn-sm mt-2">
@@ -135,15 +125,6 @@ $categories = $pdo->query('SELECT DISTINCT category FROM products WHERE category
                             <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.1 + ($index * 0.05); ?>s">
                                 <td><?php echo $product['id']; ?></td>
                                 <td class="font-medium"><?php echo htmlspecialchars($product['name']); ?></td>
-                                <td><?php echo htmlspecialchars($product['description']); ?></td>
-                                <td class="font-medium"><?php echo number_format($product['price'], 2, ',', '.'); ?> ₺</td>
-                                <td>
-                                    <?php if ($product['category']): ?>
-                                        <span class="badge badge-outline"><?php echo htmlspecialchars($product['category']); ?></span>
-                                    <?php else: ?>
-                                        <span class="text-gray-400">-</span>
-                                    <?php endif; ?>
-                                </td>
                                 <td><?php echo date('d.m.Y H:i', strtotime($product['created_at'])); ?></td>
                                 <td class="text-right">
                                     <button type="button" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)" class="btn btn-outline btn-sm mr-2">
@@ -180,21 +161,6 @@ $categories = $pdo->query('SELECT DISTINCT category FROM products WHERE category
             <div class="form-group">
                 <label class="form-label">Ürün Adı *</label>
                 <input type="text" name="name" id="productName" class="form-input" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Açıklama</label>
-                <textarea name="description" id="productDescription" class="form-textarea" rows="3"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Fiyat (₺) *</label>
-                <input type="text" name="price" id="productPrice" class="form-input" placeholder="0,00" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Kategori</label>
-                <input type="text" name="category" id="productCategory" class="form-input" placeholder="Örn: Giyim, Elektronik">
             </div>
             
             <div class="modal-footer">
@@ -242,9 +208,6 @@ function editProduct(product) {
     document.getElementById('formAction').value = 'edit';
     document.getElementById('productId').value = product.id;
     document.getElementById('productName').value = product.name;
-    document.getElementById('productDescription').value = product.description;
-    document.getElementById('productPrice').value = product.price;
-    document.getElementById('productCategory').value = product.category;
     document.getElementById('productModal').classList.remove('hidden');
 }
 
@@ -261,20 +224,6 @@ function deleteProduct(id, name) {
 function hideDeleteModal() {
     document.getElementById('deleteModal').classList.add('hidden');
 }
-
-// Price formatting
-document.getElementById('productPrice').addEventListener('input', function(e) {
-    let value = e.target.value.replace(/[^\d,]/g, '');
-    value = value.replace(',', '.');
-    if (value.includes('.')) {
-        const parts = value.split('.');
-        if (parts[1].length > 2) {
-            parts[1] = parts[1].substring(0, 2);
-        }
-        value = parts.join('.');
-    }
-    e.target.value = value;
-});
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
