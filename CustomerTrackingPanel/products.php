@@ -59,13 +59,6 @@ $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 
-<div class="dashboard-header">
-    <div class="container mx-auto px-4">
-        <h1 class="dashboard-title">Ürün Yönetimi</h1>
-        <p class="dashboard-subtitle">Ürün ekleme, düzenleme ve silme işlemleri</p>
-    </div>
-</div>
-
 <div class="container mx-auto px-4 py-6">
     <!-- Breadcrumb -->
     <div class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
