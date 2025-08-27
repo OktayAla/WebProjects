@@ -1,7 +1,6 @@
 <?php 
 require_once __DIR__ . '/includes/auth.php'; 
 require_login(); 
-require_once __DIR__ . '/includes/header.php'; 
 
 $pdo = get_pdo_connection();
 
@@ -30,6 +29,8 @@ if (isset($_GET['delete'])) {
     header('Location: customers.php');
     exit;
 }
+
+require_once __DIR__ . '/includes/header.php'; 
 
 $editCustomer = null;
 if (isset($_GET['edit'])) {
@@ -102,7 +103,7 @@ if (isset($_GET['edit'])) {
                         <tr class="animate-fadeIn">
                             <td><?php echo $row['id']; ?></td>
                             <td>
-                                <a href="customer_report.php?customer=<?php echo $row['id']; ?>" class="text-primary-600 hover:text-primary-900 font-medium">
+                                <a href="customer_report.php?customer=<?php echo $row['id']; ?>" class="hover:text-primary-900 font-medium">
                                     <?php echo htmlspecialchars($row['name']); ?>
                                 </a>
                             </td>
@@ -132,6 +133,30 @@ if (isset($_GET['edit'])) {
         </div>
     </div>
 </div>
+
+<!-- Modal için gerekli CSS -->
+<style>
+/* Modal başlangıçta gizli */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0; top: 0; width: 100vw; height: 100vh;
+    overflow: auto;
+    background: rgba(0,0,0,0.3);
+    transition: opacity 0.2s;
+    align-items: center;
+    justify-content: center;
+}
+.modal.show {
+    display: flex;
+}
+.modal-dialog {
+    max-width: 500px;
+    width: 100%;
+    margin: auto;
+}
+</style>
 
 <!-- Customer Modal -->
 <div class="modal" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
@@ -190,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Modal dışına tıklayınca kapat
     if (modal) {
-        modal.addEventListener('click', function(e) {
+        modal.addEventListener('mousedown', function(e) {
             if (e.target === modal) {
                 closeModal();
             }

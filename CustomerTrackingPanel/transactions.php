@@ -1,7 +1,6 @@
 <?php 
 require_once __DIR__ . '/includes/auth.php'; 
 require_login(); 
-require_once __DIR__ . '/includes/header.php'; 
 
 $pdo = get_pdo_connection();
 $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
@@ -31,6 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'İşlem başarısız: ' . $e->getMessage();
     }
 }
+
+require_once __DIR__ . '/includes/header.php'; 
 
 $customers = $pdo->query('SELECT id, name FROM customers ORDER BY name ASC')->fetchAll();
 $selectedCustomer = null;
@@ -180,7 +181,7 @@ if ($customerId) {
                                     $stmt = $pdo->query('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id ORDER BY t.created_at DESC');
                                 }
                             } catch (PDOException $e) {
-                                // Eğer product_id kolonu yoksa, eski sorguyu kullan
+                                // Eğer id kolonu yoksa, eski sorguyu kullan
                                 if ($customerId) {
                                     $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name FROM transactions t JOIN customers c ON c.id = t.customer_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
                                     $stmt->execute([$customerId]);
@@ -250,14 +251,7 @@ if ($customerId) {
 document.querySelector('select[name="product_id"]').addEventListener('change', function() {
     const selectedOption = this.options[this.selectedIndex];
     const amountField = document.querySelector('input[name="amount"]');
-    
-    if (selectedOption.value) {
-        // Product selected, clear amount field for manual input
-        amountField.value = '';
-    } else {
-        // No product selected
-        amountField.value = '';
-    }
+    amountField.value = '';
 });
 
 // Amount formatting
