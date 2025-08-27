@@ -56,12 +56,6 @@ $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
 <div class="floating-element"></div>
 
 <div class="container mx-auto px-4 py-6">
-    <div class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
-        <a href="index.php" class="hover:text-primary-600 transition-colors duration-200">Panel</a>
-        <span class="text-gray-400">/</span>
-        <span class="text-gray-700 font-medium">Ürünler</span>
-    </div>
-
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
             <h2 class="text-xl font-semibold text-gray-900">Ürünler</h2>
@@ -80,17 +74,13 @@ $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
     <?php endif; ?>
 
     <div class="card-hover animate-fadeIn">
-        <div class="card-header">
-            <h3 class="card-title">Ürün Listesi</h3>
-        </div>
         <div class="p-0">
             <div class="table-container">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>Ürün Adı</th>
-                            <th class="text-right">İşlemler</th>
+                            <th class="text-right"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,7 +97,6 @@ $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
                         <?php else: ?>
                             <?php foreach ($products as $index => $product): ?>
                             <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.1 + ($index * 0.05); ?>s">
-                                <td><?php echo $product['id']; ?></td>
                                 <td class="font-medium"><?php echo htmlspecialchars($product['name']); ?></td>
                                 <td class="text-right">
                                     <button type="button" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)" class="btn btn-outline btn-sm mr-2">

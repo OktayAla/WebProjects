@@ -51,28 +51,8 @@ body::before {
 
 .navbar-item:hover {
   background-color: rgba(255, 255, 255, 0.15) !important;
-  transform: translateY(-2px);
 }
 
-.card-hover {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: none;
-  border-radius: 16px;
-  box-shadow: var(--premium-shadow);
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-}
-
-.dashboard-stats .stat-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--premium-shadow-hover);
-}
-
-.card-hover:hover {
-  transform: none;
-  box-shadow: var(--premium-shadow);
-}
 
 .card-header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -100,71 +80,35 @@ body::before {
   border-radius: 3px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideInUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0px); }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-.animate-slideInUp {
-  animation: slideInUp 0.5s ease-out;
-}
-
-.animate-pulse-slow {
-  animation: pulse 2s infinite;
-}
-
+/* Animasyonları tamamen kaldır */
+.animate-fadeIn,
+.animate-slideInUp,
+.animate-pulse-slow,
 .animate-float {
-  animation: float 5s ease-in-out infinite;
+  animation: none !important;
 }
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+@keyframes fadeIn {}
+@keyframes slideInUp {}
+@keyframes pulse {}
+@keyframes float {}
+@keyframes modalSlideIn {}
+
+/* card-hover ve stat-card animasyonlarını da kaldır */
+.card-hover,
+.card-hover:hover,
+.dashboard-stats .stat-card,
+.dashboard-stats .stat-card:hover {
+  transition: none !important;
+  animation: none !important;
+  box-shadow: var(--premium-shadow);
+  transform: none !important;
 }
 
-.badge-outline {
-  color: var(--text-secondary);
-  border: 1px solid #e2e8f0;
-  background-color: transparent;
-}
-
-.badge-debit {
-  color: #dc2626;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-}
-
-.badge-credit {
-  color: #16a34a;
-  background-color: #f0fdf4;
-  border: 1px solid #bbf7d0;
+/* Tablo satırlarında animasyon varsa kaldır */
+.table tbody tr,
+.table tbody tr:hover {
+  transition: none !important;
 }
 
 .modal {
@@ -360,8 +304,10 @@ body::before {
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:active {
 }
 
 .btn-secondary {
@@ -371,7 +317,6 @@ body::before {
 
 .btn-secondary:hover {
   background: #4b5563;
-  transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(107, 114, 128, 0.3);
 }
 
@@ -382,7 +327,6 @@ body::before {
 
 .btn-success:hover {
   background: linear-gradient(135deg, #3d9b68 0%, #2f8556 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(72, 187, 120, 0.3);
 }
 
@@ -393,7 +337,6 @@ body::before {
 
 .btn-danger:hover {
   background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(245, 101, 101, 0.3);
 }
 
@@ -405,7 +348,6 @@ body::before {
 
 .btn-outline:hover {
   background: #f7fafc;
-  transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
   border-color: #667eea;
   color: #667eea;
@@ -623,7 +565,6 @@ body::before {
   .card-hover {
     box-shadow: none !important;
     border: 1px solid #e2e8f0 !important;
-    transform: none !important;
   }
   
   .table tbody tr:hover {
@@ -799,4 +740,17 @@ body::before {
     padding-left: 1rem;
     padding-right: 1rem;
   }
+}
+
+/* Tüm hover'da yukarı kayma efektlerini tamamen kaldır */
+.card-hover:hover,
+.dashboard-stats .stat-card:hover,
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-success:hover,
+.btn-danger:hover,
+.btn-outline:hover,
+.form-input:focus,
+.form-select:focus {
+  transform: none !important;
 }

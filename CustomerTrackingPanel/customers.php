@@ -54,9 +54,6 @@ if (isset($_GET['edit'])) {
     </div>
 
     <div class="card-hover animate-fadeIn">
-        <div class="card-header">
-            <h3 class="card-title">Müşteriler</h3>
-        </div>
         <div class="p-4">
             <div class="flex flex-col md:flex-row gap-3 mb-6">
                 <div class="relative flex-grow">

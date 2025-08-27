@@ -84,20 +84,11 @@ try {
 
 
 <div class="container mx-auto px-4 py-6">
-    <div class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
-        <a href="index.php" class="hover:text-primary-600 transition-colors duration-200">Panel</a>
-        <span class="text-gray-400">/</span>
-        <span class="text-gray-700 font-medium">İşlemler</span>
-    </div>
-
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
             <h2 class="text-xl font-semibold text-gray-900">İşlemler</h2>
             <p class="text-sm text-gray-600 mt-1">Yeni işlem ekle ve geçmişi görüntüle</p>
         </div>
-        <a href="customers.php" class="btn btn-outline flex items-center">
-            <i class="bi bi-people mr-2"></i> Müşteriler
-        </a>
     </div>
 
     <div class="card-hover animate-fadeIn mb-6">
@@ -181,14 +172,13 @@ try {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>Müşteri</th>
                             <th>Ürün</th>
                             <th>Tarih</th>
                             <th>Tutar (₺)</th>
                             <th>Tür</th>
                             <th>Açıklama</th>
-                            <th class="text-right">İşlem</th>
+                            <th class="text-right"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -200,7 +190,6 @@ try {
                             $index++;
                         ?>
                         <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.3 + ($index * 0.05); ?>s">
-                            <td><?php echo $row['id']; ?></td>
                             <td>
                                 <?php if (!$customerId): ?>
                                 <a href="transactions.php?customer=<?php echo $row['customer_id']; ?>" class="text-primary-600 hover:text-primary-900 font-medium">

@@ -6,17 +6,6 @@
 				<p class="text-center md:text-left text-gray-500 text-sm mb-4 md:mb-0">
 					OA Grafik Tasarım tarafından <span class="text-danger-600">❤️</span> ile geliştirilmiştir.
 				</p>
-				<div class="flex items-center space-x-4">
-					<a href="#" class="text-gray-400 hover:text-primary-600 transition-colors duration-200">
-						<i class="bi bi-question-circle text-lg"></i>
-					</a>
-					<a href="#" class="text-gray-400 hover:text-primary-600 transition-colors duration-200">
-						<i class="bi bi-envelope text-lg"></i>
-					</a>
-					<a href="#" class="text-gray-400 hover:text-primary-600 transition-colors duration-200">
-						<i class="bi bi-github text-lg"></i>
-					</a>
-				</div>
 			</div>
 		</div>
 	</footer>
