@@ -103,7 +103,6 @@ body::before {
   transform: none !important;
 }
 
-/* Tablo satırlarında animasyon varsa kaldır */
 .table tbody tr,
 .table tbody tr:hover {
   transition: none !important;
