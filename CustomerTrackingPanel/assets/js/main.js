@@ -152,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     initializeTooltips();
     
-    // Form enhancements
     const enhanceForms = function() {
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', function(e) {
@@ -162,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitBtn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-2"></i> İşleniyor...';
                     submitBtn.disabled = true;
                     
-                    // Revert after 10 seconds if still disabled (form didn't submit)
                     setTimeout(() => {
                         if (submitBtn.disabled) {
                             submitBtn.innerHTML = originalText;
