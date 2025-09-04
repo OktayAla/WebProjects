@@ -176,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     enhanceForms();
     
-    // Notification system
     window.showNotification = function(message, type = 'info', duration = 3000) {
         const notification = document.createElement('div');
         notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full opacity-0`;
