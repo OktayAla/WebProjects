@@ -739,7 +739,6 @@ body::before {
   }
 }
 
-/* Tüm hover'da yukarı kayma efektlerini tamamen kaldır */
 .card-hover:hover,
 .dashboard-stats .stat-card:hover,
 .btn-primary:hover,
