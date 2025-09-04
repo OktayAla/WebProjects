@@ -339,7 +339,6 @@ window.formatCurrency = function(amount) {
     }).format(amount);
 };
 
-// Export functions for module usage
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         debounce: window.debounce,
