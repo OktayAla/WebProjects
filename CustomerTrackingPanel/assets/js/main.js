@@ -222,7 +222,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
     
-    // Table search functionality
     const enhanceTables = function() {
         document.querySelectorAll('input[type="search"]').forEach(input => {
             const tableId = input.getAttribute('data-table');
