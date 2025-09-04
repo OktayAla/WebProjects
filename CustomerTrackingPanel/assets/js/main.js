@@ -93,16 +93,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 document.body.appendChild(tooltip);
                 
-                // Position tooltip
                 const rect = this.getBoundingClientRect();
                 const tooltipHeight = tooltip.offsetHeight;
                 const tooltipWidth = tooltip.offsetWidth;
                 
-                // Position above element by default
                 let top = rect.top - tooltipHeight - 8;
                 let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
                 
-                // Adjust if tooltip would go off-screen
                 if (top < 10) {
                     top = rect.bottom + 8;
                 }
@@ -116,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 tooltip.style.top = `${top + window.scrollY}px`;
                 tooltip.style.left = `${left}px`;
                 
-                // Animate in
                 requestAnimationFrame(() => {
                     tooltip.classList.remove('opacity-0', 'scale-95');
                     tooltip.classList.add('opacity-100', 'scale-100');
@@ -137,7 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             };
             
-            // Store handlers for cleanup
             trigger._tooltipHandlers.mouseenter = showTooltip;
             trigger._tooltipHandlers.mouseleave = hideTooltip;
             trigger._tooltipHandlers.focus = showTooltip;
