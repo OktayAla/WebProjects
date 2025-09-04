@@ -319,7 +319,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('OA Grafik Tasarım - Müşteri Takip Sistemi yüklendi');
 });
 
-// Global utility functions
 window.debounce = function(func, wait) {
     let timeout;
     return function executedFunction(...args) {
