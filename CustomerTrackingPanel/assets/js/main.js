@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupToggle(desktopToggle);
     setupToggle(mobileToggle);
     
-    // Set up auto refresh if enabled and on dashboard
     let refreshInterval;
     if (isEnabled && (window.location.pathname.endsWith('index.php') || 
         window.location.pathname === '/')) {
