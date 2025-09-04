@@ -197,7 +197,6 @@ document.addEventListener('DOMContentLoaded', function() {
             notification.classList.add('translate-x-0', 'opacity-100');
         });
         
-        // Auto remove after duration
         setTimeout(() => {
             notification.classList.remove('translate-x-0', 'opacity-100');
             notification.classList.add('translate-x-full', 'opacity-0');
@@ -209,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 300);
         }, duration);
         
-        // Click to dismiss
         notification.addEventListener('click', () => {
             notification.classList.remove('translate-x-0', 'opacity-100');
             notification.classList.add('translate-x-full', 'opacity-0');
