@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 30000);
     }
     
-    // Add active class to current page in navigation
     const currentPath = window.location.pathname;
     const filename = currentPath.substring(currentPath.lastIndexOf('/') + 1);
     
@@ -62,12 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Enhanced tooltip system
     const initializeTooltips = function() {
         const tooltipTriggers = document.querySelectorAll('[data-tooltip]');
         
         tooltipTriggers.forEach(trigger => {
-            // Remove existing event listeners to prevent duplicates
             trigger._tooltipHandlers = trigger._tooltipHandlers || {};
             
             if (trigger._tooltipHandlers.mouseenter) {
