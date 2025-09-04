@@ -308,14 +308,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         window.print();
         
-        // Cleanup
         setTimeout(() => {
             document.head.removeChild(printStyle);
             originalStyles.forEach(style => style.setAttribute('media', 'all'));
         }, 100);
     };
     
-    // Initialize all components
     console.log('OA Grafik Tasarım - Müşteri Takip Sistemi yüklendi');
 });
 
