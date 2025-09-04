@@ -245,7 +245,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     enhanceTables();
     
-    // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
@@ -262,7 +261,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Card hover effects
     const enhanceCards = function() {
         document.querySelectorAll('.card-hover').forEach(card => {
             card.addEventListener('mouseenter', function() {
@@ -279,7 +277,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     enhanceCards();
     
-    // Print functionality enhancement
     window.enhancedPrint = function(elementId = null) {
         const originalStyles = document.querySelectorAll('style, link[rel="stylesheet"]');
         originalStyles.forEach(style => style.setAttribute('media', 'screen'));
