@@ -1,10 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto refresh functionality
     const desktopToggle = document.getElementById('autoRefreshToggle');
     const mobileToggle = document.getElementById('autoRefreshToggleMobile');
     const key = 'auto_refresh_enabled';
     
-    // Initialize toggles based on localStorage
     const isEnabled = localStorage.getItem(key) === '1';
     if (desktopToggle) {
         desktopToggle.checked = isEnabled;
@@ -13,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileToggle.checked = isEnabled;
     }
     
-    // Setup toggle event listeners
     const setupToggle = function(toggle) {
         if (toggle) {
             toggle.addEventListener('change', function() {
