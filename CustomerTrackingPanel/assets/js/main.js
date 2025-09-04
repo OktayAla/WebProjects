@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const isChecked = toggle.checked;
                 localStorage.setItem(key, isChecked ? '1' : '0');
                 
-                // Show notification
                 showNotification(isChecked ? 
                     'Otomatik yenileme açıldı (30sn)' : 
                     'Otomatik yenileme kapatıldı', 
