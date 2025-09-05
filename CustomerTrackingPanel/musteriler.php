@@ -297,46 +297,79 @@ document.addEventListener('DOMContentLoaded', function() {
         applyFilter();
     };
     
+    // Aktif sayfayı vurgulama
     const highlightActivePage = () => {
         const currentPath = window.location.pathname;
         const navLinks = document.querySelectorAll('nav a');
         navLinks.forEach(link => {
-            if (link.getAttribute('href') === currentPath || 
-                (currentPath.includes('customers.php') && link.getAttribute('href').includes('customers.php'))) {
-                link.classList.add('text-primary-600', 'font-medium');
+            const href = link.getAttribute('href');
+            if (href === currentPath || 
+                (currentPath.includes('musteriler.php') && href.includes('musteriler.php'))) {
+                link.classList.add('active');
             }
         });
     };
     
+    // Fonksiyonları başlat
     setupSearch();
     highlightActivePage();
 
+    // Düzenleme modunda modal'ı otomatik aç
     <?php if ($editCustomer): ?>
         showModal();
     <?php endif; ?>
 });
 
+/**
+ * Modal'ı gösterme fonksiyonu
+ */
 function showModal() {
     const modal = document.getElementById('customerModal');
     if (modal) {
+        // Modal'ı göster ve animasyon ekle
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
-        const firstInput = modal.querySelector('input, textarea');
+        
+        // Modal içindeki dialog'a animasyon ekle
+        const dialog = modal.querySelector('.modal-dialog');
+        if (dialog) {
+            dialog.style.transform = 'translateY(0)';
+            dialog.style.opacity = '1';
+        }
+        
+        // İlk input'a odaklan
+        const firstInput = modal.querySelector('input[name="name"]');
         if (firstInput) {
-            setTimeout(() => firstInput.focus(), 100);
+            setTimeout(() => firstInput.focus(), 300);
         }
     }
 }
 
+/**
+ * Modal'ı kapatma fonksiyonu
+ */
 function closeModal() {
     const modal = document.getElementById('customerModal');
     if (modal) {
-        modal.classList.remove('show');
-        document.body.style.overflow = '';
-        const form = modal.querySelector('form');
-        if (form && !form.querySelector('input[name="id"]').value) {
-            form.reset();
+        // Modal dialog'a kapanma animasyonu ekle
+        const dialog = modal.querySelector('.modal-dialog');
+        if (dialog) {
+            dialog.style.transform = 'translateY(-10px)';
+            dialog.style.opacity = '0';
         }
+        
+        // Kısa bir gecikme ile modal'ı kapat
+        setTimeout(() => {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+            
+            // Yeni müşteri formunu sıfırla
+            const form = modal.querySelector('form');
+            const idInput = form?.querySelector('input[name="id"]');
+            if (form && idInput && !parseInt(idInput.value)) {
+                form.reset();
+            }
+        }, 200);
     }
 }
 </script>
