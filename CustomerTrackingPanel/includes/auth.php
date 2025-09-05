@@ -13,7 +13,7 @@
 
 	function require_login() {
 		if (!current_user()) {
-			header('Location: login.php');
+			header('Location: giris.php');
 			exit;
 		}
 	}
