@@ -109,19 +109,37 @@
 				</div>
 				<div class="hidden md:flex items-center">
 					<?php if (current_user()): ?>
-					<div class="ml-3 relative group">
+					<div class="ml-3 relative">
 						<div>
-							<button type="button" class="flex items-center max-w-xs text-sm rounded-full text-white focus:outline-none">
+							<button type="button" id="user-menu-button" class="flex items-center max-w-xs text-sm rounded-full text-white focus:outline-none">
 								<span class="mr-2"><?php echo htmlspecialchars(current_user()['name']); ?></span>
 								<i class="bi bi-person-circle text-xl"></i>
 							</button>
 						</div>
-						<div class="hidden group-hover:block absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50">
+						<div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50">
 							<a href="cikis.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
 								<i class="bi bi-box-arrow-right mr-2"></i> Çıkış
 							</a>
 						</div>
 					</div>
+					
+					<script>
+						document.addEventListener('DOMContentLoaded', function() {
+							const userMenuButton = document.getElementById('user-menu-button');
+							const userDropdown = document.getElementById('user-dropdown');
+							
+							userMenuButton.addEventListener('click', function() {
+								userDropdown.classList.toggle('hidden');
+							});
+							
+							// Dropdown dışına tıklandığında menüyü kapat
+							document.addEventListener('click', function(event) {
+								if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
+									userDropdown.classList.add('hidden');
+								}
+							});
+						});
+					</script>
 					<?php endif; ?>
 				</div>
 				<div class="-mr-2 flex md:hidden">
