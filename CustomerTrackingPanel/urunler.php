@@ -48,7 +48,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-$products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
+// Arama parametresi
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+// Ürünleri getir
+if ($search) {
+    $stmt = $pdo->prepare('SELECT * FROM products WHERE name LIKE ? ORDER BY name ASC');
+    $stmt->execute(["%$search%"]);
+    $products = $stmt->fetchAll();
+} else {
+    $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
+}
 ?>
 
 <div class="floating-element"></div>
@@ -64,6 +74,28 @@ $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
         <button type="button" onclick="showAddProductModal()" class="btn btn-primary flex items-center">
             <i class="bi bi-plus-lg mr-2"></i> Yeni Ürün
         </button>
+    </div>
+    
+    <!-- Arama Formu -->
+    <div class="mb-6">
+        <form action="" method="GET" class="flex gap-2">
+            <div class="form-group flex-grow">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <i class="bi bi-search text-gray-400"></i>
+                    </span>
+                    <input type="text" id="search" name="search" class="form-input pl-10 w-full" placeholder="Ürün adına göre ara..." value="<?php echo htmlspecialchars($search); ?>">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search mr-1"></i> Ara
+            </button>
+            <?php if ($search): ?>
+            <a href="urunler.php" class="btn btn-outline">
+                <i class="bi bi-x-circle mr-1"></i> Temizle
+            </a>
+            <?php endif; ?>
+        </form>
     </div>
 
     <?php if (!empty($success)): ?>
