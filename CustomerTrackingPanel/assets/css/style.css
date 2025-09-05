@@ -362,6 +362,8 @@ body::before {
   box-shadow: var(--premium-shadow);
   background: var(--glass-bg);
   backdrop-filter: blur(10px);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .table {
