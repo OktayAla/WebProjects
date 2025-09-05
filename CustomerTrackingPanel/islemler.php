@@ -15,6 +15,39 @@ if (isset($_GET['edit'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pdo->beginTransaction();
     try {
+        // Çoklu ürün ve tahsilat işlemleri
+        $customer_id = (int)($_POST['customer_id'] ?? 0);
+        if ($customer_id) {
+            // Ürün satırlarını işle
+            if (!empty($_POST['amount']) && is_array($_POST['amount'])) {
+                foreach ($_POST['amount'] as $idx => $amount) {
+                    $product_id = !empty($_POST['product_id'][$idx]) ? (int)$_POST['product_id'][$idx] : null;
+                    $type = $_POST['type'][$idx] ?? 'debit';
+                    $note = trim($_POST['note'][$idx] ?? '');
+                    $amount = (float)str_replace([',', ' '], ['.', ''], $amount);
+                    if ($amount > 0) {
+                        $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, product_id, type, amount, note) VALUES (?, ?, ?, ?, ?)');
+                        $stmt->execute([$customer_id, $product_id, $type, $amount, $note]);
+                        if ($type === 'debit') {
+                            $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$amount, $customer_id]);
+                        }
+                    }
+                }
+            }
+            // Tahsilat işlemini işle
+            if (!empty($_POST['payment_amount'])) {
+                $payAmount = (float)str_replace([',', ' '], ['.', ''], $_POST['payment_amount']);
+                $payNote = trim($_POST['payment_note'] ?? '');
+                if ($payAmount > 0) {
+                    $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, type, amount, note) VALUES (?, ?, ?, ?)');
+                    $stmt->execute([$customer_id, 'credit', $payAmount, $payNote]);
+                    $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$payAmount, $customer_id]);
+                }
+            }
+            $pdo->commit();
+            header('Location: islemler.php' . ($customerId ? '?customer=' . $customerId : ''));
+            exit;
+        }
         // İşlem güncelleme
         if (isset($_POST['action']) && $_POST['action'] === 'update_transaction' && isset($_POST['transaction_id'])) {
             $transaction_id = (int)$_POST['transaction_id'];
@@ -226,7 +259,65 @@ try {
                 </div>
             <?php endif; ?>
             
-            <form method="post" class="grid grid-cols-1 md:grid-cols-12 gap-5" id="transactionForm">
+            <form method="post" id="transactionForm">
+    <div class="grid grid-cols-1 gap-3" id="productRows">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 product-row">
+            <div class="md:col-span-3 col-span-1">
+                <label class="form-label flex items-center"><i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün</label>
+                <input list="productList" name="product_input[]" class="form-input" placeholder="Ürün Seçiniz veya Yazınız (Opsiyonel)">
+                <datalist id="productList">
+                    <?php foreach ($products as $product): ?>
+                    <option value="<?php echo htmlspecialchars($product['name']); ?>">
+                    <?php endforeach; ?>
+                </datalist>
+                <input type="hidden" name="product_id[]" class="productIdHidden">
+            </div>
+            <div class="md:col-span-2 col-span-1">
+                <label class="form-label flex items-center"><i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)</label>
+                <input type="text" name="amount[]" class="form-input amountInput" placeholder="0,00" required>
+            </div>
+            <div class="md:col-span-2 col-span-1">
+                <label class="form-label flex items-center"><i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Açıklama</label>
+                <input type="text" name="note[]" class="form-input noteInput" placeholder="İşlem açıklaması">
+            </div>
+            <div class="md:col-span-2 col-span-1">
+                <label class="form-label flex items-center"><i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> Tür</label>
+                <select name="type[]" class="form-select transactionType">
+                    <option value="debit" data-color="danger">Borç</option>
+                </select>
+            </div>
+            <div class="md:col-span-1 col-span-1 flex items-end">
+                <button type="button" class="btn btn-danger remove-row hidden"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="flex gap-2 my-2">
+        <button type="button" class="btn btn-secondary" id="addProductRow"><i class="bi bi-plus-circle"></i> Ürün Satırı Ekle</button>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-5 payment-row">
+        <div class="md:col-span-3 col-span-1">
+            <label class="form-label flex items-center"><i class="bi bi-cash-coin mr-2 text-success-500"></i> Tahsilat (Opsiyonel)</label>
+        </div>
+        <div class="md:col-span-2 col-span-1">
+            <input type="text" name="payment_amount" class="form-input" placeholder="0,00">
+        </div>
+        <div class="md:col-span-2 col-span-1">
+            <input type="text" name="payment_note" class="form-input" placeholder="Tahsilat açıklaması">
+        </div>
+        <div class="md:col-span-2 col-span-1">
+            <select name="payment_type" class="form-select">
+                <option value="credit">Tahsilat</option>
+            </select>
+        </div>
+    </div>
+    <input list="customerList" name="customer_input" class="form-input mt-4" placeholder="Müşteri Seçiniz veya Yazınız" value="<?php echo $selectedCustomer ? htmlspecialchars($selectedCustomer['name']) : ''; ?>" required>
+    <input type="hidden" name="customer_id" id="customerIdHidden" value="<?php echo $customerId; ?>">
+    <div class="md:col-span-12 col-span-1 mt-2">
+        <button type="submit" class="btn btn-primary flex items-center shadow-sm hover:shadow-md transition-all" id="submitButton">
+            <i class="bi bi-plus-circle mr-2"></i> <span id="submitText">İşlem Ekle</span>
+        </button>
+    </div>
+</form>
                 <div class="md:col-span-3 col-span-1">
                     <label class="form-label flex items-center">
                         <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
