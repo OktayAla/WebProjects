@@ -67,7 +67,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 			<div class="card-hover animate-fadeIn" style="animation-delay: 0.5s">
 				<div class="card-header">
 					<div class="flex justify-between items-center">
-						<h3 class="card-title">Son Satışlar</h3>
+						<h3 class="card-title"><i class="bi bi-receipt mr-2"></i>Son Satışlar</h3>
 						<a href="transactions.php" class="btn btn-outline btn-sm">
 							Tümünü Gör <i class="bi bi-chevron-right ml-1"></i>
 						</a>
@@ -75,7 +75,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 				</div>
 				<div class="p-0">
 					<div class="table-container">
-						<table class="table">
+						<table class="table table-hover">
 							<thead>
 								<tr>
 									<th>#</th>
@@ -83,7 +83,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 									<th>Tarih</th>
 									<th>Tutar</th>
 									<th>Not</th>
-									<th>İşlem</th>
+									<th class="text-center">İşlem</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -101,16 +101,16 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 										</a>
 									</td>
 									<td>
-										<?php echo date('d.m.Y H:i', strtotime($row['created_at'])); ?>
+										<span class="text-gray-600"><i class="bi bi-calendar3 mr-1"></i><?php echo date('d.m.Y H:i', strtotime($row['created_at'])); ?></span>
 									</td>
-									<td class="font-medium">
+									<td class="font-medium text-primary-700">
 										<?php echo number_format($row['amount'], 2, ',', '.'); ?> ₺
 									</td>
 									<td>
 										<?php echo htmlspecialchars($row['note']); ?>
 									</td>
-									<td>
-										<a href="print.php?id=<?php echo $row['id']; ?>" class="text-gray-600 hover:text-gray-900 transition-colors duration-200" data-tooltip="Yazdır">
+									<td class="text-center">
+										<a href="print.php?id=<?php echo $row['id']; ?>" class="btn btn-icon btn-sm btn-ghost" data-tooltip="Yazdır">
 											<i class="bi bi-printer"></i>
 										</a>
 									</td>
@@ -135,7 +135,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 			<div class="card-hover animate-fadeIn" style="animation-delay: 0.6s">
 				<div class="card-header">
 					<div class="flex justify-between items-center">
-						<h3 class="card-title">Borçlu Müşteriler</h3>
+						<h3 class="card-title"><i class="bi bi-exclamation-triangle mr-2"></i>Borçlu Müşteriler</h3>
 						<a href="customers.php" class="btn btn-outline btn-sm">
 							Tümünü Gör <i class="bi bi-chevron-right ml-1"></i>
 						</a>
@@ -151,9 +151,9 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 						$hasDebtors = true;
 						$i++;
 						?>
-						<div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 animate-fadeIn" style="animation-delay: <?php echo 0.6 + ($i * 0.05); ?>s">
+						<div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 animate-fadeIn hover:bg-gray-50 px-2 rounded transition-colors duration-200" style="animation-delay: <?php echo 0.6 + ($i * 0.05); ?>s">
 							<a href="customer_report.php?customer=<?php echo $debtor['id']; ?>" class="text-gray-800 hover:text-primary-600 font-medium transition-colors duration-200">
-								<?php echo htmlspecialchars($debtor['name']); ?>
+								<i class="bi bi-person mr-1"></i> <?php echo htmlspecialchars($debtor['name']); ?>
 							</a>
 							<span class="badge-danger">
 								<?php echo number_format($debtor['balance'], 2, ',', '.'); ?> ₺
