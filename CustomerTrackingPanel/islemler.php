@@ -6,24 +6,42 @@ $pdo = get_pdo_connection();
 $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $customer_id = (int)$_POST['customer_id'];
-    $product_id = !empty($_POST['product_id']) ? (int)$_POST['product_id'] : null;
-    $type = $_POST['type'] === 'debit' ? 'debit' : 'credit';
-    $amount = (float)str_replace([',', ' '], ['.', ''], $_POST['amount']);
-    $note = trim($_POST['note']);
-
     $pdo->beginTransaction();
     try {
-        $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, product_id, type, amount, note) VALUES (?, ?, ?, ?, ?)');
-        $stmt->execute([$customer_id, $product_id, $type, $amount, $note]);
-        if ($type === 'debit') {
-            $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$amount, $customer_id]);
-        } else {
-            $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$amount, $customer_id]);
+        // İşlem güncelleme
+        if (isset($_POST['action']) && $_POST['action'] === 'update_transaction' && isset($_POST['transaction_id'])) {
+            $transaction_id = (int)$_POST['transaction_id'];
+            $product_id = !empty($_POST['product_id']) ? (int)$_POST['product_id'] : null;
+            $type = $_POST['type'] === 'debit' ? 'debit' : 'credit';
+            $amount = (float)str_replace([',', ' '], ['.', ''], $_POST['amount']);
+            $note = trim($_POST['note']);
+            
+            $stmt = $pdo->prepare('UPDATE transactions SET product_id = ?, type = ?, amount = ?, note = ? WHERE id = ?');
+            $stmt->execute([$product_id, $type, $amount, $note, $transaction_id]);
+            
+            $pdo->commit();
+            header('Location: islemler.php' . ($customerId ? '?customer=' . $customerId : '') . '&success=2');
+            exit;
+        } 
+        // Yeni işlem ekleme
+        else {
+            $customer_id = (int)$_POST['customer_id'];
+            $product_id = !empty($_POST['product_id']) ? (int)$_POST['product_id'] : null;
+            $type = $_POST['type'] === 'debit' ? 'debit' : 'credit';
+            $amount = (float)str_replace([',', ' '], ['.', ''], $_POST['amount']);
+            $note = trim($_POST['note']);
+
+            $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, product_id, type, amount, note) VALUES (?, ?, ?, ?, ?)');
+            $stmt->execute([$customer_id, $product_id, $type, $amount, $note]);
+            if ($type === 'debit') {
+                $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$amount, $customer_id]);
+            } else {
+                $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$amount, $customer_id]);
+            }
+            $pdo->commit();
+            header('Location: islemler.php' . ($customerId ? '?customer=' . $customerId : ''));
+            exit;
         }
-        $pdo->commit();
-        header('Location: islemler.php');
-        exit;
     } catch (Exception $e) {
         $pdo->rollBack();
         $error = 'İşlem başarısız: ' . $e->getMessage();
@@ -41,39 +59,94 @@ if ($customerId) {
     $selectedCustomer = $st->fetch();
 }
 
+// Filtreleme parametreleri
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $perPage = 5;
 $offset = ($page - 1) * $perPage;
 
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$productFilter = isset($_GET['product']) ? (int)$_GET['product'] : 0;
+$typeFilter = isset($_GET['type']) ? $_GET['type'] : '';
+$dateFrom = isset($_GET['date_from']) ? $_GET['date_from'] : '';
+$dateTo = isset($_GET['date_to']) ? $_GET['date_to'] : '';
+
+// Sorgu koşulları oluşturma
+$conditions = [];
+$params = [];
+
 if ($customerId) {
-    $countStmt = $pdo->prepare('SELECT COUNT(*) FROM transactions WHERE customer_id = ?');
-    $countStmt->execute([$customerId]);
-    $totalRows = (int)$countStmt->fetchColumn();
-} else {
-    $totalRows = (int)$pdo->query('SELECT COUNT(*) FROM transactions')->fetchColumn();
+    $conditions[] = 'customer_id = ?';
+    $params[] = $customerId;
 }
+
+if ($search) {
+    $conditions[] = '(c.name LIKE ? OR t.note LIKE ?)';
+    $params[] = "%$search%";
+    $params[] = "%$search%";
+}
+
+if ($productFilter) {
+    $conditions[] = 't.product_id = ?';
+    $params[] = $productFilter;
+}
+
+if ($typeFilter) {
+    $conditions[] = 't.type = ?';
+    $params[] = $typeFilter;
+}
+
+if ($dateFrom) {
+    $conditions[] = 't.created_at >= ?';
+    $params[] = $dateFrom . ' 00:00:00';
+}
+
+if ($dateTo) {
+    $conditions[] = 't.created_at <= ?';
+    $params[] = $dateTo . ' 23:59:59';
+}
+
+// SQL sorgusu oluşturma
+$whereClause = '';
+if (!empty($conditions)) {
+    $whereClause = 'WHERE ' . implode(' AND ', $conditions);
+}
+
+// Toplam kayıt sayısını hesaplama
+$countSql = "SELECT COUNT(*) FROM transactions t JOIN customers c ON c.id = t.customer_id $whereClause";
+$countStmt = $pdo->prepare($countSql);
+$countStmt->execute($params);
+$totalRows = (int)$countStmt->fetchColumn();
 $totalPages = max(1, ceil($totalRows / $perPage));
 
 try {
-    if ($customerId) {
-        $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.customer_id = ? ORDER BY t.created_at DESC LIMIT ? OFFSET ?');
-        $stmt->bindValue(1, $customerId, PDO::PARAM_INT);
-        $stmt->bindValue(2, $perPage, PDO::PARAM_INT);
-        $stmt->bindValue(3, $offset, PDO::PARAM_INT);
-        $stmt->execute();
-    } else {
-        $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id ORDER BY t.created_at DESC LIMIT ? OFFSET ?');
-        $stmt->bindValue(1, $perPage, PDO::PARAM_INT);
-        $stmt->bindValue(2, $offset, PDO::PARAM_INT);
-        $stmt->execute();
+    $sql = "SELECT t.*, c.name AS customer_name, p.name AS product_name 
+           FROM transactions t 
+           JOIN customers c ON c.id = t.customer_id 
+           LEFT JOIN products p ON p.id = t.product_id 
+           $whereClause 
+           ORDER BY t.created_at DESC 
+           LIMIT ? OFFSET ?";
+    
+    $stmt = $pdo->prepare($sql);
+    $paramIndex = 1;
+    
+    foreach ($params as $param) {
+        $stmt->bindValue($paramIndex++, $param);
     }
+    
+    $stmt->bindValue($paramIndex++, $perPage, PDO::PARAM_INT);
+    $stmt->bindValue($paramIndex++, $offset, PDO::PARAM_INT);
+    $stmt->execute();
 } catch (PDOException $e) {
-    if ($customerId) {
-        $stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
-        $stmt->execute([$customerId]);
-    } else {
-        $stmt = $pdo->query('SELECT t.*, c.name AS customer_name, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id ORDER BY t.created_at DESC');
-    }
+    $sql = "SELECT t.*, c.name AS customer_name, p.name AS product_name 
+           FROM transactions t 
+           JOIN customers c ON c.id = t.customer_id 
+           LEFT JOIN products p ON p.id = t.product_id 
+           $whereClause 
+           ORDER BY t.created_at DESC";
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
 }
 
 ?>
@@ -84,6 +157,26 @@ try {
 
 
 <div class="container mx-auto px-4 py-6">
+    <?php if (isset($_GET['success'])): ?>
+    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-sm animate-fadeIn" role="alert">
+        <div class="flex items-center">
+            <div class="py-1"><i class="bi bi-check-circle-fill text-green-500 mr-3"></i></div>
+            <div>
+                <p class="font-medium">Başarılı!</p>
+                <p class="text-sm">
+                    <?php 
+                    if ($_GET['success'] == '2') {
+                        echo 'İşlem başarıyla güncellendi.';
+                    } else {
+                        echo 'İşlem başarıyla eklendi.';
+                    }
+                    ?>
+                </p>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+    
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
             <h1 class="text-2xl font-bold text-gray-800 flex items-center">
@@ -102,6 +195,66 @@ try {
                 <i class="bi bi-file-earmark-bar-graph mr-2"></i> Müşteri Raporu
             </a>
         <?php endif; ?>
+    </div>
+    
+    <!-- Arama ve Filtreleme Formu -->
+    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+        <form action="" method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <?php if ($customerId): ?>
+                <input type="hidden" name="customer" value="<?php echo $customerId; ?>">
+            <?php endif; ?>
+            
+            <div class="form-group">
+                <label for="search" class="form-label">Arama</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <i class="bi bi-search text-gray-400"></i>
+                    </span>
+                    <input type="text" id="search" name="search" class="form-input pl-10" placeholder="Müşteri adı veya not..." value="<?php echo htmlspecialchars($search); ?>">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="product" class="form-label">Ürün</label>
+                <select id="product" name="product" class="form-select">
+                    <option value="">Tüm Ürünler</option>
+                    <?php foreach ($products as $product): ?>
+                        <option value="<?php echo $product['id']; ?>" <?php echo $productFilter == $product['id'] ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($product['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="type" class="form-label">İşlem Türü</label>
+                <select id="type" name="type" class="form-select">
+                    <option value="">Tümü</option>
+                    <option value="debit" <?php echo $typeFilter === 'debit' ? 'selected' : ''; ?>>Borç</option>
+                    <option value="credit" <?php echo $typeFilter === 'credit' ? 'selected' : ''; ?>>Tahsilat</option>
+                </select>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2">
+                <div class="form-group">
+                    <label for="date_from" class="form-label">Başlangıç Tarihi</label>
+                    <input type="date" id="date_from" name="date_from" class="form-input" value="<?php echo $dateFrom; ?>">
+                </div>
+                <div class="form-group">
+                    <label for="date_to" class="form-label">Bitiş Tarihi</label>
+                    <input type="date" id="date_to" name="date_to" class="form-input" value="<?php echo $dateTo; ?>">
+                </div>
+            </div>
+            
+            <div class="col-span-full flex items-center justify-end gap-2 mt-2">
+                <a href="islemler.php<?php echo $customerId ? '?customer=' . $customerId : ''; ?>" class="btn btn-outline">
+                    <i class="bi bi-x-circle mr-1"></i> Temizle
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-filter mr-1"></i> Filtrele
+                </button>
+            </div>
+        </form>
     </div>
 
     <div class="card-hover animate-fadeIn mb-6 shadow-lg">
@@ -252,8 +405,11 @@ try {
                             </td>
                             <td class="text-right">
                                 <div class="flex justify-end gap-2">
-                                    <a href="print.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm" title="Yazdır">
+                                    <a href="yazdir.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm" title="Yazdır" target="_blank">
                                         <i class="bi bi-printer"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-outline btn-sm text-primary edit-transaction" title="Düzenle" data-id="<?php echo $row['id']; ?>" data-customer="<?php echo htmlspecialchars($row['customer_name']); ?>" data-product="<?php echo $row['product_id'] ?? ''; ?>" data-type="<?php echo $row['type']; ?>" data-amount="<?php echo $row['amount']; ?>" data-note="<?php echo htmlspecialchars($row['note'] ?? ''); ?>">
+                                        <i class="bi bi-pencil"></i>
                                     </a>
                                     <a href="#" class="btn btn-outline btn-sm text-danger" title="Sil" onclick="return confirm('Bu işlemi silmek istediğinize emin misiniz?')">
                                         <i class="bi bi-trash"></i>
@@ -387,4 +543,127 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<!-- İşlem Düzenleme Modal -->
+<div id="editTransactionModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 animate-fadeIn">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                <i class="bi bi-pencil-square mr-2 text-primary-600"></i> İşlem Düzenle
+            </h3>
+            <button type="button" class="text-gray-400 hover:text-gray-500 close-modal">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <form id="editTransactionForm" method="POST" action="">
+            <div class="p-4">
+                <input type="hidden" name="transaction_id" id="edit_transaction_id">
+                <input type="hidden" name="action" value="update_transaction">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
+                        </label>
+                        <input type="text" id="edit_customer" class="form-input bg-gray-100" readonly>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
+                        </label>
+                        <select name="product_id" id="edit_product" class="form-select">
+                            <option value="">Ürün Seçiniz (Opsiyonel)</option>
+                            <?php foreach ($products as $product): ?>
+                            <option value="<?php echo $product['id']; ?>">
+                                <?php echo htmlspecialchars($product['name']); ?>
+                            </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
+                        </label>
+                        <select name="type" id="edit_type" class="form-select">
+                            <option value="debit" data-color="danger">Borç</option>
+                            <option value="credit" data-color="success">Tahsilat</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)
+                        </label>
+                        <input type="text" name="amount" id="edit_amount" class="form-input" placeholder="0,00" required>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Açıklama
+                        </label>
+                        <input type="text" name="note" id="edit_note" class="form-input" placeholder="İşlem açıklaması">
+                    </div>
+                </div>
+            </div>
+            <div class="px-4 py-3 border-t border-gray-200 flex justify-end gap-2">
+                <button type="button" class="btn btn-outline close-modal">
+                    <i class="bi bi-x-circle mr-1"></i> İptal
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle mr-1"></i> Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal işlemleri
+    const modal = document.getElementById('editTransactionModal');
+    const closeButtons = document.querySelectorAll('.close-modal');
+    const editButtons = document.querySelectorAll('.edit-transaction');
+    const editForm = document.getElementById('editTransactionForm');
+    
+    // Modal kapatma
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            modal.classList.add('hidden');
+        });
+    });
+    
+    // Modal dışına tıklama ile kapatma
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+    
+    // Düzenleme butonları
+    editButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Form verilerini doldur
+            document.getElementById('edit_transaction_id').value = this.dataset.id;
+            document.getElementById('edit_customer').value = this.dataset.customer;
+            document.getElementById('edit_product').value = this.dataset.product;
+            document.getElementById('edit_type').value = this.dataset.type;
+            document.getElementById('edit_amount').value = this.dataset.amount.replace('.', ',');
+            document.getElementById('edit_note').value = this.dataset.note;
+            
+            // Form action URL'sini ayarla
+            editForm.action = window.location.pathname + '?action=update_transaction';
+            if (window.location.search && window.location.search.includes('customer=')) {
+                editForm.action += '&' + window.location.search.substring(1);
+            }
+            
+            // Modalı göster
+            modal.classList.remove('hidden');
+        });
+    });
+});
+</script>
+
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
