@@ -37,7 +37,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 			</div>
 			<div class="stat-info">
 				<span class="stat-label">Toplam Satış</span>
-				<span class="stat-value"><?php echo number_format($totalSales, 2, ',', '.'); ?> ₺</span>
+				<span class="stat-value cursor-pointer text-primary-700 hover:underline" id="showSalesDetail"><?php echo number_format($totalSales, 2, ',', '.'); ?> ₺</span>
 			</div>
 		</div>
 
@@ -47,7 +47,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 			</div>
 			<div class="stat-info">
 				<span class="stat-label">Toplam Tahsilat</span>
-				<span class="stat-value"><?php echo number_format($totalCollections, 2, ',', '.'); ?> ₺</span>
+				<span class="stat-value cursor-pointer text-success-700 hover:underline" id="showCollectionsDetail"><?php echo number_format($totalCollections, 2, ',', '.'); ?> ₺</span>
 			</div>
 		</div>
 
@@ -57,7 +57,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 			</div>
 			<div class="stat-info">
 				<span class="stat-label">Toplam Alacak</span>
-				<span class="stat-value"><?php echo number_format($totalReceivables, 2, ',', '.'); ?> ₺</span>
+				<span class="stat-value cursor-pointer text-warning-700 hover:underline" id="showReceivablesDetail"><?php echo number_format($totalReceivables, 2, ',', '.'); ?> ₺</span>
 			</div>
 		</div>
 	</div>
@@ -174,4 +174,78 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 	</div>
 </div>
 
+<!-- Modal for details -->
+<div id="statDetailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 animate-fadeIn">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900 flex items-center" id="statDetailTitle"></h3>
+            <button type="button" class="text-gray-400 hover:text-gray-500 close-modal" id="closeStatDetailModal">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="p-4 overflow-y-auto max-h-[70vh]" id="statDetailContent">
+            <!-- AJAX content will be loaded here -->
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function openModal(title, content) {
+        document.getElementById('statDetailTitle').innerHTML = title;
+        document.getElementById('statDetailContent').innerHTML = content;
+        document.getElementById('statDetailModal').classList.remove('hidden');
+    }
+    document.getElementById('closeStatDetailModal').onclick = function() {
+        document.getElementById('statDetailModal').classList.add('hidden');
+    };
+    // Satış Detay
+    document.getElementById('showSalesDetail').onclick = function() {
+        fetch('index.php?detail=sales').then(r=>r.text()).then(html=>{
+            openModal('Toplam Satış Detayı', html);
+        });
+    };
+    // Tahsilat Detay
+    document.getElementById('showCollectionsDetail').onclick = function() {
+        fetch('index.php?detail=collections').then(r=>r.text()).then(html=>{
+            openModal('Toplam Tahsilat Detayı', html);
+        });
+    };
+    // Alacak Detay
+    document.getElementById('showReceivablesDetail').onclick = function() {
+        fetch('index.php?detail=receivables').then(r=>r.text()).then(html=>{
+            openModal('Toplam Alacak Detayı', html);
+        });
+    };
+});
+</script>
+<?php 
+// AJAX detay istekleri
+if (isset($_GET['detail'])) {
+    if ($_GET['detail'] === 'sales') {
+        $stmt = $pdo->query("SELECT t.id, c.name AS customer_name, t.amount, t.created_at FROM transactions t JOIN customers c ON c.id = t.customer_id WHERE t.type='debit' ORDER BY t.created_at DESC LIMIT 50");
+        echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th></tr></thead><tbody>';
+        foreach ($stmt as $row) {
+            echo '<tr><td>'.$row['id'].'</td><td>'.htmlspecialchars($row['customer_name']).'</td><td>'.date('d.m.Y H:i', strtotime($row['created_at'])).'</td><td>'.number_format($row['amount'],2,',','.').' ₺</td></tr>';
+        }
+        echo '</tbody></table>';
+        exit;
+    } elseif ($_GET['detail'] === 'collections') {
+        $stmt = $pdo->query("SELECT t.id, c.name AS customer_name, t.amount, t.created_at FROM transactions t JOIN customers c ON c.id = t.customer_id WHERE t.type='credit' ORDER BY t.created_at DESC LIMIT 50");
+        echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th></tr></thead><tbody>';
+        foreach ($stmt as $row) {
+            echo '<tr><td>'.$row['id'].'</td><td>'.htmlspecialchars($row['customer_name']).'</td><td>'.date('d.m.Y H:i', strtotime($row['created_at'])).'</td><td>'.number_format($row['amount'],2,',','.').' ₺</td></tr>';
+        }
+        echo '</tbody></table>';
+        exit;
+    } elseif ($_GET['detail'] === 'receivables') {
+        $stmt = $pdo->query("SELECT id, name, balance FROM customers WHERE balance > 0 ORDER BY balance DESC LIMIT 50");
+        echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Borç</th></tr></thead><tbody>';
+        foreach ($stmt as $row) {
+            echo '<tr><td>'.$row['id'].'</td><td>'.htmlspecialchars($row['name']).'</td><td>'.number_format($row['balance'],2,',','.').' ₺</td></tr>';
+        }
+        echo '</tbody></table>';
+        exit;
+    }
+}
+?>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
