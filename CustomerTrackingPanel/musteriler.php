@@ -99,15 +99,15 @@ if (isset($_GET['edit'])) {
                                 <?php echo number_format($row['balance'], 2, ',', '.'); ?>
                             </td>
                             <td class="text-right">
-                                <div class="flex space-x-2 justify-end">
-                                    <a href="islemler.php?customer=<?php echo $row['id']; ?>" class="text-primary-600 hover:text-primary-900" title="İşlem Ekle">
-                                        <i class="bi bi-cash-coin"></i>
+                                <div class="flex space-x-3 justify-end">
+                                    <a href="islemler.php?customer=<?php echo $row['id']; ?>" class="btn-icon btn-primary-outline" title="İşlem Ekle">
+                                        <i class="bi bi-cash-stack"></i>
                                     </a>
-                                    <a href="musteriler.php?edit=<?php echo $row['id']; ?>" class="text-gray-600 hover:text-gray-900" title="Düzenle">
-                                        <i class="bi bi-pencil"></i>
+                                    <a href="musteriler.php?edit=<?php echo $row['id']; ?>" class="btn-icon btn-secondary-outline" title="Düzenle">
+                                        <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="musteriler.php?delete=<?php echo $row['id']; ?>" class="text-danger-600 hover:text-danger-900" onclick="return confirm('Silmek istediğinize emin misiniz?');" title="Sil">
-                                        <i class="bi bi-trash"></i>
+                                    <a href="musteriler.php?delete=<?php echo $row['id']; ?>" class="btn-icon btn-danger-outline" onclick="return confirm('Bu müşteriyi ve tüm işlemlerini silmek istediğinize emin misiniz?');" title="Sil">
+                                        <i class="bi bi-trash3"></i>
                                     </a>
                                 </div>
                             </td>
@@ -127,55 +127,73 @@ if (isset($_GET['edit'])) {
     z-index: 1050;
     left: 0; top: 0; width: 100vw; height: 100vh;
     overflow: auto;
-    background: rgba(0,0,0,0.3);
-    transition: opacity 0.2s;
+    background: rgba(17, 24, 39, 0.5);
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
     align-items: center;
     justify-content: center;
 }
 .modal.show {
     display: flex;
+    animation: fadeIn 0.3s ease;
 }
 .modal-dialog {
     max-width: 500px;
     width: 100%;
     margin: auto;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 </style>
 
 <div class="modal" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered shadow-xl">
+        <div class="modal-content border-0">
             <form method="post" class="w-full">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="customerModalLabel">
-                        <?php echo $editCustomer ? 'Müşteriyi Düzenle' : 'Yeni Müşteri'; ?>
+                <div class="modal-header border-b border-gray-200">
+                    <h5 class="modal-title text-lg font-bold flex items-center" id="customerModalLabel">
+                        <i class="bi <?php echo $editCustomer ? 'bi-pencil-square text-primary-600' : 'bi-person-plus-fill text-success-600'; ?> mr-2"></i>
+                        <?php echo $editCustomer ? 'Müşteriyi Düzenle' : 'Yeni Müşteri Ekle'; ?>
                     </h5>
-                    <button type="button" class="text-gray-400 hover:text-gray-500" onclick="closeModal()" aria-label="Close">
-                        <i class="bi bi-x-lg"></i>
+                    <button type="button" class="text-gray-400 hover:text-gray-700 transition-colors" onclick="closeModal()" aria-label="Close">
+                        <i class="bi bi-x-circle"></i>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-5">
                     <input type="hidden" name="id" value="<?php echo $editCustomer ? (int)$editCustomer['id'] : 0; ?>">
                     
                     <div class="mb-4">
-                        <label for="customerName" class="form-label">Ad Soyad</label>
-                        <input type="text" name="name" id="customerName" class="form-input" value="<?php echo $editCustomer ? htmlspecialchars($editCustomer['name']) : ''; ?>" required>
+                        <label for="customerName" class="form-label flex items-center">
+                            <i class="bi bi-person mr-2 text-primary-500"></i> Ad Soyad
+                        </label>
+                        <input type="text" name="name" id="customerName" class="form-input" placeholder="Müşteri adını giriniz" value="<?php echo $editCustomer ? htmlspecialchars($editCustomer['name']) : ''; ?>" required>
                     </div>
                     
                     <div class="mb-4">
-                        <label for="customerPhone" class="form-label">Telefon</label>
-                        <input type="text" name="phone" id="customerPhone" class="form-input" value="<?php echo $editCustomer ? htmlspecialchars($editCustomer['phone']) : ''; ?>">
+                        <label for="customerPhone" class="form-label flex items-center">
+                            <i class="bi bi-telephone mr-2 text-primary-500"></i> Telefon
+                        </label>
+                        <input type="text" name="phone" id="customerPhone" class="form-input" placeholder="Telefon numarası" value="<?php echo $editCustomer ? htmlspecialchars($editCustomer['phone']) : ''; ?>">
                     </div>
                     
                     <div class="mb-4">
-                        <label for="customerAddress" class="form-label">Adres</label>
-                        <textarea name="address" id="customerAddress" rows="3" class="form-input"><?php echo $editCustomer ? htmlspecialchars($editCustomer['address']) : ''; ?></textarea>
+                        <label for="customerAddress" class="form-label flex items-center">
+                            <i class="bi bi-geo-alt mr-2 text-primary-500"></i> Adres
+                        </label>
+                        <textarea name="address" id="customerAddress" rows="3" class="form-input" placeholder="Adres bilgisi"><?php echo $editCustomer ? htmlspecialchars($editCustomer['address']) : ''; ?></textarea>
                     </div>
                 </div>
                 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline" onclick="closeModal()">Kapat</button>
+                <div class="modal-footer border-t border-gray-200 p-4">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                        <i class="bi bi-x-circle mr-2"></i> Vazgeç
+                    </button>
                     <button type="submit" class="btn btn-primary">
+                        <i class="bi <?php echo $editCustomer ? 'bi-check-circle' : 'bi-plus-circle'; ?> mr-2"></i>
                         <?php echo $editCustomer ? 'Kaydet' : 'Ekle'; ?>
                     </button>
                 </div>
