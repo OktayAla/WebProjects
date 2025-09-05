@@ -93,7 +93,17 @@ body::before {
 @keyframes float {}
 @keyframes modalSlideIn {}
 
-.card-hover,
+.card-hover {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--premium-shadow);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
 .card-hover:hover,
 .dashboard-stats .stat-card,
 .dashboard-stats .stat-card:hover {
