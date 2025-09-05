@@ -724,6 +724,61 @@ body::before {
   }
 }
 
+/* Responsive Tasarım */
+@media (max-width: 1024px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .table {
+    min-width: 800px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .dashboard-stats {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  
+  .stat-card {
+    padding: 1rem;
+  }
+  
+  .stat-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 1.25rem;
+  }
+  
+  .stat-value {
+    font-size: 1.25rem;
+  }
+  
+  .card-header {
+    padding: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+  }
+  
+  .btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
 @media (max-width: 640px) {
   .modal-content {
     width: 95%;
@@ -736,6 +791,20 @@ body::before {
   .modal-footer {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+  
+  .table thead th {
+    white-space: nowrap;
+    padding: 0.5rem;
+  }
+  
+  .table tbody td {
+    padding: 0.5rem;
+  }
+  
+  .form-input, .form-select {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
   }
 }
 
