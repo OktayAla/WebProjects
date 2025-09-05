@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Müşteri Takip ve Yönetim Paneli</title>
+	<title>Müşteri Portalı</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 	<link href="assets/css/style.css" rel="stylesheet">
@@ -70,7 +70,7 @@
 				<div class="flex">
 					<div class="flex-shrink-0 flex items-center">
 						<a href="index.php" class="text-white text-xl font-bold flex items-center">
-							Müşteri Takip ve Yönetim Paneli
+							Müşteri Portalı
 						</a>
 					</div>
 					<div class="hidden md:ml-6 md:flex md:space-x-1">
