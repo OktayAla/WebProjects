@@ -9,11 +9,11 @@
 						<path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 						<path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 					</svg>
-					<span class="text-gray-700 font-semibold text-lg">MüşteriTakip</span>
+					<span class="text-gray-700 font-semibold text-lg">Müşteri Portalı</span>
 				</div>
 				<div class="flex flex-col items-center md:items-end">
 					<p class="text-center md:text-right text-gray-500 text-sm">
-						© <?php echo date('Y'); ?> MüşteriTakip. Tüm hakları saklıdır.
+						© <?php echo date('Y'); ?>Tüm hakları saklıdır.
 					</p>
 					<p class="text-center md:text-right text-gray-400 text-xs mt-1">
 						OA Grafik Tasarım tarafından <span class="text-danger-600">❤️</span> ile geliştirilmiştir.
