@@ -70,14 +70,14 @@ if (isset($_GET['edit'])) {
             </div>
 
             <div class="table-container">
-                <table id="customersTable" class="table">
+                <table id="customersTable" class="table table-hover">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Ad Soyad</th>
-                            <th>Telefon</th>
-                            <th>Adres</th>
-                            <th>Bakiye (₺)</th>
+                            <th class="text-center">#</th>
+                            <th><i class="bi bi-person-badge mr-1 text-primary-500"></i> Ad Soyad</th>
+                            <th><i class="bi bi-telephone mr-1 text-primary-500"></i> Telefon</th>
+                            <th><i class="bi bi-geo-alt mr-1 text-primary-500"></i> Adres</th>
+                            <th><i class="bi bi-cash-coin mr-1 text-primary-500"></i> Bakiye (₺)</th>
                             <th class="text-right">İşlemler</th>
                         </tr>
                     </thead>
@@ -85,16 +85,17 @@ if (isset($_GET['edit'])) {
                         <?php
                             foreach ($pdo->query('SELECT * FROM customers ORDER BY id DESC') as $row):
                         ?>
-                        <tr class="animate-fadeIn">
-                            <td><?php echo $row['id']; ?></td>
+                        <tr class="animate-fadeIn hover:bg-gray-50 transition-colors">
+                            <td class="text-center font-medium text-gray-500"><?php echo $row['id']; ?></td>
                             <td>
-                                <a href="musteri_rapor.php?customer=<?php echo $row['id']; ?>" class="hover:text-primary-900 font-medium">
+                                <a href="musteri_rapor.php?customer=<?php echo $row['id']; ?>" class="font-medium text-primary-700 hover:text-primary-900 transition-colors">
                                     <?php echo htmlspecialchars($row['name']); ?>
                                 </a>
                             </td>
-                            <td><?php echo htmlspecialchars($row['phone']); ?></td>
-                            <td class="max-w-xs truncate"><?php echo nl2br(htmlspecialchars($row['address'])); ?></td>
+                            <td><i class="bi bi-telephone-fill text-gray-400 mr-1"></i> <?php echo htmlspecialchars($row['phone']); ?></td>
+                            <td class="max-w-xs truncate"><i class="bi bi-geo text-gray-400 mr-1"></i> <?php echo nl2br(htmlspecialchars($row['address'])); ?></td>
                             <td class="font-medium <?php echo $row['balance'] > 0 ? 'text-danger-600' : 'text-success-600'; ?>">
+                                <i class="bi <?php echo $row['balance'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : 'bi-arrow-down-circle-fill text-success-500'; ?> mr-1"></i>
                                 <?php echo number_format($row['balance'], 2, ',', '.'); ?>
                             </td>
                             <td class="text-right">
