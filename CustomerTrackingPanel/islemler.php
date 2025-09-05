@@ -86,25 +86,44 @@ try {
 <div class="container mx-auto px-4 py-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
-            <h2 class="text-xl font-semibold text-gray-900">İşlemler</h2>
-            <p class="text-sm text-gray-600 mt-1">Yeni işlem ekle ve geçmişi görüntüle</p>
+            <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+                <i class="bi bi-cash-coin mr-2 text-primary-600"></i> İşlem Yönetimi
+            </h1>
+            <p class="text-sm text-gray-600 mt-1">
+                <?php if ($selectedCustomer): ?>
+                    <span class="font-medium"><?php echo htmlspecialchars($selectedCustomer['name']); ?></span> müşterisi için işlemler
+                <?php else: ?>
+                    Tüm müşteriler için işlem ekle ve geçmişi görüntüle
+                <?php endif; ?>
+            </p>
         </div>
+        <?php if ($selectedCustomer): ?>
+            <a href="musteri_rapor.php?customer=<?php echo $customerId; ?>" class="btn btn-secondary flex items-center">
+                <i class="bi bi-file-earmark-bar-graph mr-2"></i> Müşteri Raporu
+            </a>
+        <?php endif; ?>
     </div>
 
-    <div class="card-hover animate-fadeIn mb-6">
-        <div class="card-header">
+    <div class="card-hover animate-fadeIn mb-6 shadow-lg">
+        <div class="card-header flex items-center">
+            <i class="bi bi-plus-circle mr-2 text-primary-600"></i>
             <h3 class="card-title">Yeni İşlem Ekle</h3>
         </div>
-        <div class="p-4">
+        <div class="p-5">
             <?php if (!empty($error)): ?>
-                <div class="alert alert-danger mb-4"><?php echo htmlspecialchars($error); ?></div>
+                <div class="alert alert-danger mb-4 flex items-center">
+                    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
+                    <?php echo htmlspecialchars($error); ?>
+                </div>
             <?php endif; ?>
             
-            <form method="post" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <form method="post" class="grid grid-cols-1 md:grid-cols-12 gap-5">
                 <div class="md:col-span-3 col-span-1">
-                    <label class="form-label">Müşteri</label>
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
+                    </label>
                     <select name="customer_id" class="form-select" required>
-                        <option value="">Seçiniz</option>
+                        <option value="">Müşteri Seçiniz</option>
                         <?php foreach ($customers as $c): ?>
                         <option value="<?php echo $c['id']; ?>" <?php echo $customerId === (int)$c['id'] ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($c['name']); ?>
@@ -113,9 +132,11 @@ try {
                     </select>
                 </div>
                 <div class="md:col-span-3 col-span-1">
-                    <label class="form-label">Ürün</label>
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
+                    </label>
                     <select name="product_id" class="form-select">
-                        <option value="">Ürün Seçiniz</option>
+                        <option value="">Ürün Seçiniz (Opsiyonel)</option>
                         <?php foreach ($products as $product): ?>
                         <option value="<?php echo $product['id']; ?>">
                             <?php echo htmlspecialchars($product['name']); ?>
@@ -124,57 +145,64 @@ try {
                     </select>
                 </div>
                 <div class="md:col-span-2 col-span-1">
-                    <label class="form-label">Tür</label>
-                    <select name="type" class="form-select">
-                        <option value="debit">Borç</option>
-                        <option value="credit">Tahsilat</option>
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
+                    </label>
+                    <select name="type" class="form-select" id="transactionType">
+                        <option value="debit" data-color="danger">Borç Ekle</option>
+                        <option value="credit" data-color="success">Tahsilat Ekle</option>
                     </select>
                 </div>
                 
                 <div class="md:col-span-2 col-span-1">
-                    <label class="form-label">Tutar (₺)</label>
-                    <input type="text" name="amount" class="form-input" placeholder="0,00" required>
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)
+                    </label>
+                    <input type="text" name="amount" class="form-input" placeholder="0,00" required id="amountInput">
                 </div>
                 
                 <div class="md:col-span-2 col-span-1">
-                    <label class="form-label">Açıklama</label>
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Açıklama
+                    </label>
                     <input type="text" name="note" class="form-input" placeholder="İşlem açıklaması">
                 </div>
                 
-                <div class="md:col-span-12 col-span-1">
-                    <button type="submit" class="btn btn-primary flex items-center">
-                        <i class="bi bi-plus-lg mr-2"></i> Ekle
+                <div class="md:col-span-12 col-span-1 mt-2">
+                    <button type="submit" class="btn btn-primary flex items-center shadow-sm hover:shadow-md transition-all" id="submitButton">
+                        <i class="bi bi-plus-circle mr-2"></i> <span id="submitText">İşlem Ekle</span>
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="card-hover animate-fadeIn" style="animation-delay: 0.2s">
+    <div class="card-hover animate-fadeIn shadow-lg" style="animation-delay: 0.2s">
         <div class="card-header">
             <div class="flex justify-between items-center">
-                <h3 class="card-title">
+                <h3 class="card-title flex items-center">
+                    <i class="bi bi-clock-history mr-2 text-primary-600"></i>
                     <?php if ($customerId && $selectedCustomer): ?>
                         <?php echo htmlspecialchars($selectedCustomer['name']); ?> - İşlem Geçmişi
                     <?php else: ?>
-                        Tüm İşlemler
+                        Son İşlemler
                     <?php endif; ?>
                 </h3>
                 <?php if ($customerId && $selectedCustomer): ?>
-                <a href="customer_report.php?customer=<?php echo $customerId; ?>" class="btn btn-outline btn-sm">
-                    <i class="bi bi-file-earmark-text mr-2"></i> Rapor
+                <a href="musteri_rapor.php?customer=<?php echo $customerId; ?>" class="btn btn-secondary btn-sm flex items-center">
+                    <i class="bi bi-printer mr-2"></i> Yazdır
                 </a>
                 <?php endif; ?>
             </div>
         </div>
         <div class="p-0">
             <div class="table-container">
-                <table class="table">
+                <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Müşteri</th>
-                            <th>Ürün</th>
-                            <th>Tarih</th>
+                            <th><i class="bi bi-person-badge mr-1 text-primary-500"></i> Müşteri</th>
+                            <th><i class="bi bi-box-seam mr-1 text-primary-500"></i> Ürün</th>
+                            <th><i class="bi bi-calendar-date mr-1 text-primary-500"></i> Tarih</th>
                             <th>Tutar (₺)</th>
                             <th>Tür</th>
                             <th>Açıklama</th>
