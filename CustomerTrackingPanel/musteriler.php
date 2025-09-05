@@ -246,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Arama fonksiyonu kurulumu
     const setupSearch = () => {
         const input = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearSearch');
@@ -254,19 +255,31 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!input || !table) return;
         
+        // Önceki aramaları hatırlama
         input.value = localStorage.getItem(key) || '';
         
+        // Arama filtresini uygulama
         function applyFilter() {
-            const q = input.value.toLowerCase();
+            const q = input.value.toLowerCase().trim();
             const rows = table.tBodies[0].rows;
             let visibleCount = 0;
+            
+            // Arama sonuçlarını gösterme animasyonu
+            table.classList.add('filtering');
             
             for (const tr of rows) {
                 const text = tr.innerText.toLowerCase();
                 const isVisible = text.includes(q);
                 tr.style.display = isVisible ? '' : 'none';
-                tr.classList.toggle('animate-fadeIn', isVisible);
-                if (isVisible) visibleCount++;
+                
+                // Animasyon efekti
+                if (isVisible) {
+                    tr.classList.add('animate-fadeIn');
+                    tr.style.animationDelay = (visibleCount * 0.05) + 's';
+                    visibleCount++;
+                } else {
+                    tr.classList.remove('animate-fadeIn');
+                }
             }
             
             localStorage.setItem(key, q);
