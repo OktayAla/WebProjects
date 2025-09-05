@@ -58,8 +58,6 @@ if ($search) {
     $products = $stmt->fetchAll();
 } else {
     $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
-// Fiyat listesi için ürünleri al
-$priceList = $pdo->query('SELECT name, price FROM products ORDER BY name ASC')->fetchAll();
 }
 ?>
 
@@ -114,8 +112,7 @@ $priceList = $pdo->query('SELECT name, price FROM products ORDER BY name ASC')->
                     <thead>
                         <tr>
                             <th>Ürün Adı</th>
-                            <th>Fiyat (₺)</th>
-                            <th class="text-right"></th>
+                                                        <th class="text-right"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -133,8 +130,7 @@ $priceList = $pdo->query('SELECT name, price FROM products ORDER BY name ASC')->
                             <?php foreach ($products as $index => $product): ?>
                             <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.1 + ($index * 0.05); ?>s">
                                 <td class="font-medium"><?php echo htmlspecialchars($product['name']); ?></td>
-                                <td><?php echo isset($product['price']) ? number_format($product['price'], 2, ',', '.') : '-'; ?></td>
-                                <td class="text-right">
+                                                                <td class="text-right">
                                     <button type="button" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)" class="btn btn-outline btn-sm mr-2">
                                         <i class="bi bi-pencil mr-1"></i> Düzenle
                                     </button>
@@ -169,11 +165,7 @@ $priceList = $pdo->query('SELECT name, price FROM products ORDER BY name ASC')->
                 <label class="form-label">Ürün Adı *</label>
                 <input type="text" name="name" id="productName" class="form-input" required>
             </div>
-            <div class="form-group">
-                <label class="form-label">Fiyat (₺)</label>
-                <input type="number" step="0.01" name="price" id="productPrice" class="form-input" placeholder="Sadece iç liste için">
-            </div>
-            
+                        
             <div class="modal-footer">
                 <button type="button" onclick="hideProductModal()" class="btn btn-outline">İptal</button>
                 <button type="submit" class="btn btn-primary">Kaydet</button>
