@@ -207,12 +207,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('customerModal');
     const newCustomerBtn = document.getElementById('newCustomerBtn');
     
+    // Modal açma işlevi
     if (newCustomerBtn) {
         newCustomerBtn.addEventListener('click', function() {
             showModal();
+            // Form alanına otomatik odaklanma
+            setTimeout(() => {
+                document.getElementById('customerName')?.focus();
+            }, 300);
         });
     }
     
+    // Modal dışına tıklama ile kapatma
     if (modal) {
         modal.addEventListener('mousedown', function(e) {
             if (e.target === modal) {
@@ -221,11 +227,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // ESC tuşu ile kapatma
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('show')) {
+        if (e.key === 'Escape' && modal?.classList.contains('show')) {
             closeModal();
         }
     });
+    
+    // Form gönderildiğinde buton durumunu değiştirme
+    const customerForm = document.querySelector('#customerModal form');
+    if (customerForm) {
+        customerForm.addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="bi bi-hourglass-split animate-spin mr-2"></i> İşleniyor...';
+            }
+        });
+    }
 
     const setupSearch = () => {
         const input = document.getElementById('searchInput');
