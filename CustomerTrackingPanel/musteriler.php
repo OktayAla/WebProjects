@@ -45,25 +45,27 @@ if (isset($_GET['edit'])) {
 <div class="container mx-auto px-4 py-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
-            <h2 class="text-xl font-semibold text-gray-900">Müşteri Listesi</h2>
-            <p class="text-sm text-gray-600 mt-1">Sistemde kayıtlı tüm müşteriler</p>
+            <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+                <i class="bi bi-people mr-2 text-primary-600"></i> Müşteri Yönetimi
+            </h1>
+            <p class="text-sm text-gray-600 mt-1">Sistemde kayıtlı tüm müşteriler ve bakiye durumları</p>
         </div>
-        <button id="newCustomerBtn" class="btn btn-primary flex items-center justify-center">
-            <i class="bi bi-person-plus mr-2"></i> Yeni Müşteri
+        <button id="newCustomerBtn" class="btn btn-primary flex items-center justify-center shadow-sm hover:shadow-md transition-all">
+            <i class="bi bi-person-plus-fill mr-2"></i> Yeni Müşteri
         </button>
     </div>
 
-    <div class="card-hover animate-fadeIn">
-        <div class="p-4">
-            <div class="flex flex-col md:flex-row gap-3 mb-6">
+    <div class="card-hover animate-fadeIn shadow-lg">
+        <div class="p-5">
+            <div class="flex flex-col md:flex-row gap-4 mb-6">
                 <div class="relative flex-grow">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="bi bi-search text-gray-400"></i>
+                        <i class="bi bi-search text-primary-500"></i>
                     </div>
                     <input type="text" id="searchInput" class="form-input pl-10" placeholder="Müşteri ara (ad/telefon)">
                 </div>
-                <button id="clearSearch" class="btn btn-outline">
-                    <i class="bi bi-x-lg mr-2"></i> Temizle
+                <button id="clearSearch" class="btn btn-secondary">
+                    <i class="bi bi-x-circle mr-2"></i> Temizle
                 </button>
             </div>
 
