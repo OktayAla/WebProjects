@@ -226,32 +226,30 @@ try {
                 </div>
             <?php endif; ?>
             
-            <form method="post" class="grid grid-cols-1 md:grid-cols-12 gap-5">
+            <form method="post" class="grid grid-cols-1 md:grid-cols-12 gap-5" id="transactionForm">
                 <div class="md:col-span-3 col-span-1">
                     <label class="form-label flex items-center">
                         <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
                     </label>
-                    <select name="customer_id" class="form-select" required>
-                        <option value="">Müşteri Seçiniz</option>
-                        <?php foreach ($customers as $c): ?>
-                        <option value="<?php echo $c['id']; ?>" <?php echo $customerId === (int)$c['id'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($c['name']); ?>
-                        </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <input list="customerList" name="customer_input" class="form-input" placeholder="Müşteri Seçiniz veya Yazınız" value="<?php echo $selectedCustomer ? htmlspecialchars($selectedCustomer['name']) : ''; ?>" required>
+<datalist id="customerList">
+    <?php foreach ($customers as $c): ?>
+    <option value="<?php echo htmlspecialchars($c['name']); ?>">
+    <?php endforeach; ?>
+</datalist>
+<input type="hidden" name="customer_id" id="customerIdHidden" value="<?php echo $customerId; ?>">
                 </div>
                 <div class="md:col-span-3 col-span-1">
                     <label class="form-label flex items-center">
                         <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
                     </label>
-                    <select name="product_id" class="form-select">
-                        <option value="">Ürün Seçiniz (Opsiyonel)</option>
-                        <?php foreach ($products as $product): ?>
-                        <option value="<?php echo $product['id']; ?>">
-                            <?php echo htmlspecialchars($product['name']); ?>
-                        </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <input list="productList" name="product_input" class="form-input" placeholder="Ürün Seçiniz veya Yazınız (Opsiyonel)">
+<datalist id="productList">
+    <?php foreach ($products as $product): ?>
+    <option value="<?php echo htmlspecialchars($product['name']); ?>">
+    <?php endforeach; ?>
+</datalist>
+<input type="hidden" name="product_id" id="productIdHidden">
                 </div>
                 <div class="md:col-span-2 col-span-1">
                     <label class="form-label flex items-center">
@@ -274,7 +272,7 @@ try {
                     <label class="form-label flex items-center">
                         <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Açıklama
                     </label>
-                    <input type="text" name="note" class="form-input" placeholder="İşlem açıklaması">
+                    <input type="text" name="note" class="form-input" id="noteInput" placeholder="İşlem açıklaması">
                 </div>
                 
                 <div class="md:col-span-12 col-span-1 mt-2">
