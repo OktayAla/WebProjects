@@ -77,13 +77,13 @@
 						<a href="index.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
 							<i class="bi bi-speedometer2 mr-2"></i> Panel
 						</a>
-						<a href="customers.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
+						<a href="musteriler.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
 							<i class="bi bi-people mr-2"></i> Müşteriler
 						</a>
-						<a href="transactions.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
+						<a href="islemler.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
 							<i class="bi bi-cash-stack mr-2"></i> İşlemler
 						</a>
-						<a href="products.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
+						<a href="urunler.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
 							<i class="bi bi-box mr-2"></i> Ürünler
 						</a>
 					</div>
@@ -98,7 +98,7 @@
 							</button>
 						</div>
 						<div class="hidden group-hover:block absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50">
-							<a href="logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
+							<a href="cikis.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
 								<i class="bi bi-box-arrow-right mr-2"></i> Çıkış
 							</a>
 						</div>
@@ -118,13 +118,13 @@
 				<a href="index.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
 					<i class="bi bi-speedometer2 mr-2"></i> Panel
 				</a>
-				<a href="customers.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
+				<a href="musteriler.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
 					<i class="bi bi-people mr-2"></i> Müşteriler
 				</a>
-				<a href="transactions.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
+				<a href="islemler.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
 					<i class="bi bi-cash-stack mr-2"></i> İşlemler
 				</a>
-				<a href="products.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
+				<a href="urunler.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
 					<i class="bi bi-box mr-2"></i> Ürünler
 				</a>
 			</div>
@@ -138,7 +138,7 @@
 					</div>
 				</div>
 				<div class="mt-3 px-2 space-y-1">
-					<a href="logout.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-700 transition-colors duration-200">
+					<a href="cikis.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-700 transition-colors duration-200">
 						<i class="bi bi-box-arrow-right mr-2"></i> Çıkış
 					</a>
 				</div>
