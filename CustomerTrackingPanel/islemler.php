@@ -286,7 +286,14 @@ try {
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+    <div class="card-hover animate-fadeIn mb-6 shadow-lg">
+        <div class="card-header">
+            <h3 class="card-title flex items-center">
+                <i class="bi bi-search mr-2 text-primary-600"></i>
+                Arama ve Filtreleme
+            </h3>
+        </div>
+        <div class="p-5">
         <form action="" method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <?php if ($customerId): ?>
                 <input type="hidden" name="customer" value="<?php echo $customerId; ?>">
