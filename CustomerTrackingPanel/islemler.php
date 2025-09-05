@@ -5,6 +5,13 @@ require_login();
 $pdo = get_pdo_connection();
 $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
 
+$editTransaction = null;
+if (isset($_GET['edit'])) {
+    $stmt = $pdo->prepare('SELECT * FROM transactions WHERE id = ?');
+    $stmt->execute([(int)$_GET['edit']]);
+    $editTransaction = $stmt->fetch();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pdo->beginTransaction();
     try {
@@ -406,8 +413,8 @@ try {
                                     <a href="yazdir.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm" title="Yazdır" target="_blank">
                                         <i class="bi bi-printer"></i>
                                     </a>
-                                    <a href="#" class="btn btn-outline btn-sm text-primary edit-transaction" title="Düzenle" data-id="<?php echo $row['id']; ?>" data-customer="<?php echo htmlspecialchars($row['customer_name']); ?>" data-product="<?php echo $row['product_id'] ?? ''; ?>" data-type="<?php echo $row['type']; ?>" data-amount="<?php echo $row['amount']; ?>" data-note="<?php echo htmlspecialchars($row['note'] ?? ''); ?>">
-                                        <i class="bi bi-pencil"></i>
+                                    <a href="islemler.php?edit=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm text-primary" title="Düzenle">
+                                        <i class="bi bi-pencil-square"></i>
                                     </a>
                                     <a href="#" class="btn btn-outline btn-sm text-danger" title="Sil" onclick="return confirm('Bu işlemi silmek istediğinize emin misiniz?')">
                                         <i class="bi bi-trash"></i>
@@ -541,8 +548,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-<!-- İşlem Düzenleme Modal -->
-<div id="editTransactionModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+
+<!-- Transaction Edit Modal -->
+<div id="editTransactionModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center <?php echo $editTransaction ? '' : 'hidden'; ?>">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 animate-fadeIn">
         <div class="p-4 border-b border-gray-200 flex justify-between items-center">
             <h3 class="text-lg font-semibold text-gray-900 flex items-center">
@@ -554,7 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
         <form id="editTransactionForm" method="POST" action="">
             <div class="p-4">
-                <input type="hidden" name="transaction_id" id="edit_transaction_id">
+                <input type="hidden" name="transaction_id" id="edit_transaction_id" value="<?php echo $editTransaction ? (int)$editTransaction['id'] : 0; ?>">
                 <input type="hidden" name="action" value="update_transaction">
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -562,7 +570,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <label class="form-label flex items-center">
                             <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
                         </label>
-                        <input type="text" id="edit_customer" class="form-input bg-gray-100" readonly>
+                        <input type="text" id="edit_customer" class="form-input bg-gray-100" readonly value="<?php echo htmlspecialchars($editTransaction['customer_name']); ?>">
                     </div>
                     
                     <div>
@@ -572,7 +580,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <select name="product_id" id="edit_product" class="form-select">
                             <option value="">Ürün Seçiniz (Opsiyonel)</option>
                             <?php foreach ($products as $product): ?>
-                            <option value="<?php echo $product['id']; ?>">
+                            <option value="<?php echo $product['id']; ?>" <?php echo $editTransaction && $editTransaction['product_id'] == $product['id'] ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($product['name']); ?>
                             </option>
                             <?php endforeach; ?>
@@ -584,8 +592,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
                         </label>
                         <select name="type" id="edit_type" class="form-select">
-                            <option value="debit" data-color="danger">Borç</option>
-                            <option value="credit" data-color="success">Tahsilat</option>
+                            <option value="debit" data-color="danger" <?php echo $editTransaction && $editTransaction['type'] === 'debit' ? 'selected' : ''; ?>>Borç</option>
+                            <option value="credit" data-color="success" <?php echo $editTransaction && $editTransaction['type'] === 'credit' ? 'selected' : ''; ?>>Tahsilat</option>
                         </select>
                     </div>
                     
@@ -593,14 +601,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         <label class="form-label flex items-center">
                             <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)
                         </label>
-                        <input type="text" name="amount" id="edit_amount" class="form-input" placeholder="0,00" required>
+                        <input type="text" name="amount" id="edit_amount" class="form-input" placeholder="0,00" required value="<?php echo htmlspecialchars(number_format($editTransaction['amount'], 2, ',', '.')); ?>">
                     </div>
                     
                     <div class="md:col-span-2">
                         <label class="form-label flex items-center">
                             <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Açıklama
                         </label>
-                        <input type="text" name="note" id="edit_note" class="form-input" placeholder="İşlem açıklaması">
+                        <input type="text" name="note" id="edit_note" class="form-input" placeholder="İşlem açıklaması" value="<?php echo htmlspecialchars($editTransaction['note']); ?>">
                     </div>
                 </div>
             </div>
@@ -618,49 +626,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Modal işlemleri
-    const modal = document.getElementById('editTransactionModal');
-    const closeButtons = document.querySelectorAll('.close-modal');
-    const editButtons = document.querySelectorAll('.edit-transaction');
-    const editForm = document.getElementById('editTransactionForm');
-    
-    // Modal kapatma
-    closeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            modal.classList.add('hidden');
-        });
-    });
-    
-    // Modal dışına tıklama ile kapatma
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.classList.add('hidden');
-        }
-    });
-    
-    // Düzenleme butonları
-    editButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Form verilerini doldur
-            document.getElementById('edit_transaction_id').value = this.dataset.id;
-            document.getElementById('edit_customer').value = this.dataset.customer;
-            document.getElementById('edit_product').value = this.dataset.product;
-            document.getElementById('edit_type').value = this.dataset.type;
-            document.getElementById('edit_amount').value = this.dataset.amount.replace('.', ',');
-            document.getElementById('edit_note').value = this.dataset.note;
-            
-            // Form action URL'sini ayarla
-            editForm.action = window.location.pathname + '?action=update_transaction';
-            if (window.location.search && window.location.search.includes('customer=')) {
-                editForm.action += '&' + window.location.search.substring(1);
-            }
-            
-            // Modalı göster
-            modal.classList.remove('hidden');
-        });
-    });
+    // Automatically open modal if editing
+    <?php if ($editTransaction): ?>
+        document.getElementById('editTransactionModal').classList.remove('hidden');
+    <?php endif; ?>
 });
 </script>
 
