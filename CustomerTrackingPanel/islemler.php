@@ -233,26 +233,18 @@ try {
             </h1>
             <p class="text-sm text-gray-600 mt-1">
                 <?php if ($selectedCustomer): ?>
-                    <span class="font-medium"><?php echo htmlspecialchars($selectedCustomer['name']); ?></span> müşterisi için işlemler
-                <?php else: ?>
-                    Tüm müşteriler için işlem ekle ve geçmişi görüntüle
-                <?php endif; ?>
-            </p>
-        </div>
-        <?php if ($selectedCustomer): ?>
-            <a href="musteri_rapor.php?customer=<?php echo $customerId; ?>" class="btn btn-secondary flex items-center">
-                <i class="bi bi-file-earmark-bar-graph mr-2"></i> Müşteri Raporu
-    <?php foreach ($customers as $c): ?>
-    <option value="<?php echo htmlspecialchars($c['name']); ?>">
-    <?php endforeach; ?>
-</datalist>
-<input type="hidden" name="customer_id" id="customerIdHidden" value="<?php echo $customerId; ?>">
-                </div>
-                <div class="md:col-span-3 col-span-1">
-                    <label class="form-label flex items-center">
-                        <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
-                    </label>
-                    <input list="productList" name="product_input" class="form-input" placeholder="Ürün Seçiniz veya Yazınız (Opsiyonel)">
+    <span class="font-medium"><?php echo htmlspecialchars($selectedCustomer['name']); ?></span> müşterisi için işlemler
+<?php else: ?>
+    Tüm müşteriler için işlem ekle ve geçmişi görüntüle
+<?php endif; ?>
+</p>
+</div>
+<?php if ($selectedCustomer): ?>
+    <a href="musteri_rapor.php?customer=<?php echo $customerId; ?>" class="btn btn-secondary flex items-center">
+        <i class="bi bi-file-earmark-bar-graph mr-2"></i> Müşteri Raporu
+    </a>
+<?php endif; ?>
+                        <input list="productList" name="product_input" class="form-input" placeholder="Ürün Seçiniz veya Yazınız (Opsiyonel)">
 <datalist id="productList">
     <?php foreach ($products as $product): ?>
     <option value="<?php echo htmlspecialchars($product['name']); ?>">
@@ -573,13 +565,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-// Manual entry logic for customer and product fields
-const customerInput = document.querySelector('input[name="customer_input"]');
-const customerIdHidden = document.getElementById('customerIdHidden');
-const productInput = document.querySelector('input[name="product_input"]');
-const productIdHidden = document.getElementById('productIdHidden');
-const noteInput = document.getElementById('noteInput');
-const customers = <?php echo json_encode($customers); ?>;
 const products = <?php echo json_encode($products); ?>;
 
 if (customerInput && customerIdHidden) {
