@@ -152,7 +152,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 						$i++;
 						?>
 						<div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 animate-fadeIn hover:bg-gray-50 px-2 rounded transition-colors duration-200" style="animation-delay: <?php echo 0.6 + ($i * 0.05); ?>s">
-							<a href="musteri_rapor.php?id=<?php echo $debtor['id']; ?>" class="text-gray-800 hover:text-primary-600 font-medium transition-colors duration-200 truncate mr-2">
+							<a href="musteri_rapor.php?customer=<?php echo $debtor['id']; ?>" class="text-gray-800 hover:text-primary-600 font-medium transition-colors duration-200 truncate mr-2">
 								<i class="bi bi-person mr-1"></i> <?php echo htmlspecialchars($debtor['name']); ?>
 							</a>
 							<span class="badge-danger whitespace-nowrap">
