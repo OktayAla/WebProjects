@@ -564,6 +564,45 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+// Manual entry logic for customer and product fields
+const customerInput = document.querySelector('input[name="customer_input"]');
+const customerIdHidden = document.getElementById('customerIdHidden');
+const productInput = document.querySelector('input[name="product_input"]');
+const productIdHidden = document.getElementById('productIdHidden');
+const noteInput = document.getElementById('noteInput');
+const customers = <?php echo json_encode($customers); ?>;
+const products = <?php echo json_encode($products); ?>;
+
+if (customerInput && customerIdHidden) {
+    customerInput.addEventListener('input', function() {
+        const found = customers.find(c => c.name === this.value);
+        customerIdHidden.value = found ? found.id : '';
+    });
+}
+if (productInput && productIdHidden) {
+    productInput.addEventListener('input', function() {
+        const found = products.find(p => p.name === this.value);
+        productIdHidden.value = found ? found.id : '';
+    });
+}
+
+// On form submit, if customer or product not found, add to note
+const transactionForm = document.getElementById('transactionForm');
+if (transactionForm) {
+    transactionForm.addEventListener('submit', function(e) {
+        let extraNote = '';
+        if (customerInput && !customerIdHidden.value) {
+            extraNote += 'Müşteri: ' + customerInput.value + '. ';
+        }
+        if (productInput && !productIdHidden.value && productInput.value) {
+            extraNote += 'Ürün: ' + productInput.value + '. ';
+        }
+        if (extraNote) {
+            noteInput.value = (noteInput.value ? noteInput.value + ' | ' : '') + extraNote;
+        }
+    });
+}
+
 <!-- Transaction Edit Modal -->
 <div id="editTransactionModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center <?php echo $editTransaction ? '' : 'hidden'; ?>">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 animate-fadeIn">
