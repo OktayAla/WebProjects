@@ -203,10 +203,10 @@ try {
                             <th><i class="bi bi-person-badge mr-1 text-primary-500"></i> Müşteri</th>
                             <th><i class="bi bi-box-seam mr-1 text-primary-500"></i> Ürün</th>
                             <th><i class="bi bi-calendar-date mr-1 text-primary-500"></i> Tarih</th>
-                            <th>Tutar (₺)</th>
-                            <th>Tür</th>
-                            <th>Açıklama</th>
-                            <th class="text-right"></th>
+                            <th><i class="bi bi-currency-exchange mr-1 text-primary-500"></i> Tutar (₺)</th>
+                            <th><i class="bi bi-arrow-left-right mr-1 text-primary-500"></i> Tür</th>
+                            <th><i class="bi bi-chat-left-text mr-1 text-primary-500"></i> Açıklama</th>
+                            <th class="text-right"><i class="bi bi-gear-fill text-primary-500"></i> İşlemler</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -235,28 +235,50 @@ try {
                                 <?php endif; ?>
                             </td>
                             <td><?php echo date('d.m.Y H:i', strtotime($row['created_at'])); ?></td>
-                            <td class="font-medium"><?php echo number_format($row['amount'], 2, ',', '.'); ?></td>
+                            <td class="font-medium"><?php echo number_format($row['amount'], 2, ',', '.'); ?> ₺</td>
                             <td>
                                 <?php if ($row['type'] === 'debit'): ?>
-                                <span class="badge-debit">Borç</span>
+                                <span class="badge-debit flex items-center w-fit"><i class="bi bi-arrow-down-right mr-1"></i> Borç</span>
                                 <?php else: ?>
-                                <span class="badge-credit">Tahsilat</span>
+                                <span class="badge-credit flex items-center w-fit"><i class="bi bi-arrow-up-right mr-1"></i> Tahsilat</span>
                                 <?php endif; ?>
                             </td>
-                            <td><?php echo htmlspecialchars($row['note']); ?></td>
+                            <td>
+                                <?php if ($row['note']): ?>
+                                    <?php echo htmlspecialchars($row['note']); ?>
+                                <?php else: ?>
+                                    <span class="text-gray-400 italic">Not girilmedi</span>
+                                <?php endif; ?>
+                            </td>
                             <td class="text-right">
-                                <a href="print.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm">
-                                    <i class="bi bi-printer mr-1"></i> Yazdır
-                                </a>
+                                <div class="flex justify-end gap-2">
+                                    <a href="print.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm" title="Yazdır">
+                                        <i class="bi bi-printer"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-outline btn-sm text-danger" title="Sil" onclick="return confirm('Bu işlemi silmek istediğinize emin misiniz?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                         <?php endforeach; ?>
                         
                         <?php if (!$hasTransactions): ?>
                         <tr>
-                            <td colspan="8" class="text-center py-8 text-gray-500">
-                                <i class="bi bi-cash-stack text-4xl mb-2 block"></i>
-                                <p>Henüz işlem bulunmuyor</p>
+                            <td colspan="8" class="text-center py-12 text-gray-500">
+                                <div class="flex flex-col items-center justify-center gap-3">
+                                    <div class="bg-gray-100 rounded-full p-4 mb-2">
+                                        <i class="bi bi-receipt text-5xl text-primary-500"></i>
+                                    </div>
+                                    <h4 class="text-lg font-medium">Henüz işlem bulunmuyor</h4>
+                                    <p class="text-sm text-gray-400 max-w-md">
+                                        <?php if ($customerId): ?>
+                                            Bu müşteri için henüz bir işlem kaydı oluşturulmamış. Yukarıdaki formu kullanarak yeni bir işlem ekleyebilirsiniz.
+                                        <?php else: ?>
+                                            Sistemde henüz bir işlem kaydı bulunmuyor. Yukarıdaki formu kullanarak yeni bir işlem ekleyebilirsiniz.
+                                        <?php endif; ?>
+                                    </p>
+                                </div>
                             </td>
                         </tr>
                         <?php endif; ?>
@@ -268,32 +290,101 @@ try {
 
     <?php if ($totalPages > 1): ?>
     <div class="flex justify-center mt-6">
-        <nav class="inline-flex space-x-1" aria-label="Sayfalama">
-            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                <a href="transactions.php<?php echo $customerId ? '?customer=' . $customerId . '&' : '?'; ?>page=<?php echo $i; ?>"
-                   class="px-3 py-1 rounded <?php echo $i == $page ? 'bg-primary-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'; ?>">
-                    <?php echo $i; ?>
+        <nav class="inline-flex rounded-md shadow-sm" aria-label="Sayfalama">
+            <?php if ($page > 1): ?>
+                <a href="transactions.php<?php echo $customerId ? '?customer=' . $customerId . '&' : '?'; ?>page=<?php echo $page-1; ?>"
+                   class="px-3 py-2 border border-gray-300 rounded-l-md bg-white text-gray-700 hover:bg-gray-100">
+                    <i class="bi bi-chevron-left"></i>
                 </a>
+            <?php endif; ?>
+            
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <?php if ($i == 1 || $i == $totalPages || ($i >= $page - 1 && $i <= $page + 1)): ?>
+                    <a href="transactions.php<?php echo $customerId ? '?customer=' . $customerId . '&' : '?'; ?>page=<?php echo $i; ?>"
+                       class="px-3 py-2 border border-gray-300 <?php echo $i == $page ? 'bg-primary-600 text-white border-primary-600' : 'bg-white text-gray-700 hover:bg-gray-100'; ?>">
+                        <?php echo $i; ?>
+                    </a>
+                <?php elseif (($i == 2 && $page > 3) || ($i == $totalPages - 1 && $page < $totalPages - 2)): ?>
+                    <span class="px-3 py-2 border border-gray-300 bg-white text-gray-700">...</span>
+                <?php endif; ?>
             <?php endfor; ?>
+            
+            <?php if ($page < $totalPages): ?>
+                <a href="transactions.php<?php echo $customerId ? '?customer=' . $customerId . '&' : '?'; ?>page=<?php echo $page+1; ?>"
+                   class="px-3 py-2 border border-gray-300 rounded-r-md bg-white text-gray-700 hover:bg-gray-100">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            <?php endif; ?>
         </nav>
     </div>
     <?php endif; ?>
 </div>
 
 <script>
-document.querySelector('select[name="product_id"]').addEventListener('change', function() {
-});
-document.querySelector('input[name="amount"]').addEventListener('input', function(e) {
-    let value = e.target.value.replace(/[^\d,]/g, '');
-    value = value.replace(',', '.');
-    if (value.includes('.')) {
-        const parts = value.split('.');
-        if (parts[1].length > 2) {
-            parts[1] = parts[1].substring(0, 2);
-        }
-        value = parts.join('.');
+// İşlem türü değiştiğinde buton metnini güncelle
+document.addEventListener('DOMContentLoaded', function() {
+    const transactionType = document.getElementById('transactionType');
+    const submitText = document.getElementById('submitText');
+    const submitButton = document.getElementById('submitButton');
+    const amountInput = document.getElementById('amountInput');
+    
+    // İşlem türü değiştiğinde buton metnini ve rengini güncelle
+    if (transactionType) {
+        transactionType.addEventListener('change', function() {
+            const selectedOption = transactionType.options[transactionType.selectedIndex];
+            const colorClass = selectedOption.dataset.color;
+            
+            // Buton metnini güncelle
+            submitText.textContent = selectedOption.textContent;
+            
+            // Buton rengini güncelle
+            submitButton.className = submitButton.className.replace(/btn-(primary|success|danger|warning|info)/, '');
+            submitButton.classList.add(`btn-${colorClass}`);
+            
+            // Tutar alanına odaklan
+            amountInput.focus();
+        });
     }
-    e.target.value = value;
+    
+    // Ürün seçimi değiştiğinde
+    const productSelect = document.querySelector('select[name="product_id"]');
+    if (productSelect) {
+        productSelect.addEventListener('change', function() {
+            // Ürün seçildiğinde tutar alanına odaklan
+            if (productSelect.value) {
+                amountInput.focus();
+            }
+        });
+    }
+    
+    // Tutar alanı için para formatı
+    if (amountInput) {
+        amountInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^\d,]/g, '');
+            value = value.replace(',', '.');
+            if (value.includes('.')) {
+                const parts = value.split('.');
+                if (parts[1].length > 2) {
+                    parts[1] = parts[1].substring(0, 2);
+                }
+                value = parts.join('.');
+            }
+            e.target.value = value;
+        });
+    }
+    
+    // Form gönderildiğinde buton durumunu değiştir
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function() {
+            const submitButton = document.getElementById('submitButton');
+            if (submitButton) {
+                // Buton metnini değiştir ve yükleniyor simgesi ekle
+                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> İşleniyor...';
+                submitButton.disabled = true;
+            }
+        });
+    }
 });
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
