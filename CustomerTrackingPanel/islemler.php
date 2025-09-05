@@ -7,7 +7,7 @@ $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
 
 $editTransaction = null;
 if (isset($_GET['edit'])) {
-    $stmt = $pdo->prepare('SELECT * FROM transactions WHERE id = ?');
+    $stmt = $pdo->prepare('SELECT t.*, c.name as customer_name FROM transactions t JOIN customers c ON t.customer_id = c.id WHERE t.id = ?');
     $stmt->execute([(int)$_GET['edit']]);
     $editTransaction = $stmt->fetch();
 }
@@ -27,7 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$product_id, $type, $amount, $note, $transaction_id]);
             
             $pdo->commit();
-            header('Location: islemler.php' . ($customerId ? '?customer=' . $customerId : '') . '&success=2');
+            $redirect_url = 'islemler.php';
+            $query_params = [];
+            if ($customerId) {
+                $query_params['customer'] = $customerId;
+            }
+            if (isset($_GET['page'])) {
+                $query_params['page'] = $_GET['page'];
+            }
+            $query_params['success'] = '2';
+            $redirect_url .= '?' . http_build_query($query_params);
+            header('Location: ' . $redirect_url);
             exit;
         } 
         // Yeni işlem ekleme
@@ -626,10 +636,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Automatically open modal if editing
-    <?php if ($editTransaction): ?>
-        document.getElementById('editTransactionModal').classList.remove('hidden');
-    <?php endif; ?>
+    const modal = document.getElementById('editTransactionModal');
+    const closeButtons = document.querySelectorAll('.close-modal');
+
+    const closeModal = () => {
+        modal.classList.add('hidden');
+        // Clean up the URL
+        const url = new URL(window.location);
+        url.searchParams.delete('edit');
+        window.history.replaceState({}, document.title, url);
+    };
+
+    closeButtons.forEach(button => {
+        button.addEventListener('click', closeModal);
+    });
+
+    // Close modal when clicking outside of it
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === "Escape" && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
 });
 </script>
 
