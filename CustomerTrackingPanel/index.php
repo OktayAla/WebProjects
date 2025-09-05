@@ -16,6 +16,10 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 
 
 <div class="container mx-auto px-4 py-6">
+	<h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+		<i class="bi bi-speedometer2 mr-2 text-primary-600"></i> Yönetim Paneli
+	</h1>
+	
 	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 dashboard-stats">
 		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.1s">
 			<div class="stat-icon">
@@ -28,7 +32,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 		</div>
 
 		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.2s">
-			<div class="stat-icon">
+			<div class="stat-icon" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
 				<i class="bi bi-bag-fill"></i>
 			</div>
 			<div class="stat-info">
@@ -38,7 +42,7 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 		</div>
 
 		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.3s">
-			<div class="stat-icon" style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);">
+			<div class="stat-icon" style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);">
 				<i class="bi bi-cash-coin"></i>
 			</div>
 			<div class="stat-info">
@@ -48,8 +52,8 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 		</div>
 
 		<div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.4s">
-			<div class="stat-icon" style="background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);">
-				<i class="bi bi-clipboard2-data-fill"></i>
+			<div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+				<i class="bi bi-wallet2"></i>
 			</div>
 			<div class="stat-info">
 				<span class="stat-label">Toplam Alacak</span>
