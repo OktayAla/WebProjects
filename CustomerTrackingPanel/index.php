@@ -68,21 +68,21 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 				<div class="card-header">
 					<div class="flex justify-between items-center">
 						<h3 class="card-title"><i class="bi bi-receipt mr-2"></i>Son Satışlar</h3>
-						<a href="transactions.php" class="btn btn-outline btn-sm">
+						<a href="islemler.php" class="btn btn-outline btn-sm">
 							Tümünü Gör <i class="bi bi-chevron-right ml-1"></i>
 						</a>
 					</div>
 				</div>
 				<div class="p-0">
-					<div class="table-container">
-						<table class="table table-hover">
+					<div class="overflow-x-auto">
+						<table class="table table-hover w-full">
 							<thead>
 								<tr>
-									<th>#</th>
+									<th class="hidden sm:table-cell">#</th>
 									<th>Müşteri</th>
-									<th>Tarih</th>
+									<th class="hidden sm:table-cell">Tarih</th>
 									<th>Tutar</th>
-									<th>Not</th>
+									<th class="hidden md:table-cell">Not</th>
 									<th class="text-center">İşlem</th>
 								</tr>
 							</thead>
@@ -94,26 +94,26 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 									$i++;
 								?>
 								<tr class="animate-fadeIn" style="animation-delay: <?php echo 0.5 + ($i * 0.05); ?>s">
-									<td><?php echo $row['id']; ?></td>
-									<td>
-										<a href="customer_report.php?customer=<?php echo (int)$row['customer_id']; ?>" class="text-primary-600 hover:text-primary-900 transition-colors duration-200">
-											<?php echo htmlspecialchars($row['customer_name']); ?>
-										</a>
-									</td>
-									<td>
-										<span class="text-gray-600"><i class="bi bi-calendar3 mr-1"></i><?php echo date('d.m.Y H:i', strtotime($row['created_at'])); ?></span>
-									</td>
-									<td class="font-medium text-primary-700">
-										<?php echo number_format($row['amount'], 2, ',', '.'); ?> ₺
-									</td>
-									<td>
-										<?php echo htmlspecialchars($row['note']); ?>
-									</td>
-									<td class="text-center">
-										<a href="print.php?id=<?php echo $row['id']; ?>" class="btn btn-icon btn-sm btn-ghost" data-tooltip="Yazdır">
-											<i class="bi bi-printer"></i>
-										</a>
-									</td>
+								<td class="hidden sm:table-cell"><?php echo $row['id']; ?></td>
+								<td>
+									<a href="musteri_rapor.php?customer=<?php echo (int)$row['customer_id']; ?>" class="text-primary-600 hover:text-primary-900 transition-colors duration-200">
+										<?php echo htmlspecialchars($row['customer_name']); ?>
+									</a>
+								</td>
+								<td class="hidden sm:table-cell">
+									<span class="text-gray-600"><i class="bi bi-calendar3 mr-1"></i><?php echo date('d.m.Y H:i', strtotime($row['created_at'])); ?></span>
+								</td>
+								<td class="font-medium text-primary-700">
+									<?php echo number_format($row['amount'], 2, ',', '.'); ?> ₺
+								</td>
+								<td class="hidden md:table-cell">
+									<?php echo htmlspecialchars($row['note']); ?>
+								</td>
+								<td class="text-center">
+									<a href="yazdir.php?id=<?php echo $row['id']; ?>" class="btn btn-icon btn-sm btn-ghost" data-tooltip="Yazdır">
+										<i class="bi bi-printer"></i>
+									</a>
+								</td>
 								</tr>
 								<?php endforeach; ?>
 								<?php if ($i === 0): ?>
@@ -136,13 +136,13 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 				<div class="card-header">
 					<div class="flex justify-between items-center">
 						<h3 class="card-title"><i class="bi bi-exclamation-triangle mr-2"></i>Borçlu Müşteriler</h3>
-						<a href="customers.php" class="btn btn-outline btn-sm">
+						<a href="musteriler.php" class="btn btn-outline btn-sm">
 							Tümünü Gör <i class="bi bi-chevron-right ml-1"></i>
 						</a>
 					</div>
 				</div>
 				<div class="p-4">
-					<div class="space-y-3">
+					<div class="space-y-3 max-w-full">
 						<?php 
 						$debtors = $pdo->query('SELECT id, name, balance FROM customers WHERE balance > 0 ORDER BY balance DESC LIMIT 10');
 						$hasDebtors = false;
@@ -152,10 +152,10 @@ $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM cus
 						$i++;
 						?>
 						<div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 animate-fadeIn hover:bg-gray-50 px-2 rounded transition-colors duration-200" style="animation-delay: <?php echo 0.6 + ($i * 0.05); ?>s">
-							<a href="customer_report.php?customer=<?php echo $debtor['id']; ?>" class="text-gray-800 hover:text-primary-600 font-medium transition-colors duration-200">
+							<a href="musteri_rapor.php?id=<?php echo $debtor['id']; ?>" class="text-gray-800 hover:text-primary-600 font-medium transition-colors duration-200 truncate mr-2">
 								<i class="bi bi-person mr-1"></i> <?php echo htmlspecialchars($debtor['name']); ?>
 							</a>
-							<span class="badge-danger">
+							<span class="badge-danger whitespace-nowrap">
 								<?php echo number_format($debtor['balance'], 2, ',', '.'); ?> ₺
 							</span>
 						</div>
