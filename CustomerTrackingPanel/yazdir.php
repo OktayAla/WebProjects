@@ -91,10 +91,6 @@
 								<span class="text-sm font-medium text-gray-500">Telefon</span>
 								<span class="text-base"><?php echo htmlspecialchars($tx['phone']); ?></span>
 							</div>
-							<div class="flex flex-col">
-								<span class="text-sm font-medium text-gray-500">Adres</span>
-								<span class="text-base whitespace-pre-line"><?php echo htmlspecialchars($tx['address']); ?></span>
-							</div>
 						</div>
 					</div>
 					<div class="md:text-right">
@@ -139,13 +135,15 @@
 					</div>
 				</div>
 				<?php endif; ?>
-				<div class="mt-8 text-center text-sm text-gray-500">
-					Bu belge <?php echo APP_NAME; ?> tarafından <?php echo date('d.m.Y H:i'); ?> tarihinde oluşturulmuştur.
-				</div>
+				<div class="mt-8 flex flex-col items-center gap-2 text-sm text-gray-500">
+						<img src="/assets/img/logo.png" alt="Logo" class="h-12 mb-2">
+						<div class="font-semibold text-gray-700">OA Grafik Tasarım</div>
+						<div>İletişim: <a href="tel:+905555555555" class="text-primary-600 hover:underline">+90 555 555 55 55</a> &bull; info@oagrafik.com</div>
+						<div class="text-xs text-gray-400 mt-1">Bu belge <?php echo APP_NAME; ?> tarafından <?php echo date('d.m.Y H:i'); ?> tarihinde oluşturulmuştur.</div>
+					</div>
 			</div>
 		</div>
 	</div>
 </body>
 </html>
-
 
