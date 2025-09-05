@@ -99,19 +99,60 @@ body::before {
   border-radius: 3px;
 }
 
-.animate-fadeIn,
-.animate-slideInUp,
-.animate-pulse-slow,
-.animate-float {
-  animation: none !important;
+/* Animation Styles */
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-in-out;
 }
 
-@keyframes fadeIn {}
-@keyframes slideInUp {}
-@keyframes pulse {}
-@keyframes float {}
-@keyframes modalSlideIn {}
+.animate-slideInUp {
+  animation: slideInUp 0.5s ease-out;
+}
 
+.animate-pulse-slow {
+  animation: pulseSlow 2s infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+/* Floating Background Elements */
 .card-hover {
   border-radius: 16px;
   overflow: hidden;
@@ -126,10 +167,9 @@ body::before {
 .card-hover:hover,
 .dashboard-stats .stat-card,
 .dashboard-stats .stat-card:hover {
-  transition: none !important;
-  animation: none !important;
-  box-shadow: var(--premium-shadow);
-  transform: none !important;
+  transition: all 0.3s ease-in-out !important;
+  box-shadow: var(--premium-shadow-hover);
+  transform: translateY(-5px) !important;
 }
 
 .table tbody tr,
