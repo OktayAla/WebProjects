@@ -155,7 +155,6 @@ try {
 <div class="floating-element"></div>
 <div class="floating-element"></div>
 
-
 <div class="container mx-auto px-4 py-6">
     <?php if (isset($_GET['success'])): ?>
     <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-sm animate-fadeIn" role="alert">
@@ -197,66 +196,6 @@ try {
         <?php endif; ?>
     </div>
     
-    <!-- Arama ve Filtreleme Formu -->
-    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-        <form action="" method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <?php if ($customerId): ?>
-                <input type="hidden" name="customer" value="<?php echo $customerId; ?>">
-            <?php endif; ?>
-            
-            <div class="form-group">
-                <label for="search" class="form-label">Arama</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <i class="bi bi-search text-gray-400"></i>
-                    </span>
-                    <input type="text" id="search" name="search" class="form-input pl-10" placeholder="Müşteri adı veya not..." value="<?php echo htmlspecialchars($search); ?>">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="product" class="form-label">Ürün</label>
-                <select id="product" name="product" class="form-select">
-                    <option value="">Tüm Ürünler</option>
-                    <?php foreach ($products as $product): ?>
-                        <option value="<?php echo $product['id']; ?>" <?php echo $productFilter == $product['id'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($product['name']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="type" class="form-label">İşlem Türü</label>
-                <select id="type" name="type" class="form-select">
-                    <option value="">Tümü</option>
-                    <option value="debit" <?php echo $typeFilter === 'debit' ? 'selected' : ''; ?>>Borç</option>
-                    <option value="credit" <?php echo $typeFilter === 'credit' ? 'selected' : ''; ?>>Tahsilat</option>
-                </select>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-2">
-                <div class="form-group">
-                    <label for="date_from" class="form-label">Başlangıç Tarihi</label>
-                    <input type="date" id="date_from" name="date_from" class="form-input" value="<?php echo $dateFrom; ?>">
-                </div>
-                <div class="form-group">
-                    <label for="date_to" class="form-label">Bitiş Tarihi</label>
-                    <input type="date" id="date_to" name="date_to" class="form-input" value="<?php echo $dateTo; ?>">
-                </div>
-            </div>
-            
-            <div class="col-span-full flex items-center justify-end gap-2 mt-2">
-                <a href="islemler.php<?php echo $customerId ? '?customer=' . $customerId : ''; ?>" class="btn btn-outline">
-                    <i class="bi bi-x-circle mr-1"></i> Temizle
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-filter mr-1"></i> Filtrele
-                </button>
-            </div>
-        </form>
-    </div>
-
     <div class="card-hover animate-fadeIn mb-6 shadow-lg">
         <div class="card-header flex items-center">
             <i class="bi bi-plus-circle mr-2 text-primary-600"></i>
@@ -328,6 +267,65 @@ try {
                 </div>
             </form>
         </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+        <form action="" method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <?php if ($customerId): ?>
+                <input type="hidden" name="customer" value="<?php echo $customerId; ?>">
+            <?php endif; ?>
+            
+            <div class="form-group">
+                <label for="search" class="form-label">Arama</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <i class="bi bi-search text-gray-400"></i>
+                    </span>
+                    <input type="text" id="search" name="search" class="form-input pl-10" placeholder="Müşteri adı veya not..." value="<?php echo htmlspecialchars($search); ?>">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="product" class="form-label">Ürün</label>
+                <select id="product" name="product" class="form-select">
+                    <option value="">Tüm Ürünler</option>
+                    <?php foreach ($products as $product): ?>
+                        <option value="<?php echo $product['id']; ?>" <?php echo $productFilter == $product['id'] ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($product['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="type" class="form-label">İşlem Türü</label>
+                <select id="type" name="type" class="form-select">
+                    <option value="">Tümü</option>
+                    <option value="debit" <?php echo $typeFilter === 'debit' ? 'selected' : ''; ?>>Borç</option>
+                    <option value="credit" <?php echo $typeFilter === 'credit' ? 'selected' : ''; ?>>Tahsilat</option>
+                </select>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2">
+                <div class="form-group">
+                    <label for="date_from" class="form-label">Başlangıç Tarihi</label>
+                    <input type="date" id="date_from" name="date_from" class="form-input" value="<?php echo $dateFrom; ?>">
+                </div>
+                <div class="form-group">
+                    <label for="date_to" class="form-label">Bitiş Tarihi</label>
+                    <input type="date" id="date_to" name="date_to" class="form-input" value="<?php echo $dateTo; ?>">
+                </div>
+            </div>
+            
+            <div class="col-span-full flex items-center justify-end gap-2 mt-2">
+                <a href="islemler.php<?php echo $customerId ? '?customer=' . $customerId : ''; ?>" class="btn btn-outline">
+                    <i class="bi bi-x-circle mr-1"></i> Temizle
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-filter mr-1"></i> Filtrele
+                </button>
+            </div>
+        </form>
     </div>
 
     <div class="card-hover animate-fadeIn shadow-lg" style="animation-delay: 0.2s">
