@@ -6,18 +6,18 @@ $pdo = get_pdo_connection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-    $name = trim($_POST['name']);
-    $phone = trim($_POST['phone']);
-    $address = trim($_POST['address']);
+    $isim = trim($_POST['name']);
+    $numara = trim($_POST['phone']);
+    $adres = trim($_POST['address']);
     
     try {
         if ($id > 0) {
-            $stmt = $pdo->prepare('UPDATE customers SET name = ?, phone = ?, address = ? WHERE id = ?');
-            $stmt->execute([$name, $phone, $address, $id]);
+            $stmt = $pdo->prepare('UPDATE musteriler SET isim = ?, numara = ?, adres = ? WHERE id = ?');
+            $stmt->execute([$isim, $numara, $adres, $id]);
             $message = 'Müşteri başarıyla güncellendi.';
         } else {
-            $stmt = $pdo->prepare('INSERT INTO customers (name, phone, address) VALUES (?, ?, ?)');
-            $stmt->execute([$name, $phone, $address]);
+            $stmt = $pdo->prepare('INSERT INTO musteriler (isim, numara, adres) VALUES (?, ?, ?)');
+            $stmt->execute([$isim, $numara, $adres]);
             $message = 'Müşteri başarıyla eklendi.';
         }
         
@@ -34,10 +34,10 @@ if (isset($_GET['delete'])) {
     $pdo->beginTransaction();
     try {
         // Önce ilişkili işlemleri sil
-        $pdo->prepare('DELETE FROM transactions WHERE customer_id = ?')->execute([$delId]);
+        $pdo->prepare('DELETE FROM islemler WHERE musteri_id = ?')->execute([$delId]);
         
         // Sonra müşteriyi sil
-        $pdo->prepare('DELETE FROM customers WHERE id = ?')->execute([$delId]);
+        $pdo->prepare('DELETE FROM musteriler WHERE id = ?')->execute([$delId]);
         
         $pdo->commit();
         header('Location: musteriler.php?success=' . urlencode('Müşteri ve ilişkili tüm işlemler başarıyla silindi.'));
@@ -52,13 +52,13 @@ require_once __DIR__ . '/includes/header.php';
 
 $editCustomer = null;
 if (isset($_GET['edit'])) {
-    $stmt = $pdo->prepare('SELECT * FROM customers WHERE id = ?');
+    $stmt = $pdo->prepare('SELECT * FROM musteriler WHERE id = ?');
     $stmt->execute([(int)$_GET['edit']]);
     $editCustomer = $stmt->fetch();
 }
 
 // Tüm müşterileri getir (sıralama ID'ye göre)
-$customers = $pdo->query('SELECT * FROM customers ORDER BY id DESC')->fetchAll();
+$customers = $pdo->query('SELECT * FROM musteriler ORDER BY id DESC')->fetchAll();
 ?>
 
 <div class="floating-element"></div>
@@ -132,14 +132,14 @@ $customers = $pdo->query('SELECT * FROM customers ORDER BY id DESC')->fetchAll()
                                 <!-- ID SÜTUNU KALDIRILDI -->
                                 <td>
                                     <a href="musteri_rapor.php?customer=<?php echo $row['id']; ?>" class="font-medium text-primary-700 hover:text-primary-900 transition-colors">
-                                        <?php echo htmlspecialchars($row['name']); ?>
+                                        <?php echo htmlspecialchars($row['isim']); ?>
                                     </a>
                                 </td>
-                                <td><?php echo htmlspecialchars($row['phone']); ?></td>
-                                <td class="max-w-xs truncate"><?php echo nl2br(htmlspecialchars($row['address'])); ?></td>
+                                <td><?php echo htmlspecialchars($row['numara']); ?></td>
+                                <td class="max-w-xs truncate"><?php echo nl2br(htmlspecialchars($row['adres'])); ?></td>
                                 <td class="font-medium <?php echo $row['balance'] > 0 ? 'text-danger-600' : 'text-success-600'; ?>">
                                     <i class="bi <?php echo $row['balance'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : 'bi-arrow-down-circle-fill text-success-500'; ?> mr-1"></i>
-                                    <?php echo number_format($row['balance'], 2, ',', '.'); ?> ₺
+                                    <?php echo number_format($row['tutar'], 2, ',', '.'); ?> ₺
                                 </td>
                                 <td class="text-right">
                                     <div class="flex space-x-3 justify-end">
@@ -215,21 +215,21 @@ $customers = $pdo->query('SELECT * FROM customers ORDER BY id DESC')->fetchAll()
                         <label for="customerName" class="form-label flex items-center">
                             <i class="bi bi-person mr-2 text-primary-500"></i> Ad Soyad
                         </label>
-                        <input type="text" name="name" id="customerName" class="form-input" placeholder="Müşteri adını giriniz" value="<?php echo $editCustomer ? htmlspecialchars($editCustomer['name']) : ''; ?>" required>
+                        <input type="text" name="name" id="customerName" class="form-input" placeholder="Müşteri adını giriniz" value="<?php echo $editCustomer ? htmlspecialchars($editCustomer['isim']) : ''; ?>" required>
                     </div>
                     
                     <div class="mb-4">
                         <label for="customerPhone" class="form-label flex items-center">
                             <i class="bi bi-telephone mr-2 text-primary-500"></i> Telefon
                         </label>
-                        <input type="text" name="phone" id="customerPhone" class="form-input" placeholder="Telefon numarası" value="<?php echo $editCustomer ? htmlspecialchars($editCustomer['phone']) : ''; ?>">
+                        <input type="text" name="phone" id="customerPhone" class="form-input" placeholder="Telefon numarası" value="<?php echo $editCustomer ? htmlspecialchars($editCustomer['numara']) : ''; ?>">
                     </div>
                     
                     <div class="mb-4">
                         <label for="customerAddress" class="form-label flex items-center">
                             Adres
                         </label>
-                        <textarea name="address" id="customerAddress" rows="3" class="form-input" placeholder="Adres bilgisi"><?php echo $editCustomer ? htmlspecialchars($editCustomer['address']) : ''; ?></textarea>
+                        <textarea name="address" id="customerAddress" rows="3" class="form-input" placeholder="Adres bilgisi"><?php echo $editCustomer ? htmlspecialchars($editCustomer['adres']) : ''; ?></textarea>
                     </div>
                 </div>
                 
