@@ -40,25 +40,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: ' . $redirect_url);
             exit;
         } 
-        // Yeni işlem ekleme
+        // Yeni işlem ekleme (çoklu ürün desteği)
         else {
             $customer_id = (int)$_POST['customer_id'];
-            $product_id = !empty($_POST['product_id']) ? (int)$_POST['product_id'] : null;
             $type = $_POST['type'] === 'debit' ? 'debit' : 'credit';
-            $amount = (float)str_replace([',', ' '], ['.', ''], $_POST['amount']);
             $note = trim($_POST['note']);
-
-            $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, product_id, type, amount, note) VALUES (?, ?, ?, ?, ?)');
-            $stmt->execute([$customer_id, $product_id, $type, $amount, $note]);
             
-            if ($type === 'debit') {
-                $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$amount, $customer_id]);
-            } else {
-                $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$amount, $customer_id]);
+            // Çoklu ürün işleme
+            $products = $_POST['products'] ?? [];
+            $totalAmount = 0;
+            
+            foreach ($products as $productData) {
+                if (!empty($productData['product_id']) && !empty($productData['amount'])) {
+                    $product_id = !empty($productData['product_id']) ? (int)$productData['product_id'] : null;
+                    $amount = (float)str_replace([',', ' '], ['.', ''], $productData['amount']);
+                    $product_note = !empty($productData['note']) ? trim($productData['note']) : $note;
+                    
+                    $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, product_id, type, amount, note) VALUES (?, ?, ?, ?, ?)');
+                    $stmt->execute([$customer_id, $product_id, $type, $amount, $product_note]);
+                    
+                    $totalAmount += $amount;
+                }
+            }
+            
+            // Müşteri bakiyesini güncelle
+            if ($totalAmount > 0) {
+                if ($type === 'debit') {
+                    $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$totalAmount, $customer_id]);
+                } else {
+                    $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$totalAmount, $customer_id]);
+                }
             }
             
             $pdo->commit();
-            // DÜZELTME: URL yapısını düzgün oluştur
+            // Yönlendirme URL'sini doğru şekilde oluştur
             $redirect_url = 'islemler.php';
             $query_params = [];
             if ($customerId) {
@@ -233,65 +248,89 @@ $transactions = $stmt->fetchAll();
             </h3>
         </div>
         <div class="p-5">
-            <form method="POST" id="transactionForm" class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                <div class="md:col-span-3 col-span-1">
-                    <label class="form-label flex items-center">
-                        <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
-                    </label>
-                    <?php if ($customerId && $selectedCustomer): ?>
-                        <input type="hidden" name="customer_id" value="<?php echo $customerId; ?>">
-                        <input type="text" class="form-input bg-gray-100" readonly value="<?php echo htmlspecialchars($selectedCustomer['name']); ?>">
-                    <?php else: ?>
-                        <select name="customer_id" class="form-select" required>
-                            <option value="">Müşteri Seçiniz</option>
-                            <?php foreach ($customers as $customer): ?>
-                            <option value="<?php echo $customer['id']; ?>">
-                                <?php echo htmlspecialchars($customer['name']); ?>
-                            </option>
-                            <?php endforeach; ?>
+            <form method="POST" id="transactionForm" class="grid grid-cols-1 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="md:col-span-3 col-span-1">
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
+                        </label>
+                        <?php if ($customerId && $selectedCustomer): ?>
+                            <input type="hidden" name="customer_id" value="<?php echo $customerId; ?>">
+                            <input type="text" class="form-input bg-gray-100" readonly value="<?php echo htmlspecialchars($selectedCustomer['name']); ?>">
+                        <?php else: ?>
+                            <select name="customer_id" class="form-select" required>
+                                <option value="">Müşteri Seçiniz</option>
+                                <?php foreach ($customers as $customer): ?>
+                                <option value="<?php echo $customer['id']; ?>">
+                                    <?php echo htmlspecialchars($customer['name']); ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="md:col-span-2 col-span-1">
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
+                        </label>
+                        <select name="type" class="form-select" id="transactionType">
+                            <option value="debit" data-color="danger">Borç Ekle</option>
+                            <option value="credit" data-color="success">Tahsilat Ekle</option>
                         </select>
-                    <?php endif; ?>
+                    </div>
+                    
+                    <div class="md:col-span-5 col-span-1">
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Genel Açıklama
+                        </label>
+                        <input type="text" name="note" class="form-input" id="noteInput" placeholder="Genel işlem açıklaması (opsiyonel)">
+                    </div>
                 </div>
-                
-                <div class="md:col-span-3 col-span-1">
-                    <label class="form-label flex items-center">
-                        <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
-                    </label>
-                    <select name="product_id" class="form-select">
-                        <option value="">Ürün Seçiniz (Opsiyonel)</option>
-                        <?php foreach ($products as $product): ?>
-                        <option value="<?php echo $product['id']; ?>">
-                            <?php echo htmlspecialchars($product['name']); ?>
-                        </option>
-                        <?php endforeach; ?>
-                    </select>
+
+                <!-- Çoklu Ürün Alanı -->
+                <div id="products-container">
+                    <div class="product-row grid grid-cols-1 md:grid-cols-12 gap-4 mb-3">
+                        <div class="md:col-span-5 col-span-1">
+                            <label class="form-label flex items-center">
+                                <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
+                            </label>
+                            <select name="products[0][product_id]" class="form-select product-select">
+                                <option value="">Ürün Seçiniz</option>
+                                <?php foreach ($products as $product): ?>
+                                <option value="<?php echo $product['id']; ?>">
+                                    <?php echo htmlspecialchars($product['name']); ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <div class="md:col-span-3 col-span-1">
+                            <label class="form-label flex items-center">
+                                <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)
+                            </label>
+                            <input type="text" name="products[0][amount]" class="form-input amount-input" placeholder="0,00" required>
+                        </div>
+                        
+                        <div class="md:col-span-3 col-span-1">
+                            <label class="form-label flex items-center">
+                                <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Ürün Notu
+                            </label>
+                            <input type="text" name="products[0][note]" class="form-input" placeholder="Bu ürün için not (opsiyonel)">
+                        </div>
+                        
+                        <div class="md:col-span-1 col-span-1 flex items-end">
+                            <button type="button" class="btn btn-outline text-red-500 remove-product hidden" title="Kaldır">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="md:col-span-2 col-span-1">
-                    <label class="form-label flex items-center">
-                        <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
-                    </label>
-                    <select name="type" class="form-select" id="transactionType">
-                        <option value="debit" data-color="danger">Borç Ekle</option>
-                        <option value="credit" data-color="success">Tahsilat Ekle</option>
-                    </select>
-                </div>
-                
-                <div class="md:col-span-2 col-span-1">
-                    <label class="form-label flex items-center">
-                        <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)
-                    </label>
-                    <input type="text" name="amount" class="form-input" placeholder="0,00" required id="amountInput">
-                </div>
-                
-                <div class="md:col-span-2 col-span-1">
-                    <label class="form-label flex items-center">
-                        <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Açıklama
-                    </label>
-                    <input type="text" name="note" class="form-input" id="noteInput" placeholder="İşlem açıklaması">
-                </div>
-                
-                <div class="md:col-span-12 col-span-1 mt-2">
+
+                <div class="flex justify-between items-center mt-4">
+                    <button type="button" id="add-product" class="btn btn-outline btn-sm">
+                        <i class="bi bi-plus-circle mr-1"></i> Ürün Ekle
+                    </button>
+                    
                     <button type="submit" class="btn btn-primary flex items-center shadow-sm hover:shadow-md transition-all" id="submitButton">
                         <i class="bi bi-plus-circle mr-2"></i> <span id="submitText">İşlem Ekle</span>
                     </button>
@@ -599,7 +638,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const transactionType = document.getElementById('transactionType');
     const submitText = document.getElementById('submitText');
     const submitButton = document.getElementById('submitButton');
-    const amountInput = document.getElementById('amountInput');
     
     if (transactionType) {
         transactionType.addEventListener('change', function() {
@@ -612,25 +650,90 @@ document.addEventListener('DOMContentLoaded', function() {
             // Buton rengini güncelle
             submitButton.className = submitButton.className.replace(/btn-(primary|success|danger|warning|info)/, '');
             submitButton.classList.add(`btn-${colorClass}`);
-            
-            // Tutar alanına odaklan
-            amountInput.focus();
         });
     }
     
-    // Tutar alanı için para formatı
-    if (amountInput) {
-        amountInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/[^\d,]/g, '');
-            value = value.replace(',', '.');
-            if (value.includes('.')) {
-                const parts = value.split('.');
-                if (parts[1] && parts[1].length > 2) {
-                    parts[1] = parts[1].substring(0, 2);
-                }
-                value = parts.join('.');
+    // Çoklu ürün yönetimi
+    let productCounter = 1;
+    const productsContainer = document.getElementById('products-container');
+    const addProductButton = document.getElementById('add-product');
+    
+    if (addProductButton && productsContainer) {
+        addProductButton.addEventListener('click', function() {
+            const newRow = document.createElement('div');
+            newRow.className = 'product-row grid grid-cols-1 md:grid-cols-12 gap-4 mb-3';
+            newRow.innerHTML = `
+                <div class="md:col-span-5 col-span-1">
+                    <select name="products[${productCounter}][product_id]" class="form-select product-select">
+                        <option value="">Ürün Seçiniz</option>
+                        <?php foreach ($products as $product): ?>
+                        <option value="<?php echo $product['id']; ?>">
+                            <?php echo htmlspecialchars($product['name']); ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
+                <div class="md:col-span-3 col-span-1">
+                    <input type="text" name="products[${productCounter}][amount]" class="form-input amount-input" placeholder="0,00" required>
+                </div>
+                
+                <div class="md:col-span-3 col-span-1">
+                    <input type="text" name="products[${productCounter}][note]" class="form-input" placeholder="Bu ürün için not (opsiyonel)">
+                </div>
+                
+                <div class="md:col-span-1 col-span-1 flex items-end">
+                    <button type="button" class="btn btn-outline text-red-500 remove-product" title="Kaldır">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            productsContainer.appendChild(newRow);
+            productCounter++;
+            
+            // Tüm remove butonlarını güncelle
+            updateRemoveButtons();
+        });
+    }
+    
+    function updateRemoveButtons() {
+        const removeButtons = document.querySelectorAll('.remove-product');
+        const productRows = document.querySelectorAll('.product-row');
+        
+        removeButtons.forEach((button, index) => {
+            // İlk satırdaki remove butonunu gizle, diğerlerini göster
+            if (index === 0 && productRows.length === 1) {
+                button.classList.add('hidden');
+            } else {
+                button.classList.remove('hidden');
             }
-            e.target.value = value;
+            
+            button.onclick = function() {
+                if (productRows.length > 1) {
+                    button.closest('.product-row').remove();
+                    updateRemoveButtons();
+                }
+            };
+        });
+    }
+    
+    // Tutar alanları için para formatı
+    function setupAmountInputs() {
+        const amountInputs = document.querySelectorAll('.amount-input');
+        amountInputs.forEach(input => {
+            input.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^\d,]/g, '');
+                value = value.replace(',', '.');
+                if (value.includes('.')) {
+                    const parts = value.split('.');
+                    if (parts[1] && parts[1].length > 2) {
+                        parts[1] = parts[1].substring(0, 2);
+                    }
+                    value = parts.join('.');
+                }
+                e.target.value = value;
+            });
         });
     }
     
@@ -677,6 +780,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // İlk yüklemede remove butonlarını güncelle ve amount inputlarını ayarla
+    updateRemoveButtons();
+    setupAmountInputs();
 });
 </script>
 
