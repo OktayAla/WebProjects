@@ -14,6 +14,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Yazdır - <?php echo APP_NAME; ?></title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script>
@@ -54,11 +55,18 @@
 			}
 		}
 	</style>
+	<script>
+		function yazdir() {
+		  setTimeout(function() {
+			window.print();
+		  }, 500); // 500 milisaniye (yarım saniye) gecikme
+		}
+	</script>
 </head>
 <body class="bg-gray-50">
 	<div class="container mx-auto px-4 py-8 max-w-4xl">
 		<div class="flex justify-between items-center mb-6 no-print">
-			<a href="javascript:window.print();" class="btn btn-primary flex items-center space-x-2">
+			<a href="javascript:yazdir();" class="btn btn-primary flex items-center space-x-2">
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
 					<path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
 					<path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
@@ -141,4 +149,3 @@
 	</div>
 </body>
 </html>
-
