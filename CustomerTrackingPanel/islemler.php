@@ -5,23 +5,18 @@ require_login();
 $pdo = get_pdo_connection();
 $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
 
-// Mevcut kullanıcı ID'sini session'dan al
-$currentUserId = $_SESSION['user_id'] ?? $_SESSION['id'] ?? 0;
+// Mevcut kullanıcı bilgilerini session'dan al
+$currentUserId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 0;
 
 // Mevcut kullanıcının adını al
 $currentUserName = 'Sistem';
 if ($currentUserId) {
-    $userStmt = $pdo->prepare('SELECT name FROM users WHERE id = ?');
-    $userStmt->execute([$currentUserId]);
-    $currentUser = $userStmt->fetch();
-    if ($currentUser) {
-        $currentUserName = $currentUser['name'];
-    }
+    $currentUserName = isset($_SESSION['user']['name']) ? $_SESSION['user']['name'] : 'Sistem';
 }
 
 $editTransaction = null;
 if (isset($_GET['edit'])) {
-    $stmt = $pdo->prepare('SELECT t.*, c.name as customer_name FROM transactions t JOIN customers c ON t.customer_id = c.id WHERE t.id = ?');
+    $stmt = $pdo->prepare('SELECT t.*, c.name as customer_name, u.name as user_name FROM transactions t JOIN customers c ON t.customer_id = c.id LEFT JOIN users u ON t.user_id = u.id WHERE t.id = ?');
     $stmt->execute([(int)$_GET['edit']]);
     $editTransaction = $stmt->fetch();
 }
@@ -73,7 +68,7 @@ if (isset($_GET['delete'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pdo->beginTransaction();
     try {
-        // İşlem güncelleme
+        // İşlem güncelleme - user_id güncellenmez, sadece diğer alanlar güncellenir
         if (isset($_POST['action']) && $_POST['action'] === 'update_transaction' && isset($_POST['transaction_id'])) {
             $transaction_id = (int)$_POST['transaction_id'];
             $product_id = !empty($_POST['product_id']) ? (int)$_POST['product_id'] : null;
@@ -81,8 +76,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $amount = (float)str_replace([',', ' '], ['.', ''], $_POST['amount']);
             $note = trim($_POST['note']);
             
-            $stmt = $pdo->prepare('UPDATE transactions SET product_id = ?, type = ?, amount = ?, note = ? WHERE id = ?');
-            $stmt->execute([$product_id, $type, $amount, $note, $transaction_id]);
+            // Bakiye güncellemesi için eski işlemi alalım
+            $oldTxStmt = $pdo->prepare('SELECT t.*, u.name AS user_name FROM transactions t LEFT JOIN users u ON u.id = t.user_id WHERE t.id = ?');
+            $oldTxStmt->execute([$transaction_id]);
+            $oldTransaction = $oldTxStmt->fetch();
+            
+            if ($oldTransaction) {
+                // Eski işlemi bakiyeden çıkar
+                if ($oldTransaction['type'] === 'debit') {
+                    $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$oldTransaction['amount'], $oldTransaction['customer_id']]);
+                } else {
+                    $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$oldTransaction['amount'], $oldTransaction['customer_id']]);
+                }
+                
+                // İşlemi güncelle (user_id korunur)
+                $stmt = $pdo->prepare('UPDATE transactions SET product_id = ?, type = ?, amount = ?, note = ? WHERE id = ?');
+                $stmt->execute([$product_id, $type, $amount, $note, $transaction_id]);
+                
+                // Yeni işlemi bakiyeye ekle
+                if ($type === 'debit') {
+                    $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$amount, $oldTransaction['customer_id']]);
+                } else {
+                    $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$amount, $oldTransaction['customer_id']]);
+                }
+            }
             
             $pdo->commit();
             $redirect_url = 'islemler.php';
@@ -309,7 +326,7 @@ $transactions = $stmt->fetchAll();
                 <i class="bi bi-plus-circle mr-2 text-primary-600"></i>
                 Yeni İşlem Ekle
             </h3>
-            <span class="text-sm text-gray-500">İşlemler: <span class="font-medium"><?php echo htmlspecialchars($currentUserName); ?></span> tarafından eklenecek</span>
+            <span class="text-sm text-gray-500">İşlemler: <span class="font-medium text-primary-600"><?php echo htmlspecialchars($currentUserName); ?></span> tarafından eklenecek</span>
         </div>
         <div class="p-5">
             <form method="POST" id="transactionForm" class="grid grid-cols-1 gap-4">
@@ -471,7 +488,7 @@ $transactions = $stmt->fetchAll();
                 <h3 class="card-title flex items-center">
                     <i class="bi bi-clock-history mr-2 text-primary-600"></i>
                     <?php if ($customerId && $selectedCustomer): ?>
-                        <?php echo htmlspecialchars($selectedCustomer['name']); ?> - İşlem Geçmişı
+                        <?php echo htmlspecialchars($selectedCustomer['name']); ?> - İşlem Geçmişi
                     <?php else: ?>
                         Son İşlemler
                     <?php endif; ?>
@@ -540,7 +557,8 @@ $transactions = $stmt->fetchAll();
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <span class="text-sm text-gray-600" title="İşlemi ekleyen kullanıcı">
+                                <span class="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-full" title="İşlemi ekleyen kullanıcı">
+                                    <i class="bi bi-person-fill mr-1 text-primary-500"></i>
                                     <?php echo isset($row['user_name']) && !empty($row['user_name']) ? htmlspecialchars($row['user_name']) : 'Sistem'; ?>
                                 </span>
                             </td>
@@ -665,6 +683,13 @@ $transactions = $stmt->fetchAll();
                             <option value="debit" <?php echo $editTransaction && $editTransaction['type'] === 'debit' ? 'selected' : ''; ?>>Borç</option>
                             <option value="credit" <?php echo $editTransaction && $editTransaction['type'] === 'credit' ? 'selected' : ''; ?>>Tahsilat</option>
                         </select>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-person-fill mr-2 text-primary-500"></i> İşlemi Ekleyen
+                        </label>
+                        <input type="text" class="form-input bg-gray-100" readonly value="<?php echo isset($editTransaction['user_name']) && !empty($editTransaction['user_name']) ? htmlspecialchars($editTransaction['user_name']) : 'Sistem'; ?>">
                     </div>
                     
                     <div>
