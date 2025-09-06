@@ -43,33 +43,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Yeni işlem ekleme (çoklu ürün desteği)
         else {
             $customer_id = (int)$_POST['customer_id'];
-            $type = $_POST['type'] === 'debit' ? 'debit' : 'credit';
-            $note = trim($_POST['note']);
             
             // Çoklu ürün işleme
             $products = $_POST['products'] ?? [];
-            $totalAmount = 0;
+            $totalDebit = 0;
+            $totalCredit = 0;
             
             foreach ($products as $productData) {
                 if (!empty($productData['product_id']) && !empty($productData['amount'])) {
                     $product_id = !empty($productData['product_id']) ? (int)$productData['product_id'] : null;
+                    $type = $productData['type'] === 'debit' ? 'debit' : 'credit';
                     $amount = (float)str_replace([',', ' '], ['.', ''], $productData['amount']);
-                    $product_note = !empty($productData['note']) ? trim($productData['note']) : $note;
+                    $product_note = !empty($productData['note']) ? trim($productData['note']) : '';
                     
                     $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, product_id, type, amount, note) VALUES (?, ?, ?, ?, ?)');
                     $stmt->execute([$customer_id, $product_id, $type, $amount, $product_note]);
                     
-                    $totalAmount += $amount;
+                    if ($type === 'debit') {
+                        $totalDebit += $amount;
+                    } else {
+                        $totalCredit += $amount;
+                    }
                 }
             }
             
             // Müşteri bakiyesini güncelle
-            if ($totalAmount > 0) {
-                if ($type === 'debit') {
-                    $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$totalAmount, $customer_id]);
-                } else {
-                    $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$totalAmount, $customer_id]);
-                }
+            $netAmount = $totalDebit - $totalCredit;
+            if ($netAmount != 0) {
+                $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$netAmount, $customer_id]);
             }
             
             $pdo->commit();
@@ -250,7 +251,7 @@ $transactions = $stmt->fetchAll();
         <div class="p-5">
             <form method="POST" id="transactionForm" class="grid grid-cols-1 gap-4">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                    <div class="md:col-span-3 col-span-1">
+                    <div class="md:col-span-4 col-span-1">
                         <label class="form-label flex items-center">
                             <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
                         </label>
@@ -268,39 +269,32 @@ $transactions = $stmt->fetchAll();
                             </select>
                         <?php endif; ?>
                     </div>
-                    
-                    <div class="md:col-span-2 col-span-1">
-                        <label class="form-label flex items-center">
-                            <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
-                        </label>
-                        <select name="type" class="form-select" id="transactionType">
-                            <option value="debit" data-color="danger">Borç Ekle</option>
-                            <option value="credit" data-color="success">Tahsilat Ekle</option>
-                        </select>
-                    </div>
-                    
-                    <div class="md:col-span-5 col-span-1">
-                        <label class="form-label flex items-center">
-                            <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Genel Açıklama
-                        </label>
-                        <input type="text" name="note" class="form-input" id="noteInput" placeholder="Genel işlem açıklaması (opsiyonel)">
-                    </div>
                 </div>
 
                 <!-- Çoklu Ürün Alanı -->
                 <div id="products-container">
                     <div class="product-row grid grid-cols-1 md:grid-cols-12 gap-4 mb-3">
-                        <div class="md:col-span-5 col-span-1">
+                        <div class="md:col-span-4 col-span-1">
                             <label class="form-label flex items-center">
                                 <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
                             </label>
-                            <select name="products[0][product_id]" class="form-select product-select">
+                            <select name="products[0][product_id]" class="form-select product-select" required>
                                 <option value="">Ürün Seçiniz</option>
                                 <?php foreach ($products as $product): ?>
                                 <option value="<?php echo $product['id']; ?>">
                                     <?php echo htmlspecialchars($product['name']); ?>
                                 </option>
                                 <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <div class="md:col-span-2 col-span-1">
+                            <label class="form-label flex items-center">
+                                <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
+                            </label>
+                            <select name="products[0][type]" class="form-select type-select">
+                                <option value="debit">Borç</option>
+                                <option value="credit">Tahsilat</option>
                             </select>
                         </div>
                         
@@ -311,11 +305,11 @@ $transactions = $stmt->fetchAll();
                             <input type="text" name="products[0][amount]" class="form-input amount-input" placeholder="0,00" required>
                         </div>
                         
-                        <div class="md:col-span-3 col-span-1">
+                        <div class="md:col-span-2 col-span-1">
                             <label class="form-label flex items-center">
                                 <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Ürün Notu
                             </label>
-                            <input type="text" name="products[0][note]" class="form-input" placeholder="Bu ürün için not (opsiyonel)">
+                            <input type="text" name="products[0][note]" class="form-input" placeholder="Bu ürün için not">
                         </div>
                         
                         <div class="md:col-span-1 col-span-1 flex items-end">
@@ -332,7 +326,7 @@ $transactions = $stmt->fetchAll();
                     </button>
                     
                     <button type="submit" class="btn btn-primary flex items-center shadow-sm hover:shadow-md transition-all" id="submitButton">
-                        <i class="bi bi-plus-circle mr-2"></i> <span id="submitText">İşlem Ekle</span>
+                        <i class="bi bi-plus-circle mr-2"></i> İşlemleri Ekle
                     </button>
                 </div>
             </form>
@@ -634,25 +628,6 @@ $transactions = $stmt->fetchAll();
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // İşlem türü değiştiğinde buton metnini güncelle
-    const transactionType = document.getElementById('transactionType');
-    const submitText = document.getElementById('submitText');
-    const submitButton = document.getElementById('submitButton');
-    
-    if (transactionType) {
-        transactionType.addEventListener('change', function() {
-            const selectedOption = transactionType.options[transactionType.selectedIndex];
-            const colorClass = selectedOption.dataset.color;
-            
-            // Buton metnini güncelle
-            submitText.textContent = selectedOption.textContent;
-            
-            // Buton rengini güncelle
-            submitButton.className = submitButton.className.replace(/btn-(primary|success|danger|warning|info)/, '');
-            submitButton.classList.add(`btn-${colorClass}`);
-        });
-    }
-    
     // Çoklu ürün yönetimi
     let productCounter = 1;
     const productsContainer = document.getElementById('products-container');
@@ -663,8 +638,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const newRow = document.createElement('div');
             newRow.className = 'product-row grid grid-cols-1 md:grid-cols-12 gap-4 mb-3';
             newRow.innerHTML = `
-                <div class="md:col-span-5 col-span-1">
-                    <select name="products[${productCounter}][product_id]" class="form-select product-select">
+                <div class="md:col-span-4 col-span-1">
+                    <select name="products[${productCounter}][product_id]" class="form-select product-select" required>
                         <option value="">Ürün Seçiniz</option>
                         <?php foreach ($products as $product): ?>
                         <option value="<?php echo $product['id']; ?>">
@@ -674,12 +649,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     </select>
                 </div>
                 
+                <div class="md:col-span-2 col-span-1">
+                    <select name="products[${productCounter}][type]" class="form-select type-select">
+                        <option value="debit">Borç</option>
+                        <option value="credit">Tahsilat</option>
+                    </select>
+                </div>
+                
                 <div class="md:col-span-3 col-span-1">
                     <input type="text" name="products[${productCounter}][amount]" class="form-input amount-input" placeholder="0,00" required>
                 </div>
                 
-                <div class="md:col-span-3 col-span-1">
-                    <input type="text" name="products[${productCounter}][note]" class="form-input" placeholder="Bu ürün için not (opsiyonel)">
+                <div class="md:col-span-2 col-span-1">
+                    <input type="text" name="products[${productCounter}][note]" class="form-input" placeholder="Bu ürün için not">
                 </div>
                 
                 <div class="md:col-span-1 col-span-1 flex items-end">
@@ -692,6 +674,8 @@ document.addEventListener('DOMContentLoaded', function() {
             productsContainer.appendChild(newRow);
             productCounter++;
             
+            // Yeni eklenen satırdaki amount inputunu ayarla
+            setupAmountInputs();
             // Tüm remove butonlarını güncelle
             updateRemoveButtons();
         });
