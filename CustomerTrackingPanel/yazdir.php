@@ -135,12 +135,7 @@
 					</div>
 				</div>
 				<?php endif; ?>
-				<div class="mt-8 flex flex-col items-center gap-2 text-sm text-gray-500">
-						<img src="/assets/img/logo.png" alt="Logo" class="h-12 mb-2">
-						<div class="font-semibold text-gray-700">OA Grafik Tasarım</div>
-						<div>İletişim: <a href="tel:+905555555555" class="text-primary-600 hover:underline">+90 555 555 55 55</a> &bull; info@oagrafik.com</div>
-						<div class="text-xs text-gray-400 mt-1">Bu belge <?php echo APP_NAME; ?> tarafından <?php echo date('d.m.Y H:i'); ?> tarihinde oluşturulmuştur.</div>
-					</div>
+
 			</div>
 		</div>
 	</div>
