@@ -4,6 +4,7 @@ require_login();
 
 $pdo = get_pdo_connection();
 $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
+$currentUserId = $_SESSION['user_id']; // Mevcut kullanıcı ID'si
 
 $editTransaction = null;
 if (isset($_GET['edit'])) {
@@ -100,8 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $amount = (float)str_replace([',', ' '], ['.', ''], $productData['amount']);
                     $product_note = !empty($productData['note']) ? trim($productData['note']) : '';
                     
-                    $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, product_id, type, amount, note) VALUES (?, ?, ?, ?, ?)');
-                    $stmt->execute([$customer_id, $product_id, $type, $amount, $product_note]);
+                    // İşlemi eklerken user_id'yi de kaydediyoruz
+                    $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, product_id, type, amount, note, user_id) VALUES (?, ?, ?, ?, ?, ?)');
+                    $stmt->execute([$customer_id, $product_id, $type, $amount, $product_note, $currentUserId]);
                     
                     if ($type === 'debit') {
                         $totalDebit += $amount;
@@ -205,11 +207,12 @@ $countStmt->execute($params);
 $totalRows = (int)$countStmt->fetchColumn();
 $totalPages = max(1, ceil($totalRows / $perPage));
 
-// Ana sorgu
-$sql = "SELECT t.*, c.name AS customer_name, p.name AS product_name 
+// Ana sorgu - user bilgisini de joinliyoruz
+$sql = "SELECT t.*, c.name AS customer_name, p.name AS product_name, u.username AS user_name 
        FROM transactions t 
        JOIN customers c ON c.id = t.customer_id 
        LEFT JOIN products p ON p.id = t.product_id 
+       LEFT JOIN users u ON u.id = t.user_id 
        $whereClause 
        ORDER BY t.created_at DESC 
        LIMIT ? OFFSET ?";
@@ -293,6 +296,7 @@ $transactions = $stmt->fetchAll();
                 <i class="bi bi-plus-circle mr-2 text-primary-600"></i>
                 Yeni İşlem Ekle
             </h3>
+            <span class="text-sm text-gray-500">İşlemler: <span class="font-medium"><?php echo htmlspecialchars($_SESSION['username']); ?></span> tarafından eklenecek</span>
         </div>
         <div class="p-5">
             <form method="POST" id="transactionForm" class="grid grid-cols-1 gap-4">
@@ -479,6 +483,7 @@ $transactions = $stmt->fetchAll();
                             <th><i class="bi bi-currency-exchange mr-1 text-primary-500"></i> Tutar (₺)</th>
                             <th><i class="bi bi-arrow-left-right mr-1 text-primary-500"></i> Tür</th>
                             <th><i class="bi bi-chat-left-text mr-1 text-primary-500"></i> Açıklama</th>
+                            <th><i class="bi bi-person-plus mr-1 text-primary-500"></i> Ekleyen</th>
                             <th class="text-right"><i class="bi bi-gear-fill text-primary-500"></i> İşlemler</th>
                         </tr>
                     </thead>
@@ -521,6 +526,11 @@ $transactions = $stmt->fetchAll();
                                     <span class="text-gray-400 italic">Not girilmedi</span>
                                 <?php endif; ?>
                             </td>
+                            <td>
+                                <span class="text-sm text-gray-600" title="İşlemi ekleyen kullanıcı">
+                                    <?php echo isset($row['user_name']) ? htmlspecialchars($row['user_name']) : 'Sistem'; ?>
+                                </span>
+                            </td>
                             <td class="text-right">
                                 <div class="flex justify-end gap-2">
                                     <a href="yazdir.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm" title="Yazdır" target="_blank">
@@ -539,7 +549,7 @@ $transactions = $stmt->fetchAll();
                         
                         <?php if (!$hasTransactions): ?>
                         <tr>
-                            <td colspan="<?php echo $customerId ? '6' : '7'; ?>" class="text-center py-12 text-gray-500">
+                            <td colspan="<?php echo $customerId ? '7' : '8'; ?>" class="text-center py-12 text-gray-500">
                                 <div class="flex flex-col items-center justify-center gap-3">
                                     <div class="bg-gray-100 rounded-full p-4 mb-2">
                                         <i class="bi bi-receipt text-5xl text-primary-500"></i>
