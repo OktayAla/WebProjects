@@ -112,7 +112,7 @@
 					<div class="ml-3 relative">
 						<div>
 							<button type="button" id="user-menu-button" class="flex items-center max-w-xs text-sm rounded-full text-white focus:outline-none">
-								<span class="mr-2"><?php echo htmlspecialchars(current_user()['name']); ?></span>
+								<span class="mr-2"><?php echo htmlspecialchars(current_user()['isim']); ?></span>
 								<i class="bi bi-person-circle text-xl"></i>
 							</button>
 						</div>
@@ -171,7 +171,7 @@
 						<i class="bi bi-person-circle text-xl text-white"></i>
 					</div>
 					<div class="ml-3">
-						<div class="text-base font-medium text-white"><?php echo htmlspecialchars(current_user()['name']); ?></div>
+						<div class="text-base font-medium text-white"><?php echo htmlspecialchars(current_user()['isim']); ?></div>
 					</div>
 				</div>
 				<div class="mt-3 px-2 space-y-1">
