@@ -136,7 +136,7 @@ $customers = $pdo->query('SELECT * FROM customers ORDER BY id DESC')->fetchAll()
                                     </a>
                                 </td>
                                 <td><i class="bi bi-telephone-fill text-gray-400 mr-1"></i> <?php echo htmlspecialchars($row['phone']); ?></td>
-                                <td class="max-w-xs truncate"><i class="bi bi-geo text-gray-400 mr-1"></i> <?php echo nl2br(htmlspecialchars($row['address'])); ?></td>
+                                <td class="max-w-xs truncate"><?php echo nl2br(htmlspecialchars($row['address'])); ?></td>
                                 <td class="font-medium <?php echo $row['balance'] > 0 ? 'text-danger-600' : 'text-success-600'; ?>">
                                     <i class="bi <?php echo $row['balance'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : 'bi-arrow-down-circle-fill text-success-500'; ?> mr-1"></i>
                                     <?php echo number_format($row['balance'], 2, ',', '.'); ?> ₺
@@ -227,7 +227,7 @@ $customers = $pdo->query('SELECT * FROM customers ORDER BY id DESC')->fetchAll()
                     
                     <div class="mb-4">
                         <label for="customerAddress" class="form-label flex items-center">
-                            <i class="bi bi-geo-alt mr-2 text-primary-500"></i> Adres
+                            Adres
                         </label>
                         <textarea name="address" id="customerAddress" rows="3" class="form-input" placeholder="Adres bilgisi"><?php echo $editCustomer ? htmlspecialchars($editCustomer['address']) : ''; ?></textarea>
                     </div>
