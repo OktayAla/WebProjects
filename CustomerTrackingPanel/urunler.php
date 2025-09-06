@@ -7,22 +7,22 @@ $pdo = get_pdo_connection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'add') {
-        $name = trim($_POST['name']);
+        $isim = trim($_POST['isim']);
 
         try {
-            $stmt = $pdo->prepare('INSERT INTO urunler (name) VALUES (?)');
-            $stmt->execute([$name]);
+            $stmt = $pdo->prepare('INSERT INTO urunler (isim) VALUES (?)');
+            $stmt->execute([$isim]);
             $success = 'Ürün başarıyla eklendi.';
         } catch (Exception $e) {
             $error = 'Ürün eklenemedi: ' . $e->getMessage();
         }
     } elseif ($_POST['action'] === 'edit') {
         $id = (int)$_POST['id'];
-        $name = trim($_POST['name']);
+        $isim = trim($_POST['isim']);
 
         try {
-            $stmt = $pdo->prepare('UPDATE urunler SET name = ? WHERE id = ?');
-            $stmt->execute([$name, $id]);
+            $stmt = $pdo->prepare('UPDATE urunler SET isim = ? WHERE id = ?');
+            $stmt->execute([$isim, $id]);
             $success = 'Ürün başarıyla güncellendi.';
         } catch (Exception $e) {
             $error = 'Ürün güncellenemedi: ' . $e->getMessage();
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $id = (int)$_POST['id'];
         
         try {
-            $stmt = $pdo->prepare('SELECT COUNT(*) FROM islemler WHERE product_id = ?');
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM islemler WHERE urun_id = ?');
             $stmt->execute([$id]);
             $usageCount = $stmt->fetchColumn();
             
@@ -53,11 +53,11 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 // Ürünleri getir
 if ($search) {
-    $stmt = $pdo->prepare('SELECT * FROM urunler WHERE name LIKE ? ORDER BY name ASC');
+    $stmt = $pdo->prepare('SELECT * FROM urunler WHERE isim LIKE ? ORDER BY isim ASC');
     $stmt->execute(["%$search%"]);
     $products = $stmt->fetchAll();
 } else {
-    $products = $pdo->query('SELECT * FROM urunler ORDER BY name ASC')->fetchAll();
+    $products = $pdo->query('SELECT * FROM urunler ORDER BY isim ASC')->fetchAll();
 }
 ?>
 
@@ -129,12 +129,12 @@ if ($search) {
                         <?php else: ?>
                             <?php foreach ($products as $index => $product): ?>
                             <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.1 + ($index * 0.05); ?>s">
-                                <td class="font-medium"><?php echo htmlspecialchars($product['name']); ?></td>
+                                <td class="font-medium"><?php echo htmlspecialchars($product['isim']); ?></td>
                                                                 <td class="text-right">
                                     <button type="button" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)" class="btn btn-outline btn-sm mr-2">
                                         <i class="bi bi-pencil mr-1"></i> Düzenle
                                     </button>
-                                    <button type="button" onclick="deleteProduct(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['name']); ?>')" class="btn btn-danger btn-sm">
+                                    <button type="button" onclick="deleteProduct(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['isim']); ?>')" class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash mr-1"></i> Sil
                                     </button>
                                 </td>
@@ -163,7 +163,7 @@ if ($search) {
             
             <div class="form-group">
                 <label class="form-label">Ürün Adı *</label>
-                <input type="text" name="name" id="productName" class="form-input" required>
+                <input type="text" name="isim" id="productName" class="form-input" required>
             </div>
                         
             <div class="modal-footer">
@@ -209,7 +209,7 @@ function editProduct(product) {
     document.getElementById('modalTitle').textContent = 'Ürün Düzenle';
     document.getElementById('formAction').value = 'edit';
     document.getElementById('productId').value = product.id;
-    document.getElementById('productName').value = product.name;
+    document.getElementById('productName').value = product.isim;
     document.getElementById('productModal').classList.remove('hidden');
 }
 
@@ -217,9 +217,9 @@ function hideProductModal() {
     document.getElementById('productModal').classList.add('hidden');
 }
 
-function deleteProduct(id, name) {
+function deleteProduct(id, isim) {
     document.getElementById('deleteProductId').value = id;
-    document.getElementById('deleteProductName').textContent = name;
+    document.getElementById('deleteProductName').textContent = isim;
     document.getElementById('deleteModal').classList.remove('hidden');
 }
 
