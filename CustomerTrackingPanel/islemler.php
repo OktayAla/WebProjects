@@ -58,7 +58,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             $pdo->commit();
-            header('Location: islemler.php' . ($customerId ? '?customer=' . $customerId : '') . '&success=1');
+            // DÜZELTME: URL yapısını düzgün oluştur
+            $redirect_url = 'islemler.php';
+            $query_params = [];
+            if ($customerId) {
+                $query_params['customer'] = $customerId;
+            }
+            $query_params['success'] = '1';
+            $redirect_url .= '?' . http_build_query($query_params);
+            header('Location: ' . $redirect_url);
             exit;
         }
     } catch (Exception $e) {
