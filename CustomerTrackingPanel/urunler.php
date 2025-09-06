@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $id = (int)$_POST['id'];
         
         try {
-            $stmt = $pdo->prepare('SELECT COUNT(*) FROM islemler WHERE urun_id = ?');
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM islemler WHERE product_id = ?');
             $stmt->execute([$id]);
             $usageCount = $stmt->fetchColumn();
             
