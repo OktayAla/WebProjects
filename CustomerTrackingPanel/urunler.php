@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $name = trim($_POST['name']);
 
         try {
-            $stmt = $pdo->prepare('INSERT INTO products (name) VALUES (?)');
+            $stmt = $pdo->prepare('INSERT INTO urunler (name) VALUES (?)');
             $stmt->execute([$name]);
             $success = 'Ürün başarıyla eklendi.';
         } catch (Exception $e) {
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $name = trim($_POST['name']);
 
         try {
-            $stmt = $pdo->prepare('UPDATE products SET name = ? WHERE id = ?');
+            $stmt = $pdo->prepare('UPDATE urunler SET name = ? WHERE id = ?');
             $stmt->execute([$name, $id]);
             $success = 'Ürün başarıyla güncellendi.';
         } catch (Exception $e) {
@@ -31,14 +31,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $id = (int)$_POST['id'];
         
         try {
-            $stmt = $pdo->prepare('SELECT COUNT(*) FROM transactions WHERE product_id = ?');
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM islemler WHERE urun_id = ?');
             $stmt->execute([$id]);
             $usageCount = $stmt->fetchColumn();
             
             if ($usageCount > 0) {
                 $error = 'Bu ürün işlemlerde kullanıldığı için silinemez.';
             } else {
-                $stmt = $pdo->prepare('DELETE FROM products WHERE id = ?');
+                $stmt = $pdo->prepare('DELETE FROM urunler WHERE id = ?');
                 $stmt->execute([$id]);
                 $success = 'Ürün başarıyla silindi.';
             }
@@ -53,11 +53,11 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 // Ürünleri getir
 if ($search) {
-    $stmt = $pdo->prepare('SELECT * FROM products WHERE name LIKE ? ORDER BY name ASC');
+    $stmt = $pdo->prepare('SELECT * FROM urunler WHERE name LIKE ? ORDER BY name ASC');
     $stmt->execute(["%$search%"]);
     $products = $stmt->fetchAll();
 } else {
-    $products = $pdo->query('SELECT * FROM products ORDER BY name ASC')->fetchAll();
+    $products = $pdo->query('SELECT * FROM urunler ORDER BY name ASC')->fetchAll();
 }
 ?>
 
