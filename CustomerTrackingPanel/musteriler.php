@@ -135,7 +135,7 @@ $customers = $pdo->query('SELECT * FROM customers ORDER BY id DESC')->fetchAll()
                                         <?php echo htmlspecialchars($row['name']); ?>
                                     </a>
                                 </td>
-                                <td><i class="bi bi-telephone-fill text-gray-400 mr-1"></i> <?php echo htmlspecialchars($row['phone']); ?></td>
+                                <td><?php echo htmlspecialchars($row['phone']); ?></td>
                                 <td class="max-w-xs truncate"><?php echo nl2br(htmlspecialchars($row['address'])); ?></td>
                                 <td class="font-medium <?php echo $row['balance'] > 0 ? 'text-danger-600' : 'text-success-600'; ?>">
                                     <i class="bi <?php echo $row['balance'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : 'bi-arrow-down-circle-fill text-success-500'; ?> mr-1"></i>
