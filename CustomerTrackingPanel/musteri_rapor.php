@@ -7,7 +7,7 @@ $pdo = get_pdo_connection();
 $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
 $customer = null;
 if ($customerId) {
-    $stmt = $pdo->prepare('SELECT * FROM customers WHERE id = ?');
+    $stmt = $pdo->prepare('SELECT * FROM musteriler WHERE id = ?');
     $stmt->execute([$customerId]);
     $customer = $stmt->fetch();
 }
@@ -17,11 +17,11 @@ if (!$customer) {
     exit;
 }
 
-$totalSales = (float)$pdo->prepare("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE customer_id = ? AND type='debit'")->execute([$customerId]) ? $pdo->query("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE customer_id = $customerId AND type='debit'")->fetchColumn() : 0.0;
-$totalPaid  = (float)$pdo->prepare("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE customer_id = ? AND type='credit'")->execute([$customerId]) ? $pdo->query("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE customer_id = $customerId AND type='credit'")->fetchColumn() : 0.0;
-$remaining  = (float)$customer['balance'];
+$totalSales = (float)$pdo->prepare("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE musteri_id = ? AND odeme_tipi='debit'")->execute([$customerId]) ? $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE musteri_id = $customerId AND odeme_tipi='debit'")->fetchColumn() : 0.0;
+$totalPaid  = (float)$pdo->prepare("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE musteri_id = ? AND odeme_tipi='credit'")->execute([$customerId]) ? $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE musteri_id = $customerId AND odeme_tipi='credit'")->fetchColumn() : 0.0;
+$remaining  = (float)$customer['tutar'];
 
-$historyStmt = $pdo->prepare('SELECT t.id, t.type, t.amount, t.note, t.created_at, p.name AS product_name FROM transactions t LEFT JOIN products p ON p.id = t.product_id WHERE t.customer_id = ? ORDER BY t.created_at DESC');
+$historyStmt = $pdo->prepare('SELECT i.id, i.odeme_tipi, i.miktar, i.aciklama, i.olusturma_zamani, u.isim AS urun_isim FROM islemler i LEFT JOIN urunler u ON u.id = i.urun_id WHERE i.musteri_id = ? ORDER BY i.olusturma_zamani DESC');
 $historyStmt->execute([$customerId]);
 $history = $historyStmt->fetchAll();
 ?>
@@ -37,7 +37,7 @@ $history = $historyStmt->fetchAll();
         <span class="text-gray-400">/</span>
         <a href="musteriler.php" class="hover:text-primary-600 transition-colors duration-200">Müşteriler</a>
         <span class="text-gray-400">/</span>
-        <span class="text-gray-700 font-medium"><?php echo htmlspecialchars($customer['name']); ?></span>
+        <span class="text-gray-700 font-medium"><?php echo htmlspecialchars($customer['isim']); ?></span>
     </div>
 
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
@@ -65,15 +65,15 @@ $history = $historyStmt->fetchAll();
                     <div class="space-y-4">
                         <div class="flex flex-col">
                             <span class="text-sm font-medium text-gray-500">Ad Soyad</span>
-                            <span class="text-base font-semibold"><?php echo htmlspecialchars($customer['name']); ?></span>
+                            <span class="text-base font-semibold"><?php echo htmlspecialchars($customer['isim']); ?></span>
                         </div>
                         <div class="flex flex-col">
                             <span class="text-sm font-medium text-gray-500">Telefon</span>
-                            <span class="text-base"><?php echo htmlspecialchars($customer['phone']); ?></span>
+                            <span class="text-base"><?php echo htmlspecialchars($customer['numara']); ?></span>
                         </div>
                         <div class="flex flex-col">
                             <span class="text-sm font-medium text-gray-500">Adres</span>
-                            <span class="text-base whitespace-pre-line"><?php echo htmlspecialchars($customer['address']); ?></span>
+                            <span class="text-base whitespace-pre-line"><?php echo htmlspecialchars($customer['adres']); ?></span>
                         </div>
                     </div>
                 </div>
@@ -140,23 +140,23 @@ $history = $historyStmt->fetchAll();
                             <?php foreach ($history as $index => $row): ?>
                             <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.5 + ($index * 0.05); ?>s">
                                 <td><?php echo $row['id']; ?></td>
-                                <td><?php echo date('d.m.Y H:i', strtotime($row['created_at'])); ?></td>
+                                <td><?php echo date('d.m.Y H:i', strtotime($row['olusturma_zamani'])); ?></td>
                                 <td>
-                                    <?php if ($row['type'] === 'debit'): ?>
+                                    <?php if ($row['odeme_tipi'] === 'debit'): ?>
                                     <span class="badge-debit">Borç</span>
                                     <?php else: ?>
                                     <span class="badge-credit">Tahsilat</span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <?php if ($row['product_name']): ?>
-                                        <span class="badge badge-outline"><?php echo htmlspecialchars($row['product_name']); ?></span>
+                                    <?php if ($row['urun_isim']): ?>
+                                        <span class="badge badge-outline"><?php echo htmlspecialchars($row['urun_isim']); ?></span>
                                     <?php else: ?>
                                         <span class="text-gray-400">-</span>
                                     <?php endif; ?>
                                 </td>
-                                <td class="font-medium"><?php echo number_format($row['amount'], 2, ',', '.'); ?></td>
-                                <td><?php echo htmlspecialchars($row['note']); ?></td>
+                                <td class="font-medium"><?php echo number_format($row['miktar'], 2, ',', '.'); ?></td>
+                                <td><?php echo htmlspecialchars($row['aciklama']); ?></td>
                                 <td class="text-right">
                                     <a href="print.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm">
                                         <i class="bi bi-printer mr-1"></i> Yazdır
