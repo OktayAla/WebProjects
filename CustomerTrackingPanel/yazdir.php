@@ -59,7 +59,7 @@
 		function yazdir() {
 		  setTimeout(function() {
 			window.print();
-		  }, 500); // 500 milisaniye (yarım saniye) gecikme
+		  }, 500);
 		}
 	</script>
 </head>
