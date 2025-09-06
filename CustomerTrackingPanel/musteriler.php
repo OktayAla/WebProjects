@@ -207,7 +207,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('customerModal');
     const newCustomerBtn = document.getElementById('newCustomerBtn');
     
-    // Modal açma işlevi
     if (newCustomerBtn) {
         newCustomerBtn.addEventListener('click', function() {
             showModal();
@@ -218,7 +217,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Modal dışına tıklama ile kapatma
     if (modal) {
         modal.addEventListener('mousedown', function(e) {
             if (e.target === modal) {
@@ -227,14 +225,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ESC tuşu ile kapatma
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal?.classList.contains('show')) {
             closeModal();
         }
     });
     
-    // Form gönderildiğinde buton durumunu değiştirme
     const customerForm = document.querySelector('#customerModal form');
     if (customerForm) {
         customerForm.addEventListener('submit', function() {
@@ -246,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Arama fonksiyonu kurulumu
     const setupSearch = () => {
         const input = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearSearch');
@@ -255,16 +250,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!input || !table) return;
         
-        // Önceki aramaları hatırlama
         input.value = localStorage.getItem(key) || '';
         
-        // Arama filtresini uygulama
         function applyFilter() {
             const q = input.value.toLowerCase().trim();
             const rows = table.tBodies[0].rows;
             let visibleCount = 0;
             
-            // Arama sonuçlarını gösterme animasyonu
             table.classList.add('filtering');
             
             for (const tr of rows) {
@@ -272,7 +264,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const isVisible = text.includes(q);
                 tr.style.display = isVisible ? '' : 'none';
                 
-                // Animasyon efekti
                 if (isVisible) {
                     tr.classList.add('animate-fadeIn');
                     tr.style.animationDelay = (visibleCount * 0.05) + 's';
@@ -297,7 +288,6 @@ document.addEventListener('DOMContentLoaded', function() {
         applyFilter();
     };
     
-    // Aktif sayfayı vurgulama
     const highlightActivePage = () => {
         const currentPath = window.location.pathname;
         const navLinks = document.querySelectorAll('nav a');
@@ -310,34 +300,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
     
-    // Fonksiyonları başlat
     setupSearch();
     highlightActivePage();
 
-    // Düzenleme modunda modal'ı otomatik aç
     <?php if ($editCustomer): ?>
         showModal();
     <?php endif; ?>
 });
 
-/**
- * Modal'ı gösterme fonksiyonu
- */
 function showModal() {
     const modal = document.getElementById('customerModal');
     if (modal) {
-        // Modal'ı göster ve animasyon ekle
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
-        
-        // Modal içindeki dialog'a animasyon ekle
         const dialog = modal.querySelector('.modal-dialog');
         if (dialog) {
             dialog.style.transform = 'translateY(0)';
             dialog.style.opacity = '1';
         }
         
-        // İlk input'a odaklan
         const firstInput = modal.querySelector('input[name="name"]');
         if (firstInput) {
             setTimeout(() => firstInput.focus(), 300);
@@ -345,25 +326,18 @@ function showModal() {
     }
 }
 
-/**
- * Modal'ı kapatma fonksiyonu
- */
 function closeModal() {
     const modal = document.getElementById('customerModal');
     if (modal) {
-        // Modal dialog'a kapanma animasyonu ekle
         const dialog = modal.querySelector('.modal-dialog');
         if (dialog) {
             dialog.style.transform = 'translateY(-10px)';
             dialog.style.opacity = '0';
         }
         
-        // Kısa bir gecikme ile modal'ı kapat
         setTimeout(() => {
             modal.classList.remove('show');
             document.body.style.overflow = '';
-            
-            // Yeni müşteri formunu sıfırla
             const form = modal.querySelector('form');
             const idInput = form?.querySelector('input[name="id"]');
             if (form && idInput && !parseInt(idInput.value)) {
