@@ -10,10 +10,10 @@ $userRole = $_SESSION['user']['role'] ?? 'user';
 
 // Admin için istatistikler
 if ($userRole === 'admin') {
-    $totalCustomers = (int)$pdo->query('SELECT COUNT(*) FROM customers')->fetchColumn();
-    $totalSales = (float)$pdo->query("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE type = 'debit'")->fetchColumn();
-    $totalCollections = (float)$pdo->query("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE type = 'credit'")->fetchColumn();
-    $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(balance),0) FROM customers')->fetchColumn();
+    $totalCustomers = (int)$pdo->query('SELECT COUNT(*) FROM musteriler')->fetchColumn();
+    $totalSales = (float)$pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'debit'")->fetchColumn();
+    $totalCollections = (float)$pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'credit'")->fetchColumn();
+    $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(tutar),0) FROM musteriler')->fetchColumn();
 }
 
 // Sayfalama ayarları
@@ -27,8 +27,8 @@ $borcluOffset = ($borcluSayfa - 1) * $borcluSayfaBasina;
 $satisOffset = ($satisSayfa - 1) * $satisSayfaBasina;
 
 // Toplam kayıt
-$toplamBorcluMusteri = (int)$pdo->query('SELECT COUNT(*) FROM customers WHERE balance > 0')->fetchColumn();
-$toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM transactions WHERE type = 'debit'")->fetchColumn();
+$toplamBorcluMusteri = (int)$pdo->query('SELECT COUNT(*) FROM musteriler WHERE tutar > 0')->fetchColumn();
+$toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_tipi = 'debit'")->fetchColumn();
 
 ?>
 
@@ -118,11 +118,11 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM transactions WHERE ty
                             </thead>
                             <tbody>
                                 <?php
-                                    $sonSatislarSorgusu = "SELECT t.id, t.customer_id, c.name AS customer_name, t.amount, t.note, t.created_at 
-                                                          FROM transactions t 
-                                                          JOIN customers c ON c.id = t.customer_id 
-                                                          WHERE t.type='debit' 
-                                                          ORDER BY t.created_at DESC 
+                                    $sonSatislarSorgusu = "SELECT i.id, i.musteri_id, m.isim AS musteri_isim, i.miktar, i.aciklama, i.olusturma_zamani 
+                                                          FROM islemler i 
+                                                          JOIN musteriler m ON m.id = i.musteri_id 
+                                                          WHERE i.odeme_tipi='debit' 
+                                                          ORDER BY i.olusturma_zamani DESC 
                                                           LIMIT $satisSayfaBasina OFFSET $satisOffset";
                                     $sonSatislar = $pdo->query($sonSatislarSorgusu);
                                     $i = 0;
@@ -132,17 +132,17 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM transactions WHERE ty
                                 <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.5 + ($i * 0.05); ?>s">
                                     <td class="hidden sm:table-cell"><?php echo $row['id']; ?></td>
                                     <td>
-                                        <a href="musteri_rapor.php?customer=<?php echo (int)$row['customer_id']; ?>" class="text-primary-600 hover:text-primary-900 transition-colors duration-200">
-                                            <?php echo htmlspecialchars($row['customer_name']); ?>
+                                        <a href="musteri_rapor.php?customer=<?php echo (int)$row['musteri_id']; ?>" class="text-primary-600 hover:text-primary-900 transition-colors duration-200">
+                                            <?php echo htmlspecialchars($row['musteri_isim']); ?>
                                         </a>
                                     </td>
                                     <td class="hidden sm:table-cell">
-                                        <span class="text-gray-600"><i class="bi bi-calendar3 mr-1"></i><?php echo date('d.m.Y H:i', strtotime($row['created_at'])); ?></span>
+                                        <span class="text-gray-600"><i class="bi bi-calendar3 mr-1"></i><?php echo date('d.m.Y H:i', strtotime($row['olusturma_zamani'])); ?></span>
                                     </td>
                                     <td class="font-medium text-primary-700">
-                                        <?php echo number_format($row['amount'], 2, ',', '.'); ?> ₺
+                                        <?php echo number_format($row['miktar'], 2, ',', '.'); ?> ₺
                                     </td>
-                                    <td class="hidden md:table-cell"><?php echo htmlspecialchars($row['note']); ?></td>
+                                    <td class="hidden md:table-cell"><?php echo htmlspecialchars($row['aciklama']); ?></td>
                                     <td class="text-center">
                                         <a href="yazdir.php?id=<?php echo $row['id']; ?>" class="btn btn-icon btn-sm btn-ghost" data-tooltip="Yazdır">
                                             <i class="bi bi-printer"></i>
@@ -195,10 +195,10 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM transactions WHERE ty
                 <div class="p-4">
                     <div class="space-y-3 max-w-full">
                         <?php
-                            $borcluMusterilerSorgusu = "SELECT id, name, balance 
-                                                        FROM customers 
-                                                        WHERE balance > 0 
-                                                        ORDER BY balance DESC 
+                            $borcluMusterilerSorgusu = "SELECT id, isim, tutar 
+                                                        FROM musteriler 
+                                                        WHERE tutar > 0 
+                                                        ORDER BY tutar DESC 
                                                         LIMIT $borcluSayfaBasina OFFSET $borcluOffset";
                             $borcluMusteriler = $pdo->query($borcluMusterilerSorgusu);
                             $hasDebtors = false;
@@ -209,10 +209,10 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM transactions WHERE ty
                         ?>
                         <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 animate-fadeIn hover:bg-gray-50 px-2 rounded transition-colors duration-200" style="animation-delay: <?php echo 0.6 + ($i * 0.05); ?>s">
                             <a href="musteri_rapor.php?customer=<?php echo $debtor['id']; ?>" class="text-gray-800 hover:text-primary-600 font-medium transition-colors duration-200 truncate mr-2">
-                                <i class="bi bi-person mr-1"></i> <?php echo htmlspecialchars($debtor['name']); ?>
+                                <i class="bi bi-person mr-1"></i> <?php echo htmlspecialchars($debtor['isim']); ?>
                             </a>
                             <span class="badge-danger whitespace-nowrap">
-                                <?php echo number_format($debtor['balance'], 2, ',', '.'); ?> ₺
+                                <?php echo number_format($debtor['tutar'], 2, ',', '.'); ?> ₺
                             </span>
                         </div>
                         <?php endforeach; ?>
@@ -278,34 +278,34 @@ document.addEventListener('DOMContentLoaded', function() {
 // AJAX detayları (sadece admin görebilsin)
 if ($userRole === 'admin' && isset($_GET['detail'])) {
     if ($_GET['detail'] === 'sales') {
-        $stmt = $pdo->query("SELECT t.id, c.name AS customer_name, t.amount, t.created_at 
-                             FROM transactions t 
-                             JOIN customers c ON c.id = t.customer_id 
-                             WHERE t.type='debit' 
-                             ORDER BY t.created_at DESC LIMIT 50");
+        $stmt = $pdo->query("SELECT i.id, m.isim AS musteri_isim, i.miktar, i.olusturma_zamani 
+                             FROM islemler i 
+                             JOIN musteriler m ON m.id = i.musteri_id 
+                             WHERE i.odeme_tipi='debit' 
+                             ORDER BY i.olusturma_zamani DESC LIMIT 50");
         echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th></tr></thead><tbody>';
         foreach ($stmt as $row) {
-            echo '<tr><td>'.$row['id'].'</td><td>'.htmlspecialchars($row['customer_name']).'</td><td>'.date('d.m.Y H:i', strtotime($row['created_at'])).'</td><td>'.number_format($row['amount'],2,',','.').' ₺</td></tr>';
+            echo '<tr><td>'.$row['id'].'</td><td>'.htmlspecialchars($row['musteri_isim']).'</td><td>'.date('d.m.Y H:i', strtotime($row['olusturma_zamani'])).'</td><td>'.number_format($row['miktar'],2,',','.').' ₺</td></tr>';
         }
         echo '</tbody></table>';
         exit;
     } elseif ($_GET['detail'] === 'collections') {
-        $stmt = $pdo->query("SELECT t.id, c.name AS customer_name, t.amount, t.created_at 
-                             FROM transactions t 
-                             JOIN customers c ON c.id = t.customer_id 
-                             WHERE t.type='credit' 
-                             ORDER BY t.created_at DESC LIMIT 50");
+        $stmt = $pdo->query("SELECT i.id, m.isim AS musteri_isim, i.miktar, i.olusturma_zamani 
+                             FROM islemler i 
+                             JOIN musteriler m ON m.id = i.musteri_id 
+                             WHERE i.odeme_tipi='credit' 
+                             ORDER BY i.olusturma_zamani DESC LIMIT 50");
         echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th></tr></thead><tbody>';
         foreach ($stmt as $row) {
-            echo '<tr><td>'.$row['id'].'</td><td>'.htmlspecialchars($row['customer_name']).'</td><td>'.date('d.m.Y H:i', strtotime($row['created_at'])).'</td><td>'.number_format($row['amount'],2,',','.').' ₺</td></tr>';
+            echo '<tr><td>'.$row['id'].'</td><td>'.htmlspecialchars($row['musteri_isim']).'</td><td>'.date('d.m.Y H:i', strtotime($row['olusturma_zamani'])).'</td><td>'.number_format($row['miktar'],2,',','.').' ₺</td></tr>';
         }
         echo '</tbody></table>';
         exit;
     } elseif ($_GET['detail'] === 'receivables') {
-        $stmt = $pdo->query("SELECT id, name, balance FROM customers WHERE balance > 0 ORDER BY balance DESC LIMIT 50");
+        $stmt = $pdo->query("SELECT id, isim, tutar FROM musteriler WHERE tutar > 0 ORDER BY tutar DESC LIMIT 50");
         echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Borç</th></tr></thead><tbody>';
         foreach ($stmt as $row) {
-            echo '<tr><td>'.$row['id'].'</td><td>'.htmlspecialchars($row['name']).'</td><td>'.number_format($row['balance'],2,',','.').' ₺</td></tr>';
+            echo '<tr><td>'.$row['id'].'</td><td>'.htmlspecialchars($row['isim']).'</td><td>'.number_format($row['tutar'],2,',','.').' ₺</td></tr>';
         }
         echo '</tbody></table>';
         exit;
