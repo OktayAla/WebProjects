@@ -4,7 +4,20 @@ require_login();
 
 $pdo = get_pdo_connection();
 $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
-$currentUserId = $_SESSION['user_id'] ?? $_SESSION['id'] ?? 0; // Farklı session isimleri için
+
+// Mevcut kullanıcı ID'sini session'dan al
+$currentUserId = $_SESSION['user_id'] ?? $_SESSION['id'] ?? 0;
+
+// Mevcut kullanıcının adını al
+$currentUserName = 'Sistem';
+if ($currentUserId) {
+    $userStmt = $pdo->prepare('SELECT name FROM users WHERE id = ?');
+    $userStmt->execute([$currentUserId]);
+    $currentUser = $userStmt->fetch();
+    if ($currentUser) {
+        $currentUserName = $currentUser['name'];
+    }
+}
 
 $editTransaction = null;
 if (isset($_GET['edit'])) {
@@ -146,14 +159,6 @@ if ($customerId) {
     $st = $pdo->prepare('SELECT * FROM customers WHERE id = ?');
     $st->execute([$customerId]);
     $selectedCustomer = $st->fetch();
-}
-
-// Mevcut kullanıcı bilgisini al
-$currentUser = null;
-if ($currentUserId) {
-    $userStmt = $pdo->prepare('SELECT name FROM users WHERE id = ?');
-    $userStmt->execute([$currentUserId]);
-    $currentUser = $userStmt->fetch();
 }
 
 // Filtreleme parametreleri
@@ -304,7 +309,7 @@ $transactions = $stmt->fetchAll();
                 <i class="bi bi-plus-circle mr-2 text-primary-600"></i>
                 Yeni İşlem Ekle
             </h3>
-            <span class="text-sm text-gray-500">İşlemler: <span class="font-medium"><?php echo htmlspecialchars($currentUser['name'] ?? $_SESSION['username'] ?? 'Kullanıcı'); ?></span> tarafından eklenecek</span>
+            <span class="text-sm text-gray-500">İşlemler: <span class="font-medium"><?php echo htmlspecialchars($currentUserName); ?></span> tarafından eklenecek</span>
         </div>
         <div class="p-5">
             <form method="POST" id="transactionForm" class="grid grid-cols-1 gap-4">
@@ -466,7 +471,7 @@ $transactions = $stmt->fetchAll();
                 <h3 class="card-title flex items-center">
                     <i class="bi bi-clock-history mr-2 text-primary-600"></i>
                     <?php if ($customerId && $selectedCustomer): ?>
-                        <?php echo htmlspecialchars($selectedCustomer['name']); ?> - İşlem Geçmişi
+                        <?php echo htmlspecialchars($selectedCustomer['name']); ?> - İşlem Geçmişı
                     <?php else: ?>
                         Son İşlemler
                     <?php endif; ?>
@@ -536,7 +541,7 @@ $transactions = $stmt->fetchAll();
                             </td>
                             <td>
                                 <span class="text-sm text-gray-600" title="İşlemi ekleyen kullanıcı">
-                                    <?php echo isset($row['user_name']) ? htmlspecialchars($row['user_name']) : 'Sistem'; ?>
+                                    <?php echo isset($row['user_name']) && !empty($row['user_name']) ? htmlspecialchars($row['user_name']) : 'Sistem'; ?>
                                 </span>
                             </td>
                             <td class="text-right">
