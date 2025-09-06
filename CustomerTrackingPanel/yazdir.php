@@ -2,7 +2,18 @@
 <?php
 	$pdo = get_pdo_connection();
 	$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-	$stmt = $pdo->prepare('SELECT t.*, c.name AS customer_name, c.phone, c.address, p.name AS product_name FROM transactions t JOIN customers c ON c.id = t.customer_id LEFT JOIN products p ON p.id = t.product_id WHERE t.id = ?');
+	$stmt = $pdo->prepare('
+        SELECT 
+            i.*, 
+            m.isim AS musteri_isim, 
+            m.numara, 
+            m.adres, 
+            u.isim AS urun_isim 
+        FROM islemler i 
+        JOIN musteriler m ON m.id = i.musteri_id 
+        LEFT JOIN urunler u ON u.id = i.urun_id 
+        WHERE i.id = ?
+    ');
 	$stmt->execute([$id]);
 	$tx = $stmt->fetch();
 	if (!$tx) {
@@ -83,7 +94,7 @@
 		<div class="card-hover">
 			<div class="card-header border-b border-gray-200 bg-white py-3 px-4">
 				<h4 class="text-lg font-semibold text-gray-900">
-					<?php echo $tx['type'] === 'debit' ? 'Borç Dekontu' : 'Tahsilat Dekontu'; ?>
+					<?php echo $tx['odeme_tipi'] === 'debit' ? 'Borç Dekontu' : 'Tahsilat Dekontu'; ?>
 				</h4>
 			</div>
 			<div class="p-6">
@@ -93,11 +104,11 @@
 						<div class="space-y-2">
 							<div class="flex flex-col">
 								<span class="text-sm font-medium text-gray-500">Ad Soyad</span>
-								<span class="text-base"><?php echo htmlspecialchars($tx['customer_name']); ?></span>
+								<span class="text-base"><?php echo htmlspecialchars($tx['musteri_isim']); ?></span>
 							</div>
 							<div class="flex flex-col">
 								<span class="text-sm font-medium text-gray-500">Telefon</span>
-								<span class="text-base"><?php echo htmlspecialchars($tx['phone']); ?></span>
+								<span class="text-base"><?php echo htmlspecialchars($tx['numara']); ?></span>
 							</div>
 						</div>
 					</div>
@@ -110,17 +121,17 @@
 							</div>
 							<div class="flex flex-col md:items-end">
 								<span class="text-sm font-medium text-gray-500">Tarih</span>
-								<span class="text-base"><?php echo date('d.m.Y H:i', strtotime($tx['created_at'])); ?></span>
+								<span class="text-base"><?php echo date('d.m.Y H:i', strtotime($tx['olusturma_zamani'])); ?></span>
 							</div>
 							<div class="flex flex-col md:items-end">
 								<span class="text-sm font-medium text-gray-500">Tür</span>
-								<span class="<?php echo $tx['type'] === 'debit' ? 'badge badge-debit' : 'badge badge-credit'; ?>">
-									<?php echo $tx['type'] === 'debit' ? 'Borç' : 'Tahsilat'; ?>
+								<span class="<?php echo $tx['odeme_tipi'] === 'debit' ? 'badge badge-debit' : 'badge badge-credit'; ?>">
+									<?php echo $tx['odeme_tipi'] === 'debit' ? 'Borç' : 'Tahsilat'; ?>
 								</span>
 							</div>
 							<div class="flex flex-col md:items-end">
 								<span class="text-sm font-medium text-gray-500">Tutar</span>
-								<span class="text-2xl font-bold"><?php echo number_format($tx['amount'], 2, ',', '.'); ?> ₺</span>
+								<span class="text-2xl font-bold"><?php echo number_format($tx['miktar'], 2, ',', '.'); ?> ₺</span>
 							</div>
 						</div>
 					</div>
@@ -128,17 +139,17 @@
 				<div class="border-t border-gray-200 mt-6 pt-6">
 					<h5 class="text-base font-semibold text-gray-900 mb-2">Açıklama</h5>
 					<div class="bg-gray-50 p-4 rounded-lg whitespace-pre-line">
-						<?php echo htmlspecialchars($tx['note'] ?: 'Açıklama bulunmuyor.'); ?>
+						<?php echo htmlspecialchars($tx['aciklama'] ?: 'Açıklama bulunmuyor.'); ?>
 					</div>
 				</div>
 				
-				<?php if ($tx['product_name']): ?>
+				<?php if ($tx['urun_isim']): ?>
 				<div class="border-t border-gray-200 mt-6 pt-6">
 					<h5 class="text-base font-semibold text-gray-900 mb-2">Ürün Bilgisi</h5>
 					<div class="bg-blue-50 p-4 rounded-lg">
 						<div>
 							<span class="text-sm font-medium text-gray-500">Ürün Adı</span>
-							<div class="text-base font-medium"><?php echo htmlspecialchars($tx['product_name']); ?></div>
+							<div class="text-base font-medium"><?php echo htmlspecialchars($tx['urun_isim']); ?></div>
 						</div>
 					</div>
 				</div>
