@@ -4,7 +4,7 @@
 
 	function users_count() {
 		$pdo = get_pdo_connection();
-		return (int)$pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
+		return (int)$pdo->query('SELECT COUNT(*) FROM kullanicilar')->fetchColumn();
 	}
 
 	function current_user() {
@@ -22,7 +22,7 @@
 		$pdo = get_pdo_connection();
 		$hasUsername = false;
 		try {
-			$colStmt = $pdo->query("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'username' LIMIT 1");
+			$colStmt = $pdo->query("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'kullanicilar' AND COLUMN_NAME = 'username' LIMIT 1");
 			$hasUsername = (bool)$colStmt->fetchColumn();
 		} catch (Exception $e) {
 			$hasUsername = false;
@@ -30,31 +30,31 @@
 
 		$user = null;
 		if ($hasUsername) {
-			$stmt = $pdo->prepare('SELECT id, name, email, username, password_hash, role FROM users WHERE username = ? LIMIT 1');
+			$stmt = $pdo->prepare('SELECT id, isim, eposta, username, sifre, rol FROM kullanicilar WHERE username = ? LIMIT 1');
 			$stmt->execute([$identifier]);
 			$user = $stmt->fetch();
 			if (!$user) {
-				$stmt = $pdo->prepare('SELECT id, name, email, username, password_hash, role FROM users WHERE email = ? LIMIT 1');
+				$stmt = $pdo->prepare('SELECT id, isim, eposta, username, sifre, rol FROM kullanicilar WHERE eposta = ? LIMIT 1');
 				$stmt->execute([$identifier]);
 				$user = $stmt->fetch();
 				if (!$user) {
-					$stmt = $pdo->prepare('SELECT id, name, email, username, password_hash, role FROM users WHERE name = ? LIMIT 1');
+					$stmt = $pdo->prepare('SELECT id, isim, eposta, username, sifre, rol FROM kullanicilar WHERE isim = ? LIMIT 1');
 					$stmt->execute([$identifier]);
 					$user = $stmt->fetch();
 				}
 			}
 		} else {
-			$stmt = $pdo->prepare('SELECT id, name, email, password_hash, role FROM users WHERE email = ? LIMIT 1');
+			$stmt = $pdo->prepare('SELECT id, isim, eposta, sifre, rol FROM kullanicilar WHERE eposta = ? LIMIT 1');
 			$stmt->execute([$identifier]);
 			$user = $stmt->fetch();
 			if (!$user) {
-				$stmt = $pdo->prepare('SELECT id, name, email, password_hash, role FROM users WHERE name = ? LIMIT 1');
+				$stmt = $pdo->prepare('SELECT id, isim, eposta, sifre, rol FROM kullanicilar WHERE isim = ? LIMIT 1');
 				$stmt->execute([$identifier]);
 				$user = $stmt->fetch();
 			}
 		}
 		if (!$user) return false;
-		$hash = $user['password_hash'];
+		$hash = $user['sifre'];
 		$verified = false;
 		if (strpos($hash, '$2y$') === 0 || strpos($hash, '$argon2') === 0) {
 			$verified = password_verify($password, $hash);
@@ -62,7 +62,7 @@
 			$verified = hash_equals($hash, $password);
 		}
 		if ($verified) {
-			unset($user['password_hash']);
+			unset($user['sifre']);
 			$_SESSION['user'] = $user;
 			return true;
 		}
