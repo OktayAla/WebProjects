@@ -4,7 +4,7 @@ require_login();
 
 $pdo = get_pdo_connection();
 $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
-$currentUserId = $_SESSION['user_id']; // Mevcut kullanıcı ID'si
+$currentUserId = $_SESSION['user_id'] ?? $_SESSION['id'] ?? 0; // Farklı session isimleri için
 
 $editTransaction = null;
 if (isset($_GET['edit'])) {
@@ -140,12 +140,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/includes/header.php'; 
 
 $customers = $pdo->query('SELECT id, name FROM customers ORDER BY name ASC')->fetchAll();
-$products = $pdo->query('SELECT id, name FROM products ORDER BY name ASC')->fetchAll();
+$products = $pdo->query('SELECT id, name FROM products ORDER by name ASC')->fetchAll();
 $selectedCustomer = null;
 if ($customerId) {
     $st = $pdo->prepare('SELECT * FROM customers WHERE id = ?');
     $st->execute([$customerId]);
     $selectedCustomer = $st->fetch();
+}
+
+// Mevcut kullanıcı bilgisini al
+$currentUser = null;
+if ($currentUserId) {
+    $userStmt = $pdo->prepare('SELECT name FROM users WHERE id = ?');
+    $userStmt->execute([$currentUserId]);
+    $currentUser = $userStmt->fetch();
 }
 
 // Filtreleme parametreleri
@@ -207,8 +215,8 @@ $countStmt->execute($params);
 $totalRows = (int)$countStmt->fetchColumn();
 $totalPages = max(1, ceil($totalRows / $perPage));
 
-// Ana sorgu - user bilgisini de joinliyoruz
-$sql = "SELECT t.*, c.name AS customer_name, p.name AS product_name, u.username AS user_name 
+// Ana sorgu - user bilgisini de joinliyoruz (users.name kullanıyoruz)
+$sql = "SELECT t.*, c.name AS customer_name, p.name AS product_name, u.name AS user_name 
        FROM transactions t 
        JOIN customers c ON c.id = t.customer_id 
        LEFT JOIN products p ON p.id = t.product_id 
@@ -296,7 +304,7 @@ $transactions = $stmt->fetchAll();
                 <i class="bi bi-plus-circle mr-2 text-primary-600"></i>
                 Yeni İşlem Ekle
             </h3>
-            <span class="text-sm text-gray-500">İşlemler: <span class="font-medium"><?php echo htmlspecialchars($_SESSION['username']); ?></span> tarafından eklenecek</span>
+            <span class="text-sm text-gray-500">İşlemler: <span class="font-medium"><?php echo htmlspecialchars($currentUser['name'] ?? $_SESSION['username'] ?? 'Kullanıcı'); ?></span> tarafından eklenecek</span>
         </div>
         <div class="p-5">
             <form method="POST" id="transactionForm" class="grid grid-cols-1 gap-4">
