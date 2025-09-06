@@ -3,17 +3,9 @@
 	<footer class="bg-white py-8 mt-auto border-t border-gray-200">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="flex flex-col md:flex-row justify-between items-center">
-				<div class="flex items-center mb-4 md:mb-0">
-					<svg class="h-8 w-8 mr-2 text-primary-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
-						<path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-						<path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
-					<span class="text-gray-700 font-semibold text-lg">Müşteri Portalı</span>
-				</div>
 				<div class="flex flex-col items-center md:items-end">
 					<p class="text-center md:text-right text-gray-500 text-sm">
-						© <?php echo date('Y'); ?>Tüm hakları saklıdır.
+						Copyright © Tüm hakları saklıdır.
 					</p>
 					<p class="text-center md:text-right text-gray-400 text-xs mt-1">
 						OA Grafik Tasarım tarafından <span class="text-danger-600">❤️</span> ile geliştirilmiştir.
