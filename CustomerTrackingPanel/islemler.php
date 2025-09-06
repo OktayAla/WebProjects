@@ -12,6 +12,50 @@ if (isset($_GET['edit'])) {
     $editTransaction = $stmt->fetch();
 }
 
+// Silme işlemi
+if (isset($_GET['delete'])) {
+    $transactionId = (int)$_GET['delete'];
+    
+    $pdo->beginTransaction();
+    try {
+        // Önce işlemi alalım (bakiye güncellemesi için)
+        $stmt = $pdo->prepare('SELECT * FROM transactions WHERE id = ?');
+        $stmt->execute([$transactionId]);
+        $transaction = $stmt->fetch();
+        
+        if ($transaction) {
+            // Müşteri bakiyesini güncelle (silinen işlemi geri al)
+            if ($transaction['type'] === 'debit') {
+                $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$transaction['amount'], $transaction['customer_id']]);
+            } else {
+                $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$transaction['amount'], $transaction['customer_id']]);
+            }
+            
+            // İşlemi sil
+            $pdo->prepare('DELETE FROM transactions WHERE id = ?')->execute([$transactionId]);
+            
+            $pdo->commit();
+            
+            // Başarılı mesajı ile yönlendir
+            $redirect_url = 'islemler.php';
+            $query_params = [];
+            if ($customerId) {
+                $query_params['customer'] = $customerId;
+            }
+            if (isset($_GET['page'])) {
+                $query_params['page'] = $_GET['page'];
+            }
+            $query_params['success'] = '3'; // 3 = silme başarılı
+            $redirect_url .= '?' . http_build_query($query_params);
+            header('Location: ' . $redirect_url);
+            exit;
+        }
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        $error = 'Silme işlemi başarısız: ' . $e->getMessage();
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pdo->beginTransaction();
     try {
@@ -198,6 +242,8 @@ $transactions = $stmt->fetchAll();
                     <?php 
                     if ($_GET['success'] == '2') {
                         echo 'İşlem başarıyla güncellendi.';
+                    } else if ($_GET['success'] == '3') {
+                        echo 'İşlem başarıyla silindi.';
                     } else {
                         echo 'İşlem başarıyla eklendi.';
                     }
@@ -483,7 +529,7 @@ $transactions = $stmt->fetchAll();
                                     <a href="islemler.php?edit=<?php echo $row['id']; ?><?php echo $customerId ? '&customer=' . $customerId : ''; ?><?php echo isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>" class="btn btn-outline btn-sm text-primary" title="Düzenle">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="#" class="btn btn-outline btn-sm text-danger" title="Sil" onclick="return confirm('Bu işlemi silmek istediğinize emin misiniz?')">
+                                    <a href="islemler.php?delete=<?php echo $row['id']; ?><?php echo $customerId ? '&customer=' . $customerId : ''; ?><?php echo isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>" class="btn btn-outline btn-sm text-danger" title="Sil" onclick="return confirm('Bu işlemi silmek istediğinize emin misiniz?')">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </div>
