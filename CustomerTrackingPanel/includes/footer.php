@@ -3,6 +3,8 @@
 	<footer class="bg-white py-8 mt-auto border-t border-gray-200">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="flex flex-col md:flex-row justify-between items-center">
+				<div class="flex items-center mb-4 md:mb-0">
+				</div>
 				<div class="flex flex-col items-center md:items-end">
 					<p class="text-center md:text-right text-gray-500 text-sm">
 						Copyright © Tüm hakları saklıdır.
