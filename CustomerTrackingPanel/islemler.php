@@ -15,39 +15,6 @@ if (isset($_GET['edit'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pdo->beginTransaction();
     try {
-        // Çoklu ürün ve tahsilat işlemleri
-        $customer_id = (int)($_POST['customer_id'] ?? 0);
-        if ($customer_id) {
-            // Ürün satırlarını işle
-            if (!empty($_POST['amount']) && is_array($_POST['amount'])) {
-                foreach ($_POST['amount'] as $idx => $amount) {
-                    $product_id = !empty($_POST['product_id'][$idx]) ? (int)$_POST['product_id'][$idx] : null;
-                    $type = $_POST['type'][$idx] ?? 'debit';
-                    $note = trim($_POST['note'][$idx] ?? '');
-                    $amount = (float)str_replace([',', ' '], ['.', ''], $amount);
-                    if ($amount > 0) {
-                        $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, product_id, type, amount, note) VALUES (?, ?, ?, ?, ?)');
-                        $stmt->execute([$customer_id, $product_id, $type, $amount, $note]);
-                        if ($type === 'debit') {
-                            $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$amount, $customer_id]);
-                        }
-                    }
-                }
-            }
-            // Tahsilat işlemini işle
-            if (!empty($_POST['payment_amount'])) {
-                $payAmount = (float)str_replace([',', ' '], ['.', ''], $_POST['payment_amount']);
-                $payNote = trim($_POST['payment_note'] ?? '');
-                if ($payAmount > 0) {
-                    $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, type, amount, note) VALUES (?, ?, ?, ?)');
-                    $stmt->execute([$customer_id, 'credit', $payAmount, $payNote]);
-                    $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$payAmount, $customer_id]);
-                }
-            }
-            $pdo->commit();
-            header('Location: islemler.php' . ($customerId ? '?customer=' . $customerId : ''));
-            exit;
-        }
         // İşlem güncelleme
         if (isset($_POST['action']) && $_POST['action'] === 'update_transaction' && isset($_POST['transaction_id'])) {
             $transaction_id = (int)$_POST['transaction_id'];
@@ -83,13 +50,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $stmt = $pdo->prepare('INSERT INTO transactions (customer_id, product_id, type, amount, note) VALUES (?, ?, ?, ?, ?)');
             $stmt->execute([$customer_id, $product_id, $type, $amount, $note]);
+            
             if ($type === 'debit') {
                 $pdo->prepare('UPDATE customers SET balance = balance + ? WHERE id = ?')->execute([$amount, $customer_id]);
             } else {
                 $pdo->prepare('UPDATE customers SET balance = balance - ? WHERE id = ?')->execute([$amount, $customer_id]);
             }
+            
             $pdo->commit();
-            header('Location: islemler.php' . ($customerId ? '?customer=' . $customerId : ''));
+            header('Location: islemler.php' . ($customerId ? '?customer=' . $customerId : '') . '&success=1');
             exit;
         }
     } catch (Exception $e) {
@@ -111,7 +80,7 @@ if ($customerId) {
 
 // Filtreleme parametreleri
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-$perPage = 5;
+$perPage = 10;
 $offset = ($page - 1) * $perPage;
 
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -125,7 +94,7 @@ $conditions = [];
 $params = [];
 
 if ($customerId) {
-    $conditions[] = 'customer_id = ?';
+    $conditions[] = 't.customer_id = ?';
     $params[] = $customerId;
 }
 
@@ -168,37 +137,26 @@ $countStmt->execute($params);
 $totalRows = (int)$countStmt->fetchColumn();
 $totalPages = max(1, ceil($totalRows / $perPage));
 
-try {
-    $sql = "SELECT t.*, c.name AS customer_name, p.name AS product_name 
-           FROM transactions t 
-           JOIN customers c ON c.id = t.customer_id 
-           LEFT JOIN products p ON p.id = t.product_id 
-           $whereClause 
-           ORDER BY t.created_at DESC 
-           LIMIT ? OFFSET ?";
-    
-    $stmt = $pdo->prepare($sql);
-    $paramIndex = 1;
-    
-    foreach ($params as $param) {
-        $stmt->bindValue($paramIndex++, $param);
-    }
-    
-    $stmt->bindValue($paramIndex++, $perPage, PDO::PARAM_INT);
-    $stmt->bindValue($paramIndex++, $offset, PDO::PARAM_INT);
-    $stmt->execute();
-} catch (PDOException $e) {
-    $sql = "SELECT t.*, c.name AS customer_name, p.name AS product_name 
-           FROM transactions t 
-           JOIN customers c ON c.id = t.customer_id 
-           LEFT JOIN products p ON p.id = t.product_id 
-           $whereClause 
-           ORDER BY t.created_at DESC";
-    
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
+// Ana sorgu
+$sql = "SELECT t.*, c.name AS customer_name, p.name AS product_name 
+       FROM transactions t 
+       JOIN customers c ON c.id = t.customer_id 
+       LEFT JOIN products p ON p.id = t.product_id 
+       $whereClause 
+       ORDER BY t.created_at DESC 
+       LIMIT ? OFFSET ?";
+
+$stmt = $pdo->prepare($sql);
+$paramIndex = 1;
+
+foreach ($params as $param) {
+    $stmt->bindValue($paramIndex++, $param);
 }
 
+$stmt->bindValue($paramIndex++, $perPage, PDO::PARAM_INT);
+$stmt->bindValue($paramIndex++, $offset, PDO::PARAM_INT);
+$stmt->execute();
+$transactions = $stmt->fetchAll();
 ?>
 
 <div class="floating-element"></div>
@@ -225,6 +183,18 @@ try {
         </div>
     </div>
     <?php endif; ?>
+
+    <?php if (isset($error)): ?>
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm" role="alert">
+        <div class="flex items-center">
+            <div class="py-1"><i class="bi bi-exclamation-triangle-fill text-red-500 mr-3"></i></div>
+            <div>
+                <p class="font-medium">Hata!</p>
+                <p class="text-sm"><?php echo htmlspecialchars($error); ?></p>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
     
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
@@ -233,25 +203,62 @@ try {
             </h1>
             <p class="text-sm text-gray-600 mt-1">
                 <?php if ($selectedCustomer): ?>
-    <span class="font-medium"><?php echo htmlspecialchars($selectedCustomer['name']); ?></span> müşterisi için işlemler
-<?php else: ?>
-    Tüm müşteriler için işlem ekle ve geçmişi görüntüle
-<?php endif; ?>
-</p>
-</div>
-<?php if ($selectedCustomer): ?>
-    <a href="musteri_rapor.php?customer=<?php echo $customerId; ?>" class="btn btn-secondary flex items-center">
-        <i class="bi bi-file-earmark-bar-graph mr-2"></i> Müşteri Raporu
-    </a>
-<?php endif; ?>
-                        <input list="productList" name="product_input" class="form-input" placeholder="Ürün Seçiniz veya Yazınız (Opsiyonel)">
-<datalist id="productList">
-    <?php foreach ($products as $product): ?>
-    <option value="<?php echo htmlspecialchars($product['name']); ?>">
-    <?php endforeach; ?>
-</datalist>
-<input type="hidden" name="product_id" id="productIdHidden">
+                    <span class="font-medium"><?php echo htmlspecialchars($selectedCustomer['name']); ?></span> müşterisi için işlemler
+                <?php else: ?>
+                    Tüm müşteriler için işlem ekle ve geçmişi görüntüle
+                <?php endif; ?>
+            </p>
+        </div>
+        <?php if ($selectedCustomer): ?>
+        <a href="musteri_rapor.php?customer=<?php echo $customerId; ?>" class="btn btn-secondary flex items-center">
+            <i class="bi bi-file-earmark-bar-graph mr-2"></i> Müşteri Raporu
+        </a>
+        <?php endif; ?>
+    </div>
+
+    <!-- İşlem Ekleme Formu -->
+    <div class="card-hover animate-fadeIn mb-6 shadow-lg">
+        <div class="card-header">
+            <h3 class="card-title flex items-center">
+                <i class="bi bi-plus-circle mr-2 text-primary-600"></i>
+                Yeni İşlem Ekle
+            </h3>
+        </div>
+        <div class="p-5">
+            <form method="POST" id="transactionForm" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <div class="md:col-span-3 col-span-1">
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
+                    </label>
+                    <?php if ($customerId && $selectedCustomer): ?>
+                        <input type="hidden" name="customer_id" value="<?php echo $customerId; ?>">
+                        <input type="text" class="form-input bg-gray-100" readonly value="<?php echo htmlspecialchars($selectedCustomer['name']); ?>">
+                    <?php else: ?>
+                        <select name="customer_id" class="form-select" required>
+                            <option value="">Müşteri Seçiniz</option>
+                            <?php foreach ($customers as $customer): ?>
+                            <option value="<?php echo $customer['id']; ?>">
+                                <?php echo htmlspecialchars($customer['name']); ?>
+                            </option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php endif; ?>
                 </div>
+                
+                <div class="md:col-span-3 col-span-1">
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
+                    </label>
+                    <select name="product_id" class="form-select">
+                        <option value="">Ürün Seçiniz (Opsiyonel)</option>
+                        <?php foreach ($products as $product): ?>
+                        <option value="<?php echo $product['id']; ?>">
+                            <?php echo htmlspecialchars($product['name']); ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
                 <div class="md:col-span-2 col-span-1">
                     <label class="form-label flex items-center">
                         <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
@@ -285,6 +292,7 @@ try {
         </div>
     </div>
 
+    <!-- Arama ve Filtreleme -->
     <div class="card-hover animate-fadeIn mb-6 shadow-lg">
         <div class="card-header">
             <h3 class="card-title flex items-center">
@@ -293,64 +301,66 @@ try {
             </h3>
         </div>
         <div class="p-5">
-        <form action="" method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <?php if ($customerId): ?>
-                <input type="hidden" name="customer" value="<?php echo $customerId; ?>">
-            <?php endif; ?>
-            
-            <div class="form-group">
-                <label for="search" class="form-label">Arama</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <i class="bi bi-search text-gray-400"></i>
-                    </span>
-                    <input type="text" id="search" name="search" class="form-input pl-10" placeholder="Müşteri adı veya not..." value="<?php echo htmlspecialchars($search); ?>">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="product" class="form-label">Ürün</label>
-                <select id="product" name="product" class="form-select">
-                    <option value="">Tüm Ürünler</option>
-                    <?php foreach ($products as $product): ?>
-                        <option value="<?php echo $product['id']; ?>" <?php echo $productFilter == $product['id'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($product['name']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="type" class="form-label">İşlem Türü</label>
-                <select id="type" name="type" class="form-select">
-                    <option value="">Tümü</option>
-                    <option value="debit" <?php echo $typeFilter === 'debit' ? 'selected' : ''; ?>>Borç</option>
-                    <option value="credit" <?php echo $typeFilter === 'credit' ? 'selected' : ''; ?>>Tahsilat</option>
-                </select>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-2">
+            <form action="" method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <?php if ($customerId): ?>
+                    <input type="hidden" name="customer" value="<?php echo $customerId; ?>">
+                <?php endif; ?>
+                
                 <div class="form-group">
-                    <label for="date_from" class="form-label">Başlangıç Tarihi</label>
-                    <input type="date" id="date_from" name="date_from" class="form-input" value="<?php echo $dateFrom; ?>">
+                    <label for="search" class="form-label">Arama</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="bi bi-search text-gray-400"></i>
+                        </span>
+                        <input type="text" id="search" name="search" class="form-input pl-10" placeholder="Müşteri adı veya not..." value="<?php echo htmlspecialchars($search); ?>">
+                    </div>
                 </div>
+                
                 <div class="form-group">
-                    <label for="date_to" class="form-label">Bitiş Tarihi</label>
-                    <input type="date" id="date_to" name="date_to" class="form-input" value="<?php echo $dateTo; ?>">
+                    <label for="product" class="form-label">Ürün</label>
+                    <select id="product" name="product" class="form-select">
+                        <option value="">Tüm Ürünler</option>
+                        <?php foreach ($products as $product): ?>
+                            <option value="<?php echo $product['id']; ?>" <?php echo $productFilter == $product['id'] ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($product['name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
-            </div>
-            
-            <div class="col-span-full flex items-center justify-end gap-2 mt-2">
-                <a href="islemler.php<?php echo $customerId ? '?customer=' . $customerId : ''; ?>" class="btn btn-outline">
-                    <i class="bi bi-x-circle mr-1"></i> Temizle
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-filter mr-1"></i> Filtrele
-                </button>
-            </div>
-        </form>
+                
+                <div class="form-group">
+                    <label for="type" class="form-label">İşlem Türü</label>
+                    <select id="type" name="type" class="form-select">
+                        <option value="">Tümü</option>
+                        <option value="debit" <?php echo $typeFilter === 'debit' ? 'selected' : ''; ?>>Borç</option>
+                        <option value="credit" <?php echo $typeFilter === 'credit' ? 'selected' : ''; ?>>Tahsilat</option>
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="form-group">
+                        <label for="date_from" class="form-label">Başlangıç Tarihi</label>
+                        <input type="date" id="date_from" name="date_from" class="form-input" value="<?php echo $dateFrom; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="date_to" class="form-label">Bitiş Tarihi</label>
+                        <input type="date" id="date_to" name="date_to" class="form-input" value="<?php echo $dateTo; ?>">
+                    </div>
+                </div>
+                
+                <div class="col-span-full flex items-center justify-end gap-2 mt-2">
+                    <a href="islemler.php<?php echo $customerId ? '?customer=' . $customerId : ''; ?>" class="btn btn-outline">
+                        <i class="bi bi-x-circle mr-1"></i> Temizle
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-filter mr-1"></i> Filtrele
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
+    <!-- İşlem Geçmişi -->
     <div class="card-hover animate-fadeIn shadow-lg" style="animation-delay: 0.2s">
         <div class="card-header">
             <div class="flex justify-between items-center">
@@ -374,7 +384,9 @@ try {
                 <table class="table table-hover">
                     <thead>
                         <tr>
+                            <?php if (!$customerId): ?>
                             <th><i class="bi bi-person-badge mr-1 text-primary-500"></i> Müşteri</th>
+                            <?php endif; ?>
                             <th><i class="bi bi-box-seam mr-1 text-primary-500"></i> Ürün</th>
                             <th><i class="bi bi-calendar-date mr-1 text-primary-500"></i> Tarih</th>
                             <th><i class="bi bi-currency-exchange mr-1 text-primary-500"></i> Tutar (₺)</th>
@@ -387,20 +399,18 @@ try {
                         <?php
                             $hasTransactions = false;
                             $index = 0;
-                            foreach ($stmt as $row):
+                            foreach ($transactions as $row):
                             $hasTransactions = true;
                             $index++;
                         ?>
                         <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.3 + ($index * 0.05); ?>s">
+                            <?php if (!$customerId): ?>
                             <td>
-                                <?php if (!$customerId): ?>
-                                <a href="transactions.php?customer=<?php echo $row['customer_id']; ?>" class="text-primary-600 hover:text-primary-900 font-medium">
+                                <a href="islemler.php?customer=<?php echo $row['customer_id']; ?>" class="text-primary-600 hover:text-primary-900 font-medium">
                                     <?php echo htmlspecialchars($row['customer_name']); ?>
                                 </a>
-                                <?php else: ?>
-                                    <?php echo htmlspecialchars($row['customer_name']); ?>
-                                <?php endif; ?>
                             </td>
+                            <?php endif; ?>
                             <td>
                                 <?php if (isset($row['product_name']) && $row['product_name']): ?>
                                     <span class="badge badge-outline"><?php echo htmlspecialchars($row['product_name']); ?></span>
@@ -429,7 +439,7 @@ try {
                                     <a href="yazdir.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm" title="Yazdır" target="_blank">
                                         <i class="bi bi-printer"></i>
                                     </a>
-                                    <a href="islemler.php?edit=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm text-primary" title="Düzenle">
+                                    <a href="islemler.php?edit=<?php echo $row['id']; ?><?php echo $customerId ? '&customer=' . $customerId : ''; ?><?php echo isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>" class="btn btn-outline btn-sm text-primary" title="Düzenle">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                     <a href="#" class="btn btn-outline btn-sm text-danger" title="Sil" onclick="return confirm('Bu işlemi silmek istediğinize emin misiniz?')">
@@ -442,7 +452,7 @@ try {
                         
                         <?php if (!$hasTransactions): ?>
                         <tr>
-                            <td colspan="8" class="text-center py-12 text-gray-500">
+                            <td colspan="<?php echo $customerId ? '6' : '7'; ?>" class="text-center py-12 text-gray-500">
                                 <div class="flex flex-col items-center justify-center gap-3">
                                     <div class="bg-gray-100 rounded-full p-4 mb-2">
                                         <i class="bi bi-receipt text-5xl text-primary-500"></i>
@@ -465,11 +475,12 @@ try {
         </div>
     </div>
 
+    <!-- Sayfalama -->
     <?php if ($totalPages > 1): ?>
     <div class="flex justify-center mt-6">
         <nav class="inline-flex rounded-md shadow-sm" aria-label="Sayfalama">
             <?php if ($page > 1): ?>
-                <a href="transactions.php<?php echo $customerId ? '?customer=' . $customerId . '&' : '?'; ?>page=<?php echo $page-1; ?>"
+                <a href="islemler.php?<?php echo http_build_query(array_merge($_GET, ['page' => $page-1])); ?>"
                    class="px-3 py-2 border border-gray-300 rounded-l-md bg-white text-gray-700 hover:bg-gray-100">
                     <i class="bi bi-chevron-left"></i>
                 </a>
@@ -477,7 +488,7 @@ try {
             
             <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                 <?php if ($i == 1 || $i == $totalPages || ($i >= $page - 1 && $i <= $page + 1)): ?>
-                    <a href="transactions.php<?php echo $customerId ? '?customer=' . $customerId . '&' : '?'; ?>page=<?php echo $i; ?>"
+                    <a href="islemler.php?<?php echo http_build_query(array_merge($_GET, ['page' => $i])); ?>"
                        class="px-3 py-2 border border-gray-300 <?php echo $i == $page ? 'bg-primary-600 text-white border-primary-600' : 'bg-white text-gray-700 hover:bg-gray-100'; ?>">
                         <?php echo $i; ?>
                     </a>
@@ -487,7 +498,7 @@ try {
             <?php endfor; ?>
             
             <?php if ($page < $totalPages): ?>
-                <a href="transactions.php<?php echo $customerId ? '?customer=' . $customerId . '&' : '?'; ?>page=<?php echo $page+1; ?>"
+                <a href="islemler.php?<?php echo http_build_query(array_merge($_GET, ['page' => $page+1])); ?>"
                    class="px-3 py-2 border border-gray-300 rounded-r-md bg-white text-gray-700 hover:bg-gray-100">
                     <i class="bi bi-chevron-right"></i>
                 </a>
@@ -497,15 +508,91 @@ try {
     <?php endif; ?>
 </div>
 
+<!-- İşlem Düzenleme Modal -->
+<?php if ($editTransaction): ?>
+<div id="editTransactionModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 animate-fadeIn">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                <i class="bi bi-pencil-square mr-2 text-primary-600"></i> İşlem Düzenle
+            </h3>
+            <button type="button" class="text-gray-400 hover:text-gray-500 close-modal">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <form method="POST" action="">
+            <div class="p-4">
+                <input type="hidden" name="transaction_id" value="<?php echo (int)$editTransaction['id']; ?>">
+                <input type="hidden" name="action" value="update_transaction">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
+                        </label>
+                        <input type="text" class="form-input bg-gray-100" readonly value="<?php echo htmlspecialchars($editTransaction['customer_name']); ?>">
+                    </div>
+                    
+                    <div>
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
+                        </label>
+                        <select name="product_id" class="form-select">
+                            <option value="">Ürün Seçiniz (Opsiyonel)</option>
+                            <?php foreach ($products as $product): ?>
+                            <option value="<?php echo $product['id']; ?>" <?php echo $editTransaction && $editTransaction['product_id'] == $product['id'] ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($product['name']); ?>
+                            </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
+                        </label>
+                        <select name="type" class="form-select">
+                            <option value="debit" <?php echo $editTransaction && $editTransaction['type'] === 'debit' ? 'selected' : ''; ?>>Borç</option>
+                            <option value="credit" <?php echo $editTransaction && $editTransaction['type'] === 'credit' ? 'selected' : ''; ?>>Tahsilat</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)
+                        </label>
+                        <input type="text" name="amount" class="form-input" placeholder="0,00" required value="<?php echo $editTransaction ? number_format($editTransaction['amount'], 2, ',', '.') : ''; ?>">
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="form-label flex items-center">
+                            <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Açıklama
+                        </label>
+                        <input type="text" name="note" class="form-input" placeholder="İşlem açıklaması" value="<?php echo $editTransaction ? htmlspecialchars($editTransaction['note']) : ''; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="px-4 py-3 border-t border-gray-200 flex justify-end gap-2">
+                <button type="button" class="btn btn-outline close-modal">
+                    <i class="bi bi-x-circle mr-1"></i> İptal
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle mr-1"></i> Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
 <script>
-// İşlem türü değiştiğinde buton metnini güncelle
 document.addEventListener('DOMContentLoaded', function() {
+    // İşlem türü değiştiğinde buton metnini güncelle
     const transactionType = document.getElementById('transactionType');
     const submitText = document.getElementById('submitText');
     const submitButton = document.getElementById('submitButton');
     const amountInput = document.getElementById('amountInput');
     
-    // İşlem türü değiştiğinde buton metnini ve rengini güncelle
     if (transactionType) {
         transactionType.addEventListener('change', function() {
             const selectedOption = transactionType.options[transactionType.selectedIndex];
@@ -523,17 +610,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Ürün seçimi değiştiğinde
-    const productSelect = document.querySelector('select[name="product_id"]');
-    if (productSelect) {
-        productSelect.addEventListener('change', function() {
-            // Ürün seçildiğinde tutar alanına odaklan
-            if (productSelect.value) {
-                amountInput.focus();
-            }
-        });
-    }
-    
     // Tutar alanı için para formatı
     if (amountInput) {
         amountInput.addEventListener('input', function(e) {
@@ -541,7 +617,7 @@ document.addEventListener('DOMContentLoaded', function() {
             value = value.replace(',', '.');
             if (value.includes('.')) {
                 const parts = value.split('.');
-                if (parts[1].length > 2) {
+                if (parts[1] && parts[1].length > 2) {
                     parts[1] = parts[1].substring(0, 2);
                 }
                 value = parts.join('.');
@@ -551,157 +627,48 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Form gönderildiğinde buton durumunu değiştir
-    const form = document.querySelector('form');
+    const form = document.getElementById('transactionForm');
     if (form) {
         form.addEventListener('submit', function() {
             const submitButton = document.getElementById('submitButton');
             if (submitButton) {
-                // Buton metnini değiştir ve yükleniyor simgesi ekle
                 submitButton.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> İşleniyor...';
                 submitButton.disabled = true;
             }
         });
     }
-});
-</script>
-
-const products = <?php echo json_encode($products); ?>;
-
-if (customerInput && customerIdHidden) {
-    customerInput.addEventListener('input', function() {
-        const found = customers.find(c => c.name === this.value);
-        customerIdHidden.value = found ? found.id : '';
-    });
-}
-if (productInput && productIdHidden) {
-    productInput.addEventListener('input', function() {
-        const found = products.find(p => p.name === this.value);
-        productIdHidden.value = found ? found.id : '';
-    });
-}
-
-// On form submit, if customer or product not found, add to note
-const transactionForm = document.getElementById('transactionForm');
-if (transactionForm) {
-    transactionForm.addEventListener('submit', function(e) {
-        let extraNote = '';
-        if (customerInput && !customerIdHidden.value) {
-            extraNote += 'Müşteri: ' + customerInput.value + '. ';
-        }
-        if (productInput && !productIdHidden.value && productInput.value) {
-            extraNote += 'Ürün: ' + productInput.value + '. ';
-        }
-        if (extraNote) {
-            noteInput.value = (noteInput.value ? noteInput.value + ' | ' : '') + extraNote;
-        }
-    });
-}
-
-<!-- Transaction Edit Modal -->
-<div id="editTransactionModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center <?php echo $editTransaction ? '' : 'hidden'; ?>">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 animate-fadeIn">
-        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                <i class="bi bi-pencil-square mr-2 text-primary-600"></i> İşlem Düzenle
-            </h3>
-            <button type="button" class="text-gray-400 hover:text-gray-500 close-modal">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-        <form id="editTransactionForm" method="POST" action="">
-            <div class="p-4">
-                <input type="hidden" name="transaction_id" id="edit_transaction_id" value="<?php echo $editTransaction ? (int)$editTransaction['id'] : 0; ?>">
-                <input type="hidden" name="action" value="update_transaction">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="form-label flex items-center">
-                            <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
-                        </label>
-                        <input type="text" id="edit_customer" class="form-input bg-gray-100" readonly value="<?php echo htmlspecialchars($editTransaction['customer_name']); ?>">
-                    </div>
-                    
-                    <div>
-                        <label class="form-label flex items-center">
-                            <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
-                        </label>
-                        <select name="product_id" id="edit_product" class="form-select">
-                            <option value="">Ürün Seçiniz (Opsiyonel)</option>
-                            <?php foreach ($products as $product): ?>
-                            <option value="<?php echo $product['id']; ?>" <?php echo $editTransaction && $editTransaction['product_id'] == $product['id'] ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($product['name']); ?>
-                            </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label class="form-label flex items-center">
-                            <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
-                        </label>
-                        <select name="type" id="edit_type" class="form-select">
-                            <option value="debit" data-color="danger" <?php echo $editTransaction && $editTransaction['type'] === 'debit' ? 'selected' : ''; ?>>Borç</option>
-                            <option value="credit" data-color="success" <?php echo $editTransaction && $editTransaction['type'] === 'credit' ? 'selected' : ''; ?>>Tahsilat</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label class="form-label flex items-center">
-                            <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)
-                        </label>
-                        <input type="text" name="amount" id="edit_amount" class="form-input" placeholder="0,00" required value="<?php echo htmlspecialchars(number_format($editTransaction['amount'], 2, ',', '.')); ?>">
-                    </div>
-                    
-                    <div class="md:col-span-2">
-                        <label class="form-label flex items-center">
-                            <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Açıklama
-                        </label>
-                        <input type="text" name="note" id="edit_note" class="form-input" placeholder="İşlem açıklaması" value="<?php echo htmlspecialchars($editTransaction['note']); ?>">
-                    </div>
-                </div>
-            </div>
-            <div class="px-4 py-3 border-t border-gray-200 flex justify-end gap-2">
-                <button type="button" class="btn btn-outline close-modal">
-                    <i class="bi bi-x-circle mr-1"></i> İptal
-                </button>
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-check-circle mr-1"></i> Kaydet
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+    
+    // Modal işlemleri
     const modal = document.getElementById('editTransactionModal');
-    const closeButtons = document.querySelectorAll('.close-modal');
+    if (modal) {
+        const closeButtons = document.querySelectorAll('.close-modal');
 
-    const closeModal = () => {
-        modal.classList.add('hidden');
-        // Clean up the URL
-        const url = new URL(window.location);
-        url.searchParams.delete('edit');
-        window.history.replaceState({}, document.title, url);
-    };
+        const closeModal = () => {
+            modal.classList.add('hidden');
+            // URL'yi temizle
+            const url = new URL(window.location);
+            url.searchParams.delete('edit');
+            window.history.replaceState({}, document.title, url);
+        };
 
-    closeButtons.forEach(button => {
-        button.addEventListener('click', closeModal);
-    });
+        closeButtons.forEach(button => {
+            button.addEventListener('click', closeModal);
+        });
 
-    // Close modal when clicking outside of it
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
+        // Modal dışına tıklandığında kapat
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
 
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === "Escape" && !modal.classList.contains('hidden')) {
-            closeModal();
-        }
-    });
+        // Escape tuşu ile kapat
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "Escape" && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    }
 });
 </script>
 
