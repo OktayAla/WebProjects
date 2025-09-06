@@ -9,23 +9,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name']);
     $phone = trim($_POST['phone']);
     $address = trim($_POST['address']);
-    if ($id > 0) {
-        $stmt = $pdo->prepare('UPDATE customers SET name = ?, phone = ?, address = ? WHERE id = ?');
-        $stmt->execute([$name, $phone, $address, $id]);
-    } else {
-        $stmt = $pdo->prepare('INSERT INTO customers (name, phone, address) VALUES (?, ?, ?)');
-        $stmt->execute([$name, $phone, $address]);
+    
+    try {
+        if ($id > 0) {
+            $stmt = $pdo->prepare('UPDATE customers SET name = ?, phone = ?, address = ? WHERE id = ?');
+            $stmt->execute([$name, $phone, $address, $id]);
+            $message = 'Müşteri başarıyla güncellendi.';
+        } else {
+            $stmt = $pdo->prepare('INSERT INTO customers (name, phone, address) VALUES (?, ?, ?)');
+            $stmt->execute([$name, $phone, $address]);
+            $message = 'Müşteri başarıyla eklendi.';
+        }
+        
+        header('Location: musteriler.php?success=' . urlencode($message));
+        exit;
+    } catch (Exception $e) {
+        $error = 'İşlem başarısız: ' . $e->getMessage();
     }
-    header('Location: musteriler.php');
-    exit;
 }
 
 if (isset($_GET['delete'])) {
     $delId = (int)$_GET['delete'];
-    $pdo->prepare('DELETE FROM transactions WHERE customer_id = ?')->execute([$delId]);
-    $pdo->prepare('DELETE FROM customers WHERE id = ?')->execute([$delId]);
-    header('Location: musteriler.php');
-    exit;
+    
+    $pdo->beginTransaction();
+    try {
+        // Önce ilişkili işlemleri sil
+        $pdo->prepare('DELETE FROM transactions WHERE customer_id = ?')->execute([$delId]);
+        
+        // Sonra müşteriyi sil
+        $pdo->prepare('DELETE FROM customers WHERE id = ?')->execute([$delId]);
+        
+        $pdo->commit();
+        header('Location: musteriler.php?success=' . urlencode('Müşteri ve ilişkili tüm işlemler başarıyla silindi.'));
+        exit;
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        $error = 'Silme işlemi başarısız: ' . $e->getMessage();
+    }
 }
 
 require_once __DIR__ . '/includes/header.php'; 
@@ -36,6 +56,9 @@ if (isset($_GET['edit'])) {
     $stmt->execute([(int)$_GET['edit']]);
     $editCustomer = $stmt->fetch();
 }
+
+// Tüm müşterileri getir (sıralama ID'ye göre)
+$customers = $pdo->query('SELECT * FROM customers ORDER BY id DESC')->fetchAll();
 ?>
 
 <div class="floating-element"></div>
@@ -55,6 +78,13 @@ if (isset($_GET['edit'])) {
         </button>
     </div>
 
+    <?php if (isset($_GET['success'])): ?>
+    <div class="alert alert-success mb-4"><?php echo htmlspecialchars($_GET['success']); ?></div>
+    <?php endif; ?>
+    <?php if (isset($error)): ?>
+    <div class="alert alert-danger mb-4"><?php echo htmlspecialchars($error); ?></div>
+    <?php endif; ?>
+
     <div class="card-hover animate-fadeIn shadow-lg">
         <div class="p-5">
             <div class="flex flex-col md:flex-row gap-4 mb-6">
@@ -73,7 +103,7 @@ if (isset($_GET['edit'])) {
                 <table id="customersTable" class="table table-hover">
                     <thead>
                         <tr>
-                            <th class="text-center">#</th>
+                            <!-- # ID SÜTUNU KALDIRILDI -->
                             <th><i class="bi bi-person-badge mr-1 text-primary-500"></i> Ad Soyad</th>
                             <th><i class="bi bi-telephone mr-1 text-primary-500"></i> Telefon</th>
                             <th><i class="bi bi-geo-alt mr-1 text-primary-500"></i> Adres</th>
@@ -82,37 +112,51 @@ if (isset($_GET['edit'])) {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                            foreach ($pdo->query('SELECT * FROM customers ORDER BY id DESC') as $row):
-                        ?>
-                        <tr class="animate-fadeIn hover:bg-gray-50 transition-colors">
-                            <td class="text-center font-medium text-gray-500"><?php echo $row['id']; ?></td>
-                            <td>
-                                <a href="musteri_rapor.php?customer=<?php echo $row['id']; ?>" class="font-medium text-primary-700 hover:text-primary-900 transition-colors">
-                                    <?php echo htmlspecialchars($row['name']); ?>
-                                </a>
-                            </td>
-                            <td><i class="bi bi-telephone-fill text-gray-400 mr-1"></i> <?php echo htmlspecialchars($row['phone']); ?></td>
-                            <td class="max-w-xs truncate"><i class="bi bi-geo text-gray-400 mr-1"></i> <?php echo nl2br(htmlspecialchars($row['address'])); ?></td>
-                            <td class="font-medium <?php echo $row['balance'] > 0 ? 'text-danger-600' : 'text-success-600'; ?>">
-                                <i class="bi <?php echo $row['balance'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : 'bi-arrow-down-circle-fill text-success-500'; ?> mr-1"></i>
-                                <?php echo number_format($row['balance'], 2, ',', '.'); ?>
-                            </td>
-                            <td class="text-right">
-                                <div class="flex space-x-3 justify-end">
-                                    <a href="islemler.php?customer=<?php echo $row['id']; ?>" class="btn-icon btn-primary-outline" title="İşlem Ekle">
-                                        <i class="bi bi-cash-stack"></i>
-                                    </a>
-                                    <a href="musteriler.php?edit=<?php echo $row['id']; ?>" class="btn-icon btn-secondary-outline" title="Düzenle">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a href="musteriler.php?delete=<?php echo $row['id']; ?>" class="btn-icon btn-danger-outline" onclick="return confirm('Bu müşteriyi ve tüm işlemlerini silmek istediğinize emin misiniz?');" title="Sil">
-                                        <i class="bi bi-trash3"></i>
-                                    </a>
+                        <?php if (empty($customers)): ?>
+                        <tr>
+                            <td colspan="5" class="text-center py-12 text-gray-500">
+                                <div class="flex flex-col items-center justify-center gap-3">
+                                    <div class="bg-gray-100 rounded-full p-4 mb-2">
+                                        <i class="bi bi-person-circle text-5xl text-primary-500"></i>
+                                    </div>
+                                    <h4 class="text-lg font-medium">Henüz kayıtlı müşteri yok</h4>
+                                    <button type="button" onclick="showModal()" class="btn btn-outline mt-2">
+                                        <i class="bi bi-person-plus-fill mr-1"></i> İlk Müşteriyi Ekle
+                                    </button>
                                 </div>
                             </td>
                         </tr>
-                        <?php endforeach; ?>
+                        <?php else: ?>
+                            <?php foreach ($customers as $index => $row): ?>
+                            <tr class="animate-fadeIn hover:bg-gray-50 transition-colors" style="animation-delay: <?php echo $index * 0.05; ?>s">
+                                <!-- ID SÜTUNU KALDIRILDI -->
+                                <td>
+                                    <a href="musteri_rapor.php?customer=<?php echo $row['id']; ?>" class="font-medium text-primary-700 hover:text-primary-900 transition-colors">
+                                        <?php echo htmlspecialchars($row['name']); ?>
+                                    </a>
+                                </td>
+                                <td><i class="bi bi-telephone-fill text-gray-400 mr-1"></i> <?php echo htmlspecialchars($row['phone']); ?></td>
+                                <td class="max-w-xs truncate"><i class="bi bi-geo text-gray-400 mr-1"></i> <?php echo nl2br(htmlspecialchars($row['address'])); ?></td>
+                                <td class="font-medium <?php echo $row['balance'] > 0 ? 'text-danger-600' : 'text-success-600'; ?>">
+                                    <i class="bi <?php echo $row['balance'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : 'bi-arrow-down-circle-fill text-success-500'; ?> mr-1"></i>
+                                    <?php echo number_format($row['balance'], 2, ',', '.'); ?> ₺
+                                </td>
+                                <td class="text-right">
+                                    <div class="flex space-x-3 justify-end">
+                                        <a href="islemler.php?customer=<?php echo $row['id']; ?>" class="btn-icon btn-primary-outline" title="İşlem Ekle">
+                                            <i class="bi bi-cash-stack"></i>
+                                        </a>
+                                        <a href="musteriler.php?edit=<?php echo $row['id']; ?>" class="btn-icon btn-secondary-outline" title="Düzenle">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a href="musteriler.php?delete=<?php echo $row['id']; ?>" class="btn-icon btn-danger-outline" onclick="return confirm('Bu müşteriyi ve tüm işlemlerini silmek istediğinize emin misiniz?');" title="Sil">
+                                            <i class="bi bi-trash3"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -121,6 +165,7 @@ if (isset($_GET['edit'])) {
 </div>
 
 <style>
+/* CSS styles for modal */
 .modal {
     display: none;
     position: fixed;
@@ -188,7 +233,7 @@ if (isset($_GET['edit'])) {
                     </div>
                 </div>
                 
-                <div class="modal-footer border-t border-gray-200 p-4">
+                <div class="modal-footer border-t border-gray-200 p-4 flex justify-end gap-2">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">
                         <i class="bi bi-x-circle mr-2"></i> Vazgeç
                     </button>
@@ -209,11 +254,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (newCustomerBtn) {
         newCustomerBtn.addEventListener('click', function() {
+            // Yeni müşteri ekleme modunda formu sıfırla
+            document.querySelector('#customerModal form').reset();
+            document.querySelector('#customerModal input[name="id"]').value = 0;
+            document.getElementById('customerModalLabel').innerHTML = '<i class="bi bi-person-plus-fill text-success-600 mr-2"></i> Yeni Müşteri Ekle';
             showModal();
-            // Form alanına otomatik odaklanma
-            setTimeout(() => {
-                document.getElementById('customerName')?.focus();
-            }, 300);
         });
     }
     
@@ -250,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!input || !table) return;
         
+        // Tarayıcı depolamasından arama kelimesini al
         input.value = localStorage.getItem(key) || '';
         
         function applyFilter() {
@@ -257,14 +303,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const rows = table.tBodies[0].rows;
             let visibleCount = 0;
             
-            table.classList.add('filtering');
-            
+            // Tüm satırları döngüye al
             for (const tr of rows) {
-                const text = tr.innerText.toLowerCase();
-                const isVisible = text.includes(q);
+                // Sadece Ad Soyad ve Telefon sütunlarını kontrol et (ID'yi kaldırdık)
+                const nameText = tr.cells[0]?.innerText.toLowerCase() || ''; // Ad Soyad
+                const phoneText = tr.cells[1]?.innerText.toLowerCase() || ''; // Telefon
+                
+                const isVisible = nameText.includes(q) || phoneText.includes(q);
                 tr.style.display = isVisible ? '' : 'none';
                 
                 if (isVisible) {
+                    // Animasyon gecikmesini güncelle
                     tr.classList.add('animate-fadeIn');
                     tr.style.animationDelay = (visibleCount * 0.05) + 's';
                     visibleCount++;
@@ -273,6 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
+            // Arama kelimesini kaydet
             localStorage.setItem(key, q);
         }
         
@@ -285,27 +335,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
+        // Sayfa yüklendiğinde filtreyi uygula
         applyFilter();
     };
     
-    const highlightActivePage = () => {
-        const currentPath = window.location.pathname;
-        const navLinks = document.querySelectorAll('nav a');
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href === currentPath || 
-                (currentPath.includes('musteriler.php') && href.includes('musteriler.php'))) {
-                link.classList.add('active');
-            }
-        });
-    };
-    
-    setupSearch();
-    highlightActivePage();
-
+    // Düzenleme modunda modalı aç
     <?php if ($editCustomer): ?>
         showModal();
     <?php endif; ?>
+
+    setupSearch();
 });
 
 function showModal() {
@@ -313,11 +352,15 @@ function showModal() {
     if (modal) {
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
-        const dialog = modal.querySelector('.modal-dialog');
-        if (dialog) {
-            dialog.style.transform = 'translateY(0)';
-            dialog.style.opacity = '1';
-        }
+        
+        // Modalı ortaya çıkarmak için küçük bir gecikme ekle
+        setTimeout(() => {
+            const dialog = modal.querySelector('.modal-dialog');
+            if (dialog) {
+                dialog.style.transform = 'translateY(0)';
+                dialog.style.opacity = '1';
+            }
+        }, 50);
         
         const firstInput = modal.querySelector('input[name="name"]');
         if (firstInput) {
@@ -338,10 +381,12 @@ function closeModal() {
         setTimeout(() => {
             modal.classList.remove('show');
             document.body.style.overflow = '';
-            const form = modal.querySelector('form');
-            const idInput = form?.querySelector('input[name="id"]');
-            if (form && idInput && !parseInt(idInput.value)) {
-                form.reset();
+            
+            // Eğer URL'de 'edit' parametresi varsa, modal kapatıldığında bunu temizle
+            const url = new URL(window.location.href);
+            if (url.searchParams.has('edit')) {
+                url.searchParams.delete('edit');
+                history.replaceState(null, '', url.toString());
             }
         }, 200);
     }
