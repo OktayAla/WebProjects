@@ -5,30 +5,23 @@ require_once __DIR__ . '/includes/header.php';
 
 $pdo = get_pdo_connection();
 
-// Kullanıcı rolü
 $userRole = $_SESSION['user']['role'] ?? 'user';
 
-// Admin için istatistikler
 if ($userRole === 'admin') {
     $totalCustomers = (int)$pdo->query('SELECT COUNT(*) FROM musteriler')->fetchColumn();
-    $totalSales = (float)$pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'debit'")->fetchColumn();
-    $totalCollections = (float)$pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'credit'")->fetchColumn();
+    $totalSales = (float)$pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'borc'")->fetchColumn();
+    $totalCollections = (float)$pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'tahsilat'")->fetchColumn();
     $totalReceivables = (float)$pdo->query('SELECT COALESCE(SUM(tutar),0) FROM musteriler')->fetchColumn();
 }
 
-// Sayfalama ayarları
 $borcluSayfa = isset($_GET['borclu_sayfa']) ? (int)$_GET['borclu_sayfa'] : 1;
 $borcluSayfaBasina = 7;
 $satisSayfa = isset($_GET['satis_sayfa']) ? (int)$_GET['satis_sayfa'] : 1;
 $satisSayfaBasina = 6;
-
-// Offset
 $borcluOffset = ($borcluSayfa - 1) * $borcluSayfaBasina;
 $satisOffset = ($satisSayfa - 1) * $satisSayfaBasina;
-
-// Toplam kayıt
 $toplamBorcluMusteri = (int)$pdo->query('SELECT COUNT(*) FROM musteriler WHERE tutar > 0')->fetchColumn();
-$toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_tipi = 'debit'")->fetchColumn();
+$toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_tipi = 'borc'")->fetchColumn();
 
 ?>
 
@@ -42,7 +35,6 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_
     </h1>
 
     <?php if ($userRole === 'admin'): ?>
-    <!-- Admin Dashboard Kartları -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 dashboard-stats">
         <div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.1s">
             <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
@@ -90,9 +82,7 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_
     </div>
     <?php endif; ?>
 
-    <!-- Son Satışlar ve Borçlu Müşteriler (herkes görür) -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Son Satışlar -->
         <div class="lg:col-span-2">
             <div class="card-hover animate-fadeIn" style="animation-delay: 0.5s">
                 <div class="card-header">
@@ -121,7 +111,7 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_
                                     $sonSatislarSorgusu = "SELECT i.id, i.musteri_id, m.isim AS musteri_isim, i.miktar, i.aciklama, i.olusturma_zamani 
                                                           FROM islemler i 
                                                           JOIN musteriler m ON m.id = i.musteri_id 
-                                                          WHERE i.odeme_tipi='debit' 
+                                                          WHERE i.odeme_tipi='borc' 
                                                           ORDER BY i.olusturma_zamani DESC 
                                                           LIMIT $satisSayfaBasina OFFSET $satisOffset";
                                     $sonSatislar = $pdo->query($sonSatislarSorgusu);
@@ -181,7 +171,6 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_
             </div>
         </div>
 
-        <!-- Borçlu Müşteriler -->
         <div class="lg:col-span-1">
             <div class="card-hover animate-fadeIn" style="animation-delay: 0.6s">
                 <div class="card-header">
@@ -233,7 +222,6 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_
     </div>
 </div>
 
-<!-- Modal -->
 <div id="statDetailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 animate-fadeIn">
         <div class="p-4 border-b border-gray-200 flex justify-between items-center">
@@ -275,13 +263,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <?php
-// AJAX detayları (sadece admin görebilsin)
+
 if ($userRole === 'admin' && isset($_GET['detail'])) {
     if ($_GET['detail'] === 'sales') {
         $stmt = $pdo->query("SELECT i.id, m.isim AS musteri_isim, i.miktar, i.olusturma_zamani 
                              FROM islemler i 
                              JOIN musteriler m ON m.id = i.musteri_id 
-                             WHERE i.odeme_tipi='debit' 
+                             WHERE i.odeme_tipi='borc' 
                              ORDER BY i.olusturma_zamani DESC LIMIT 50");
         echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th></tr></thead><tbody>';
         foreach ($stmt as $row) {
@@ -293,7 +281,7 @@ if ($userRole === 'admin' && isset($_GET['detail'])) {
         $stmt = $pdo->query("SELECT i.id, m.isim AS musteri_isim, i.miktar, i.olusturma_zamani 
                              FROM islemler i 
                              JOIN musteriler m ON m.id = i.musteri_id 
-                             WHERE i.odeme_tipi='credit' 
+                             WHERE i.odeme_tipi='tahsilat' 
                              ORDER BY i.olusturma_zamani DESC LIMIT 50");
         echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th></tr></thead><tbody>';
         foreach ($stmt as $row) {
