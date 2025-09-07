@@ -58,7 +58,16 @@ if (isset($_GET['edit'])) {
 }
 
 // Tüm müşterileri getir (sıralama ID'ye göre)
-$customers = $pdo->query('SELECT * FROM musteriler ORDER BY id DESC')->fetchAll();
+$customers = $pdo->query('SELECT m.*, 
+    (SELECT COALESCE(SUM(CASE WHEN odeme_tipi = "borc" THEN miktar ELSE 0 END), 0) FROM islemler WHERE musteri_id = m.id) as toplam_borc,
+    (SELECT COALESCE(SUM(CASE WHEN odeme_tipi = "tahsilat" THEN miktar ELSE 0 END), 0) FROM islemler WHERE musteri_id = m.id) as toplam_tahsilat
+    FROM musteriler m ORDER BY m.id DESC')->fetchAll();
+
+// Her müşteri için net bakiye hesapla
+foreach ($customers as &$customer) {
+    $customer['net_bakiye'] = $customer['toplam_borc'] - $customer['toplam_tahsilat'];
+}
+
 ?>
 
 <div class="floating-element"></div>
@@ -137,9 +146,10 @@ $customers = $pdo->query('SELECT * FROM musteriler ORDER BY id DESC')->fetchAll(
                                 </td>
                                 <td><?php echo htmlspecialchars($row['numara']); ?></td>
                                 <td class="max-w-xs truncate"><?php echo nl2br(htmlspecialchars($row['adres'])); ?></td>
-                                <td class="font-medium <?php echo $row['tutar'] > 0 ? 'text-danger-600' : 'text-success-600'; ?>">
-                                    <i class="bi <?php echo $row['tutar'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : 'bi-arrow-down-circle-fill text-success-500'; ?> mr-1"></i>
-                                    <?php echo number_format($row['tutar'], 2, ',', '.'); ?> ₺
+                                <td class="font-medium <?php echo $row['net_bakiye'] > 0 ? 'text-danger-600' : ($row['net_bakiye'] < 0 ? 'text-success-600' : 'text-gray-600'); ?>">
+                                    <i class="bi <?php echo $row['net_bakiye'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : ($row['net_bakiye'] < 0 ? 'bi-arrow-down-circle-fill text-success-500' : 'bi-dash-circle text-gray-500'); ?> mr-1"></i>
+                                    <?php echo number_format(abs($row['net_bakiye']), 2, ',', '.'); ?> ₺
+                                    <?php if ($row['net_bakiye'] < 0): ?><span class="text-xs text-gray-500">(alacaklı)</span><?php endif; ?>
                                 </td>
                                 <td class="text-right">
                                     <div class="flex space-x-3 justify-end">
