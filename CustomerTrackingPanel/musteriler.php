@@ -137,8 +137,8 @@ $customers = $pdo->query('SELECT * FROM musteriler ORDER BY id DESC')->fetchAll(
                                 </td>
                                 <td><?php echo htmlspecialchars($row['numara']); ?></td>
                                 <td class="max-w-xs truncate"><?php echo nl2br(htmlspecialchars($row['adres'])); ?></td>
-                                <td class="font-medium <?php echo $row['balance'] > 0 ? 'text-danger-600' : 'text-success-600'; ?>">
-                                    <i class="bi <?php echo $row['balance'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : 'bi-arrow-down-circle-fill text-success-500'; ?> mr-1"></i>
+                                <td class="font-medium <?php echo $row['tutar'] > 0 ? 'text-danger-600' : 'text-success-600'; ?>">
+                                    <i class="bi <?php echo $row['tutar'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : 'bi-arrow-down-circle-fill text-success-500'; ?> mr-1"></i>
                                     <?php echo number_format($row['tutar'], 2, ',', '.'); ?> ₺
                                 </td>
                                 <td class="text-right">
