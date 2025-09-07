@@ -36,7 +36,7 @@
 			<div class="col-md-4">
 				<div class="card shadow-sm border-0">
 					<div class="card-body">
-						<h4 class="mb-3 text-center text-primary"><?php echo APP_NAME; ?></h4>
+						<h4>Analiz Tarım | Müşteri Paneli</h4>
 						<?php if ($error): ?><div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
 						<form method="post" autocomplete="off">
 							<div class="mb-3">
