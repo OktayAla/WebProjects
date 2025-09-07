@@ -16,7 +16,7 @@ if ($userRole === 'admin') {
     // Toplam Tahsilat: sadece tahsilat işlemleri
     $totalCollections = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'tahsilat'")->fetchColumn();
     
-    // Toplam Alacak: sadece borç işlemleri
+    // Toplam Alacak: sadece borç işlemleri (işlemler tablosundan)
     $totalReceivables = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'borc'")->fetchColumn();
 }
 
