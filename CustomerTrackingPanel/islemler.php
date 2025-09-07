@@ -260,10 +260,6 @@ $stmt->execute();
 $transactions = $stmt->fetchAll();
 ?>
 
-<div class="floating-element"></div>
-<div class="floating-element"></div>
-<div class="floating-element"></div>
-
 <div class="container mx-auto px-4 py-6">
     <?php if (isset($_GET['success'])): ?>
         <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-sm animate-fadeIn" role="alert">
