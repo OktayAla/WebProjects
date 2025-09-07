@@ -5,7 +5,7 @@ require_once __DIR__ . '/includes/header.php';
 
 $pdo = get_pdo_connection();
 
-$userRole = $_SESSION['user']['role'] ?? 'user';
+$userRole = $_SESSION['user']['rol'] ?? 'user';
 
 if ($userRole === 'admin') {
     $totalCustomers = (int)$pdo->query('SELECT COUNT(*) FROM musteriler')->fetchColumn();
