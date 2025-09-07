@@ -34,7 +34,7 @@ if (isset($_GET['delete'])) {
 
         if ($transaction) {
             // Müşteri bakiyesini güncelle (silinen işlemi geri al)
-            if ($transaction['odeme_tipi'] === 'debit') {
+            if ($transaction['odeme_tipi'] === 'borc') {
                 $pdo->prepare('UPDATE musteriler SET tutar = tutar - ? WHERE id = ?')->execute([$transaction['miktar'], $transaction['musteri_id']]);
             } else {
                 $pdo->prepare('UPDATE musteriler SET tutar = tutar + ? WHERE id = ?')->execute([$transaction['miktar'], $transaction['musteri_id']]);
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['action']) && $_POST['action'] === 'update_transaction' && isset($_POST['transaction_id'])) {
             $transaction_id = (int)$_POST['transaction_id'];
             $urun_id = !empty($_POST['product_id']) ? (int)$_POST['product_id'] : null;
-            $odeme_tipi = $_POST['type'] === 'debit' ? 'debit' : 'credit';
+            $odeme_tipi = $_POST['type'];
             $miktar = (float)str_replace([',', ' '], ['.', ''], $_POST['amount']);
             $aciklama = trim($_POST['note']);
 
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($oldTransaction) {
                 // Eski işlemi bakiyeden çıkar
-                if ($oldTransaction['odeme_tipi'] === 'debit') {
+                if ($oldTransaction['odeme_tipi'] === 'borc') {
                     $pdo->prepare('UPDATE musteriler SET tutar = tutar - ? WHERE id = ?')->execute([$oldTransaction['miktar'], $oldTransaction['musteri_id']]);
                 } else {
                     $pdo->prepare('UPDATE musteriler SET tutar = tutar + ? WHERE id = ?')->execute([$oldTransaction['miktar'], $oldTransaction['musteri_id']]);
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([$urun_id, $odeme_tipi, $miktar, $aciklama, $transaction_id]);
 
                 // Yeni işlemi bakiyeye ekle
-                if ($odeme_tipi === 'debit') {
+                if ($odeme_tipi === 'borc') {
                     $pdo->prepare('UPDATE musteriler SET tutar = tutar + ? WHERE id = ?')->execute([$miktar, $oldTransaction['musteri_id']]);
                 } else {
                     $pdo->prepare('UPDATE musteriler SET tutar = tutar - ? WHERE id = ?')->execute([$miktar, $oldTransaction['musteri_id']]);
@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             foreach ($products as $productData) {
                 if (!empty($productData['product_id']) && !empty($productData['amount'])) {
                     $urun_id = !empty($productData['product_id']) ? (int)$productData['product_id'] : null;
-                    $odeme_tipi = $productData['type'] === 'debit' ? 'debit' : 'credit';
+                    $odeme_tipi = $productData['type'];
                     $miktar = (float)str_replace([',', ' '], ['.', ''], $productData['amount']);
                     $urun_notu = !empty($productData['note']) ? trim($productData['note']) : '';
 
@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt = $pdo->prepare('INSERT INTO islemler (musteri_id, urun_id, odeme_tipi, miktar, aciklama, kullanici_id) VALUES (?, ?, ?, ?, ?, ?)');
                     $stmt->execute([$musteri_id, $urun_id, $odeme_tipi, $miktar, $urun_notu, $currentUserId]);
 
-                    if ($odeme_tipi === 'debit') {
+                    if ($odeme_tipi === 'borc') {
                         $totalDebit += $miktar;
                     } else {
                         $totalCredit += $miktar;
@@ -335,7 +335,7 @@ $transactions = $stmt->fetchAll();
                         <label class="form-label flex items-center">
                             <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
                         </label>
-                        <?php if ($customerId && $selectedCustomer): ?>
+                        <?php if ($selectedCustomer): ?>
                             <input type="hidden" name="customer_id" value="<?php echo $customerId; ?>">
                             <input type="text" class="form-input bg-gray-100" readonly value="<?php echo htmlspecialchars($selectedCustomer['isim']); ?>">
                         <?php else: ?>
@@ -373,8 +373,8 @@ $transactions = $stmt->fetchAll();
                                 <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
                             </label>
                             <select name="products[0][type]" class="form-select type-select">
-                                <option value="debit">Borç</option>
-                                <option value="credit">Tahsilat</option>
+                                <option value="borc">Borç</option>
+                                <option value="tahsilat">Tahsilat</option>
                             </select>
                         </div>
 
@@ -443,7 +443,7 @@ $transactions = $stmt->fetchAll();
                         <option value="">Tüm Ürünler</option>
                         <?php foreach ($products as $product): ?>
                             <option value="<?php echo $product['id']; ?>" <?php echo $productFilter == $product['id'] ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($product['name']); ?>
+                                <?php echo htmlspecialchars($product['isim']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -453,8 +453,8 @@ $transactions = $stmt->fetchAll();
                     <label for="type" class="form-label">İşlem Türü</label>
                     <select id="type" name="type" class="form-select">
                         <option value="">Tümü</option>
-                        <option value="debit" <?php echo $typeFilter === 'debit' ? 'selected' : ''; ?>>Borç</option>
-                        <option value="credit" <?php echo $typeFilter === 'credit' ? 'selected' : ''; ?>>Tahsilat</option>
+                        <option value="borc" <?php echo $typeFilter === 'borc' ? 'selected' : ''; ?>>Borç</option>
+                        <option value="tahsilat" <?php echo $typeFilter === 'tahsilat' ? 'selected' : ''; ?>>Tahsilat</option>
                     </select>
                 </div>
 
@@ -543,7 +543,7 @@ $transactions = $stmt->fetchAll();
                                 <td><?php echo date('d.m.Y H:i', strtotime($row['olusturma_zamani'])); ?></td>
                                 <td class="font-medium"><?php echo number_format($row['miktar'], 2, ',', '.'); ?> ₺</td>
                                 <td>
-                                    <?php if ($row['odeme_tipi'] === 'debit'): ?>
+                                    <?php if ($row['odeme_tipi'] === 'borc'): ?>
                                         <span class="badge-debit flex items-center w-fit"><i class="bi bi-arrow-down-right mr-1"></i> Borç</span>
                                     <?php else: ?>
                                         <span class="badge-credit flex items-center w-fit"><i class="bi bi-arrow-up-right mr-1"></i> Tahsilat</span>
@@ -680,8 +680,8 @@ $transactions = $stmt->fetchAll();
                                 <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
                             </label>
                             <select name="type" class="form-select">
-                                <option value="debit" <?php echo $editTransaction && $editTransaction['odeme_tipi'] === 'debit' ? 'selected' : ''; ?>>Borç</option>
-                                <option value="credit" <?php echo $editTransaction && $editTransaction['odeme_tipi'] === 'credit' ? 'selected' : ''; ?>>Tahsilat</option>
+                                <option value="borc" <?php echo $editTransaction && $editTransaction['odeme_tipi'] === 'borc' ? 'selected' : ''; ?>>Borç</option>
+                                <option value="tahsilat" <?php echo $editTransaction && $editTransaction['odeme_tipi'] === 'tahsilat' ? 'selected' : ''; ?>>Tahsilat</option>
                             </select>
                         </div>
 
@@ -746,8 +746,8 @@ $transactions = $stmt->fetchAll();
                 
                 <div class="md:col-span-2 col-span-1">
                     <select name="products[${productCounter}][type]" class="form-select type-select">
-                        <option value="debit">Borç</option>
-                        <option value="credit">Tahsilat</option>
+                        <option value="borc">Borç</option>
+                        <option value="tahsilat">Tahsilat</option>
                     </select>
                 </div>
                 
