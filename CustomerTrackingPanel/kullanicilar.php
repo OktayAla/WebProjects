@@ -14,6 +14,7 @@ $pdo = get_pdo_connection();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
     $isim = trim($_POST['name']);
+    $eposta = 'info@mail.com'; // Otomatik e-posta ataması
     $sifre = trim($_POST['password']);
     $rol = trim($_POST['role']);
     
@@ -22,12 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Şifre değiştirilmek isteniyorsa
             if (!empty($sifre)) {
                 $hashed_password = password_hash($sifre, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare('UPDATE kullanicilar SET isim = ?, sifre = ?, rol = ? WHERE id = ?');
-                $stmt->execute([$isim, $hashed_password, $rol, $id]);
+                $stmt = $pdo->prepare('UPDATE kullanicilar SET isim = ?, eposta = ?, sifre = ?, rol = ? WHERE id = ?');
+                $stmt->execute([$isim, $eposta, $hashed_password, $rol, $id]);
             } else {
                 // Şifre değiştirilmek istenmiyorsa
-                $stmt = $pdo->prepare('UPDATE kullanicilar SET isim = ?, rol = ? WHERE id = ?');
-                $stmt->execute([$isim, $rol, $id]);
+                $stmt = $pdo->prepare('UPDATE kullanicilar SET isim = ?, eposta = ?, rol = ? WHERE id = ?');
+                $stmt->execute([$isim, $eposta, $rol, $id]);
             }
             $message = 'Kullanıcı başarıyla güncellendi.';
         } else {
@@ -36,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception('Yeni kullanıcı için şifre gereklidir.');
             }
             $hashed_password = password_hash($sifre, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare('INSERT INTO kullanicilar (isim, sifre, rol, olusturma_zamani) VALUES (?, ?, ?, NOW())');
-            $stmt->execute([$isim, $hashed_password, $rol]);
+            $stmt = $pdo->prepare('INSERT INTO kullanicilar (isim, eposta, sifre, rol, olusturma_zamani) VALUES (?, ?, ?, ?, NOW())');
+            $stmt->execute([$isim, $eposta, $hashed_password, $rol]);
             $message = 'Kullanıcı başarıyla eklendi.';
         }
         
@@ -120,17 +121,14 @@ $users = $pdo->query('SELECT * FROM kullanicilar ORDER BY id DESC')->fetchAll();
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead>
                         <tr>
-                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                             <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">İsim</th>
                             <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
-                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Oluşturma Zamanı</th>
                             <th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200" id="userTableBody">
                         <?php foreach ($users as $user): ?>
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo htmlspecialchars($user['id']); ?></td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?php echo htmlspecialchars($user['isim']); ?></td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <?php if ($user['rol'] === 'admin'): ?>
@@ -139,7 +137,6 @@ $users = $pdo->query('SELECT * FROM kullanicilar ORDER BY id DESC')->fetchAll();
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Kullanıcı</span>
                                 <?php endif; ?>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo htmlspecialchars($user['olusturma_zamani'] ?? 'Belirtilmemiş'); ?></td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end space-x-2">
                                     <a href="?edit=<?php echo $user['id']; ?>" class="text-primary-600 hover:text-primary-900" title="Düzenle">
@@ -178,6 +175,8 @@ $users = $pdo->query('SELECT * FROM kullanicilar ORDER BY id DESC')->fetchAll();
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">İsim</label>
                     <input type="text" id="name" name="name" class="form-input" value="<?php echo $editUser ? htmlspecialchars($editUser['isim']) : ''; ?>" required>
                 </div>
+                
+                <!-- E-posta alanı kaldırıldı, otomatik olarak info@mail.com atanacak -->
                 
                 <div class="mb-4">
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
