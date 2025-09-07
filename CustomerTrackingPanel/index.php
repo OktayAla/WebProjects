@@ -21,7 +21,7 @@ $satisSayfaBasina = 6;
 $borcluOffset = ($borcluSayfa - 1) * $borcluSayfaBasina;
 $satisOffset = ($satisSayfa - 1) * $satisSayfaBasina;
 $toplamBorcluMusteri = (int)$pdo->query('SELECT COUNT(*) FROM musteriler WHERE tutar > 0')->fetchColumn();
-$toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_tipi = 'borc'")->fetchColumn();
+$toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_tipi IN ('borc', 'tahsilat')")->fetchColumn();
 
 ?>
 
@@ -104,20 +104,22 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_
                                     <th>Tutar</th>
                                     <th class="hidden md:table-cell">Not</th>
                                     <th class="text-center">İşlem</th>
+                                    <th class="text-center">Tip</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                    $sonSatislarSorgusu = "SELECT i.id, i.musteri_id, m.isim AS musteri_isim, i.miktar, i.aciklama, i.olusturma_zamani 
+                                    $sonSatislarSorgusu = "SELECT i.id, i.musteri_id, i.odeme_tipi, m.isim AS musteri_isim, i.miktar, i.aciklama, i.olusturma_zamani 
                                                           FROM islemler i 
                                                           JOIN musteriler m ON m.id = i.musteri_id 
-                                                          WHERE i.odeme_tipi='borc' 
+                                                          WHERE i.odeme_tipi IN ('borc', 'tahsilat')
                                                           ORDER BY i.olusturma_zamani DESC 
                                                           LIMIT $satisSayfaBasina OFFSET $satisOffset";
                                     $sonSatislar = $pdo->query($sonSatislarSorgusu);
                                     $i = 0;
                                     foreach ($sonSatislar as $row):
                                     $i++;
+                                    $isBorc = $row['odeme_tipi'] === 'borc';
                                 ?>
                                 <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.5 + ($i * 0.05); ?>s">
                                     <td class="hidden sm:table-cell"><?php echo $row['id']; ?></td>
@@ -129,10 +131,16 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_
                                     <td class="hidden sm:table-cell">
                                         <span class="text-gray-600"><i class="bi bi-calendar3 mr-1"></i><?php echo date('d.m.Y H:i', strtotime($row['olusturma_zamani'])); ?></span>
                                     </td>
-                                    <td class="font-medium text-primary-700">
+                                    <td class="font-medium <?php echo $isBorc ? 'text-primary-700' : 'text-success-600'; ?>">
                                         <?php echo number_format($row['miktar'], 2, ',', '.'); ?> ₺
                                     </td>
                                     <td class="hidden md:table-cell"><?php echo htmlspecialchars($row['aciklama']); ?></td>
+                                    <td class="text-center">
+                                        <span class="badge <?php echo $isBorc ? 'bg-primary-100 text-primary-800' : 'bg-green-100 text-green-800'; ?> px-2 py-1 rounded-full text-xs font-medium">
+                                            <i class="bi <?php echo $isBorc ? 'bi-arrow-up-circle' : 'bi-arrow-down-circle'; ?> mr-1"></i>
+                                            <?php echo $isBorc ? 'Borç' : 'Tahsilat'; ?>
+                                        </span>
+                                    </td>
                                     <td class="text-center">
                                         <a href="yazdir.php?id=<?php echo $row['id']; ?>" class="btn btn-icon btn-sm btn-ghost" data-tooltip="Yazdır">
                                             <i class="bi bi-printer"></i>
