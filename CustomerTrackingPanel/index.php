@@ -7,6 +7,18 @@ $pdo = get_pdo_connection();
 
 $userRole = $_SESSION['user']['rol'] ?? 'user';
 
+// Son yapılan işlemler (10 adet) - tüm roller için
+$recentStmtGlobal = $pdo->query(
+	"SELECT i.id, i.miktar, i.odeme_tipi, i.aciklama, i.olusturma_zamani,
+		m.isim AS musteri_isim, COALESCE(u.isim,'-') AS urun_isim
+	 FROM islemler i
+	 JOIN musteriler m ON m.id = i.musteri_id
+	 LEFT JOIN urunler u ON u.id = i.urun_id
+	 ORDER BY i.olusturma_zamani DESC
+	 LIMIT 10"
+);
+$recentTransactions = $recentStmtGlobal ? $recentStmtGlobal->fetchAll() : [];
+
 if ($userRole === 'admin') {
     $totalCustomers = (int) $pdo->query('SELECT COUNT(*) FROM musteriler')->fetchColumn();
     
@@ -55,17 +67,6 @@ if ($userRole === 'admin') {
 	);
 	$topProducts = $topProductsStmt ? $topProductsStmt->fetchAll() : [];
 
-	// Son yapılan işlemler (10 adet)
-	$recentStmt = $pdo->query(
-		"SELECT i.id, i.miktar, i.odeme_tipi, i.aciklama, i.olusturma_zamani,
-			m.isim AS musteri_isim, COALESCE(u.isim,'-') AS urun_isim
-		 FROM islemler i
-		 JOIN musteriler m ON m.id = i.musteri_id
-		 LEFT JOIN urunler u ON u.id = i.urun_id
-		 ORDER BY i.olusturma_zamani DESC
-		 LIMIT 10"
-	);
-	$recentTransactions = $recentStmt ? $recentStmt->fetchAll() : [];
 }
 
 ?>
@@ -143,6 +144,8 @@ if ($userRole === 'admin') {
             </div>
         </div>
 
+        <?php endif; ?>
+
         <div class="card-hover shadow-lg animate-fadeIn mb-8">
             <div class="card-header">
                 <h3 class="card-title flex items-center"><i class="bi bi-clock-history mr-2 text-primary-600"></i> Son Yapılan İşlemler</h3>
@@ -189,48 +192,49 @@ if ($userRole === 'admin') {
             </div>
         </div>
 
-        <!-- Chart.js ve veriler -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-        <script>
-        (function(){
-            const dayLabels = <?php echo json_encode($dayLabels ?? []); ?>;
-            const borcData = <?php echo json_encode($borcData ?? []); ?>;
-            const tahsilatData = <?php echo json_encode($tahsilatData ?? []); ?>;
-            const topProducts = <?php echo json_encode($topProducts ?? []); ?>;
+        <?php if ($userRole === 'admin'): ?>
+            <!-- Chart.js ve veriler (sadece admin) -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+            <script>
+            (function(){
+                const dayLabels = <?php echo json_encode($dayLabels ?? []); ?>;
+                const borcData = <?php echo json_encode($borcData ?? []); ?>;
+                const tahsilatData = <?php echo json_encode($tahsilatData ?? []); ?>;
+                const topProducts = <?php echo json_encode($topProducts ?? []); ?>;
 
-            const trendCtx = document.getElementById('trendChart');
-            if (trendCtx && dayLabels.length) {
-                new Chart(trendCtx, {
-                    type: 'line',
-                    data: {
-                        labels: dayLabels,
-                        datasets: [
-                            { label: 'Borç', data: borcData, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,.1)', tension: .3, fill: true },
-                            { label: 'Tahsilat', data: tahsilatData, borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,.1)', tension: .3, fill: true }
-                        ]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
-            }
+                const trendCtx = document.getElementById('trendChart');
+                if (trendCtx && dayLabels.length) {
+                    new Chart(trendCtx, {
+                        type: 'line',
+                        data: {
+                            labels: dayLabels,
+                            datasets: [
+                                { label: 'Borç', data: borcData, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,.1)', tension: .3, fill: true },
+                                { label: 'Tahsilat', data: tahsilatData, borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,.1)', tension: .3, fill: true }
+                            ]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+                }
 
-            const productsCtx = document.getElementById('productsChart');
-            if (productsCtx && topProducts.length) {
-                new Chart(productsCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: topProducts.map(p => p.urun_adi),
-                        datasets: [{
-                            label: 'Tutar (₺)',
-                            data: topProducts.map(p => Number(p.toplam_tutar)),
-                            backgroundColor: ['#6366f1','#22c55e','#f59e0b','#ef4444','#06b6d4']
-                        }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
-            }
-        })();
-        </script>
-    <?php endif; ?>
+                const productsCtx = document.getElementById('productsChart');
+                if (productsCtx && topProducts.length) {
+                    new Chart(productsCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: topProducts.map(p => p.urun_adi),
+                            datasets: [{
+                                label: 'Tutar (₺)',
+                                data: topProducts.map(p => Number(p.toplam_tutar)),
+                                backgroundColor: ['#6366f1','#22c55e','#f59e0b','#ef4444','#06b6d4']
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+                }
+            })();
+            </script>
+        <?php endif; ?>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     </div>
