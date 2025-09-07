@@ -439,8 +439,7 @@ body {
   box-shadow: var(--card-shadow);
   background-color: white;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow-x: visible;
 }
 
 .table {
@@ -451,6 +450,8 @@ body {
   border-spacing: 0;
   min-width: 650px;
 }
+/* Compact tables without forced min-width (avoid desktop scrollbar) */
+.table-compact { min-width: 0; }
 
 .table thead {
   background-color: #f8fafc;
@@ -693,6 +694,7 @@ body {
   
   .table-container {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   /* Stacked table for small screens */
   .table.table-stacked thead {
