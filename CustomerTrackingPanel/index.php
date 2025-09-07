@@ -9,9 +9,12 @@ $userRole = $_SESSION['user']['rol'] ?? 'user';
 
 if ($userRole === 'admin') {
     $totalCustomers = (int) $pdo->query('SELECT COUNT(*) FROM musteriler')->fetchColumn();
-    $totalSales = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'borc'")->fetchColumn();
+    // Toplam Satış: borç + tahsilat işlemlerinin toplamı
+    $totalSales = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi IN ('borc','tahsilat')")->fetchColumn();
+    // Toplam Tahsilat: sadece tahsilat
     $totalCollections = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'tahsilat'")->fetchColumn();
-    $totalReceivables = (float) $pdo->query('SELECT COALESCE(SUM(tutar),0) FROM musteriler')->fetchColumn();
+    // Toplam Alacak: sadece borç
+    $totalReceivables = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'borc'")->fetchColumn();
 }
 
 $borcluSayfa = isset($_GET['borclu_sayfa']) ? (int) $_GET['borclu_sayfa'] : 1;
