@@ -61,10 +61,6 @@ if ($search) {
 }
 ?>
 
-<div class="floating-element"></div>
-<div class="floating-element"></div>
-<div class="floating-element"></div>
-
 <div class="container mx-auto px-4 py-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
@@ -112,7 +108,7 @@ if ($search) {
                     <thead>
                         <tr>
                             <th>Ürün Adı</th>
-                                                        <th class="text-right"></th>
+                            <th class="text-right"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -130,7 +126,7 @@ if ($search) {
                             <?php foreach ($products as $index => $product): ?>
                             <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.1 + ($index * 0.05); ?>s">
                                 <td class="font-medium"><?php echo htmlspecialchars($product['isim']); ?></td>
-                                                                <td class="text-right">
+                                <td class="text-right">
                                     <button type="button" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)" class="btn btn-outline btn-sm mr-2">
                                         <i class="bi bi-pencil mr-1"></i> Düzenle
                                     </button>
