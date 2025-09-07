@@ -17,14 +17,18 @@ if (!$customer) {
     exit;
 }
 
+// Toplam Satış (Borç)
 $salesStmt = $pdo->prepare("SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE musteri_id = ? AND odeme_tipi = 'borc'");
 $salesStmt->execute([$customerId]);
 $totalSales = (float)$salesStmt->fetchColumn();
 
+// Toplam Tahsilat (Ödeme)
 $paidStmt = $pdo->prepare("SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE musteri_id = ? AND odeme_tipi = 'tahsilat'");
 $paidStmt->execute([$customerId]);
 $totalPaid = (float)$paidStmt->fetchColumn();
-$remaining  = (float)$customer['tutar'];
+
+// Kalan Borç (Bakiye) - Toplam borçtan toplam tahsilatı çıkar
+$remaining = $totalSales - $totalPaid;
 
 $historyStmt = $pdo->prepare('SELECT i.id, i.odeme_tipi, i.miktar, i.aciklama, i.olusturma_zamani, u.isim AS urun_isim FROM islemler i LEFT JOIN urunler u ON u.id = i.urun_id WHERE i.musteri_id = ? ORDER BY i.olusturma_zamani DESC');
 $historyStmt->execute([$customerId]);
