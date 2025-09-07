@@ -86,7 +86,7 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2">
-            <div class="card-hover animate-fadeIn" style="animation-delay: 0.5s">
+            <div class="card-hover animate-fadeIn shadow-lg" style="animation-delay: 0.5s">
                 <div class="card-header">
                     <div class="flex justify-between items-center">
                         <h3 class="card-title"><i class="bi bi-receipt mr-2"></i>Son Satışlar</h3>
@@ -96,7 +96,7 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                     </div>
                 </div>
                 <div class="p-5">
-                    <div class="table-container">
+                    <div class="table-container overflow-x-auto">
                         <table class="table table-hover table-compact w-full">
                             <thead>
                                 <tr>
@@ -180,7 +180,7 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
         </div>
 
         <div class="lg:col-span-1">
-            <div class="card-hover animate-fadeIn" style="animation-delay: 0.6s">
+            <div class="card-hover animate-fadeIn shadow-lg" style="animation-delay: 0.6s">
                 <div class="card-header">
                     <div class="flex justify-between items-center">
                         <h3 class="card-title"><i class="bi bi-exclamation-triangle mr-2"></i>Borçlu Müşteriler</h3>
@@ -190,7 +190,7 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                     </div>
                 </div>
                 <div class="p-5">
-                    <div class="table-container">
+                    <div class="table-container overflow-x-auto">
                         <table class="table table-hover table-compact w-full">
                             <thead>
                                 <tr>
