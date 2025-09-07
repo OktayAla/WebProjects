@@ -56,7 +56,7 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                 </div>
                 <div class="stat-info">
                     <span class="stat-label">Toplam Satış</span>
-                    <span class="stat-value cursor-pointer text-primary-700 hover:underline" id="showSalesDetail">
+                    <span class="stat-value text-primary-700">
                         <?php echo number_format($totalSales, 2, ',', '.'); ?> ₺
                     </span>
                 </div>
@@ -68,7 +68,7 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                 </div>
                 <div class="stat-info">
                     <span class="stat-label">Toplam Tahsilat</span>
-                    <span class="stat-value cursor-pointer text-success-700 hover:underline" id="showCollectionsDetail">
+                    <span class="stat-value text-success-700">
                         <?php echo number_format($totalCollections, 2, ',', '.'); ?> ₺
                     </span>
                 </div>
@@ -80,8 +80,7 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                 </div>
                 <div class="stat-info">
                     <span class="stat-label">Toplam Alacak</span>
-                    <span class="stat-value cursor-pointer text-red-600 hover:underline" id="showReceivablesDetail"
-                        style="color: red !important;">
+                    <span class="stat-value text-red-600" style="color: red !important;">
                         <?php echo number_format($totalReceivables, 2, ',', '.'); ?> ₺
                     </span>
                 </div>
@@ -238,87 +237,4 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
     </div>
 </div>
 
-<div id="statDetailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 animate-fadeIn">
-        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-            <h3 class="text-lg font-semibold text-gray-900 flex items-center" id="statDetailTitle"></h3>
-            <button type="button" class="text-gray-400 hover:text-gray-500 close-modal" id="closeStatDetailModal">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-        <div class="p-4 overflow-y-auto max-h-[70vh]" id="statDetailContent"></div>
-    </div>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        function openModal(title, content) {
-            document.getElementById('statDetailTitle').innerHTML = title;
-            document.getElementById('statDetailContent').innerHTML = content;
-            document.getElementById('statDetailModal').classList.remove('hidden');
-        }
-        document.getElementById('closeStatDetailModal').onclick = function () {
-            document.getElementById('statDetailModal').classList.add('hidden');
-        };
-        <?php if ($userRole === 'admin'): ?>
-            document.getElementById('showSalesDetail').onclick = function () {
-                fetch('index.php?detail=sales').then(r => r.text()).then(html => {
-                    openModal('Toplam Satış Detayı', html);
-                });
-            };
-            document.getElementById('showCollectionsDetail').onclick = function () {
-                fetch('index.php?detail=collections').then(r => r.text()).then(html => {
-                    openModal('Toplam Tahsilat Detayı', html);
-                });
-            };
-            document.getElementById('showReceivablesDetail').onclick = function () {
-                fetch('index.php?detail=receivables').then(r => r.text()).then(html => {
-                    openModal('Toplam Alacak Detayı', html);
-                });
-            };
-        <?php endif; ?>
-    });
-</script>
-<?php
-
-if ($userRole === 'admin' && isset($_GET['detail'])) {
-    if ($_GET['detail'] === 'sales') {
-        $stmt = $pdo->query("SELECT i.id, m.isim AS musteri_isim, i.miktar, i.olusturma_zamani, i.odeme_tipi
-                             FROM islemler i 
-                             JOIN musteriler m ON m.id = i.musteri_id 
-                             WHERE i.odeme_tipi IN ('borc', 'tahsilat')
-                             ORDER BY i.olusturma_zamani DESC LIMIT 50");
-        echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th><th>Tür</th></tr></thead><tbody>';
-        foreach ($stmt as $row) {
-            $isBorc = $row['odeme_tipi'] === 'borc';
-            echo '<tr><td>' . $row['id'] . '</td><td>' . htmlspecialchars($row['musteri_isim']) . '</td><td>' . date('d.m.Y H:i', strtotime($row['olusturma_zamani'])) . '</td><td>' . number_format($row['miktar'], 2, ',', '.') . ' ₺</td><td>' . ($isBorc ? 'Borç' : 'Tahsilat') . '</td></tr>';
-        }
-        echo '</tbody></table>';
-        exit;
-    } elseif ($_GET['detail'] === 'collections') {
-        $stmt = $pdo->query("SELECT i.id, m.isim AS musteri_isim, i.miktar, i.olusturma_zamani 
-                             FROM islemler i 
-                             JOIN musteriler m ON m.id = i.musteri_id 
-                             WHERE i.odeme_tipi='tahsilat' 
-                             ORDER BY i.olusturma_zamani DESC LIMIT 50");
-        echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th></tr></thead><tbody>';
-        foreach ($stmt as $row) {
-            echo '<tr><td>' . $row['id'] . '</td><td>' . htmlspecialchars($row['musteri_isim']) . '</td><td>' . date('d.m.Y H:i', strtotime($row['olusturma_zamani'])) . '</td><td>' . number_format($row['miktar'], 2, ',', '.') . ' ₺</td></tr>';
-        }
-        echo '</tbody></table>';
-        exit;
-    } elseif ($_GET['detail'] === 'receivables') {
-        $stmt = $pdo->query("SELECT i.id, m.isim AS musteri_isim, i.miktar, i.olusturma_zamani 
-                             FROM islemler i 
-                             JOIN musteriler m ON m.id = i.musteri_id 
-                             WHERE i.odeme_tipi='borc' 
-                             ORDER BY i.olusturma_zamani DESC LIMIT 50");
-        echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th></tr></thead><tbody>';
-        foreach ($stmt as $row) {
-            echo '<tr><td>' . $row['id'] . '</td><td>' . htmlspecialchars($row['musteri_isim']) . '</td><td>' . date('d.m.Y H:i', strtotime($row['olusturma_zamani'])) . '</td><td>' . number_format($row['miktar'], 2, ',', '.') . ' ₺</td></tr>';
-        }
-        echo '</tbody></table>';
-        exit;
-    }
-}
-?>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
