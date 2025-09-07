@@ -13,8 +13,8 @@ if ($userRole === 'admin') {
     $totalSales = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi IN ('borc','tahsilat')")->fetchColumn();
     // Toplam Tahsilat: sadece tahsilat
     $totalCollections = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'tahsilat'")->fetchColumn();
-    // Toplam Alacak: sadece borç
-    $totalReceivables = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'borc'")->fetchColumn();
+    // Toplam Alacak: mevcut açık alacak (musteriler.tutar toplamı)
+    $totalReceivables = (float) $pdo->query('SELECT COALESCE(SUM(tutar),0) FROM musteriler')->fetchColumn();
 }
 
 $borcluSayfa = isset($_GET['borclu_sayfa']) ? (int) $_GET['borclu_sayfa'] : 1;
