@@ -102,6 +102,11 @@
 						<a href="urunler.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
 							<i class="bi bi-box mr-2"></i> Ürünler
 						</a>
+						<?php if (current_user() && current_user()['rol'] === 'admin'): ?>
+						<a href="kullanicilar.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
+							<i class="bi bi-people-fill mr-2"></i> Kullanıcılar
+						</a>
+						<?php endif; ?>
 					</div>
 				</div>
 				<div class="hidden md:flex items-center">
