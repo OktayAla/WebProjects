@@ -101,13 +101,13 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                 </div>
                 <div class="p-0">
                     <div class="overflow-x-auto">
-                        <table class="table table-hover w-full">
+                        <table class="table table-hover table-stacked w-full">
                             <thead>
                                 <tr>
                                     <th>Müşteri</th>
-                                    <th class="hidden sm:table-cell">Tarih</th>
+                                    <th>Tarih</th>
                                     <th>Tutar</th>
-                                    <th class="hidden md:table-cell">Not</th>
+                                    <th>Not</th>
                                     <th class="text-center">İşlem</th>
                                 </tr>
                             </thead>
@@ -126,25 +126,24 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                                     $isBorc = $row['odeme_tipi'] === 'borc';
                                     ?>
                                     <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.5 + ($i * 0.05); ?>s">
-                                        <td>
+                                        <td data-label="Müşteri">
                                             <a href="musteri_rapor.php?customer=<?php echo (int) $row['musteri_id']; ?>"
                                                 class="text-primary-600 hover:text-primary-900 transition-colors duration-200">
                                                 <?php echo htmlspecialchars($row['musteri_isim']); ?>
                                             </a>
                                         </td>
-                                        <td class="hidden sm:table-cell">
+                                        <td data-label="Tarih">
                                             <span class="text-gray-600"><i
                                                     class="bi bi-calendar3 mr-1"></i><?php echo date('d.m.Y H:i', strtotime($row['olusturma_zamani'])); ?></span>
                                         </td>
-                                        <td
+                                        <td data-label="Tutar"
                                             class="font-medium <?php echo $isBorc ? 'text-primary-700' : 'text-success-600'; ?>">
                                             <?php echo number_format($row['miktar'], 2, ',', '.'); ?> ₺
                                         </td>
-                                        <td class="hidden md:table-cell"><?php echo htmlspecialchars($row['aciklama']); ?>
+                                        <td data-label="Not"><?php echo htmlspecialchars($row['aciklama']); ?>
                                         </td>
-                                        <td class="text-center">
-                                            <span
-                                                class="badge <?php echo $isBorc ? 'bg-primary-100 text-primary-800' : 'bg-green-100 text-green-800'; ?> px-2 py-1 rounded-full text-xs font-medium">
+                                        <td class="text-center" data-label="İşlem">
+                                            <span class="badge <?php echo $isBorc ? 'badge-primary' : 'badge-success'; ?>">
                                                 <i
                                                     class="bi <?php echo $isBorc ? 'bi-arrow-up-circle' : 'bi-arrow-down-circle'; ?> mr-1"></i>
                                                 <?php echo $isBorc ? 'Borç' : 'Tahsilat'; ?>
