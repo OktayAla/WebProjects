@@ -95,9 +95,9 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                         </a>
                     </div>
                 </div>
-                <div class="p-0">
+                <div class="p-5">
                     <div class="table-container">
-                        <table class="table table-hover w-full">
+                        <table class="table table-hover table-compact w-full">
                             <thead>
                                 <tr>
                                     <th>Müşteri</th>
@@ -189,9 +189,9 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                         </a>
                     </div>
                 </div>
-                <div class="p-0">
+                <div class="p-5">
                     <div class="table-container">
-                        <table class="table table-hover w-full">
+                        <table class="table table-hover table-compact w-full">
                             <thead>
                                 <tr>
                                     <th>Müşteri</th>
