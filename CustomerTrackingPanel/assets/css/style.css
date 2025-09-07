@@ -969,6 +969,22 @@ body {
   }
 }
 
+@media (max-width: 1024px) {
+  .table-container {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+  .table {
+    min-width: 800px;
+  }
+}
+
+.table-container {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
 .card-hover:hover,
 .dashboard-stats .stat-card:hover,
 .btn-primary:hover,
