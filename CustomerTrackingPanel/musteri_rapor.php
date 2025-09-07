@@ -17,7 +17,7 @@ if (!$customer) {
     exit;
 }
 
-// Toplam Satış (Borç)
+// Toplam Borç (Satış)
 $salesStmt = $pdo->prepare("SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE musteri_id = ? AND odeme_tipi = 'borc'");
 $salesStmt->execute([$customerId]);
 $totalSales = (float)$salesStmt->fetchColumn();
@@ -27,7 +27,7 @@ $paidStmt = $pdo->prepare("SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE m
 $paidStmt->execute([$customerId]);
 $totalPaid = (float)$paidStmt->fetchColumn();
 
-// Kalan Borç (Bakiye) - Toplam borçtan toplam tahsilatı çıkar
+// Net Bakiye (Borç - Tahsilat)
 $remaining = $totalSales - $totalPaid;
 
 $historyStmt = $pdo->prepare('SELECT i.id, i.odeme_tipi, i.miktar, i.aciklama, i.olusturma_zamani, u.isim AS urun_isim FROM islemler i LEFT JOIN urunler u ON u.id = i.urun_id WHERE i.musteri_id = ? ORDER BY i.olusturma_zamani DESC');
@@ -101,12 +101,12 @@ $history = $historyStmt->fetchAll();
                     </div>
                 </div>
                 
-                <div class="stat-card card-hover animate-fadeIn" style="animation-delay: 0.2s">
-                    <div class="stat-icon" style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);">
-                        <i class="bi bi-cash"></i>
+                <div class="stat-card card-hover" style="animation-delay: 0.3s">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);">
+                        <i class="bi bi-cash-coin"></i>
                     </div>
                     <div class="stat-info">
-                        <span class="stat-label">Ödenen Toplam</span>
+                        <span class="stat-label">Toplam Tahsilat</span>
                         <span class="stat-value"><?php echo number_format($totalPaid, 2, ',', '.'); ?> ₺</span>
                     </div>
                 </div>
@@ -116,8 +116,10 @@ $history = $historyStmt->fetchAll();
                         <i class="bi bi-wallet2"></i>
                     </div>
                     <div class="stat-info">
-                        <span class="stat-label">Kalan Borç</span>
-                        <span class="stat-value"><?php echo number_format($remaining, 2, ',', '.'); ?> ₺</span>
+                        <span class="stat-label">Net Bakiye</span>
+                        <span class="stat-value <?php echo $remaining > 0 ? 'text-danger-600' : ($remaining < 0 ? 'text-success-600' : ''); ?>">
+                            <?php echo ($remaining > 0 ? '+' : '') . number_format($remaining, 2, ',', '.'); ?> ₺
+                        </span>
                     </div>
                 </div>
             </div>
