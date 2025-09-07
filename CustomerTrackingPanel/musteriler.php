@@ -59,11 +59,11 @@ if (isset($_GET['edit'])) {
 
 // Tüm müşterileri getir (sıralama ID'ye göre)
 $customers = $pdo->query('SELECT m.*, 
-    (SELECT COALESCE(SUM(CASE WHEN odeme_tipi = "borc" THEN miktar ELSE 0 END), 0) FROM islemler WHERE musteri_id = m.id) as toplam_borc,
-    (SELECT COALESCE(SUM(CASE WHEN odeme_tipi = "tahsilat" THEN miktar ELSE 0 END), 0) FROM islemler WHERE musteri_id = m.id) as toplam_tahsilat
+    (SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE musteri_id = m.id AND odeme_tipi = "borc") as toplam_borc,
+    (SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE musteri_id = m.id AND odeme_tipi = "tahsilat") as toplam_tahsilat
     FROM musteriler m ORDER BY m.id DESC')->fetchAll();
 
-// Her müşteri için net bakiye hesapla
+// Her müşteri için net bakiye hesapla (borç - tahsilat)
 foreach ($customers as &$customer) {
     $customer['net_bakiye'] = $customer['toplam_borc'] - $customer['toplam_tahsilat'];
 }
@@ -148,8 +148,7 @@ foreach ($customers as &$customer) {
                                 <td class="max-w-xs truncate"><?php echo nl2br(htmlspecialchars($row['adres'])); ?></td>
                                 <td class="font-medium <?php echo $row['net_bakiye'] > 0 ? 'text-danger-600' : ($row['net_bakiye'] < 0 ? 'text-success-600' : 'text-gray-600'); ?>">
                                     <i class="bi <?php echo $row['net_bakiye'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : ($row['net_bakiye'] < 0 ? 'bi-arrow-down-circle-fill text-success-500' : 'bi-dash-circle text-gray-500'); ?> mr-1"></i>
-                                    <?php echo number_format(abs($row['net_bakiye']), 2, ',', '.'); ?> ₺
-                                    <?php if ($row['net_bakiye'] < 0): ?><span class="text-xs text-gray-500">(alacaklı)</span><?php endif; ?>
+                                    <?php echo ($row['net_bakiye'] > 0 ? '+' : '') . number_format($row['net_bakiye'], 2, ',', '.'); ?> ₺
                                 </td>
                                 <td class="text-right">
                                     <div class="flex space-x-3 justify-end">
