@@ -39,11 +39,12 @@ body::before {
 }
 
 h4 {
-  color: #333;
+  color: #161824;
   font-weight: 600;
   margin-bottom: 1.5rem !important;
   position: relative;
   padding-bottom: 0.5rem;
+  text-align: center;
 }
 
 h4::after {
@@ -52,9 +53,9 @@ h4::after {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 50px;
+  width: 150px;
   height: 3px;
-  background: linear-gradient(to right, #667eea, #764ba2);
+  background: linear-gradient(to right, #1a1e34, #231536);
   border-radius: 3px;
 }
 
@@ -79,7 +80,7 @@ h4::after {
 }
 
 .btn-primary {
-  background: linear-gradient(to right, #667eea, #764ba2);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   border: none;
   border-radius: 6px;
   padding: 0.75rem;
@@ -90,7 +91,7 @@ h4::after {
 }
 
 .btn-primary:hover {
-  background: linear-gradient(to right, #5a6fd8, #6a4190);
+  background: linear-gradient(135deg, #060b16 0%, #374c6d 100%);
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
 }
