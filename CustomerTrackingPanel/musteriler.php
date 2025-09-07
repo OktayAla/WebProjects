@@ -63,9 +63,9 @@ $customers = $pdo->query('SELECT m.*,
     (SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE musteri_id = m.id AND odeme_tipi = "tahsilat") as toplam_tahsilat
     FROM musteriler m ORDER BY m.id DESC')->fetchAll();
 
-// Her müşteri için net bakiye hesapla (borç - tahsilat)
+// Her müşteri için net bakiye hesapla (tahsilat - borç)
 foreach ($customers as &$customer) {
-    $customer['net_bakiye'] = $customer['toplam_borc'] - $customer['toplam_tahsilat'];
+    $customer['net_bakiye'] = $customer['toplam_tahsilat'] - $customer['toplam_borc'];
 }
 
 ?>
@@ -146,8 +146,8 @@ foreach ($customers as &$customer) {
                                 </td>
                                 <td><?php echo htmlspecialchars($row['numara']); ?></td>
                                 <td class="max-w-xs truncate"><?php echo nl2br(htmlspecialchars($row['adres'])); ?></td>
-                                <td class="font-medium <?php echo $row['net_bakiye'] > 0 ? 'text-danger-600' : ($row['net_bakiye'] < 0 ? 'text-success-600' : 'text-gray-600'); ?>">
-                                    <i class="bi <?php echo $row['net_bakiye'] > 0 ? 'bi-arrow-up-circle-fill text-danger-500' : ($row['net_bakiye'] < 0 ? 'bi-arrow-down-circle-fill text-success-500' : 'bi-dash-circle text-gray-500'); ?> mr-1"></i>
+                                <td class="font-medium <?php echo $row['net_bakiye'] < 0 ? 'text-danger-600' : ($row['net_bakiye'] > 0 ? 'text-success-600' : 'text-gray-600'); ?>">
+                                    <i class="bi <?php echo $row['net_bakiye'] < 0 ? 'bi-arrow-down-circle-fill text-danger-500' : ($row['net_bakiye'] > 0 ? 'bi-arrow-up-circle-fill text-success-500' : 'bi-dash-circle text-gray-500'); ?> mr-1"></i>
                                     <?php echo ($row['net_bakiye'] > 0 ? '+' : '') . number_format($row['net_bakiye'], 2, ',', '.'); ?> ₺
                                 </td>
                                 <td class="text-right">
