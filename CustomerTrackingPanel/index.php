@@ -31,10 +31,6 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
 
 ?>
 
-<div class="floating-element"></div>
-<div class="floating-element"></div>
-<div class="floating-element"></div>
-
 <div class="container mx-auto px-4 py-6">
     <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
         <i class="bi bi-speedometer2 mr-2 text-primary-600"></i> Yönetim Paneli
@@ -100,8 +96,8 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                     </div>
                 </div>
                 <div class="p-0">
-                    <div class="overflow-x-auto">
-                        <table class="table table-hover table-stacked w-full">
+                    <div class="table-container">
+                        <table class="table table-hover w-full">
                             <thead>
                                 <tr>
                                     <th>Müşteri</th>
@@ -126,23 +122,23 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                                     $isBorc = $row['odeme_tipi'] === 'borc';
                                     ?>
                                     <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.5 + ($i * 0.05); ?>s">
-                                        <td data-label="Müşteri">
+                                        <td>
                                             <a href="musteri_rapor.php?customer=<?php echo (int) $row['musteri_id']; ?>"
                                                 class="text-primary-600 hover:text-primary-900 transition-colors duration-200">
                                                 <?php echo htmlspecialchars($row['musteri_isim']); ?>
                                             </a>
                                         </td>
-                                        <td data-label="Tarih">
+                                        <td>
                                             <span class="text-gray-600"><i
                                                     class="bi bi-calendar3 mr-1"></i><?php echo date('d.m.Y H:i', strtotime($row['olusturma_zamani'])); ?></span>
                                         </td>
-                                        <td data-label="Tutar"
+                                        <td
                                             class="font-medium <?php echo $isBorc ? 'text-primary-700' : 'text-success-600'; ?>">
                                             <?php echo number_format($row['miktar'], 2, ',', '.'); ?> ₺
                                         </td>
-                                        <td data-label="Not"><?php echo htmlspecialchars($row['aciklama']); ?>
+                                        <td><?php echo htmlspecialchars($row['aciklama']); ?>
                                         </td>
-                                        <td class="text-center" data-label="İşlem">
+                                        <td class="text-center">
                                             <span class="badge <?php echo $isBorc ? 'badge-primary' : 'badge-success'; ?>">
                                                 <i
                                                     class="bi <?php echo $isBorc ? 'bi-arrow-up-circle' : 'bi-arrow-down-circle'; ?> mr-1"></i>
@@ -193,8 +189,16 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                         </a>
                     </div>
                 </div>
-                <div class="p-4">
-                    <div class="space-y-3 max-w-full">
+                <div class="p-0">
+                    <div class="table-container">
+                        <table class="table table-hover w-full">
+                            <thead>
+                                <tr>
+                                    <th>Müşteri</th>
+                                    <th class="text-right">Tutar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                         <?php
                         $borcluMusterilerSorgusu = "SELECT id, isim, tutar 
                                                         FROM musteriler 
@@ -208,24 +212,30 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                             $hasDebtors = true;
                             $i++;
                             ?>
-                            <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 animate-fadeIn hover:bg-gray-50 px-2 rounded transition-colors duration-200"
-                                style="animation-delay: <?php echo 0.6 + ($i * 0.05); ?>s">
-                                <a href="musteri_rapor.php?customer=<?php echo $debtor['id']; ?>"
-                                    class="text-gray-800 hover:text-primary-600 font-medium transition-colors duration-200 truncate mr-2">
-                                    <i class="bi bi-person mr-1"></i> <?php echo htmlspecialchars($debtor['isim']); ?>
-                                </a>
-                                <span class="badge-danger whitespace-nowrap">
-                                    <?php echo number_format($debtor['tutar'], 2, ',', '.'); ?> ₺
-                                </span>
-                            </div>
+                            <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.6 + ($i * 0.05); ?>s">
+                                <td>
+                                    <a href="musteri_rapor.php?customer=<?php echo $debtor['id']; ?>" class="text-gray-800 hover:text-primary-600 font-medium transition-colors duration-200">
+                                        <i class="bi bi-person mr-1"></i> <?php echo htmlspecialchars($debtor['isim']); ?>
+                                    </a>
+                                </td>
+                                <td class="text-right">
+                                    <span class="badge badge-danger">
+                                        <?php echo number_format($debtor['tutar'], 2, ',', '.'); ?> ₺
+                                    </span>
+                                </td>
+                            </tr>
                         <?php endforeach; ?>
 
                         <?php if (!$hasDebtors): ?>
-                            <div class="py-8 text-center text-gray-500">
-                                <i class="bi bi-emoji-smile text-3xl mb-2 block"></i>
-                                Borçlu müşteri bulunmuyor.
-                            </div>
+                            <tr>
+                                <td colspan="2" class="text-center py-8 text-gray-500">
+                                    <i class="bi bi-emoji-smile text-3xl mb-2 block"></i>
+                                    Borçlu müşteri bulunmuyor.
+                                </td>
+                            </tr>
                         <?php endif; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="card-footer">
