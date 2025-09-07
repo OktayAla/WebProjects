@@ -512,6 +512,29 @@ body::before {
 .table-striped tbody tr:nth-of-type(odd):hover {
   background-color: #f1f5f9;
 }
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  line-height: 1;
+  font-weight: 600;
+}
+.badge-danger {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+.badge-success {
+  background-color: #dcfce7;
+  color: #166534;
+}
+.badge-primary {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
 
 .stat-card {
   display: flex;
@@ -691,6 +714,29 @@ body::before {
   
   .table-container {
     overflow-x: auto;
+  }
+  /* Stacked table for small screens */
+  .table.table-stacked thead {
+    display: none;
+  }
+  .table.table-stacked tbody tr {
+    display: block;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.5rem 0.75rem;
+  }
+  .table.table-stacked tbody tr td {
+    display: grid;
+    grid-template-columns: 40% 1fr;
+    padding: 0.5rem 0;
+    font-size: 0.875rem;
+  }
+  .table.table-stacked tbody tr td::before {
+    content: attr(data-label);
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding-right: 0.75rem;
   }
   
   .modal-dialog {
