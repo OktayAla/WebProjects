@@ -35,10 +35,6 @@ $historyStmt->execute([$customerId]);
 $history = $historyStmt->fetchAll();
 ?>
 
-<div class="floating-element"></div>
-<div class="floating-element"></div>
-<div class="floating-element"></div>
-
 
 <div class="container mx-auto px-4 py-6">
     <div class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
