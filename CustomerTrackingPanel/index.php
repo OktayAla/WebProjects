@@ -9,12 +9,12 @@ $userRole = $_SESSION['user']['rol'] ?? 'user';
 
 if ($userRole === 'admin') {
     $totalCustomers = (int) $pdo->query('SELECT COUNT(*) FROM musteriler')->fetchColumn();
-    // Toplam Satış: borç + tahsilat işlemlerinin toplamı
-    $totalSales = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi IN ('borc','tahsilat')")->fetchColumn();
-    // Toplam Tahsilat: sadece tahsilat
+    // Toplam Satış: tüm işlemlerin toplamı (borç + tahsilat)
+    $totalSales = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler")->fetchColumn();
+    // Toplam Tahsilat: sadece tahsilat işlemlerinin toplamı
     $totalCollections = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'tahsilat'")->fetchColumn();
-    // Toplam Alacak: mevcut açık alacak (musteriler.tutar toplamı)
-    $totalReceivables = (float) $pdo->query('SELECT COALESCE(SUM(tutar),0) FROM musteriler')->fetchColumn();
+    // Toplam Alacak: sadece borç işlemlerinin toplamı
+    $totalReceivables = (float) $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE odeme_tipi = 'borc'")->fetchColumn();
 }
 
 $borcluSayfa = isset($_GET['borclu_sayfa']) ? (int) $_GET['borclu_sayfa'] : 1;
@@ -24,7 +24,7 @@ $satisSayfaBasina = 6;
 $borcluOffset = ($borcluSayfa - 1) * $borcluSayfaBasina;
 $satisOffset = ($satisSayfa - 1) * $satisSayfaBasina;
 $toplamBorcluMusteri = (int) $pdo->query('SELECT COUNT(*) FROM musteriler WHERE tutar > 0')->fetchColumn();
-$toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_tipi IN ('borc', 'tahsilat')")->fetchColumn();
+$toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler")->fetchColumn();
 
 ?>
 
@@ -114,7 +114,6 @@ $toplamSatisKaydi = (int) $pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme
                                 $sonSatislarSorgusu = "SELECT i.id, i.musteri_id, i.odeme_tipi, m.isim AS musteri_isim, i.miktar, i.aciklama, i.olusturma_zamani 
                                                           FROM islemler i 
                                                           JOIN musteriler m ON m.id = i.musteri_id 
-                                                          WHERE i.odeme_tipi IN ('borc', 'tahsilat')
                                                           ORDER BY i.olusturma_zamani DESC 
                                                           LIMIT $satisSayfaBasina OFFSET $satisOffset";
                                 $sonSatislar = $pdo->query($sonSatislarSorgusu);
@@ -282,7 +281,6 @@ if ($userRole === 'admin' && isset($_GET['detail'])) {
         $stmt = $pdo->query("SELECT i.id, m.isim AS musteri_isim, i.miktar, i.olusturma_zamani 
                              FROM islemler i 
                              JOIN musteriler m ON m.id = i.musteri_id 
-                             WHERE i.odeme_tipi='borc' 
                              ORDER BY i.olusturma_zamani DESC LIMIT 50");
         echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th></tr></thead><tbody>';
         foreach ($stmt as $row) {
@@ -303,10 +301,14 @@ if ($userRole === 'admin' && isset($_GET['detail'])) {
         echo '</tbody></table>';
         exit;
     } elseif ($_GET['detail'] === 'receivables') {
-        $stmt = $pdo->query("SELECT id, isim, tutar FROM musteriler WHERE tutar > 0 ORDER BY tutar DESC LIMIT 50");
-        echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Borç</th></tr></thead><tbody>';
+        $stmt = $pdo->query("SELECT i.id, m.isim AS musteri_isim, i.miktar, i.olusturma_zamani 
+                             FROM islemler i 
+                             JOIN musteriler m ON m.id = i.musteri_id 
+                             WHERE i.odeme_tipi='borc' 
+                             ORDER BY i.olusturma_zamani DESC LIMIT 50");
+        echo '<table class="table table-hover"><thead><tr><th>#</th><th>Müşteri</th><th>Tarih</th><th>Tutar</th></tr></thead><tbody>';
         foreach ($stmt as $row) {
-            echo '<tr><td>' . $row['id'] . '</td><td>' . htmlspecialchars($row['isim']) . '</td><td>' . number_format($row['tutar'], 2, ',', '.') . ' ₺</td></tr>';
+            echo '<tr><td>' . $row['id'] . '</td><td>' . htmlspecialchars($row['musteri_isim']) . '</td><td>' . date('d.m.Y H:i', strtotime($row['olusturma_zamani'])) . '</td><td>' . number_format($row['miktar'], 2, ',', '.') . ' ₺</td></tr>';
         }
         echo '</tbody></table>';
         exit;
