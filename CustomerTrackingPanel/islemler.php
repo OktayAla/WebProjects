@@ -326,7 +326,6 @@ $transactions = $stmt->fetchAll();
                 <i class="bi bi-plus-circle mr-2 text-primary-600"></i>
                 Yeni İşlem Ekle
             </h3>
-            <span class="text-sm text-gray-500">İşlemler: <span class="font-medium text-primary-600"><?php echo htmlspecialchars($currentUserName); ?></span> tarafından eklenecek</span>
         </div>
         <div class="p-5">
             <form method="POST" id="transactionForm" class="grid grid-cols-1 gap-4">
