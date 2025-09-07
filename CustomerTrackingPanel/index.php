@@ -87,7 +87,7 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_
             <div class="card-hover animate-fadeIn" style="animation-delay: 0.5s">
                 <div class="card-header">
                     <div class="flex justify-between items-center">
-                        <h3 class="card-title"><i class="bi bi-receipt mr-2"></i>Son Satışlar</h3>
+                        <h3 class="card-title"><i class="bi bi-receipt mr-2"></i>Son İşlemler</h3>
                         <a href="islemler.php" class="btn btn-outline btn-sm">
                             Tümünü Gör <i class="bi bi-chevron-right ml-1"></i>
                         </a>
@@ -98,18 +98,15 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_
                         <table class="table table-hover w-full">
                             <thead>
                                 <tr>
-                                    <th class="hidden sm:table-cell">#</th>
                                     <th>Müşteri</th>
                                     <th class="hidden sm:table-cell">Tarih</th>
                                     <th>Tutar</th>
                                     <th class="hidden md:table-cell">Not</th>
-                                    <th class="text-center">İşlem</th>
-                                    <th class="text-center">Tip</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                    $sonSatislarSorgusu = "SELECT i.id, i.musteri_id, i.odeme_tipi, m.isim AS musteri_isim, i.miktar, i.aciklama, i.olusturma_zamani 
+                                    $sonSatislarSorgusu = "SELECT i.musteri_id, i.odeme_tipi, m.isim AS musteri_isim, i.miktar, i.aciklama, i.olusturma_zamani 
                                                           FROM islemler i 
                                                           JOIN musteriler m ON m.id = i.musteri_id 
                                                           WHERE i.odeme_tipi IN ('borc', 'tahsilat')
@@ -122,7 +119,6 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_
                                     $isBorc = $row['odeme_tipi'] === 'borc';
                                 ?>
                                 <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.5 + ($i * 0.05); ?>s">
-                                    <td class="hidden sm:table-cell"><?php echo $row['id']; ?></td>
                                     <td>
                                         <a href="musteri_rapor.php?customer=<?php echo (int)$row['musteri_id']; ?>" class="text-primary-600 hover:text-primary-900 transition-colors duration-200">
                                             <?php echo htmlspecialchars($row['musteri_isim']); ?>
@@ -135,24 +131,13 @@ $toplamSatisKaydi = (int)$pdo->query("SELECT COUNT(*) FROM islemler WHERE odeme_
                                         <?php echo number_format($row['miktar'], 2, ',', '.'); ?> ₺
                                     </td>
                                     <td class="hidden md:table-cell"><?php echo htmlspecialchars($row['aciklama']); ?></td>
-                                    <td class="text-center">
-                                        <span class="badge <?php echo $isBorc ? 'bg-primary-100 text-primary-800' : 'bg-green-100 text-green-800'; ?> px-2 py-1 rounded-full text-xs font-medium">
-                                            <i class="bi <?php echo $isBorc ? 'bi-arrow-up-circle' : 'bi-arrow-down-circle'; ?> mr-1"></i>
-                                            <?php echo $isBorc ? 'Borç' : 'Tahsilat'; ?>
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="yazdir.php?id=<?php echo $row['id']; ?>" class="btn btn-icon btn-sm btn-ghost" data-tooltip="Yazdır">
-                                            <i class="bi bi-printer"></i>
-                                        </a>
-                                    </td>
                                 </tr>
                                 <?php endforeach; ?>
                                 <?php if ($i === 0): ?>
                                 <tr>
-                                    <td colspan="6" class="text-center py-8 text-gray-500">
+                                    <td colspan="4" class="text-center py-8 text-gray-500">
                                         <i class="bi bi-inbox text-3xl mb-2 block"></i>
-                                        Henüz satış kaydı bulunmuyor.
+                                        Henüz işlem kaydı bulunmuyor.
                                     </td>
                                 </tr>
                                 <?php endif; ?>
