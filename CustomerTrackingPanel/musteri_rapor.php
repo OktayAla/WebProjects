@@ -17,8 +17,13 @@ if (!$customer) {
     exit;
 }
 
-$totalSales = (float)$pdo->prepare("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE musteri_id = ? AND odeme_tipi='debit'")->execute([$customerId]) ? $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE musteri_id = $customerId AND odeme_tipi='debit'")->fetchColumn() : 0.0;
-$totalPaid  = (float)$pdo->prepare("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE musteri_id = ? AND odeme_tipi='credit'")->execute([$customerId]) ? $pdo->query("SELECT COALESCE(SUM(miktar),0) FROM islemler WHERE musteri_id = $customerId AND odeme_tipi='credit'")->fetchColumn() : 0.0;
+$salesStmt = $pdo->prepare("SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE musteri_id = ? AND odeme_tipi = 'borc'");
+$salesStmt->execute([$customerId]);
+$totalSales = (float)$salesStmt->fetchColumn();
+
+$paidStmt = $pdo->prepare("SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE musteri_id = ? AND odeme_tipi = 'tahsilat'");
+$paidStmt->execute([$customerId]);
+$totalPaid = (float)$paidStmt->fetchColumn();
 $remaining  = (float)$customer['tutar'];
 
 $historyStmt = $pdo->prepare('SELECT i.id, i.odeme_tipi, i.miktar, i.aciklama, i.olusturma_zamani, u.isim AS urun_isim FROM islemler i LEFT JOIN urunler u ON u.id = i.urun_id WHERE i.musteri_id = ? ORDER BY i.olusturma_zamani DESC');
@@ -142,7 +147,7 @@ $history = $historyStmt->fetchAll();
                                 <td><?php echo $row['id']; ?></td>
                                 <td><?php echo date('d.m.Y H:i', strtotime($row['olusturma_zamani'])); ?></td>
                                 <td>
-                                    <?php if ($row['odeme_tipi'] === 'debit'): ?>
+                                    <?php if ($row['odeme_tipi'] === 'borc'): ?>
                                     <span class="badge-debit">Borç</span>
                                     <?php else: ?>
                                     <span class="badge-credit">Tahsilat</span>
