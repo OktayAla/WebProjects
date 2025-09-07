@@ -27,8 +27,8 @@ $paidStmt = $pdo->prepare("SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE m
 $paidStmt->execute([$customerId]);
 $totalPaid = (float)$paidStmt->fetchColumn();
 
-// Net Bakiye (Borç - Tahsilat)
-$remaining = $totalSales - $totalPaid;
+// Net Bakiye (Tahsilat - Borç) -> Pozitif: alacaklı, Negatif: borçlu
+$remaining = $totalPaid - $totalSales;
 
 $historyStmt = $pdo->prepare('SELECT i.id, i.odeme_tipi, i.miktar, i.aciklama, i.olusturma_zamani, u.isim AS urun_isim FROM islemler i LEFT JOIN urunler u ON u.id = i.urun_id WHERE i.musteri_id = ? ORDER BY i.olusturma_zamani DESC');
 $historyStmt->execute([$customerId]);
@@ -117,7 +117,7 @@ $history = $historyStmt->fetchAll();
                     </div>
                     <div class="stat-info">
                         <span class="stat-label">Net Bakiye</span>
-                        <span class="stat-value <?php echo $remaining > 0 ? 'text-danger-600' : ($remaining < 0 ? 'text-success-600' : ''); ?>">
+                        <span class="stat-value <?php echo $remaining < 0 ? 'text-danger-600' : ($remaining > 0 ? 'text-success-600' : ''); ?>">
                             <?php echo ($remaining > 0 ? '+' : '') . number_format($remaining, 2, ',', '.'); ?> ₺
                         </span>
                     </div>
@@ -166,7 +166,12 @@ $history = $historyStmt->fetchAll();
                                         <span class="text-gray-400">-</span>
                                     <?php endif; ?>
                                 </td>
-                                <td class="font-medium"><?php echo number_format($row['miktar'], 2, ',', '.'); ?></td>
+                                <td class="font-medium <?php echo $row['odeme_tipi'] === 'borc' ? 'text-danger-600' : 'text-success-600'; ?>">
+                                    <?php 
+                                        $signedAmount = ($row['odeme_tipi'] === 'borc' ? '-' : '+') . number_format($row['miktar'], 2, ',', '.');
+                                        echo $signedAmount;
+                                    ?>
+                                </td>
                                 <td><?php echo htmlspecialchars($row['aciklama']); ?></td>
                                 <td class="text-right">
                                     <a href="print.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm">
