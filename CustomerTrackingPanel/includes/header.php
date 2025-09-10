@@ -129,15 +129,25 @@
 						document.addEventListener('DOMContentLoaded', function() {
 							const userMenuButton = document.getElementById('user-menu-button');
 							const userDropdown = document.getElementById('user-dropdown');
+							const mobileMenuButton = document.getElementById('mobile-menu-button');
+							const mobileMenu = document.getElementById('mobile-menu');
 							
 							userMenuButton.addEventListener('click', function() {
 								userDropdown.classList.toggle('hidden');
+							});
+							
+							// Mobil menü butonu
+							mobileMenuButton.addEventListener('click', function() {
+								mobileMenu.classList.toggle('hidden');
 							});
 							
 							// Dropdown dışına tıklandığında menüyü kapat
 							document.addEventListener('click', function(event) {
 								if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
 									userDropdown.classList.add('hidden');
+								}
+								if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+									mobileMenu.classList.add('hidden');
 								}
 							});
 						});
@@ -166,6 +176,11 @@
 				<a href="urunler.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
 					<i class="bi bi-box mr-2"></i> Ürünler
 				</a>
+				<?php if (current_user() && current_user()['rol'] === 'admin'): ?>
+				<a href="kullanicilar.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
+					<i class="bi bi-people-fill mr-2"></i> Kullanıcılar
+				</a>
+				<?php endif; ?>
 			</div>
 			<div class="pt-4 pb-3 border-t border-gray-600">
 				<div class="flex items-center px-5">
