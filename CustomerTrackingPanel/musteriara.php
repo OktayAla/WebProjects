@@ -1,22 +1,5 @@
 <!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
 <!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
  
-<?php 
-require_once __DIR__ . '/includes/auth.php';
-require_login();
-
-$pdo = get_pdo_connection();
-$query = $_GET['q'] ?? '';
-
-if (strlen($query) < 2) {
-    echo json_encode([]);
-    exit;
-}
-
-$stmt = $pdo->prepare("SELECT id, isim, numara FROM musteriler WHERE isim LIKE ? ORDER BY isim ASC LIMIT 10");
-$stmt->execute(["%$query%"]);
-$customers = $stmt->fetchAll();
-
-header('Content-Type: application/json');
-echo json_encode($customers);
-?>
+<?php
+ goto mtI_t; dKjXL: $stmt = $pdo->prepare("\123\105\x4c\x45\x43\124\x20\151\x64\x2c\40\151\163\x69\155\x2c\x20\156\165\155\141\x72\141\40\106\122\x4f\x4d\x20\x6d\x75\x73\164\145\162\x69\154\x65\162\x20\x57\110\x45\122\x45\x20\151\163\151\x6d\40\x4c\111\113\105\x20\x3f\x20\117\122\104\105\122\x20\102\x59\x20\x69\163\151\x6d\40\x41\x53\x43\40\x4c\x49\115\x49\124\x20\61\x30"); goto MZhBc; hwwcy: $pdo = get_pdo_connection(); goto SVhTL; tafDh: header("\103\x6f\x6e\x74\x65\156\x74\55\124\x79\160\145\x3a\x20\x61\160\160\x6c\151\x63\141\164\x69\x6f\x6e\x2f\x6a\x73\157\x6e"); goto bniuS; MZhBc: $stmt->execute(array("\x25{$query}\45")); goto Zq36q; Zq36q: $customers = $stmt->fetchAll(); goto tafDh; jFO4F: if (strlen($query) < 2) { echo json_encode(array()); die; } goto dKjXL; IaX6q: require_login(); goto hwwcy; SVhTL: $query = $_GET["\161"] ?? ''; goto jFO4F; mtI_t: require_once __DIR__ . "\57\x69\x6e\143\x6c\165\144\x65\163\x2f\x61\x75\164\150\56\x70\x68\x70"; goto IaX6q; bniuS: echo json_encode($customers); goto Vat6b; Vat6b: ?>
