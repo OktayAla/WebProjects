@@ -1064,6 +1064,47 @@ $transactions = $stmt->fetchAll();
             setupProductSearch(newProductSearch[newProductSearch.length - 1]);
         };
     });
+
+    // Otomatik filtreleme için form gönderimini yönet
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterForm = document.querySelector('form[action=""][method="GET"]');
+        if (filterForm) {
+            // Tüm filtre alanlarını seç
+            const filterInputs = filterForm.querySelectorAll('input, select');
+            
+            // Her bir filtre alanı için değişiklik dinleyicisi ekle
+            filterInputs.forEach(input => {
+                // Tarih alanları için 'change' olayını kullan
+                if (input.type === 'date') {
+                    input.addEventListener('change', submitFilterForm);
+                } 
+                // Arama kutusu için 'input' olayını kullan (yazarken arama yapmak için)
+                else if (input.id === 'search') {
+                    let searchTimer;
+                    input.addEventListener('input', function() {
+                        clearTimeout(searchTimer);
+                        searchTimer = setTimeout(() => {
+                            submitFilterForm();
+                        }, 500); // 500ms bekleme süresi
+                    });
+                }
+                // Diğer tüm seçim alanları için 'change' olayını kullan
+                else {
+                    input.addEventListener('change', submitFilterForm);
+                }
+            });
+            
+            // Formu gönderen yardımcı fonksiyon
+            function submitFilterForm() {
+                // Sayfa numarasını sıfırla (yeni bir arama yapıldığında 1. sayfadan başlasın)
+                const pageInput = document.querySelector('input[name="page"]');
+                if (pageInput) {
+                    pageInput.value = 1;
+                }
+                filterForm.submit();
+            }
+        }
+    });
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
