@@ -102,6 +102,9 @@
 						<a href="urunler.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
 							<i class="bi bi-box mr-2"></i> Ürünler
 						</a>
+						<a href="fiyatlar.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
+							<i class="bi bi-currency-dollar mr-2"></i> Fiyatlar
+						</a>
 						<?php if (current_user() && current_user()['rol'] === 'admin'): ?>
 						<a href="kullanicilar.php" class="navbar-item text-white px-3 py-2 text-sm font-medium flex items-center">
 							<i class="bi bi-people-fill mr-2"></i> Kullanıcılar
@@ -175,6 +178,9 @@
 				</a>
 				<a href="urunler.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
 					<i class="bi bi-box mr-2"></i> Ürünler
+				</a>
+				<a href="fiyatlar.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
+					<i class="bi bi-currency-dollar mr-2"></i> Fiyatlar
 				</a>
 				<?php if (current_user() && current_user()['rol'] === 'admin'): ?>
 				<a href="kullanicilar.php" class="navbar-item text-white block px-3 py-2 rounded-md text-base font-medium">
