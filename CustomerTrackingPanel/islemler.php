@@ -1,238 +1,11 @@
+<!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
+<!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
+ 
 <?php
 require_once __DIR__ . '/includes/auth.php';
 require_login();
 
 $pdo = get_pdo_connection();
-
-// AJAX isteği için özel endpoint
-if (isset($_GET['ajax_filter'])) {
-    header('Content-Type: application/json');
-    
-    try {
-        // Mevcut filtreleme parametrelerini al
-        $search = $_GET['search'] ?? '';
-        $productFilter = $_GET['product'] ?? '';
-        $typeFilter = $_GET['type'] ?? '';
-        $dateFrom = $_GET['date_from'] ?? '';
-        $dateTo = $_GET['date_to'] ?? '';
-        $customerId = $_GET['customer'] ?? '';
-        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $perPage = 10;
-        $offset = ($page - 1) * $perPage;
-
-        // Sorgu oluştur
-        $query = "SELECT i.*, m.isim AS musteri_isim, u.isim AS urun_isim, k.kullanici_adi AS kullanici_isim 
-                 FROM islemler i 
-                 LEFT JOIN musteriler m ON i.musteri_id = m.id 
-                 LEFT JOIN urunler u ON i.urun_id = u.id 
-                 LEFT JOIN kullanicilar k ON i.kullanici_id = k.id 
-                 WHERE 1=1";
-        $params = [];
-
-        // Müşteri ID'si varsa filtrele
-        if ($customerId) {
-            $query .= " AND i.musteri_id = ?";
-            $params[] = $customerId;
-        }
-
-        // Arama kelimesi varsa filtrele
-        if (!empty($search)) {
-            $query .= " AND (m.isim LIKE ? OR i.aciklama LIKE ?)";
-            $searchTerm = "%$search%";
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
-        }
-
-        // Ürün ID'si varsa filtrele
-        if (!empty($productFilter)) {
-            $query .= " AND i.urun_id = ?";
-            $params[] = $productFilter;
-        }
-
-        // İşlem türü varsa filtrele
-        if (!empty($typeFilter)) {
-            $query .= " AND i.odeme_tipi = ?";
-            $params[] = $typeFilter;
-        }
-
-        // Tarih aralığı varsa filtrele
-        if (!empty($dateFrom)) {
-            $query .= " AND DATE(i.olusturma_zamani) >= ?";
-            $params[] = $dateFrom;
-        }
-        if (!empty($dateTo)) {
-            $query .= " AND DATE(i.olusturma_zamani) <= ?";
-            $params[] = $dateTo;
-        }
-
-        // Sıralama ve sayfalama
-        $query .= " ORDER BY i.olusturma_zamani DESC LIMIT ? OFFSET ?";
-        $params[] = $perPage;
-        $params[] = $offset;
-
-        // Sorguyu çalıştır
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-        $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Toplam kayıt sayısını al
-        $countQuery = str_replace(
-            ["i.*, m.isim AS musteri_isim, u.isim AS urun_isim, k.kullanici_adi AS kullanici_isim", "ORDER BY i.olusturma_zamani DESC LIMIT ? OFFSET ?"], 
-            ["COUNT(*) as total"], 
-            $query
-        );
-        $countStmt = $pdo->prepare($countQuery);
-        $countParams = array_slice($params, 0, -2); // LIMIT ve OFFSET parametrelerini çıkar
-        $countStmt->execute($countParams);
-        $totalTransactions = $countStmt->fetchColumn();
-        $totalPages = ceil($totalTransactions / $perPage);
-
-        // İşlemleri HTML olarak oluştur
-        $html = '';
-        if (count($transactions) > 0) {
-            foreach ($transactions as $index => $row) {
-                $html .= '<tr class="animate-fadeIn" style="animation-delay: ' . (0.3 + ($index * 0.05)) . 's">';
-                
-                if (empty($customerId)) {
-                    $html .= '<td><a href="islemler.php?customer=' . $row['musteri_id'] . '" class="text-primary-600 hover:text-primary-900 font-medium">' . 
-                             htmlspecialchars($row['musteri_isim']) . '</a></td>';
-                }
-                
-                $html .= '<td>';
-                if (!empty($row['urun_isim'])) {
-                    $html .= '<span class="badge badge-outline">' . htmlspecialchars($row['urun_isim']) . '</span>';
-                } else {
-                    $html .= '<span class="text-gray-400">-</span>';
-                }
-                $html .= '</td>';
-                
-                $html .= '<td>' . date('d.m.Y H:i', strtotime($row['olusturma_zamani'])) . '</td>';
-                $html .= '<td class="font-medium">' . number_format($row['miktar'], 2, ',', '.') . ' ₺</td>';
-                $html .= '<td>';
-                if ($row['odeme_tipi'] === 'borc') {
-                    $html .= '<span class="badge-debit flex items-center w-fit"><i class="bi bi-arrow-down-right mr-1"></i> Borç</span>';
-                } else {
-                    $html .= '<span class="badge-credit flex items-center w-fit"><i class="bi bi-arrow-up-right mr-1"></i> Tahsilat</span>';
-                }
-                $html .= '</td>';
-                
-                $html .= '<td>';
-                if (!empty($row['aciklama'])) {
-                    $html .= htmlspecialchars($row['aciklama']);
-                } else {
-                    $html .= '<span class="text-gray-400 italic">Not girilmedi</span>';
-                }
-                $html .= '</td>';
-                
-                $html .= '<td><span class="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-full" title="İşlemi ekleyen kullanıcı">';
-                $html .= '<i class="bi bi-person-fill mr-1 text-primary-500"></i>';
-                $html .= !empty($row['kullanici_isim']) ? htmlspecialchars($row['kullanici_isim']) : 'Sistem';
-                $html .= '</span></td>';
-                
-                $html .= '<td class="text-right">';
-                $html .= '<div class="flex justify-end gap-2">';
-                $html .= '<a href="yazdir.php?id=' . $row['id'] . '" class="btn btn-outline btn-sm" title="Yazdır" target="_blank">';
-                $html .= '<i class="bi bi-printer"></i></a>';
-                $html .= '<a href="islemler.php?edit=' . $row['id'] . 
-                         ($customerId ? '&customer=' . $customerId : '') . 
-                         (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . '" ';
-                $html .= 'class="btn btn-outline btn-sm text-primary" title="Düzenle">';
-                $html .= '<i class="bi bi-pencil-square"></i></a>';
-                $html .= '<a href="islemler.php?delete=' . $row['id'] . 
-                         ($customerId ? '&customer=' . $customerId : '') . 
-                         (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . '" ';
-                $html .= 'class="btn btn-outline btn-sm text-danger" title="Sil" ';
-                $html .= 'onclick="return confirm(\'Bu işlemi silmek istediğinize emin misiniz?\')">';
-                $html .= '<i class="bi bi-trash"></i></a>';
-                $html .= '</div></td></tr>';
-            }
-            
-            // Sayfalama linklerini oluştur
-            $pagination = '';
-            if ($totalPages > 1) {
-                $pagination .= '<div class="flex justify-center mt-6">';
-                $pagination .= '<div class="flex space-x-2">';
-                
-                // Önceki sayfa butonu
-                if ($page > 1) {
-                    $prevPage = $page - 1;
-                    $pagination .= '<a href="#" data-page="' . $prevPage . '" class="page-link px-4 py-2 border rounded-lg hover:bg-gray-50">';
-                    $pagination .= '<i class="bi bi-chevron-left mr-1"></i> Önceki';
-                    $pagination .= '</a>';
-                }
-                
-                // Sayfa numaraları
-                $startPage = max(1, $page - 2);
-                $endPage = min($totalPages, $page + 2);
-                
-                if ($startPage > 1) {
-                    $pagination .= '<a href="#" data-page="1" class="page-link px-4 py-2 border rounded-lg hover:bg-gray-50">1</a>';
-                    if ($startPage > 2) {
-                        $pagination .= '<span class="px-4 py-2">...</span>';
-                    }
-                }
-                
-                for ($i = $startPage; $i <= $endPage; $i++) {
-                    if ($i == $page) {
-                        $pagination .= '<span class="px-4 py-2 bg-primary-500 text-white rounded-lg">' . $i . '</span>';
-                    } else {
-                        $pagination .= '<a href="#" data-page="' . $i . '" class="page-link px-4 py-2 border rounded-lg hover:bg-gray-50">' . $i . '</a>';
-                    }
-                }
-                
-                if ($endPage < $totalPages) {
-                    if ($endPage < $totalPages - 1) {
-                        $pagination .= '<span class="px-4 py-2">...</span>';
-                    }
-                    $pagination .= '<a href="#" data-page="' . $totalPages . '" class="page-link px-4 py-2 border rounded-lg hover:bg-gray-50">' . $totalPages . '</a>';
-                }
-                
-                // Sonraki sayfa butonu
-                if ($page < $totalPages) {
-                    $nextPage = $page + 1;
-                    $pagination .= '<a href="#" data-page="' . $nextPage . '" class="page-link px-4 py-2 border rounded-lg hover:bg-gray-50">';
-                    $pagination .= 'Sonraki <i class="bi bi-chevron-right ml-1"></i>';
-                    $pagination .= '</a>';
-                }
-                
-                $pagination .= '</div></div>';
-            }
-            
-            echo json_encode([
-                'success' => true,
-                'html' => $html,
-                'pagination' => $pagination,
-                'total' => $totalTransactions
-            ]);
-        } else {
-            $html = '<tr><td colspan="' . (empty($customerId) ? '8' : '7') . '" class="text-center py-12 text-gray-500">';
-            $html .= '<div class="flex flex-col items-center justify-center gap-3">';
-            $html .= '<div class="bg-gray-100 rounded-full p-4 mb-2">';
-            $html .= '<i class="bi bi-inbox text-3xl text-gray-400"></i>';
-            $html .= '</div>';
-            $html .= '<div class="text-center">';
-            $html .= '<h4 class="text-lg font-medium text-gray-900">Henüz işlem bulunamadı</h4>';
-            $html .= '<p class="text-gray-500">Yeni bir işlem eklemek için yukarıdaki formu kullanabilirsiniz.</p>';
-            $html .= '</div></div></td></tr>';
-            
-            echo json_encode([
-                'success' => true,
-                'html' => $html,
-                'pagination' => '',
-                'total' => 0
-            ]);
-        }
-        
-        exit;
-    } catch (Exception $e) {
-        http_response_code(500);
-        echo json_encode([
-            'success' => false,
-            'message' => 'Bir hata oluştu: ' . $e->getMessage()
-        ]);
-        exit;
-    }
-}
 $customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
 
 // Mevcut kullanıcı bilgilerini session'dan al
@@ -675,9 +448,9 @@ $transactions = $stmt->fetchAll();
             </h3>
         </div>
         <div class="p-5">
-            <form action="" method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <?php if ($customerId): ?>
-                    <input type="hidden" name="customer" value="<?php echo $customerId; ?>">
+                    <input type="hidden" id="customer-filter" value="<?php echo $customerId; ?>">
                 <?php endif; ?>
 
                 <div class="form-group">
@@ -686,13 +459,18 @@ $transactions = $stmt->fetchAll();
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                             <i class="bi bi-search text-gray-400"></i>
                         </span>
-                        <input type="text" id="search" name="search" class="form-input pl-10" placeholder="Müşteri adı veya not..." value="<?php echo htmlspecialchars($search); ?>">
+                        <input type="text" id="search" class="form-input pl-10" placeholder="Müşteri adı veya not..." value="<?php echo htmlspecialchars($search); ?>">
+                        <div id="search-loading" class="absolute inset-y-0 right-0 flex items-center pr-3 hidden">
+                            <div class="spinner-border spinner-border-sm text-primary-500" role="status">
+                                <span class="sr-only">Yükleniyor...</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="product" class="form-label">Ürün</label>
-                    <select id="product" name="product" class="form-select">
+                    <select id="product" class="form-select">
                         <option value="">Tüm Ürünler</option>
                         <?php foreach ($products as $product): ?>
                             <option value="<?php echo $product['id']; ?>" <?php echo $productFilter == $product['id'] ? 'selected' : ''; ?>>
@@ -704,7 +482,7 @@ $transactions = $stmt->fetchAll();
 
                 <div class="form-group">
                     <label for="type" class="form-label">İşlem Türü</label>
-                    <select id="type" name="type" class="form-select">
+                    <select id="type" class="form-select">
                         <option value="">Tümü</option>
                         <option value="borc" <?php echo $typeFilter === 'borc' ? 'selected' : ''; ?>>Borç</option>
                         <option value="tahsilat" <?php echo $typeFilter === 'tahsilat' ? 'selected' : ''; ?>>Tahsilat</option>
@@ -714,23 +492,25 @@ $transactions = $stmt->fetchAll();
                 <div class="grid grid-cols-2 gap-2">
                     <div class="form-group">
                         <label for="date_from" class="form-label">Başlangıç Tarihi</label>
-                        <input type="date" id="date_from" name="date_from" class="form-input" value="<?php echo $dateFrom; ?>">
+                        <input type="date" id="date_from" class="form-input" value="<?php echo $dateFrom; ?>">
                     </div>
                     <div class="form-group">
                         <label for="date_to" class="form-label">Bitiş Tarihi</label>
-                        <input type="date" id="date_to" name="date_to" class="form-input" value="<?php echo $dateTo; ?>">
+                        <input type="date" id="date_to" class="form-input" value="<?php echo $dateTo; ?>">
                     </div>
                 </div>
 
                 <div class="col-span-full flex items-center justify-end gap-2 mt-2">
-                    <a href="islemler.php<?php echo $customerId ? '?customer=' . $customerId : ''; ?>" class="btn btn-outline">
-                        <i class="bi bi-x-circle mr-1"></i> Temizle
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-filter mr-1"></i> Filtrele
-                    </button>
+                    <div id="filter-loading" class="hidden">
+                        <div class="flex items-center text-primary-500">
+                            <div class="spinner-border spinner-border-sm mr-2" role="status">
+                                <span class="sr-only">Yükleniyor...</span>
+                            </div>
+                            <span class="text-sm">Filtreleniyor...</span>
+                        </div>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -738,19 +518,16 @@ $transactions = $stmt->fetchAll();
     <div class="card-hover animate-fadeIn shadow-lg" style="animation-delay: 0.2s">
         <div class="card-header">
             <div class="flex justify-between items-center">
-                <div class="flex items-center">
-                    <h3 class="card-title flex items-center">
-                        <i class="bi bi-clock-history mr-2 text-primary-600"></i>
+                <h3 class="card-title flex items-center">
+                    <i class="bi bi-clock-history mr-2 text-primary-600"></i>
+                    <span id="table-title">
                         <?php if ($customerId && $selectedCustomer): ?>
                             <?php echo htmlspecialchars($selectedCustomer['isim']); ?> - İşlem Geçmişi
                         <?php else: ?>
                             Son İşlemler
                         <?php endif; ?>
-                    </h3>
-                    <span id="results-count-container" class="ml-3 text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                        Toplam <span id="results-count"><?php echo count($transactions); ?></span> sonuç
                     </span>
-                </div>
+                </h3>
                 <?php if ($customerId && $selectedCustomer): ?>
                     <a href="musteri_rapor.php?customer=<?php echo $customerId; ?>" class="btn btn-secondary btn-sm flex items-center">
                         <i class="bi bi-printer mr-2"></i> Yazdır
@@ -760,223 +537,140 @@ $transactions = $stmt->fetchAll();
         </div>
         <div class="p-0">
             <div class="table-container">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <?php if (!$customerId): ?>
-                                <th><i class="bi bi-person-badge mr-1 text-primary-500"></i> Müşteri</th>
-                            <?php endif; ?>
-                            <th><i class="bi bi-box-seam mr-1 text-primary-500"></i> Ürün</th>
-                            <th><i class="bi bi-calendar-date mr-1 text-primary-500"></i> Tarih</th>
-                            <th><i class="bi bi-currency-exchange mr-1 text-primary-500"></i> Tutar (₺)</th>
-                            <th><i class="bi bi-arrow-left-right mr-1 text-primary-500"></i> Tür</th>
-                            <th><i class="bi bi-chat-left-text mr-1 text-primary-500"></i> Açıklama</th>
-                            <th><i class="bi bi-person-plus mr-1 text-primary-500"></i> Ekleyen</th>
-                            <th class="text-right"><i class="bi bi-gear-fill text-primary-500"></i> İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $hasTransactions = false;
-                        $index = 0;
-                        foreach ($transactions as $row):
-                            $hasTransactions = true;
-                            $index++;
-                            ?>
-                            <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.3 + ($index * 0.05); ?>s">
-                                <?php if (!$customerId): ?>
-                                    <td>
-                                        <a href="islemler.php?customer=<?php echo $row['musteri_id']; ?>" class="text-primary-600 hover:text-primary-900 font-medium">
-                                            <?php echo htmlspecialchars($row['musteri_isim']); ?>
-                                        </a>
-                                    </td>
-                                <?php endif; ?>
-                                <td>
-                                    <?php if (isset($row['urun_isim']) && $row['urun_isim']): ?>
-                                        <span class="badge badge-outline"><?php echo htmlspecialchars($row['urun_isim']); ?></span>
-                                    <?php else: ?>
-                                        <span class="text-gray-400">-</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?php echo date('d.m.Y H:i', strtotime($row['olusturma_zamani'])); ?></td>
-                                <td class="font-medium"><?php echo number_format($row['miktar'], 2, ',', '.'); ?> ₺</td>
-                                <td>
-                                    <?php if ($row['odeme_tipi'] === 'borc'): ?>
-                                        <span class="badge-debit flex items-center w-fit"><i class="bi bi-arrow-down-right mr-1"></i> Borç</span>
-                                    <?php else: ?>
-                                        <span class="badge-credit flex items-center w-fit"><i class="bi bi-arrow-up-right mr-1"></i> Tahsilat</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if ($row['aciklama']): ?>
-                                        <?php echo htmlspecialchars($row['aciklama']); ?>
-                                    <?php else: ?>
-                                        <span class="text-gray-400 italic">Not girilmedi</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <span class="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-full" title="İşlemi ekleyen kullanıcı">
-                                        <i class="bi bi-person-fill mr-1 text-primary-500"></i>
-                                        <?php echo isset($row['kullanici_isim']) && !empty($row['kullanici_isim']) ? htmlspecialchars($row['kullanici_isim']) : 'Sistem'; ?>
-                                    </span>
-                                </td>
-                                <td class="text-right">
-                                    <div class="flex justify-end gap-2">
-                                        <a href="yazdir.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm" title="Yazdır" target="_blank">
-                                            <i class="bi bi-printer"></i>
-                                        </a>
-                                        <a href="islemler.php?edit=<?php echo $row['id']; ?><?php echo $customerId ? '&customer=' . $customerId : ''; ?><?php echo isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>" class="btn btn-outline btn-sm text-primary" title="Düzenle">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                        <a href="islemler.php?delete=<?php echo $row['id']; ?><?php echo $customerId ? '&customer=' . $customerId : ''; ?><?php echo isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>" class="btn btn-outline btn-sm text-danger" title="Sil" onclick="return confirm('Bu işlemi silmek istediğinize emin misiniz?')">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-
-                        <?php if (!$hasTransactions): ?>
+                <div id="transactions-table-container">
+                    <table class="table table-hover">
+                        <thead>
                             <tr>
-                                <td colspan="<?php echo $customerId ? '7' : '8'; ?>" class="text-center py-12 text-gray-500">
-                                    <div class="flex flex-col items-center justify-center gap-3">
-                                        <div class="bg-gray-100 rounded-full p-4 mb-2">
-                                            <i class="bi bi-receipt text-5xl text-primary-500"></i>
-                                        </div>
-                                        <h4 class="text-lg font-medium">Henüz işlem bulunmuyor</h4>
-                                        <p class="text-sm text-gray-400 max-w-md">
-                                            <?php if ($customerId): ?>
-                                                Bu müşteri için henüz bir işlem kaydı oluşturulmamış. Yukarıdaki formu kullanarak yeni bir işlem ekleyebilirsiniz.
-                                            <?php else: ?>
-                                                Sistemde henüz bir işlem kaydı bulunmuyor. Yukarıdaki formu kullanarak yeni bir işlem ekleyebilirsiniz.
-                                            <?php endif; ?>
-                                        </p>
-                                    </div>
-                                </td>
+                                <?php if (!$customerId): ?>
+                                    <th><i class="bi bi-person-badge mr-1 text-primary-500"></i> Müşteri</th>
+                                <?php endif; ?>
+                                <th><i class="bi bi-box-seam mr-1 text-primary-500"></i> Ürün</th>
+                                <th><i class="bi bi-calendar-date mr-1 text-primary-500"></i> Tarih</th>
+                                <th><i class="bi bi-currency-exchange mr-1 text-primary-500"></i> Tutar (₺)</th>
+                                <th><i class="bi bi-arrow-left-right mr-1 text-primary-500"></i> Tür</th>
+                                <th><i class="bi bi-chat-left-text mr-1 text-primary-500"></i> Açıklama</th>
+                                <th><i class="bi bi-person-plus mr-1 text-primary-500"></i> Ekleyen</th>
+                                <th class="text-right"><i class="bi bi-gear-fill text-primary-500"></i> İşlemler</th>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody id="transactions-tbody">
+                            <?php
+                            $hasTransactions = false;
+                            $index = 0;
+                            foreach ($transactions as $row):
+                                $hasTransactions = true;
+                                $index++;
+                                ?>
+                                <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.3 + ($index * 0.05); ?>s">
+                                    <?php if (!$customerId): ?>
+                                        <td>
+                                            <a href="islemler.php?customer=<?php echo $row['musteri_id']; ?>" class="text-primary-600 hover:text-primary-900 font-medium">
+                                                <?php echo htmlspecialchars($row['musteri_isim']); ?>
+                                            </a>
+                                        </td>
+                                    <?php endif; ?>
+                                    <td>
+                                        <?php if (isset($row['urun_isim']) && $row['urun_isim']): ?>
+                                            <span class="badge badge-outline"><?php echo htmlspecialchars($row['urun_isim']); ?></span>
+                                        <?php else: ?>
+                                            <span class="text-gray-400">-</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?php echo date('d.m.Y H:i', strtotime($row['olusturma_zamani'])); ?></td>
+                                    <td class="font-medium"><?php echo number_format($row['miktar'], 2, ',', '.'); ?> ₺</td>
+                                    <td>
+                                        <?php if ($row['odeme_tipi'] === 'borc'): ?>
+                                            <span class="badge-debit flex items-center w-fit"><i class="bi bi-arrow-down-right mr-1"></i> Borç</span>
+                                        <?php else: ?>
+                                            <span class="badge-credit flex items-center w-fit"><i class="bi bi-arrow-up-right mr-1"></i> Tahsilat</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($row['aciklama']): ?>
+                                            <?php echo htmlspecialchars($row['aciklama']); ?>
+                                        <?php else: ?>
+                                            <span class="text-gray-400 italic">Not girilmedi</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <span class="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-full" title="İşlemi ekleyen kullanıcı">
+                                            <i class="bi bi-person-fill mr-1 text-primary-500"></i>
+                                            <?php echo isset($row['kullanici_isim']) && !empty($row['kullanici_isim']) ? htmlspecialchars($row['kullanici_isim']) : 'Sistem'; ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="flex justify-end gap-2">
+                                            <a href="yazdir.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm" title="Yazdır" target="_blank">
+                                                <i class="bi bi-printer"></i>
+                                            </a>
+                                            <a href="islemler.php?edit=<?php echo $row['id']; ?><?php echo $customerId ? '&customer=' . $customerId : ''; ?><?php echo isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>" class="btn btn-outline btn-sm text-primary" title="Düzenle">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                            <a href="islemler.php?delete=<?php echo $row['id']; ?><?php echo $customerId ? '&customer=' . $customerId : ''; ?><?php echo isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>" class="btn btn-outline btn-sm text-danger" title="Sil" onclick="return confirm('Bu işlemi silmek istediğinize emin misiniz?')">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+
+                            <?php if (!$hasTransactions): ?>
+                                <tr>
+                                    <td colspan="<?php echo $customerId ? '7' : '8'; ?>" class="text-center py-12 text-gray-500">
+                                        <div class="flex flex-col items-center justify-center gap-3">
+                                            <div class="bg-gray-100 rounded-full p-4 mb-2">
+                                                <i class="bi bi-receipt text-5xl text-primary-500"></i>
+                                            </div>
+                                            <h4 class="text-lg font-medium">Henüz işlem bulunmuyor</h4>
+                                            <p class="text-sm text-gray-400 max-w-md">
+                                                <?php if ($customerId): ?>
+                                                    Bu müşteri için henüz bir işlem kaydı oluşturulmamış. Yukarıdaki formu kullanarak yeni bir işlem ekleyebilirsiniz.
+                                                <?php else: ?>
+                                                    Sistemde henüz bir işlem kaydı bulunmuyor. Yukarıdaki formu kullanarak yeni bir işlem ekleyebilirsiniz.
+                                                <?php endif; ?>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Sayfalama -->
-    <div class="pagination-container">
+    <div id="pagination-container" class="flex justify-center mt-6">
         <?php if ($totalPages > 1): ?>
-            <div class="flex justify-center mt-6">
-                <div class="flex space-x-2">
-                    <?php if ($page > 1): ?>
-                        <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>" class="page-link px-4 py-2 border rounded-lg hover:bg-gray-50" data-page="<?php echo $page - 1; ?>">
-                            <i class="bi bi-chevron-left mr-1"></i> Önceki
-                        </a>
-                    <?php endif; ?>
+            <nav class="inline-flex rounded-md shadow-sm" aria-label="Sayfalama">
+                <?php if ($page > 1): ?>
+                    <a href="islemler.php?<?php echo http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>"
+                       class="px-3 py-2 border border-gray-300 rounded-l-md bg-white text-gray-700 hover:bg-gray-100">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                <?php endif; ?>
 
-                    <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
-                        <?php if ($i == $page): ?>
-                            <span class="px-4 py-2 bg-primary-500 text-white rounded-lg"><?php echo $i; ?></span>
-                        <?php else: ?>
-                            <a href="#" class="page-link px-4 py-2 border rounded-lg hover:bg-gray-50" data-page="<?php echo $i; ?>">
-                                <?php echo $i; ?>
-                            </a>
-                        <?php endif; ?>
-                    <?php endfor; ?>
-
-                    <?php if ($page < $totalPages): ?>
-                        <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>" class="page-link px-4 py-2 border rounded-lg hover:bg-gray-50" data-page="<?php echo $page + 1; ?>">
-                            Sonraki <i class="bi bi-chevron-right ml-1"></i>
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <?php if ($i == 1 || $i == $totalPages || ($i >= $page - 1 && $i <= $page + 1)): ?>
+                        <a href="islemler.php?<?php echo http_build_query(array_merge($_GET, ['page' => $i])); ?>"
+                           class="px-3 py-2 border border-gray-300 <?php echo $i == $page ? 'bg-primary-600 text-white border-primary-600' : 'bg-white text-gray-700 hover:bg-gray-100'; ?>">
+                            <?php echo $i; ?>
                         </a>
+                    <?php elseif (($i == 2 && $page > 3) || ($i == $totalPages - 1 && $page < $totalPages - 2)): ?>
+                        <span class="px-3 py-2 border border-gray-300 bg-white text-gray-700">...</span>
                     <?php endif; ?>
-                </div>
-            </div>
+                <?php endfor; ?>
+
+                <?php if ($page < $totalPages): ?>
+                    <a href="islemler.php?<?php echo http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>"
+                       class="px-3 py-2 border border-gray-300 rounded-r-md bg-white text-gray-700 hover:bg-gray-100">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                <?php endif; ?>
+            </nav>
         <?php endif; ?>
     </div>
-
-    <!-- İşlem Düzenleme Modal -->
-    <?php if ($editTransaction): ?>
-        <div id="editTransactionModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 animate-fadeIn">
-                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                        <i class="bi bi-pencil-square mr-2 text-primary-600"></i> İşlem Düzenle
-                    </h3>
-                    <button type="button" class="text-gray-400 hover:text-gray-500 close-modal">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
-                </div>
-                <form method="POST" action="">
-                    <div class="p-4">
-                        <input type="hidden" name="transaction_id" value="<?php echo (int)$editTransaction['id']; ?>">
-                        <input type="hidden" name="action" value="update_transaction">
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="form-label flex items-center">
-                                    <i class="bi bi-person mr-2 text-primary-500"></i> Müşteri
-                                </label>
-                                <input type="text" class="form-input bg-gray-100" readonly value="<?php echo htmlspecialchars($editTransaction['musteri_isim']); ?>">
-                            </div>
-
-                            <div>
-                                <label class="form-label flex items-center">
-                                    <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
-                                </label>
-                                <select name="product_id" class="form-select">
-                                    <option value="">Ürün Seçiniz (Opsiyonel)</option>
-                                    <?php foreach ($products as $product): ?>
-                                        <option value="<?php echo $product['id']; ?>" <?php echo $editTransaction && $editTransaction['urun_id'] == $product['id'] ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($product['isim']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="form-label flex items-center">
-                                    <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
-                                </label>
-                                <select name="type" class="form-select">
-                                    <option value="borc" <?php echo $editTransaction && $editTransaction['odeme_tipi'] === 'borc' ? 'selected' : ''; ?>>Borç</option>
-                                    <option value="tahsilat" <?php echo $editTransaction && $editTransaction['odeme_tipi'] === 'tahsilat' ? 'selected' : ''; ?>>Tahsilat</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="form-label flex items-center">
-                                    <i class="bi bi-person-fill mr-2 text-primary-500"></i> İşlemi Ekleyen
-                            </label>
-                            <input type="text" class="form-input bg-gray-100" readonly value="<?php echo isset($editTransaction['kullanici_isim']) && !empty($editTransaction['kullanici_isim']) ? htmlspecialchars($editTransaction['kullanici_isim']) : 'Sistem'; ?>">
-                        </div>
-
-                            <div>
-                                <label class="form-label flex items-center">
-                                    <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)
-                                </label>
-                                <input type="text" name="amount" class="form-input" placeholder="0,00" required value="<?php echo $editTransaction ? number_format($editTransaction['miktar'], 2, ',', '.') : ''; ?>">
-                            </div>
-
-                            <div class="md:col-span-2">
-                                <label class="form-label flex items-center">
-                                    <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Açıklama
-                                </label>
-                                <input type="text" name="note" class="form-input" placeholder="İşlem açıklaması" value="<?php echo $editTransaction ? htmlspecialchars($editTransaction['aciklama']) : ''; ?>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="px-4 py-3 border-t border-gray-200 flex justify-end gap-2">
-                        <button type="button" class="btn btn-outline close-modal">
-                            <i class="bi bi-x-circle mr-1"></i> İptal
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle mr-1"></i> Kaydet
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-            </nav>
-        </div>
-    <?php endif; ?>
 </div>
 
 <!-- İşlem Düzenleme Modal -->
@@ -1385,159 +1079,284 @@ $transactions = $stmt->fetchAll();
         };
     });
 
-    // AJAX ile filtreleme işlemi
+    // AJAX tabanlı arama ve filtreleme sistemi
     document.addEventListener('DOMContentLoaded', function() {
-        const filterForm = document.querySelector('form[action=""][method="GET"]');
-        if (filterForm) {
-            // Tüm filtre alanlarını seç
-            const filterInputs = filterForm.querySelectorAll('input, select');
-            const transactionsTable = document.querySelector('.table-hover tbody');
-            const paginationContainer = document.querySelector('.pagination-container');
-            let isLoading = false;
+        let searchTimeout;
+        let currentPage = 1;
+        let isLoading = false;
+        
+        // Filtre elementlerini seç
+        const searchInput = document.getElementById('search');
+        const productSelect = document.getElementById('product');
+        const typeSelect = document.getElementById('type');
+        const dateFromInput = document.getElementById('date_from');
+        const dateToInput = document.getElementById('date_to');
+        const clearFiltersBtn = document.getElementById('clear-filters');
+        const searchLoading = document.getElementById('search-loading');
+        const filterLoading = document.getElementById('filter-loading');
+        
+        // Müşteri ID'sini al
+        const customerId = document.getElementById('customer-filter') ? 
+            document.getElementById('customer-filter').value : null;
+        
+        // Arama fonksiyonu
+        function performSearch(page = 1) {
+            if (isLoading) return;
             
-            // Sayfa yüklendiğinde URL'deki parametreleri al
-            const urlParams = new URLSearchParams(window.location.search);
+            isLoading = true;
+            currentPage = page;
             
-            // Her bir filtre alanı için değişiklik dinleyicisi ekle
-            filterInputs.forEach(input => {
-                // Arama kutusu için 'input' olayını kullan (yazarken arama yapmak için)
-                if (input.id === 'search') {
-                    let searchTimer;
-                    input.addEventListener('input', function() {
-                        clearTimeout(searchTimer);
-                        searchTimer = setTimeout(() => {
-                            updateUrlParams();
-                            loadTransactions();
-                        }, 500); // 500ms bekleme süresi
-                    });
-                }
-                // Diğer tüm alanlar için 'change' olayını kullan
-                else {
-                    input.addEventListener('change', function() {
-                        updateUrlParams();
-                        loadTransactions();
-                    });
-                }
-            });
-            
-            // Sayfalama linklerine tıklama olayını ekle
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('.page-link')) {
-                    e.preventDefault();
-                    const page = e.target.closest('.page-link').dataset.page;
-                    const pageInput = document.querySelector('input[name="page"]');
-                    if (pageInput) {
-                        pageInput.value = page;
-                    } else {
-                        const hiddenInput = document.createElement('input');
-                        hiddenInput.type = 'hidden';
-                        hiddenInput.name = 'page';
-                        hiddenInput.value = page;
-                        filterForm.appendChild(hiddenInput);
-                    }
-                    updateUrlParams();
-                    loadTransactions();
-                }
-            });
-            
-            // URL'yi güncelleyen fonksiyon
-            function updateUrlParams() {
-                const formData = new FormData(filterForm);
-                const params = new URLSearchParams();
-                
-                // Form verilerini URL parametrelerine ekle
-                for (let [key, value] of formData.entries()) {
-                    if (value) {
-                        params.set(key, value);
-                    } else {
-                        params.delete(key);
-                    }
-                }
-                
-                // URL'yi güncelle (sayfa yenilenmeden)
-                const newUrl = window.location.pathname + '?' + params.toString();
-                window.history.pushState({}, '', newUrl);
+            // Loading göstergelerini göster
+            if (searchInput.value.trim()) {
+                searchLoading.classList.remove('hidden');
             }
+            filterLoading.classList.remove('hidden');
             
-            // İşlemleri yükleyen fonksiyon
-            async function loadTransactions() {
-                if (isLoading) return;
-                
-                try {
-                    isLoading = true;
-                    const formData = new FormData(filterForm);
-                    formData.append('ajax_filter', '1');
-                    
-                    // Loading göstergesi ekle
-                    if (transactionsTable) {
-                        transactionsTable.innerHTML = `
-                            <tr>
-                                <td colspan="${document.querySelector('thead th').length}" class="text-center py-8">
-                                    <div class="flex justify-center">
-                                        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-500"></div>
-                                    </div>
-                                    <p class="mt-2 text-gray-500">Yükleniyor...</p>
-                                </td>
-                            </tr>`;
-                    }
-                    
-                    // AJAX isteği gönder
-                    const response = await fetch(window.location.pathname + '?' + new URLSearchParams(formData).toString());
-                    const data = await response.json();
-                    
+            // Filtre parametrelerini hazırla
+            const params = new URLSearchParams();
+            if (customerId) params.append('customer', customerId);
+            if (page > 1) params.append('page', page);
+            if (searchInput.value.trim()) params.append('search', searchInput.value.trim());
+            if (productSelect.value) params.append('product', productSelect.value);
+            if (typeSelect.value) params.append('type', typeSelect.value);
+            if (dateFromInput.value) params.append('date_from', dateFromInput.value);
+            if (dateToInput.value) params.append('date_to', dateToInput.value);
+            
+            // AJAX isteği gönder
+            fetch(`api_search.php?${params.toString()}`)
+                .then(response => response.json())
+                .then(data => {
                     if (data.success) {
-                        // Tablo içeriğini güncelle
-                        if (transactionsTable) {
-                            transactionsTable.innerHTML = data.html;
-                        }
-                        
-                        // Sayfalama bağlantılarını güncelle
-                        if (paginationContainer) {
-                            paginationContainer.innerHTML = data.pagination || '';
-                        }
-                        
-                        // Sayfa başlığını güncelle (toplam sonuç sayısı)
-                        const resultsCount = document.getElementById('results-count');
-                        if (resultsCount) {
-                            resultsCount.textContent = data.total;
-                        }
+                        updateTable(data.data);
+                        updatePagination(data.data.pagination);
+                        updateTableTitle(data.data.selected_customer);
                     } else {
-                        console.error('Hata:', data.message);
+                        showError('Arama sırasında bir hata oluştu.');
                     }
-                } catch (error) {
-                    console.error('İstek sırasında bir hata oluştu:', error);
-                    if (transactionsTable) {
-                        transactionsTable.innerHTML = `
-                            <tr>
-                                <td colspan="${document.querySelector('thead th').length}" class="text-center py-8 text-red-500">
-                                    <i class="bi bi-exclamation-triangle-fill mr-2"></i>
-                                    Veriler yüklenirken bir hata oluştu. Lütfen sayfayı yenileyip tekrar deneyin.
-                                </td>
-                            </tr>`;
-                    }
-                } finally {
+                })
+                .catch(error => {
+                    console.error('Arama hatası:', error);
+                    showError('Arama sırasında bir hata oluştu.');
+                })
+                .finally(() => {
                     isLoading = false;
+                    searchLoading.classList.add('hidden');
+                    filterLoading.classList.add('hidden');
+                });
+        }
+        
+        // Tabloyu güncelle
+        function updateTable(data) {
+            const tbody = document.getElementById('transactions-tbody');
+            const customerId = document.getElementById('customer-filter') ? 
+                document.getElementById('customer-filter').value : null;
+            
+            if (data.transactions.length === 0) {
+                const colspan = customerId ? '7' : '8';
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="${colspan}" class="text-center py-12 text-gray-500">
+                            <div class="flex flex-col items-center justify-center gap-3">
+                                <div class="bg-gray-100 rounded-full p-4 mb-2">
+                                    <i class="bi bi-receipt text-5xl text-primary-500"></i>
+                                </div>
+                                <h4 class="text-lg font-medium">Henüz işlem bulunmuyor</h4>
+                                <p class="text-sm text-gray-400 max-w-md">
+                                    ${customerId ? 
+                                        'Bu müşteri için henüz bir işlem kaydı oluşturulmamış. Yukarıdaki formu kullanarak yeni bir işlem ekleyebilirsiniz.' :
+                                        'Sistemde henüz bir işlem kaydı bulunmuyor. Yukarıdaki formu kullanarak yeni bir işlem ekleyebilirsiniz.'
+                                    }
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            data.transactions.forEach((row, index) => {
+                const date = new Date(row.olusturma_zamani);
+                const formattedDate = date.toLocaleDateString('tr-TR') + ' ' + 
+                    date.toLocaleTimeString('tr-TR', {hour: '2-digit', minute: '2-digit'});
+                
+                const amount = parseFloat(row.miktar).toLocaleString('tr-TR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                
+                const isDebit = row.odeme_tipi === 'borc';
+                const typeBadge = isDebit ? 
+                    '<span class="badge-debit flex items-center w-fit"><i class="bi bi-arrow-down-right mr-1"></i> Borç</span>' :
+                    '<span class="badge-credit flex items-center w-fit"><i class="bi bi-arrow-up-right mr-1"></i> Tahsilat</span>';
+                
+                const productName = row.urun_isim ? 
+                    `<span class="badge badge-outline">${escapeHtml(row.urun_isim)}</span>` :
+                    '<span class="text-gray-400">-</span>';
+                
+                const description = row.aciklama ? 
+                    escapeHtml(row.aciklama) : 
+                    '<span class="text-gray-400 italic">Not girilmedi</span>';
+                
+                const userName = row.kullanici_isim || 'Sistem';
+                
+                const customerLink = customerId ? '' : 
+                    `<a href="islemler.php?customer=${row.musteri_id}" class="text-primary-600 hover:text-primary-900 font-medium">${escapeHtml(row.musteri_isim)}</a>`;
+                
+                const customerCell = customerId ? '' : `<td>${customerLink}</td>`;
+                
+                html += `
+                    <tr class="animate-fadeIn" style="animation-delay: ${0.3 + (index * 0.05)}s">
+                        ${customerCell}
+                        <td>${productName}</td>
+                        <td>${formattedDate}</td>
+                        <td class="font-medium">${amount} ₺</td>
+                        <td>${typeBadge}</td>
+                        <td>${description}</td>
+                        <td>
+                            <span class="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-full" title="İşlemi ekleyen kullanıcı">
+                                <i class="bi bi-person-fill mr-1 text-primary-500"></i>
+                                ${escapeHtml(userName)}
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="yazdir.php?id=${row.id}" class="btn btn-outline btn-sm" title="Yazdır" target="_blank">
+                                    <i class="bi bi-printer"></i>
+                                </a>
+                                <a href="islemler.php?edit=${row.id}${customerId ? '&customer=' + customerId : ''}${currentPage > 1 ? '&page=' + currentPage : ''}" class="btn btn-outline btn-sm text-primary" title="Düzenle">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="islemler.php?delete=${row.id}${customerId ? '&customer=' + customerId : ''}${currentPage > 1 ? '&page=' + currentPage : ''}" class="btn btn-outline btn-sm text-danger" title="Sil" onclick="return confirm('Bu işlemi silmek istediğinize emin misiniz?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+        
+        // Sayfalama güncelle
+        function updatePagination(pagination) {
+            const container = document.getElementById('pagination-container');
+            
+            if (pagination.total_pages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let html = '<nav class="inline-flex rounded-md shadow-sm" aria-label="Sayfalama">';
+            
+            // Önceki sayfa
+            if (pagination.current_page > 1) {
+                html += `<button onclick="performSearch(${pagination.current_page - 1})" class="px-3 py-2 border border-gray-300 rounded-l-md bg-white text-gray-700 hover:bg-gray-100">
+                    <i class="bi bi-chevron-left"></i>
+                </button>`;
+            }
+            
+            // Sayfa numaraları
+            for (let i = 1; i <= pagination.total_pages; i++) {
+                if (i == 1 || i == pagination.total_pages || (i >= pagination.current_page - 1 && i <= pagination.current_page + 1)) {
+                    const isActive = i === pagination.current_page;
+                    const activeClass = isActive ? 'bg-primary-600 text-white border-primary-600' : 'bg-white text-gray-700 hover:bg-gray-100';
+                    html += `<button onclick="performSearch(${i})" class="px-3 py-2 border border-gray-300 ${activeClass}">
+                        ${i}
+                    </button>`;
+                } else if ((i == 2 && pagination.current_page > 3) || (i == pagination.total_pages - 1 && pagination.current_page < pagination.total_pages - 2)) {
+                    html += '<span class="px-3 py-2 border border-gray-300 bg-white text-gray-700">...</span>';
                 }
             }
             
-            // Sayfa yüklendiğinde URL'deki parametreleri form alanlarına uygula
-            function initializeFormFromUrl() {
-                filterInputs.forEach(input => {
-                    if (input.name && urlParams.has(input.name)) {
-                        if (input.type === 'checkbox' || input.type === 'radio') {
-                            input.checked = input.value === urlParams.get(input.name);
-                        } else {
-                            input.value = urlParams.get(input.name);
-                        }
-                    }
-                });
+            // Sonraki sayfa
+            if (pagination.current_page < pagination.total_pages) {
+                html += `<button onclick="performSearch(${pagination.current_page + 1})" class="px-3 py-2 border border-gray-300 rounded-r-md bg-white text-gray-700 hover:bg-gray-100">
+                    <i class="bi bi-chevron-right"></i>
+                </button>`;
             }
             
-            // Sayfa yüklendiğinde formu başlat ve ilk verileri yükle
-            initializeFormFromUrl();
-            loadTransactions();
+            html += '</nav>';
+            container.innerHTML = html;
         }
+        
+        // Tablo başlığını güncelle
+        function updateTableTitle(selectedCustomer) {
+            const title = document.getElementById('table-title');
+            if (selectedCustomer) {
+                title.textContent = `${selectedCustomer.isim} - İşlem Geçmişi`;
+            } else {
+                title.textContent = 'Son İşlemler';
+            }
+        }
+        
+        // Hata mesajı göster
+        function showError(message) {
+            const tbody = document.getElementById('transactions-tbody');
+            const customerId = document.getElementById('customer-filter') ? 
+                document.getElementById('customer-filter').value : null;
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="${customerId ? '7' : '8'}" class="text-center py-12 text-red-500">
+                        <div class="flex flex-col items-center justify-center gap-3">
+                            <i class="bi bi-exclamation-triangle text-5xl"></i>
+                            <h4 class="text-lg font-medium">Hata</h4>
+                            <p class="text-sm">${message}</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+        
+        // HTML escape fonksiyonu
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Event listeners
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    performSearch(1);
+                }, 500);
+            });
+        }
+        
+        if (productSelect) {
+            productSelect.addEventListener('change', () => performSearch(1));
+        }
+        
+        if (typeSelect) {
+            typeSelect.addEventListener('change', () => performSearch(1));
+        }
+        
+        if (dateFromInput) {
+            dateFromInput.addEventListener('change', () => performSearch(1));
+        }
+        
+        if (dateToInput) {
+            dateToInput.addEventListener('change', () => performSearch(1));
+        }
+        
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                productSelect.value = '';
+                typeSelect.value = '';
+                dateFromInput.value = '';
+                dateToInput.value = '';
+                performSearch(1);
+            });
+        }
+        
+        // Global fonksiyon olarak tanımla
+        window.performSearch = performSearch;
     });
+
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
