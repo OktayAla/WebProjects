@@ -1,3 +1,6 @@
+<!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
+<!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
+
 <?php
 require_once __DIR__ . '/includes/auth.php';
 require_login();
@@ -7,7 +10,6 @@ $pdo = get_pdo_connection();
 
 $userRole = $_SESSION['user']['rol'] ?? 'user';
 
-// Son yapılan işlemler (10 adet) - tüm roller için
 $recentStmtGlobal = $pdo->query(
 	"SELECT i.id, i.miktar, i.odeme_tipi, i.aciklama, i.olusturma_zamani,
 		m.isim AS musteri_isim, COALESCE(u.isim,'-') AS urun_isim
