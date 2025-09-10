@@ -1,3 +1,6 @@
+/* Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. */
+/* Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. */
+
 document.addEventListener('DOMContentLoaded', function() {
     const desktopToggle = document.getElementById('autoRefreshToggle');
     const mobileToggle = document.getElementById('autoRefreshToggleMobile');
