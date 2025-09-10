@@ -552,7 +552,7 @@ function showDetailModal(type) {
     }
     
     // AJAX ile veri çek
-    fetch(`get_detail_data.php?type=${type}`)
+    fetch(`detaylar.php?type=${type}`)
         .then(response => response.text())
         .then(data => {
             content.innerHTML = data;
