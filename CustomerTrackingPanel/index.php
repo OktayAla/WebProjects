@@ -151,7 +151,7 @@ if ($userRole === 'admin') {
                 </div>
             </div>
 
-            <div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.4s">
+            <div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.4s" onclick="showDetailModal('sales')" style="cursor: pointer;">
                 <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
                     <i class="bi bi-bag-fill"></i>
                 </div>
@@ -188,11 +188,11 @@ if ($userRole === 'admin') {
                             </svg>
                         </div>
                         <div class="grid grid-cols-2 gap-4 w-full">
-                            <div class="text-center">
+                            <div class="text-center" onclick="showDetailModal('collections')" style="cursor: pointer;">
                                 <p class="text-sm text-gray-500">Toplam Tahsilat</p>
                                 <p class="font-bold text-success-600"><?php echo number_format($totalCollections, 2, ',', '.'); ?> ₺</p>
                             </div>
-                            <div class="text-center">
+                            <div class="text-center" onclick="showDetailModal('receivables')" style="cursor: pointer;">
                                 <p class="text-sm text-gray-500">Toplam Alacak</p>
                                 <p class="font-bold text-red-600"><?php echo number_format($totalReceivables, 2, ',', '.'); ?> ₺</p>
                             </div>
@@ -508,5 +508,71 @@ if ($userRole === 'admin') {
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     </div>
 </div>
+
+<!-- Detay Modal -->
+<div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="p-5 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-900" id="modalTitle">Detaylar</h3>
+                <button id="closeDetailModal" class="text-gray-400 hover:text-gray-500">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
+        <div class="p-5">
+            <div id="detailContent">
+                <!-- İçerik buraya yüklenecek -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showDetailModal(type) {
+    const modal = document.getElementById('detailModal');
+    const title = document.getElementById('modalTitle');
+    const content = document.getElementById('detailContent');
+    
+    // Loading göster
+    content.innerHTML = '<div class="text-center py-8"><i class="bi bi-hourglass-split text-4xl text-gray-400"></i><p class="mt-2 text-gray-600">Yükleniyor...</p></div>';
+    modal.classList.remove('hidden');
+    
+    // Başlık ayarla
+    switch(type) {
+        case 'sales':
+            title.textContent = 'Toplam Satış Detayları';
+            break;
+        case 'collections':
+            title.textContent = 'Tahsilat Detayları';
+            break;
+        case 'receivables':
+            title.textContent = 'Alacak Detayları';
+            break;
+    }
+    
+    // AJAX ile veri çek
+    fetch(`get_detail_data.php?type=${type}`)
+        .then(response => response.text())
+        .then(data => {
+            content.innerHTML = data;
+        })
+        .catch(error => {
+            content.innerHTML = '<div class="text-center py-8 text-red-600"><i class="bi bi-exclamation-triangle text-4xl"></i><p class="mt-2">Veri yüklenirken hata oluştu.</p></div>';
+        });
+}
+
+// Modal kapatma
+document.getElementById('closeDetailModal').addEventListener('click', function() {
+    document.getElementById('detailModal').classList.add('hidden');
+});
+
+// Modal dışına tıklandığında kapat
+document.getElementById('detailModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.classList.add('hidden');
+    }
+});
+</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
