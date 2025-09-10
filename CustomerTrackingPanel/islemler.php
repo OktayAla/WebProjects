@@ -982,7 +982,7 @@ $transactions = $stmt->fetchAll();
                 }
                 
                 productTimeout = setTimeout(() => {
-                    fetch(`search_products.php?q=${encodeURIComponent(query)}`)
+                    fetch(`urunara.php?q=${encodeURIComponent(query)}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data.length > 0) {
