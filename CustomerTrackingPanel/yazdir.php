@@ -72,6 +72,41 @@
 			window.print();
 		  }, 500);
 		}
+		
+		function toggleCustomize() {
+			const panel = document.getElementById('customize-panel');
+			panel.classList.toggle('hidden');
+		}
+		
+		function applyCustomization() {
+			const companyName = document.getElementById('company-name').value;
+			const companyPhone = document.getElementById('company-phone').value;
+			const companyEmail = document.getElementById('company-email').value;
+			const companyAddress = document.getElementById('company-address').value;
+			
+			// Şirket adını güncelle
+			document.getElementById('company-name-display').textContent = companyName;
+			
+			// İletişim bilgilerini güncelle
+			const contactInfo = [];
+			if (companyPhone) contactInfo.push(`Tel: ${companyPhone}`);
+			if (companyEmail) contactInfo.push(`E-posta: ${companyEmail}`);
+			if (companyAddress) contactInfo.push(`Adres: ${companyAddress}`);
+			
+			document.getElementById('company-contact-display').innerHTML = contactInfo.join('<br>');
+			
+			// Paneli gizle
+			document.getElementById('customize-panel').classList.add('hidden');
+		}
+		
+		function resetCustomization() {
+			document.getElementById('company-name').value = 'Müşteri Portalı';
+			document.getElementById('company-phone').value = '';
+			document.getElementById('company-email').value = '';
+			document.getElementById('company-address').value = '';
+			
+			applyCustomization();
+		}
 	</script>
 </head>
 <body class="bg-gray-50">
@@ -93,11 +128,53 @@
 		</div>
 		<div class="card-hover">
 			<div class="card-header border-b border-gray-200 bg-white py-3 px-4">
-				<h4 class="text-lg font-semibold text-gray-900">
-					<?php echo $tx['odeme_tipi'] === 'debit' ? 'Borç Dekontu' : 'Tahsilat Dekontu'; ?>
-				</h4>
+				<div class="flex justify-between items-center">
+					<h4 class="text-lg font-semibold text-gray-900">
+						<?php echo $tx['odeme_tipi'] === 'borc' ? 'Borç Dekontu' : 'Tahsilat Dekontu'; ?>
+					</h4>
+					<button onclick="toggleCustomize()" class="btn btn-outline btn-sm no-print">
+						<i class="bi bi-gear mr-1"></i> Özelleştir
+					</button>
+				</div>
 			</div>
 			<div class="p-6">
+				<!-- Özelleştirme Paneli -->
+				<div id="customize-panel" class="mb-6 p-4 bg-gray-50 rounded-lg no-print hidden">
+					<h5 class="font-semibold mb-3">Dekont Özelleştirme</h5>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div>
+							<label class="block text-sm font-medium mb-1">Şirket Adı</label>
+							<input type="text" id="company-name" class="form-input" value="Müşteri Portalı">
+						</div>
+						<div>
+							<label class="block text-sm font-medium mb-1">Telefon</label>
+							<input type="text" id="company-phone" class="form-input" value="">
+						</div>
+						<div>
+							<label class="block text-sm font-medium mb-1">E-posta</label>
+							<input type="email" id="company-email" class="form-input" value="">
+						</div>
+						<div>
+							<label class="block text-sm font-medium mb-1">Adres</label>
+							<textarea id="company-address" class="form-input" rows="2"></textarea>
+						</div>
+					</div>
+					<div class="mt-4">
+						<button onclick="applyCustomization()" class="btn btn-primary btn-sm">
+							<i class="bi bi-check mr-1"></i> Uygula
+						</button>
+						<button onclick="resetCustomization()" class="btn btn-outline btn-sm ml-2">
+							<i class="bi bi-arrow-clockwise mr-1"></i> Sıfırla
+						</button>
+					</div>
+				</div>
+				
+				<!-- Şirket Bilgileri -->
+				<div id="company-info" class="mb-6 text-center">
+					<h3 id="company-name-display" class="text-xl font-bold text-gray-900">Müşteri Portalı</h3>
+					<div id="company-contact-display" class="text-sm text-gray-600 mt-1"></div>
+				</div>
+				
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div>
 						<h5 class="text-base font-semibold text-gray-900 mb-3">Müşteri Bilgileri</h5>
