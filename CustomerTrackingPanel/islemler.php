@@ -906,7 +906,7 @@ $transactions = $stmt->fetchAll();
                 }
                 
                 customerTimeout = setTimeout(() => {
-                    fetch(`search_customers.php?q=${encodeURIComponent(query)}`)
+                    fetch(`musteriara.php?q=${encodeURIComponent(query)}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data.length > 0) {
@@ -943,15 +943,28 @@ $transactions = $stmt->fetchAll();
                 }
             });
             
-            // Enter tuşu ile yeni müşteri ekleme
+            // Enter tuşu ile yeni müşteri ekleme veya arama yapma
             customerSearch.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     const query = this.value.trim();
                     if (query.length > 0) {
-                        customerIdInput.value = '0';
-                        document.getElementById('new_customer_name').value = query;
-                        customerSuggestions.classList.add('hidden');
+                        // Eğer öneriler gösteriliyorsa ve bir öneri seçiliyse, onu seç
+                        const selectedSuggestion = customerSuggestions.querySelector('[data-id]');
+                        if (selectedSuggestion) {
+                            const id = selectedSuggestion.dataset.id;
+                            const name = selectedSuggestion.dataset.name;
+                            customerSearch.value = name;
+                            customerIdInput.value = id;
+                            document.getElementById('new_customer_name').value = '';
+                            document.getElementById('new_customer_phone').value = '';
+                            customerSuggestions.classList.add('hidden');
+                        } else {
+                            // Eğer öneri yoksa, yeni müşteri olarak ekle
+                            customerIdInput.value = '0';
+                            document.getElementById('new_customer_name').value = query;
+                            customerSuggestions.classList.add('hidden');
+                        }
                     }
                 }
             });
