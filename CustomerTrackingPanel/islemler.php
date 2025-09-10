@@ -117,7 +117,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         // Yeni işlem ekleme (çoklu ürün desteği)
         else {
+            // Müşteri ID'sini al veya yeni müşteri oluştur
             $musteri_id = (int)$_POST['customer_id'];
+            
+            // Eğer müşteri ID 0 ise, yeni müşteri oluştur
+            if ($musteri_id === 0 && !empty($_POST['new_customer_name'])) {
+                $newCustomerName = trim($_POST['new_customer_name']);
+                $newCustomerPhone = trim($_POST['new_customer_phone'] ?? '');
+                
+                $stmt = $pdo->prepare('INSERT INTO musteriler (isim, numara, tutar) VALUES (?, ?, 0)');
+                $stmt->execute([$newCustomerName, $newCustomerPhone]);
+                $musteri_id = $pdo->lastInsertId();
+            }
 
             // Çoklu ürün işleme
             $products = $_POST['products'] ?? [];
@@ -125,11 +136,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $totalCredit = 0;
 
             foreach ($products as $productData) {
-                if (!empty($productData['product_id']) && !empty($productData['amount'])) {
+                if (!empty($productData['amount'])) {
                     $urun_id = !empty($productData['product_id']) ? (int)$productData['product_id'] : null;
                     $odeme_tipi = $productData['type'];
                     $miktar = (float)str_replace([',', ' '], ['.', ''], $productData['amount']);
                     $urun_notu = !empty($productData['note']) ? trim($productData['note']) : '';
+                    
+                    // Eğer ürün ID 0 ise ve yeni ürün adı varsa, yeni ürün oluştur
+                    if ($urun_id === 0 && !empty($productData['new_product_name'])) {
+                        $newProductName = trim($productData['new_product_name']);
+                        
+                        $stmt = $pdo->prepare('INSERT INTO urunler (isim, fiyat) VALUES (?, 0)');
+                        $stmt->execute([$newProductName]);
+                        $urun_id = $pdo->lastInsertId();
+                        
+                        // Yeni ürün adını açıklamaya ekle
+                        if (!empty($urun_notu)) {
+                            $urun_notu = "Yeni ürün: " . $newProductName . " - " . $urun_notu;
+                        } else {
+                            $urun_notu = "Yeni ürün: " . $newProductName;
+                        }
+                    }
 
                     // İşlemi eklerken user_id'yi de kaydediyoruz
                     $stmt = $pdo->prepare('INSERT INTO islemler (musteri_id, urun_id, odeme_tipi, miktar, aciklama, kullanici_id) VALUES (?, ?, ?, ?, ?, ?)');
@@ -334,14 +361,15 @@ $transactions = $stmt->fetchAll();
                             <input type="hidden" name="customer_id" value="<?php echo $customerId; ?>">
                             <input type="text" class="form-input bg-gray-100" readonly value="<?php echo htmlspecialchars($selectedCustomer['isim']); ?>">
                         <?php else: ?>
-                            <select name="customer_id" class="form-select" required>
-                                <option value="">Müşteri Seçiniz</option>
-                                <?php foreach ($customers as $customer): ?>
-                                    <option value="<?php echo $customer['id']; ?>">
-                                        <?php echo htmlspecialchars($customer['isim']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <div class="relative">
+                                <input type="text" id="customer-search" class="form-input" placeholder="Müşteri ara veya yeni müşteri adı yazın..." autocomplete="off">
+                                <input type="hidden" name="customer_id" id="customer_id" required>
+                                <input type="hidden" name="new_customer_name" id="new_customer_name">
+                                <input type="hidden" name="new_customer_phone" id="new_customer_phone">
+                                <div id="customer-suggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-60 overflow-y-auto">
+                                    <!-- Öneriler buraya yüklenecek -->
+                                </div>
+                            </div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -353,14 +381,14 @@ $transactions = $stmt->fetchAll();
                             <label class="form-label flex items-center">
                                 <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
                             </label>
-                            <select name="products[0][product_id]" class="form-select product-select" required>
-                                <option value="">Ürün Seçiniz</option>
-                                <?php foreach ($products as $product): ?>
-                                    <option value="<?php echo $product['id']; ?>">
-                                        <?php echo htmlspecialchars($product['isim']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <div class="relative">
+                                <input type="text" class="form-input product-search" placeholder="Ürün ara veya yeni ürün adı yazın..." autocomplete="off">
+                                <input type="hidden" name="products[0][product_id]" class="product-id" required>
+                                <input type="hidden" name="products[0][new_product_name]" class="new-product-name">
+                                <div class="product-suggestions absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-60 overflow-y-auto">
+                                    <!-- Ürün önerileri buraya yüklenecek -->
+                                </div>
+                            </div>
                         </div>
 
                         <div class="md:col-span-2 col-span-1">
@@ -858,6 +886,170 @@ $transactions = $stmt->fetchAll();
         // İlk yüklemede remove butonlarını güncelle ve amount inputlarını ayarla
         updateRemoveButtons();
         setupAmountInputs();
+        
+        // Müşteri arama özelliği
+        const customerSearch = document.getElementById('customer-search');
+        const customerSuggestions = document.getElementById('customer-suggestions');
+        const customerIdInput = document.getElementById('customer_id');
+        
+        if (customerSearch) {
+            let customerTimeout;
+            
+            customerSearch.addEventListener('input', function() {
+                clearTimeout(customerTimeout);
+                const query = this.value.trim();
+                
+                if (query.length < 2) {
+                    customerSuggestions.classList.add('hidden');
+                    customerIdInput.value = '';
+                    return;
+                }
+                
+                customerTimeout = setTimeout(() => {
+                    fetch(`search_customers.php?q=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length > 0) {
+                                customerSuggestions.innerHTML = data.map(customer => 
+                                    `<div class="p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-200 last:border-b-0" data-id="${customer.id}" data-name="${customer.isim}">
+                                        <div class="font-medium">${customer.isim}</div>
+                                        <div class="text-sm text-gray-500">${customer.numara || 'Telefon yok'}</div>
+                                    </div>`
+                                ).join('');
+                                customerSuggestions.classList.remove('hidden');
+                            } else {
+                                customerSuggestions.innerHTML = `<div class="p-3 text-gray-500">"${query}" için müşteri bulunamadı. Yeni müşteri olarak eklenebilir.</div>`;
+                                customerSuggestions.classList.remove('hidden');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Müşteri arama hatası:', error);
+                        });
+                }, 300);
+            });
+            
+            // Müşteri seçimi
+            customerSuggestions.addEventListener('click', function(e) {
+                const item = e.target.closest('[data-id]');
+                if (item) {
+                    const id = item.dataset.id;
+                    const name = item.dataset.name;
+                    
+                    customerSearch.value = name;
+                    customerIdInput.value = id;
+                    document.getElementById('new_customer_name').value = '';
+                    document.getElementById('new_customer_phone').value = '';
+                    customerSuggestions.classList.add('hidden');
+                }
+            });
+            
+            // Enter tuşu ile yeni müşteri ekleme
+            customerSearch.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const query = this.value.trim();
+                    if (query.length > 0) {
+                        customerIdInput.value = '0';
+                        document.getElementById('new_customer_name').value = query;
+                        customerSuggestions.classList.add('hidden');
+                    }
+                }
+            });
+            
+            // Dışarı tıklandığında önerileri gizle
+            document.addEventListener('click', function(e) {
+                if (!customerSearch.contains(e.target) && !customerSuggestions.contains(e.target)) {
+                    customerSuggestions.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Ürün arama özelliği
+        function setupProductSearch(productSearchInput) {
+            const productSuggestions = productSearchInput.parentElement.querySelector('.product-suggestions');
+            const productIdInput = productSearchInput.parentElement.querySelector('.product-id');
+            
+            let productTimeout;
+            
+            productSearchInput.addEventListener('input', function() {
+                clearTimeout(productTimeout);
+                const query = this.value.trim();
+                
+                if (query.length < 2) {
+                    productSuggestions.classList.add('hidden');
+                    productIdInput.value = '';
+                    return;
+                }
+                
+                productTimeout = setTimeout(() => {
+                    fetch(`search_products.php?q=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length > 0) {
+                                productSuggestions.innerHTML = data.map(product => 
+                                    `<div class="p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-200 last:border-b-0" data-id="${product.id}" data-name="${product.isim}">
+                                        <div class="font-medium">${product.isim}</div>
+                                        <div class="text-sm text-gray-500">${product.fiyat ? product.fiyat + ' ₺' : 'Fiyat belirtilmemiş'}</div>
+                                    </div>`
+                                ).join('');
+                                productSuggestions.classList.remove('hidden');
+                            } else {
+                                productSuggestions.innerHTML = `<div class="p-3 text-gray-500">"${query}" için ürün bulunamadı. Yeni ürün olarak eklenebilir.</div>`;
+                                productSuggestions.classList.remove('hidden');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Ürün arama hatası:', error);
+                        });
+                }, 300);
+            });
+            
+            // Ürün seçimi
+            productSuggestions.addEventListener('click', function(e) {
+                const item = e.target.closest('[data-id]');
+                if (item) {
+                    const id = item.dataset.id;
+                    const name = item.dataset.name;
+                    
+                    productSearchInput.value = name;
+                    productIdInput.value = id;
+                    productSearchInput.parentElement.querySelector('.new-product-name').value = '';
+                    productSuggestions.classList.add('hidden');
+                }
+            });
+            
+            // Enter tuşu ile yeni ürün ekleme
+            productSearchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const query = this.value.trim();
+                    if (query.length > 0) {
+                        productIdInput.value = '0';
+                        productSearchInput.parentElement.querySelector('.new-product-name').value = query;
+                        productSuggestions.classList.add('hidden');
+                    }
+                }
+            });
+            
+            // Dışarı tıklandığında önerileri gizle
+            document.addEventListener('click', function(e) {
+                if (!productSearchInput.contains(e.target) && !productSuggestions.contains(e.target)) {
+                    productSuggestions.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Mevcut ürün arama alanlarını ayarla
+        document.querySelectorAll('.product-search').forEach(setupProductSearch);
+        
+        // Yeni ürün satırı eklendiğinde arama özelliğini ayarla
+        const originalAddProduct = window.addProduct;
+        window.addProduct = function() {
+            originalAddProduct();
+            // Yeni eklenen ürün arama alanını ayarla
+            const newProductSearch = document.querySelectorAll('.product-search');
+            setupProductSearch(newProductSearch[newProductSearch.length - 1]);
+        };
     });
 </script>
 
