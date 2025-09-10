@@ -1,4 +1,7 @@
-<?php require_once __DIR__ . '/includes/auth.php'; require_login(); ?>
+<!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
+<!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
+ 
+<?php  require_once __DIR__ . '/includes/auth.php'; require_login(); ?>
 <?php
 	$pdo = get_pdo_connection();
 	$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -26,7 +29,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Yazdır - <?php echo APP_NAME; ?></title>
+	<title>Yazdır</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script>
 		tailwind.config = {
@@ -100,7 +103,7 @@
 		}
 		
 		function resetCustomization() {
-			document.getElementById('company-name').value = 'Müşteri Portalı';
+			document.getElementById('company-name').value = 'Analiz Tarım';
 			document.getElementById('company-phone').value = '';
 			document.getElementById('company-email').value = '';
 			document.getElementById('company-address').value = '';
