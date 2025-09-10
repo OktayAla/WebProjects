@@ -1,29 +1,5 @@
 <!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
 <!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
  
-<?php 
-require_once __DIR__ . '/includes/auth.php';
-require_login();
-
-$pdo = get_pdo_connection();
-$query = $_GET['q'] ?? '';
-
-if (strlen($query) < 2) {
-    echo json_encode([]);
-    exit;
-}
-
-// Fiyat alanını ekle (eğer yoksa)
-try {
-    $pdo->exec("ALTER TABLE urunler ADD COLUMN IF NOT EXISTS fiyat DECIMAL(10,2) DEFAULT 0.00");
-} catch (Exception $e) {
-    // Alan zaten varsa hata vermez
-}
-
-$stmt = $pdo->prepare("SELECT id, isim, fiyat FROM urunler WHERE isim LIKE ? ORDER BY isim ASC LIMIT 10");
-$stmt->execute(["%$query%"]);
-$products = $stmt->fetchAll();
-
-header('Content-Type: application/json');
-echo json_encode($products);
-?>
+<?php
+ goto ScH7j; hxICR: require_login(); goto w5MH0; RPQhG: echo json_encode($products); goto Jcz_W; hghaQ: if (strlen($query) < 2) { echo json_encode(array()); die; } goto QkAtE; LMLpX: $stmt->execute(array("\x25{$query}\x25")); goto apTaD; aC3Pn: $stmt = $pdo->prepare("\123\x45\x4c\x45\103\x54\40\151\144\x2c\40\x69\x73\x69\155\x2c\40\146\x69\x79\141\x74\x20\x46\122\x4f\115\40\165\x72\x75\156\x6c\x65\162\40\127\110\105\122\x45\40\x69\163\151\155\40\x4c\111\x4b\x45\40\x3f\40\x4f\122\x44\105\122\x20\102\x59\x20\x69\x73\x69\155\x20\x41\x53\x43\x20\x4c\111\x4d\x49\124\40\x31\60"); goto LMLpX; YzRf9: $query = $_GET["\x71"] ?? ''; goto hghaQ; w5MH0: $pdo = get_pdo_connection(); goto YzRf9; Am1hf: header("\103\x6f\156\x74\145\156\x74\55\124\x79\x70\145\x3a\40\x61\160\160\154\151\143\x61\164\151\x6f\156\57\152\163\x6f\156"); goto RPQhG; QkAtE: try { $pdo->exec("\x41\x4c\x54\105\x52\40\x54\101\x42\114\105\40\x75\x72\165\x6e\x6c\x65\162\40\x41\x44\x44\40\103\117\x4c\x55\115\116\x20\111\x46\x20\116\117\x54\x20\105\130\111\123\124\x53\40\x66\151\171\141\164\40\x44\105\x43\111\115\101\x4c\50\x31\60\54\62\x29\40\x44\105\x46\x41\x55\114\x54\40\x30\x2e\x30\x30"); } catch (Exception $e) { } goto aC3Pn; ScH7j: require_once __DIR__ . "\57\151\156\143\154\165\144\x65\163\57\141\165\164\x68\56\160\x68\160"; goto hxICR; apTaD: $products = $stmt->fetchAll(); goto Am1hf; Jcz_W: ?>
