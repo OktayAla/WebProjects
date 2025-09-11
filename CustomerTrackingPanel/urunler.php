@@ -1,22 +1,230 @@
 <!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
 <!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
  
-<?php
- goto oFrlF; EkxIP: ?>
-</form></div><?php  goto Mb5IV; Mb5IV: if (!empty($success)) { ?>
-<div class="alert mb-4 alert-success"><?php  echo htmlspecialchars($success); ?>
-</div><?php  } goto PiC3N; z6Nm1: if ($search) { $stmt = $pdo->prepare("\123\x45\114\x45\x43\124\x20\52\40\x46\x52\x4f\x4d\x20\165\x72\x75\x6e\154\145\162\x20\127\x48\x45\122\x45\40\x69\x73\x69\x6d\x20\x4c\111\x4b\x45\40\77\x20\117\x52\104\x45\122\x20\102\x59\x20\x69\163\151\155\40\101\123\103"); $stmt->execute(array("\45{$search}\45")); $products = $stmt->fetchAll(); } else { $products = $pdo->query("\x53\105\x4c\x45\x43\124\40\52\40\x46\x52\x4f\x4d\40\165\162\x75\156\x6c\x65\x72\x20\x4f\x52\x44\105\x52\x20\x42\131\x20\x69\x73\151\155\40\101\123\103")->fetchAll(); } goto Ij4k8; PiC3N: if (!empty($error)) { ?>
-<div class="alert mb-4 alert-danger"><?php  echo htmlspecialchars($error); ?>
-</div><?php  } goto OVlSt; fxYuR: require_once __DIR__ . "\57\x69\x6e\143\154\x75\x64\x65\x73\x2f\150\x65\141\144\x65\x72\56\160\x68\160"; goto nC8xN; EQmR7: $search = isset($_GET["\x73\x65\x61\162\143\x68"]) ? trim($_GET["\x73\145\141\x72\x63\x68"]) : ''; goto z6Nm1; Ij4k8: ?>
-<div class="container mx-auto px-4 py-6"><div class="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between"><div><h2 class="font-semibold text-gray-900 text-xl">Ürünler</h2><p class="mt-1 text-gray-600 text-sm">Sistemdeki tüm ürünleri yönetin</p></div><button class="btn btn-primary flex items-center"type="button"onclick="showAddProductModal()"><i class="bi bi-plus-lg mr-2"></i> Yeni Ürün</button></div><div class="mb-6"><form class="flex gap-2"action=""><div class="form-group flex-grow"><div class="relative"><span class="flex items-center absolute inset-y-0 left-0 pl-3"><i class="bi bi-search text-gray-400"></i> </span><input name="search"id="search"value="<?php  goto GNQqt; GNQqt: echo htmlspecialchars($search); goto LnmsE; oFrlF: require_once __DIR__ . "\57\151\x6e\143\x6c\x75\x64\x65\163\57\x61\165\164\x68\x2e\160\150\x70"; goto VDYXB; VDYXB: require_login(); goto fxYuR; kIXWp: if ($_SERVER["\122\x45\121\x55\x45\123\x54\137\x4d\x45\x54\x48\x4f\104"] === "\x50\x4f\123\124" && isset($_POST["\141\x63\x74\151\157\x6e"])) { if ($_POST["\x61\x63\x74\151\157\156"] === "\x61\x64\144") { $isim = trim($_POST["\x69\x73\x69\155"]); try { $stmt = $pdo->prepare("\x49\x4e\123\x45\122\x54\x20\111\x4e\124\x4f\x20\x75\x72\x75\x6e\x6c\145\x72\40\50\151\163\x69\x6d\x29\x20\126\x41\x4c\x55\105\x53\x20\50\77\51"); $stmt->execute(array($isim)); $success = "\xc3\234\x72\xc3\xbc\x6e\40\x62\141\305\237\x61\162\304\261\171\154\x61\x20\145\153\154\x65\x6e\144\x69\x2e"; } catch (Exception $e) { $error = "\303\234\x72\303\274\156\40\x65\153\154\145\156\x65\x6d\x65\144\151\x3a\40" . $e->getMessage(); } } elseif ($_POST["\x61\x63\x74\x69\157\156"] === "\x65\x64\151\x74") { $id = (int) $_POST["\151\144"]; $isim = trim($_POST["\x69\163\x69\155"]); try { $stmt = $pdo->prepare("\x55\120\104\x41\124\x45\40\165\x72\x75\x6e\154\145\x72\40\123\x45\x54\40\x69\163\151\155\40\x3d\40\77\x20\127\110\105\x52\x45\x20\151\x64\40\x3d\40\77"); $stmt->execute(array($isim, $id)); $success = "\xc3\x9c\x72\303\274\156\40\x62\x61\305\x9f\x61\x72\304\261\x79\x6c\x61\x20\147\xc3\274\156\x63\x65\154\154\x65\156\x64\x69\x2e"; } catch (Exception $e) { $error = "\xc3\x9c\x72\303\xbc\x6e\x20\147\xc3\xbc\156\143\145\154\154\x65\x6e\145\155\x65\144\151\72\40" . $e->getMessage(); } } elseif ($_POST["\141\143\x74\151\157\x6e"] === "\144\x65\x6c\145\x74\145") { $id = (int) $_POST["\151\x64"]; try { $stmt = $pdo->prepare("\x53\x45\x4c\105\103\x54\40\103\x4f\125\x4e\x54\x28\52\x29\x20\106\122\117\x4d\x20\151\163\154\x65\x6d\x6c\x65\x72\x20\x57\110\105\122\x45\40\165\162\x75\156\x5f\151\x64\x20\75\x20\77"); $stmt->execute(array($id)); $usageCount = $stmt->fetchColumn(); if ($usageCount > 0) { $error = "\102\165\40\xc3\xbc\x72\303\xbc\x6e\x20\x69\xc5\x9f\x6c\x65\x6d\x6c\x65\162\x64\x65\x20\x6b\165\x6c\154\x61\156\304\xb1\x6c\144\304\xb1\304\237\xc4\xb1\x20\151\303\247\151\156\40\x73\x69\x6c\151\x6e\145\x6d\145\172\x2e"; } else { $stmt = $pdo->prepare("\104\x45\114\x45\124\105\40\106\122\x4f\115\x20\x75\162\165\x6e\x6c\x65\162\x20\127\x48\x45\x52\x45\x20\x69\144\x20\x3d\40\x3f"); $stmt->execute(array($id)); $success = "\303\x9c\x72\303\274\156\40\x62\x61\xc5\237\141\162\304\261\171\x6c\141\x20\163\x69\x6c\x69\x6e\144\x69\56"; } } catch (Exception $e) { $error = "\xc3\234\162\303\274\x6e\x20\163\x69\x6c\x69\156\x65\155\x65\x64\151\x3a\40" . $e->getMessage(); } } } goto EQmR7; LnmsE: ?>
-"class="form-input pl-10 w-full"placeholder="Ürün adına göre ara..."></div></div><button class="btn btn-primary"type="submit"><i class="bi mr-1 bi-search"></i> Ara</button><?php  goto oGF9U; Mf78K: require_once __DIR__ . "\x2f\151\x6e\x63\x6c\x75\144\x65\163\x2f\146\157\157\x74\145\x72\56\160\150\x70"; goto YWqMd; OVlSt: ?>
-<div class="animate-fadeIn card-hover"><div class="p-0"><div class="table-container"><table class="table"><thead><tr><th>Ürün Adı</th><th class="text-right"></th></tr></thead><tbody><?php  goto T2fo9; EgZz4: ?>
-</tbody></table></div></div></div></div><div class="hidden modal"id="productModal"><div class="modal-overlay"onclick="hideProductModal()"></div><div class="modal-content"><div class="modal-header"><h3 class="modal-title"id="modalTitle">Yeni Ürün Ekle</h3><button class="modal-close"type="button"onclick="hideProductModal()"><i class="bi bi-x-lg"></i></button></div><form class="modal-body"method="post"id="productForm"><input name="action"id="formAction"type="hidden"value="add"> <input name="id"id="productId"type="hidden"><div class="form-group"><label class="form-label">Ürün Adı *</label> <input name="isim"id="productName"class="form-input"required></div><div class="modal-footer"><button class="btn btn-outline"type="button"onclick="hideProductModal()">İptal</button> <button class="btn btn-primary"type="submit">Kaydet</button></div></form></div></div><div class="hidden modal"id="deleteModal"><div class="modal-overlay"onclick="hideDeleteModal()"></div><div class="modal-content"><div class="modal-header"><h3 class="modal-title text-red-600">Ürün Sil</h3><button class="modal-close"type="button"onclick="hideDeleteModal()"><i class="bi bi-x-lg"></i></button></div><div class="modal-body"><p>Bu ürünü silmek istediğinizden emin misiniz?</p><p class="font-medium"id="deleteProductName"></p></div><form class="modal-footer"method="post"><input name="action"type="hidden"value="delete"> <input name="id"id="deleteProductId"type="hidden"> <button class="btn btn-outline"type="button"onclick="hideDeleteModal()">İptal</button> <button class="btn btn-danger"type="submit">Sil</button></form></div></div><script>function showAddProductModal(){document.getElementById("modalTitle").textContent="Yeni Ürün Ekle",document.getElementById("formAction").value="add",document.getElementById("productForm").reset(),document.getElementById("productId").value="",document.getElementById("productModal").classList.remove("hidden")}function editProduct(e){document.getElementById("modalTitle").textContent="Ürün Düzenle",document.getElementById("formAction").value="edit",document.getElementById("productId").value=e.id,document.getElementById("productName").value=e.isim,document.getElementById("productModal").classList.remove("hidden")}function hideProductModal(){document.getElementById("productModal").classList.add("hidden")}function deleteProduct(e,t){document.getElementById("deleteProductId").value=e,document.getElementById("deleteProductName").textContent=t,document.getElementById("deleteModal").classList.remove("hidden")}function hideDeleteModal(){document.getElementById("deleteModal").classList.add("hidden")}</script><?php  goto Mf78K; T2fo9: if (empty($products)) { ?>
-<tr><td class="py-8 text-center text-gray-500"colspan="3"><i class="bi bi-box block mb-2 text-4xl"></i><p>Henüz ürün eklenmemiş</p><button class="btn btn-outline btn-sm mt-2"type="button"onclick="showAddProductModal()">İlk Ürünü Ekle</button></td></tr><?php  } else { foreach ($products as $index => $product) { ?>
-<tr class="animate-fadeIn"style="animation-delay:<?php  echo 0.1 + $index * 0.05; ?>
-s"><td class="font-medium"><?php  echo htmlspecialchars($product["\151\163\151\155"]); ?>
-</td><td class="text-right"><button class="btn btn-outline btn-sm mr-2"type="button"onclick="editProduct(<?php  echo htmlspecialchars(json_encode($product)); ?>
-)"><i class="bi mr-1 bi-pencil"></i> Düzenle</button> <button class="btn btn-sm btn-danger"type="button"onclick='deleteProduct(<?php  echo $product["\151\x64"]; ?>
-,"<?php  echo htmlspecialchars($product["\x69\163\x69\x6d"]); ?>
-")'><i class="bi mr-1 bi-trash"></i> Sil</button></td></tr><?php  } } goto EgZz4; nC8xN: $pdo = get_pdo_connection(); goto kIXWp; oGF9U: if ($search) { ?>
-<a class="btn btn-outline"href="urunler.php"><i class="bi mr-1 bi-x-circle"></i> Temizle </a><?php  } goto EkxIP; YWqMd: ?>
+<?php 
+require_once __DIR__ . '/includes/auth.php'; 
+require_login(); 
+require_once __DIR__ . '/includes/header.php'; 
+
+$pdo = get_pdo_connection();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    if ($_POST['action'] === 'add') {
+        $isim = trim($_POST['isim']);
+
+        try {
+            $stmt = $pdo->prepare('INSERT INTO urunler (isim) VALUES (?)');
+            $stmt->execute([$isim]);
+            $success = 'Ürün başarıyla eklendi.';
+        } catch (Exception $e) {
+            $error = 'Ürün eklenemedi: ' . $e->getMessage();
+        }
+    } elseif ($_POST['action'] === 'edit') {
+        $id = (int)$_POST['id'];
+        $isim = trim($_POST['isim']);
+
+        try {
+            $stmt = $pdo->prepare('UPDATE urunler SET isim = ? WHERE id = ?');
+            $stmt->execute([$isim, $id]);
+            $success = 'Ürün başarıyla güncellendi.';
+        } catch (Exception $e) {
+            $error = 'Ürün güncellenemedi: ' . $e->getMessage();
+        }
+    } elseif ($_POST['action'] === 'delete') {
+        $id = (int)$_POST['id'];
+        
+        try {
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM islemler WHERE urun_id = ?');
+            $stmt->execute([$id]);
+            $usageCount = $stmt->fetchColumn();
+            
+            if ($usageCount > 0) {
+                $error = 'Bu ürün işlemlerde kullanıldığı için silinemez.';
+            } else {
+                $stmt = $pdo->prepare('DELETE FROM urunler WHERE id = ?');
+                $stmt->execute([$id]);
+                $success = 'Ürün başarıyla silindi.';
+            }
+        } catch (Exception $e) {
+            $error = 'Ürün silinemedi: ' . $e->getMessage();
+        }
+    }
+}
+
+// Arama parametresi
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+// Ürünleri getir
+if ($search) {
+    $stmt = $pdo->prepare('SELECT * FROM urunler WHERE isim LIKE ? ORDER BY isim ASC');
+    $stmt->execute(["%$search%"]);
+    $products = $stmt->fetchAll();
+} else {
+    $products = $pdo->query('SELECT * FROM urunler ORDER BY isim ASC')->fetchAll();
+}
+?>
+
+<div class="container mx-auto px-4 py-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <div>
+            <h2 class="text-xl font-semibold text-gray-900">Ürünler</h2>
+            <p class="text-sm text-gray-600 mt-1">Sistemdeki tüm ürünleri yönetin</p>
+        </div>
+        <button type="button" onclick="showAddProductModal()" class="btn btn-primary flex items-center">
+            <i class="bi bi-plus-lg mr-2"></i> Yeni Ürün
+        </button>
+    </div>
+    
+    <!-- Arama Formu -->
+    <div class="mb-6">
+        <form action="" method="GET" class="flex gap-2">
+            <div class="form-group flex-grow">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <i class="bi bi-search text-gray-400"></i>
+                    </span>
+                    <input type="text" id="search" name="search" class="form-input pl-10 w-full" placeholder="Ürün adına göre ara..." value="<?php echo htmlspecialchars($search); ?>">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search mr-1"></i> Ara
+            </button>
+            <?php if ($search): ?>
+            <a href="urunler.php" class="btn btn-outline">
+                <i class="bi bi-x-circle mr-1"></i> Temizle
+            </a>
+            <?php endif; ?>
+        </form>
+    </div>
+
+    <?php if (!empty($success)): ?>
+        <div class="alert alert-success mb-4"><?php echo htmlspecialchars($success); ?></div>
+    <?php endif; ?>
+    <?php if (!empty($error)): ?>
+        <div class="alert alert-danger mb-4"><?php echo htmlspecialchars($error); ?></div>
+    <?php endif; ?>
+
+    <div class="card-hover animate-fadeIn">
+        <div class="p-0">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Ürün Adı</th>
+                            <th class="text-right"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($products)): ?>
+                        <tr>
+                            <td colspan="3" class="text-center py-8 text-gray-500">
+                                <i class="bi bi-box text-4xl mb-2 block"></i>
+                                <p>Henüz ürün eklenmemiş</p>
+                                <button type="button" onclick="showAddProductModal()" class="btn btn-outline btn-sm mt-2">
+                                    İlk Ürünü Ekle
+                                </button>
+                            </td>
+                        </tr>
+                        <?php else: ?>
+                            <?php foreach ($products as $index => $product): ?>
+                            <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.1 + ($index * 0.05); ?>s">
+                                <td class="font-medium"><?php echo htmlspecialchars($product['isim']); ?></td>
+                                <td class="text-right">
+                                    <button type="button" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)" class="btn btn-outline btn-sm mr-2">
+                                        <i class="bi bi-pencil mr-1"></i> Düzenle
+                                    </button>
+                                    <button type="button" onclick="deleteProduct(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['isim']); ?>')" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash mr-1"></i> Sil
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="productModal" class="modal hidden">
+    <div class="modal-overlay" onclick="hideProductModal()"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle" class="modal-title">Yeni Ürün Ekle</h3>
+            <button type="button" onclick="hideProductModal()" class="modal-close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <form id="productForm" method="post" class="modal-body">
+            <input type="hidden" name="action" id="formAction" value="add">
+            <input type="hidden" name="id" id="productId">
+            
+            <div class="form-group">
+                <label class="form-label">Ürün Adı *</label>
+                <input type="text" name="isim" id="productName" class="form-input" required>
+            </div>
+                        
+            <div class="modal-footer">
+                <button type="button" onclick="hideProductModal()" class="btn btn-outline">İptal</button>
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="deleteModal" class="modal hidden">
+    <div class="modal-overlay" onclick="hideDeleteModal()"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title text-red-600">Ürün Sil</h3>
+            <button type="button" onclick="hideDeleteModal()" class="modal-close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Bu ürünü silmek istediğinizden emin misiniz?</p>
+            <p class="font-medium" id="deleteProductName"></p>
+        </div>
+        <form method="post" class="modal-footer">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="id" id="deleteProductId">
+            <button type="button" onclick="hideDeleteModal()" class="btn btn-outline">İptal</button>
+            <button type="submit" class="btn btn-danger">Sil</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function showAddProductModal() {
+    document.getElementById('modalTitle').textContent = 'Yeni Ürün Ekle';
+    document.getElementById('formAction').value = 'add';
+    document.getElementById('productForm').reset();
+    document.getElementById('productId').value = '';
+    document.getElementById('productModal').classList.remove('hidden');
+}
+
+function editProduct(product) {
+    document.getElementById('modalTitle').textContent = 'Ürün Düzenle';
+    document.getElementById('formAction').value = 'edit';
+    document.getElementById('productId').value = product.id;
+    document.getElementById('productName').value = product.isim;
+    document.getElementById('productModal').classList.remove('hidden');
+}
+
+function hideProductModal() {
+    document.getElementById('productModal').classList.add('hidden');
+}
+
+function deleteProduct(id, isim) {
+    document.getElementById('deleteProductId').value = id;
+    document.getElementById('deleteProductName').textContent = isim;
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function hideDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+}
+</script>
+
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
