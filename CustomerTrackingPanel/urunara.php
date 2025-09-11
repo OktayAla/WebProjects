@@ -20,7 +20,7 @@ try {
     // Alan zaten varsa hata vermez
 }
 
-$stmt = $pdo->prepare("SELECT id, isim, fiyat FROM urunler WHERE isim LIKE ? ORDER BY isim ASC LIMIT 10");
+$stmt = $pdo->prepare("SELECT id, isim, fiyat FROM urunler WHERE LOWER(isim) LIKE LOWER(?) ORDER BY isim ASC LIMIT 10");
 $stmt->execute(["%$query%"]);
 $products = $stmt->fetchAll();
 

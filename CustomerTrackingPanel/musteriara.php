@@ -13,7 +13,7 @@ if (strlen($query) < 2) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT id, isim, numara FROM musteriler WHERE isim LIKE ? ORDER BY isim ASC LIMIT 10");
+$stmt = $pdo->prepare("SELECT id, isim, numara FROM musteriler WHERE LOWER(isim) LIKE LOWER(?) ORDER BY isim ASC LIMIT 10");
 $stmt->execute(["%$query%"]);
 $customers = $stmt->fetchAll();
 
