@@ -36,7 +36,7 @@ if ($customerId) {
 }
 
 if ($search) {
-    $conditions[] = '(m.isim LIKE ? OR i.aciklama LIKE ?)';
+    $conditions[] = '(LOWER(m.isim) LIKE LOWER(?) OR LOWER(i.aciklama) LIKE LOWER(?))';
     $params[] = "%$search%";
     $params[] = "%$search%";
 }
