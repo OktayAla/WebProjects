@@ -1,2 +1,80 @@
 <?php
- goto AFUXJ; LefG_: function logout() { $_SESSION = array(); if (ini_get("\x73\145\163\x73\151\157\x6e\x2e\165\x73\145\x5f\x63\157\157\153\151\x65\x73")) { $params = session_get_cookie_params(); setcookie(session_name(), '', time() - 42000, $params["\160\141\x74\x68"], $params["\144\157\x6d\141\x69\156"], $params["\x73\x65\x63\x75\162\145"], $params["\150\164\164\x70\157\156\x6c\171"]); } session_destroy(); } goto saGwT; WJJ1T: function current_user() { return isset($_SESSION["\x75\163\x65\x72"]) ? $_SESSION["\x75\163\x65\162"] : null; } goto SEgfx; AFUXJ: session_start(); goto tWafm; aD70D: function login($identifier, $password) { $pdo = get_pdo_connection(); $hasUsername = false; try { $colStmt = $pdo->query("\123\105\x4c\105\103\124\40\x31\40\106\x52\x4f\115\40\111\116\x46\x4f\x52\115\101\124\x49\x4f\x4e\137\123\x43\110\x45\x4d\101\x2e\103\117\x4c\125\115\116\123\x20\x57\110\105\x52\105\40\x54\x41\x42\114\105\137\x53\x43\110\x45\115\101\x20\75\40\x44\101\x54\101\x42\x41\x53\x45\x28\51\40\101\116\104\x20\x54\101\x42\114\x45\x5f\116\x41\x4d\105\40\75\x20\47\x6b\165\x6c\x6c\x61\x6e\151\x63\151\154\141\x72\x27\40\x41\x4e\104\x20\x43\x4f\x4c\125\115\116\137\x4e\x41\x4d\105\40\x3d\x20\47\165\x73\x65\x72\156\141\155\x65\x27\40\x4c\x49\115\111\x54\40\61"); $hasUsername = (bool) $colStmt->fetchColumn(); } catch (Exception $e) { $hasUsername = false; } $user = null; if ($hasUsername) { $stmt = $pdo->prepare("\123\x45\x4c\x45\x43\124\40\x69\144\x2c\x20\x69\163\151\155\x2c\x20\145\x70\x6f\x73\x74\x61\54\x20\165\163\145\162\x6e\141\x6d\x65\54\x20\163\x69\146\162\x65\54\40\162\x6f\x6c\40\x46\x52\x4f\x4d\x20\x6b\x75\x6c\154\141\x6e\x69\x63\151\154\141\162\x20\x57\x48\105\x52\x45\40\x75\x73\145\x72\x6e\x61\155\145\40\x3d\40\77\40\x4c\x49\x4d\111\124\40\61"); $stmt->execute(array($identifier)); $user = $stmt->fetch(); if (!$user) { $stmt = $pdo->prepare("\123\x45\x4c\105\103\x54\40\x69\144\x2c\x20\151\x73\x69\155\x2c\x20\x65\160\x6f\x73\164\x61\54\40\x75\x73\145\x72\x6e\141\155\145\54\40\163\x69\x66\162\x65\x2c\40\x72\157\x6c\x20\106\x52\117\x4d\40\153\x75\x6c\154\x61\156\x69\x63\151\x6c\141\x72\x20\127\110\x45\122\x45\40\145\160\x6f\x73\164\141\40\x3d\x20\x3f\x20\x4c\111\115\111\x54\40\61"); $stmt->execute(array($identifier)); $user = $stmt->fetch(); if (!$user) { $stmt = $pdo->prepare("\123\x45\114\105\103\x54\40\151\144\x2c\x20\x69\x73\151\x6d\x2c\x20\145\x70\157\x73\x74\x61\x2c\40\165\x73\x65\x72\156\x61\x6d\x65\x2c\x20\163\x69\x66\x72\x65\54\40\162\x6f\154\x20\x46\122\x4f\x4d\x20\x6b\x75\x6c\154\141\156\x69\x63\151\x6c\141\162\x20\x57\x48\105\x52\105\40\151\x73\x69\155\x20\75\x20\77\40\x4c\111\115\111\x54\40\61"); $stmt->execute(array($identifier)); $user = $stmt->fetch(); } } } else { $stmt = $pdo->prepare("\123\x45\114\x45\103\124\x20\x69\x64\x2c\x20\x69\163\151\155\x2c\x20\145\160\x6f\163\164\x61\54\40\x73\x69\x66\162\x65\x2c\40\x72\x6f\154\x20\106\x52\117\x4d\40\x6b\165\x6c\x6c\141\x6e\151\x63\151\x6c\141\162\x20\127\110\105\122\105\x20\x65\160\157\x73\x74\x61\x20\x3d\x20\77\40\114\x49\115\111\124\40\61"); $stmt->execute(array($identifier)); $user = $stmt->fetch(); if (!$user) { $stmt = $pdo->prepare("\x53\105\114\x45\103\x54\40\151\144\54\x20\151\163\x69\155\54\x20\145\x70\x6f\163\164\141\x2c\x20\x73\151\x66\162\145\54\x20\x72\157\154\40\106\x52\x4f\x4d\x20\x6b\x75\x6c\154\141\156\x69\143\x69\154\x61\162\x20\127\x48\105\122\x45\40\x69\163\x69\x6d\40\75\x20\x3f\x20\114\111\115\x49\124\x20\x31"); $stmt->execute(array($identifier)); $user = $stmt->fetch(); } } if (!$user) { return false; } $hash = $user["\x73\151\146\162\145"]; $verified = false; if (strpos($hash, "\x24\62\x79\44") === 0 || strpos($hash, "\44\x61\x72\x67\157\x6e\x32") === 0) { $verified = password_verify($password, $hash); } else { $verified = hash_equals($hash, $password); } if ($verified) { unset($user["\163\151\146\162\x65"]); $_SESSION["\165\163\145\x72"] = $user; return true; } return false; } goto LefG_; dCQMD: function users_count() { $pdo = get_pdo_connection(); return (int) $pdo->query("\123\105\x4c\105\103\124\x20\x43\x4f\x55\x4e\124\50\52\51\40\106\x52\117\x4d\x20\153\165\154\154\x61\x6e\x69\x63\x69\x6c\x61\x72")->fetchColumn(); } goto WJJ1T; SEgfx: function require_login() { if (!current_user()) { header("\114\157\x63\x61\164\x69\x6f\x6e\x3a\x20\147\x69\162\151\x73\x2e\160\150\x70"); die; } } goto aD70D; tWafm: require_once __DIR__ . "\x2f\144\x62\56\x70\x68\160"; goto dCQMD; saGwT: ?>
+	session_start();
+	require_once __DIR__ . '/db.php';
+
+	function users_count() {
+		$pdo = get_pdo_connection();
+		return (int)$pdo->query('SELECT COUNT(*) FROM kullanicilar')->fetchColumn();
+	}
+
+	function current_user() {
+		return isset($_SESSION['user']) ? $_SESSION['user'] : null;
+	}
+
+	function require_login() {
+		if (!current_user()) {
+			header('Location: giris.php');
+			exit;
+		}
+	}
+
+	function login($identifier, $password) {
+		$pdo = get_pdo_connection();
+		$hasUsername = false;
+		try {
+			$colStmt = $pdo->query("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'kullanicilar' AND COLUMN_NAME = 'username' LIMIT 1");
+			$hasUsername = (bool)$colStmt->fetchColumn();
+		} catch (Exception $e) {
+			$hasUsername = false;
+		}
+
+		$user = null;
+		if ($hasUsername) {
+			$stmt = $pdo->prepare('SELECT id, isim, eposta, username, sifre, rol FROM kullanicilar WHERE username = ? LIMIT 1');
+			$stmt->execute([$identifier]);
+			$user = $stmt->fetch();
+			if (!$user) {
+				$stmt = $pdo->prepare('SELECT id, isim, eposta, username, sifre, rol FROM kullanicilar WHERE eposta = ? LIMIT 1');
+				$stmt->execute([$identifier]);
+				$user = $stmt->fetch();
+				if (!$user) {
+					$stmt = $pdo->prepare('SELECT id, isim, eposta, username, sifre, rol FROM kullanicilar WHERE isim = ? LIMIT 1');
+					$stmt->execute([$identifier]);
+					$user = $stmt->fetch();
+				}
+			}
+		} else {
+			$stmt = $pdo->prepare('SELECT id, isim, eposta, sifre, rol FROM kullanicilar WHERE eposta = ? LIMIT 1');
+			$stmt->execute([$identifier]);
+			$user = $stmt->fetch();
+			if (!$user) {
+				$stmt = $pdo->prepare('SELECT id, isim, eposta, sifre, rol FROM kullanicilar WHERE isim = ? LIMIT 1');
+				$stmt->execute([$identifier]);
+				$user = $stmt->fetch();
+			}
+		}
+		if (!$user) return false;
+		$hash = $user['sifre'];
+		$verified = false;
+		if (strpos($hash, '$2y$') === 0 || strpos($hash, '$argon2') === 0) {
+			$verified = password_verify($password, $hash);
+		} else {
+			$verified = hash_equals($hash, $password);
+		}
+		if ($verified) {
+			unset($user['sifre']);
+			$_SESSION['user'] = $user;
+			return true;
+		}
+		return false;
+	}
+
+	function logout() {
+		$_SESSION = [];
+		if (ini_get('session.use_cookies')) {
+			$params = session_get_cookie_params();
+			setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+		}
+		session_destroy();
+	}
+?>
