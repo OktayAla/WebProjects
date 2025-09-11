@@ -1,2 +1,26 @@
 <?php
- goto KQouv; sKSx9: function get_pdo_connection() { static $pdo = null; if ($pdo !== null) { return $pdo; } $host = DB_HOST; $port = null; if (strpos($host, "\72") !== false) { list($host, $port) = explode("\x3a", $host, 2); } $dsn = "\155\x79\x73\x71\x6c\72\x68\157\x73\164\75" . $host . "\x3b\144\142\156\x61\x6d\x65\x3d" . DB_NAME . "\x3b\143\x68\x61\162\163\145\164\75\x75\164\x66\70\x6d\x62\x34"; if ($port) { $dsn .= "\73\160\x6f\162\164\75" . $port; } $options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_EMULATE_PREPARES => false); $pdo = new PDO($dsn, DB_USER, DB_PASS, $options); return $pdo; } goto VJ3Ne; KQouv: require_once __DIR__ . "\x2f\x63\157\156\146\x69\147\56\x70\150\x70"; goto sKSx9; VJ3Ne: ?>
+	require_once __DIR__ . '/config.php';
+
+	function get_pdo_connection() {
+		static $pdo = null;
+		if ($pdo !== null) return $pdo;
+		$host = DB_HOST;
+		$port = null;
+		if (strpos($host, ':') !== false) {
+			list($host, $port) = explode(':', $host, 2);
+		}
+		$dsn = 'mysql:host=' . $host . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+		if ($port) {
+			$dsn .= ';port=' . $port;
+		}
+		$options = [
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+			PDO::ATTR_EMULATE_PREPARES => false,
+		];
+		$pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+		return $pdo;
+	}
+?>
+
+
