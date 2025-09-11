@@ -2,6 +2,22 @@
 	session_start();
 	require_once __DIR__ . '/db.php';
 
+	// CSRF yardımcıları
+	if (!function_exists('csrf_token')) {
+		function csrf_token() {
+			if (empty($_SESSION['csrf_token'])) {
+				$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+			}
+			return $_SESSION['csrf_token'];
+		}
+	}
+
+	if (!function_exists('verify_csrf')) {
+		function verify_csrf($token) {
+			return isset($_SESSION['csrf_token']) && is_string($token) && hash_equals($_SESSION['csrf_token'], $token);
+		}
+	}
+
 	function users_count() {
 		$pdo = get_pdo_connection();
 		return (int)$pdo->query('SELECT COUNT(*) FROM kullanicilar')->fetchColumn();
