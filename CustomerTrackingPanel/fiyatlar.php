@@ -1,22 +1,175 @@
 <!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
 <!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
 
-<?php
- goto KXMMe; QNGTe: ?>
-"></div></div><button class="btn btn-primary"type="submit"><i class="bi mr-1 bi-search"></i> Ara</button><?php  goto qZyyd; wDWW1: $search = isset($_GET["\163\x65\x61\162\143\x68"]) ? trim($_GET["\x73\145\141\162\143\x68"]) : ''; goto zHYSD; EcSq5: if ($_SERVER["\x52\x45\x51\x55\105\x53\x54\x5f\x4d\105\x54\110\x4f\x44"] === "\x50\117\123\x54" && isset($_POST["\141\143\164\151\157\x6e"])) { if ($_POST["\x61\143\164\x69\x6f\x6e"] === "\x75\160\x64\x61\x74\x65\137\x70\162\151\x63\x65") { $id = (int) $_POST["\x69\144"]; $fiyat = (double) str_replace(array("\54", "\40"), array("\x2e", ''), $_POST["\x66\x69\x79\x61\x74"]); try { $stmt = $pdo->prepare("\125\120\x44\101\124\105\40\165\162\165\156\154\145\162\x20\123\x45\x54\x20\x66\x69\171\x61\164\x20\x3d\40\x3f\40\x57\110\x45\x52\105\40\151\144\x20\75\40\x3f"); $stmt->execute(array($fiyat, $id)); $success = "\303\234\162\303\xbc\156\x20\x66\x69\x79\141\x74\xc4\261\x20\142\141\xc5\x9f\x61\x72\xc4\261\x79\x6c\x61\x20\147\xc3\274\x6e\x63\x65\154\x6c\x65\x6e\144\x69\56"; } catch (Exception $e) { $error = "\106\x69\171\141\x74\40\147\303\274\156\x63\x65\x6c\154\145\156\x65\155\x65\x64\x69\72\x20" . $e->getMessage(); } } } goto wDWW1; Dzl33: require_once __DIR__ . "\57\151\x6e\143\x6c\x75\x64\145\163\57\146\157\157\164\x65\x72\56\160\150\160"; goto Unv5n; xNoHK: try { $pdo->exec("\x41\114\x54\105\122\40\x54\x41\x42\114\105\40\165\x72\x75\x6e\x6c\145\x72\x20\x41\x44\x44\x20\103\117\x4c\125\115\x4e\x20\x49\x46\x20\x4e\117\124\x20\105\x58\x49\123\x54\123\40\146\x69\x79\141\164\40\104\x45\103\x49\x4d\101\114\50\x31\60\x2c\x32\51\40\x44\x45\x46\x41\x55\x4c\x54\40\60\x2e\x30\x30"); } catch (Exception $e) { } goto EcSq5; XGcwB: require_login(); goto y1tqX; KXMMe: require_once __DIR__ . "\x2f\151\x6e\143\x6c\165\144\x65\x73\57\x61\165\x74\x68\56\160\x68\x70"; goto XGcwB; qZyyd: if ($search) { ?>
-<a class="btn btn-outline"href="fiyatlar.php"><i class="bi mr-1 bi-x-circle"></i> Temizle </a><?php  } goto LKze1; Lmcy6: ?>
-<div class="container mx-auto px-4 py-6"><div class="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between"><div><h2 class="font-semibold text-gray-900 text-xl">Ürün Fiyatları</h2><p class="mt-1 text-gray-600 text-sm">Ürünlerin fiyatlarını yönetin</p></div></div><div class="mb-6"><form class="flex gap-2"action=""><div class="form-group flex-grow"><div class="relative"><span class="flex absolute inset-y-0 items-center left-0 pl-3"><i class="bi bi-search text-gray-400"></i> </span><input id="search"class="form-input pl-10 w-full"name="search"placeholder="Ürün adına göre ara..."value="<?php  goto jskLX; DmaC0: if (!empty($error)) { ?>
-<div class="alert mb-4 alert-danger"><?php  echo htmlspecialchars($error); ?>
-</div><?php  } goto ANRKk; gjQCI: if (empty($products)) { ?>
-<tr><td class="py-8 text-center text-gray-500"colspan="3"><i class="bi bi-box block mb-2 text-4xl"></i><p>Henüz ürün eklenmemiş</p><a class="btn btn-outline btn-sm mt-2"href="urunler.php">Ürün Ekle</a></td></tr><?php  } else { foreach ($products as $product) { ?>
-<tr><td class="font-medium"><?php  echo htmlspecialchars($product["\151\163\x69\x6d"]); ?>
-</td><td><span class="font-semibold text-lg text-primary-600"><?php  echo number_format($product["\x66\151\171\x61\164"] ?? 0, 2, "\x2c", "\56"); ?>
-₺</span></td><td class="text-right"><button class="btn btn-primary btn-sm"type="button"onclick='showPriceModal(<?php  echo $product["\x69\x64"]; ?>
-,"<?php  echo htmlspecialchars($product["\x69\x73\151\x6d"]); ?>
-",<?php  echo $product["\146\x69\171\141\164"] ?? 0; ?>
-)'><i class="bi mr-1 bi-pencil-square"></i> Fiyat Güncelle</button></td></tr><?php  } } goto aLdnB; ANRKk: ?>
-<div class="animate-fadeIn card-hover"><div class="p-0"><div class="table-container"><table class="table"><thead><tr><th>Ürün Adı</th><th>Mevcut Fiyat</th><th class="text-right">İşlemler</th></tr></thead><tbody><?php  goto gjQCI; LKze1: ?>
-</form></div><?php  goto WBYN6; zHYSD: if ($search) { $stmt = $pdo->prepare("\x53\105\x4c\105\x43\124\40\x2a\x20\x46\x52\x4f\x4d\40\x75\162\x75\156\154\x65\x72\x20\127\110\105\x52\105\x20\151\163\x69\155\x20\114\111\113\x45\40\x3f\40\x4f\x52\104\x45\122\x20\x42\131\x20\x69\163\x69\x6d\x20\x41\123\103"); $stmt->execute(array("\x25{$search}\x25")); $products = $stmt->fetchAll(); } else { $products = $pdo->query("\123\x45\x4c\x45\x43\124\x20\52\x20\x46\x52\117\x4d\x20\x75\x72\165\156\x6c\x65\162\x20\117\122\x44\105\122\x20\x42\131\x20\151\x73\x69\155\40\101\123\103")->fetchAll(); } goto Lmcy6; aLdnB: ?>
-</tbody></table></div></div></div></div><div class="hidden modal"id="priceModal"><div class="modal-overlay"onclick="hidePriceModal()"></div><div class="modal-content"><div class="modal-header"><h3 class="modal-title">Fiyat Güncelle</h3><button class="modal-close"type="button"onclick="hidePriceModal()"><i class="bi bi-x-lg"></i></button></div><form class="modal-body"id="priceForm"method="post"><input name="action"type="hidden"value="update_price"> <input id="priceProductId"name="id"type="hidden"><div class="form-group"><label class="form-label">Ürün Adı</label> <input id="priceProductName"class="form-input"readonly></div><div class="form-group"><label class="form-label">Yeni Fiyat (₺) *</label> <input id="priceValue"class="form-input"name="fiyat"min="0"required step="0.01"type="number"></div><div class="modal-footer"><button class="btn btn-outline"type="button"onclick="hidePriceModal()">İptal</button> <button class="btn btn-primary"type="submit">Güncelle</button></div></form></div></div><script>function showPriceModal(e,d,t){document.getElementById("priceProductId").value=e,document.getElementById("priceProductName").value=d,document.getElementById("priceValue").value=t,document.getElementById("priceModal").classList.remove("hidden")}function hidePriceModal(){document.getElementById("priceModal").classList.add("hidden"),document.getElementById("priceForm").reset()}</script><?php  goto Dzl33; jskLX: echo htmlspecialchars($search); goto QNGTe; maefE: $pdo = get_pdo_connection(); goto xNoHK; y1tqX: require_once __DIR__ . "\57\151\x6e\143\154\x75\x64\x65\163\57\150\x65\x61\x64\x65\162\56\160\x68\160"; goto maefE; WBYN6: if (!empty($success)) { ?>
-<div class="alert mb-4 alert-success"><?php  echo htmlspecialchars($success); ?>
-</div><?php  } goto DmaC0; Unv5n: ?>
+<?php 
+require_once __DIR__ . '/includes/auth.php'; 
+require_login(); 
+require_once __DIR__ . '/includes/header.php'; 
+
+$pdo = get_pdo_connection();
+
+// Fiyat alanını ekle (eğer yoksa)
+try {
+    $pdo->exec("ALTER TABLE urunler ADD COLUMN IF NOT EXISTS fiyat DECIMAL(10,2) DEFAULT 0.00");
+} catch (Exception $e) {
+    // Alan zaten varsa hata vermez
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    if ($_POST['action'] === 'update_price') {
+        $id = (int)$_POST['id'];
+        $fiyat = (float)str_replace([',', ' '], ['.', ''], $_POST['fiyat']);
+
+        try {
+            $stmt = $pdo->prepare('UPDATE urunler SET fiyat = ? WHERE id = ?');
+            $stmt->execute([$fiyat, $id]);
+            $success = 'Ürün fiyatı başarıyla güncellendi.';
+        } catch (Exception $e) {
+            $error = 'Fiyat güncellenemedi: ' . $e->getMessage();
+        }
+    }
+}
+
+// Arama parametresi
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+// Ürünleri getir
+if ($search) {
+    $stmt = $pdo->prepare('SELECT * FROM urunler WHERE isim LIKE ? ORDER BY isim ASC');
+    $stmt->execute(["%$search%"]);
+    $products = $stmt->fetchAll();
+} else {
+    $products = $pdo->query('SELECT * FROM urunler ORDER BY isim ASC')->fetchAll();
+}
+?>
+
+<div class="container mx-auto px-4 py-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <div>
+            <h2 class="text-xl font-semibold text-gray-900">Ürün Fiyatları</h2>
+            <p class="text-sm text-gray-600 mt-1">Ürünlerin fiyatlarını yönetin</p>
+        </div>
+    </div>
+    
+    <!-- Arama Formu -->
+    <div class="mb-6">
+        <form action="" method="GET" class="flex gap-2">
+            <div class="form-group flex-grow">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <i class="bi bi-search text-gray-400"></i>
+                    </span>
+                    <input type="text" id="search" name="search" class="form-input pl-10 w-full" placeholder="Ürün adına göre ara..." value="<?php echo htmlspecialchars($search); ?>">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search mr-1"></i> Ara
+            </button>
+            <?php if ($search): ?>
+            <a href="fiyatlar.php" class="btn btn-outline">
+                <i class="bi bi-x-circle mr-1"></i> Temizle
+            </a>
+            <?php endif; ?>
+        </form>
+    </div>
+
+    <?php if (!empty($success)): ?>
+        <div class="alert alert-success mb-4"><?php echo htmlspecialchars($success); ?></div>
+    <?php endif; ?>
+    <?php if (!empty($error)): ?>
+        <div class="alert alert-danger mb-4"><?php echo htmlspecialchars($error); ?></div>
+    <?php endif; ?>
+
+    <div class="card-hover animate-fadeIn">
+        <div class="p-0">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Ürün Adı</th>
+                            <th>Mevcut Fiyat</th>
+                            <th class="text-right">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($products)): ?>
+                        <tr>
+                            <td colspan="3" class="text-center py-8 text-gray-500">
+                                <i class="bi bi-box text-4xl mb-2 block"></i>
+                                <p>Henüz ürün eklenmemiş</p>
+                                <a href="urunler.php" class="btn btn-outline btn-sm mt-2">
+                                    Ürün Ekle
+                                </a>
+                            </td>
+                        </tr>
+                        <?php else: ?>
+                            <?php foreach ($products as $product): ?>
+                            <tr>
+                                <td class="font-medium"><?php echo htmlspecialchars($product['isim']); ?></td>
+                                <td>
+                                    <span class="text-lg font-semibold text-primary-600">
+                                        <?php echo number_format($product['fiyat'] ?? 0, 2, ',', '.'); ?> ₺
+                                    </span>
+                                </td>
+                                <td class="text-right">
+                                    <button type="button" onclick="showPriceModal(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['isim']); ?>', <?php echo $product['fiyat'] ?? 0; ?>)" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square mr-1"></i> Fiyat Güncelle
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fiyat Güncelleme Modal -->
+<div id="priceModal" class="modal hidden">
+    <div class="modal-overlay" onclick="hidePriceModal()"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Fiyat Güncelle</h3>
+            <button type="button" onclick="hidePriceModal()" class="modal-close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <form id="priceForm" method="post" class="modal-body">
+            <input type="hidden" name="action" value="update_price">
+            <input type="hidden" name="id" id="priceProductId">
+            
+            <div class="form-group">
+                <label class="form-label">Ürün Adı</label>
+                <input type="text" id="priceProductName" class="form-input" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Yeni Fiyat (₺) *</label>
+                <input type="number" name="fiyat" id="priceValue" class="form-input" step="0.01" min="0" required>
+            </div>
+                        
+            <div class="modal-footer">
+                <button type="button" onclick="hidePriceModal()" class="btn btn-outline">İptal</button>
+                <button type="submit" class="btn btn-primary">Güncelle</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function showPriceModal(id, name, currentPrice) {
+    document.getElementById('priceProductId').value = id;
+    document.getElementById('priceProductName').value = name;
+    document.getElementById('priceValue').value = currentPrice;
+    document.getElementById('priceModal').classList.remove('hidden');
+}
+
+function hidePriceModal() {
+    document.getElementById('priceModal').classList.add('hidden');
+    document.getElementById('priceForm').reset();
+}
+</script>
+
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
