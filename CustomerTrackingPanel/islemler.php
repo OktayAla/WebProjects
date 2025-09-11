@@ -71,6 +71,10 @@ if (isset($_GET['delete'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pdo->beginTransaction();
     try {
+        // CSRF kontrolü
+        if (!isset($_POST['csrf_token']) || !verify_csrf($_POST['csrf_token'])) {
+            throw new Exception('Güvenlik doğrulaması başarısız (CSRF).');
+        }
         // İşlem güncelleme - user_id güncellenmez, sadece diğer alanlar güncellenir
         if (isset($_POST['action']) && $_POST['action'] === 'update_transaction' && isset($_POST['transaction_id'])) {
             $transaction_id = (int)$_POST['transaction_id'];
@@ -355,6 +359,7 @@ $transactions = $stmt->fetchAll();
         </div>
         <div class="p-5">
             <form method="POST" id="transactionForm" class="grid grid-cols-1 gap-4">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <div class="md:col-span-4 col-span-1">
                         <label class="form-label flex items-center">
@@ -372,6 +377,7 @@ $transactions = $stmt->fetchAll();
                                 <div id="customer-suggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-60 overflow-y-auto">
                                     <!-- Öneriler buraya yüklenecek -->
                                 </div>
+                                <div id="customer-balance" class="mt-2 text-sm text-gray-600 hidden"></div>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -969,6 +975,8 @@ $transactions = $stmt->fetchAll();
                     document.getElementById('new_customer_name').value = '';
                     document.getElementById('new_customer_phone').value = '';
                     customerSuggestions.classList.add('hidden');
+                    // Bakiye getir
+                    try { fetchCustomerBalance(id); } catch(e){}
                 }
             });
             
@@ -988,11 +996,14 @@ $transactions = $stmt->fetchAll();
                             document.getElementById('new_customer_name').value = '';
                             document.getElementById('new_customer_phone').value = '';
                             customerSuggestions.classList.add('hidden');
+                            try { fetchCustomerBalance(id); } catch(e){}
                         } else {
                             // Eğer öneri yoksa, yeni müşteri olarak ekle
                             customerIdInput.value = '0';
                             document.getElementById('new_customer_name').value = query;
                             customerSuggestions.classList.add('hidden');
+                            // Yeni müşterilerde başlangıç bakiye 0 kabul edilir
+                            try { showBalanceInfo({ bakiye: 0 }); } catch(e){}
                         }
                     }
                 }
@@ -1092,6 +1103,31 @@ $transactions = $stmt->fetchAll();
             const newProductSearch = document.querySelectorAll('.product-search');
             setupProductSearch(newProductSearch[newProductSearch.length - 1]);
         };
+
+        // Bakiye yardımcıları
+        function fetchCustomerBalance(id) {
+            const info = document.getElementById('customer-balance');
+            if (!info) return;
+            info.classList.remove('hidden');
+            info.innerHTML = '<span class="text-gray-500">Bakiye yükleniyor...</span>';
+            fetch(`customer_summary.php?customer=${encodeURIComponent(id)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.success) throw new Error();
+                    showBalanceInfo(data.data);
+                })
+                .catch(() => {
+                    info.innerHTML = '<span class="text-red-600">Bakiye getirilemedi</span>';
+                });
+        }
+
+        function showBalanceInfo(data) {
+            const info = document.getElementById('customer-balance');
+            if (!info) return;
+            const bakiye = Number(data.bakiye || 0);
+            const cls = bakiye > 0 ? 'text-red-600' : (bakiye < 0 ? 'text-green-600' : 'text-gray-700');
+            info.innerHTML = `Mevcut bakiye: <span class="font-medium ${cls}">${bakiye.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₺</span>`;
+        }
     });
 
     // AJAX tabanlı arama ve filtreleme sistemi
