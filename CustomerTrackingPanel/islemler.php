@@ -771,17 +771,21 @@ $transactions = $stmt->fetchAll();
                 newRow.className = 'product-row grid grid-cols-1 md:grid-cols-12 gap-4 mb-3';
                 newRow.innerHTML = `
                 <div class="md:col-span-4 col-span-1">
-                    <select name="products[${productCounter}][product_id]" class="form-select product-select" required>
-                        <option value="">Ürün Seçiniz</option>
-                        <?php foreach ($products as $product): ?>
-                        <option value="<?php echo $product['id']; ?>">
-                            <?php echo htmlspecialchars($product['isim']); ?>
-                        </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-box-seam mr-2 text-primary-500"></i> Ürün
+                    </label>
+                    <div class="relative">
+                        <input type="text" class="form-input product-search" placeholder="Ürün ara veya yeni ürün adı yazın..." autocomplete="off">
+                        <input type="hidden" name="products[${productCounter}][product_id]" class="product-id" required>
+                        <input type="hidden" name="products[${productCounter}][new_product_name]" class="new-product-name">
+                        <div class="product-suggestions absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-60 overflow-y-auto"></div>
+                    </div>
                 </div>
                 
                 <div class="md:col-span-2 col-span-1">
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-arrow-left-right mr-2 text-primary-500"></i> İşlem Türü
+                    </label>
                     <select name="products[${productCounter}][type]" class="form-select type-select">
                         <option value="borc">Borç</option>
                         <option value="tahsilat">Tahsilat</option>
@@ -789,10 +793,16 @@ $transactions = $stmt->fetchAll();
                 </div>
                 
                 <div class="md:col-span-3 col-span-1">
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)
+                    </label>
                     <input type="text" name="products[${productCounter}][amount]" class="form-input amount-input" placeholder="0,00" required>
                 </div>
                 
                 <div class="md:col-span-2 col-span-1">
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Ürün Notu
+                    </label>
                     <input type="text" name="products[${productCounter}][note]" class="form-input" placeholder="Bu ürün için not">
                 </div>
                 
@@ -804,6 +814,11 @@ $transactions = $stmt->fetchAll();
             `;
 
                 productsContainer.appendChild(newRow);
+                // Yeni eklenen ürün arama alanını etkinleştir
+                const newlyAddedSearch = newRow.querySelector('.product-search');
+                if (newlyAddedSearch) {
+                    setupProductSearch(newlyAddedSearch);
+                }
                 productCounter++;
 
                 // Yeni eklenen satırdaki amount inputunu ayarla
