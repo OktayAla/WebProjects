@@ -1139,19 +1139,27 @@ $transactions = $stmt->fetchAll();
             
             // AJAX isteği gönder
             fetch(`api_search.php?${params.toString()}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        updateTable(data.data);
-                        updatePagination(data.data.pagination);
-                        updateTableTitle(data.data.selected_customer);
-                    } else {
-                        showError('Arama sırasında bir hata oluştu.');
+                .then(async response => {
+                    const contentType = response.headers.get('content-type') || '';
+                    if (!contentType.includes('application/json')) {
+                        throw new Error('Geçersiz yanıt formatı');
                     }
+                    const data = await response.json();
+                    if (!response.ok) {
+                        const msg = data && data.message ? data.message : 'Arama sırasında bir hata oluştu.';
+                        throw new Error(msg);
+                    }
+                    if (!data.success) {
+                        const msg = data && data.message ? data.message : 'Arama sırasında bir hata oluştu.';
+                        throw new Error(msg);
+                    }
+                    updateTable(data.data);
+                    updatePagination(data.data.pagination);
+                    updateTableTitle(data.data.selected_customer);
                 })
                 .catch(error => {
                     console.error('Arama hatası:', error);
-                    showError('Arama sırasında bir hata oluştu.');
+                    showError(error.message || 'Arama sırasında bir hata oluştu.');
                 })
                 .finally(() => {
                     isLoading = false;

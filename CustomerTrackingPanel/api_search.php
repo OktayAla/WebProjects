@@ -1,6 +1,3 @@
-<!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
-<!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
-
 <?php
 require_once __DIR__ . '/includes/auth.php';
 require_login();
@@ -61,40 +58,51 @@ if ($dateTo) {
     $params[] = $dateTo . ' 23:59:59';
 }
 
-// SQL sorgusu oluşturma
-$whereClause = '';
-if (!empty($conditions)) {
-    $whereClause = 'WHERE ' . implode(' AND ', $conditions);
+try {
+    // SQL sorgusu oluşturma
+    $whereClause = '';
+    if (!empty($conditions)) {
+        $whereClause = 'WHERE ' . implode(' AND ', $conditions);
+    }
+
+    // Toplam kayıt sayısını hesaplama
+    $countSql = "SELECT COUNT(*) FROM islemler i JOIN musteriler m ON m.id = i.musteri_id $whereClause";
+    $countStmt = $pdo->prepare($countSql);
+    $countStmt->execute($params);
+    $totalRows = (int)$countStmt->fetchColumn();
+    $totalPages = max(1, (int)ceil($totalRows / $perPage));
+
+    // LIMIT/OFFSET'i güvenli şekilde yerleştir (parametre bağlama kullanılmıyor)
+    $safeLimit = (int)$perPage;
+    $safeOffset = (int)$offset;
+
+    // Ana sorgu
+    $sql = "SELECT i.*, m.isim AS musteri_isim, u.isim AS urun_isim, k.isim AS kullanici_isim
+           FROM islemler i
+           JOIN musteriler m ON m.id = i.musteri_id
+           LEFT JOIN urunler u ON u.id = i.urun_id
+           LEFT JOIN kullanicilar k ON k.id = i.kullanici_id
+           $whereClause
+           ORDER BY i.olusturma_zamani DESC
+           LIMIT $safeLimit OFFSET $safeOffset";
+
+    $stmt = $pdo->prepare($sql);
+    $paramIndex = 1;
+
+    foreach ($params as $param) {
+        $stmt->bindValue($paramIndex++, $param);
+    }
+
+    $stmt->execute();
+    $transactions = $stmt->fetchAll();
+} catch (Exception $e) {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'message' => 'Arama sorgusu çalıştırılırken bir hata oluştu.',
+    ]);
+    exit;
 }
-
-// Toplam kayıt sayısını hesaplama
-$countSql = "SELECT COUNT(*) FROM islemler i JOIN musteriler m ON m.id = i.musteri_id $whereClause";
-$countStmt = $pdo->prepare($countSql);
-$countStmt->execute($params);
-$totalRows = (int)$countStmt->fetchColumn();
-$totalPages = max(1, ceil($totalRows / $perPage));
-
-// Ana sorgu
-$sql = "SELECT i.*, m.isim AS musteri_isim, u.isim AS urun_isim, k.isim AS kullanici_isim
-       FROM islemler i
-       JOIN musteriler m ON m.id = i.musteri_id
-       LEFT JOIN urunler u ON u.id = i.urun_id
-       LEFT JOIN kullanicilar k ON k.id = i.kullanici_id
-       $whereClause
-       ORDER BY i.olusturma_zamani DESC
-       LIMIT ? OFFSET ?";
-
-$stmt = $pdo->prepare($sql);
-$paramIndex = 1;
-
-foreach ($params as $param) {
-    $stmt->bindValue($paramIndex++, $param);
-}
-
-$stmt->bindValue($paramIndex++, $perPage, PDO::PARAM_INT);
-$stmt->bindValue($paramIndex++, $offset, PDO::PARAM_INT);
-$stmt->execute();
-$transactions = $stmt->fetchAll();
 
 // Müşteri bilgisini al (eğer belirli bir müşteri seçilmişse)
 $selectedCustomer = null;
