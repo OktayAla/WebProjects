@@ -1071,6 +1071,7 @@ $transactions = $stmt->fetchAll();
                     // Fiyatı miktar alanına otomatik doldur
                     const row = productSearchInput.closest('.product-row');
                     const amountInput = row ? row.querySelector('.amount-input') : null;
+                    // Ürün fiyatını ileri taşı: liste öğesindeki ikinci satırdan parse edebiliriz, fakat güvenilir yol API'den tekrar çekmek
                     fetch(`urunara.php?q=${encodeURIComponent(name)}`)
                         .then(r => r.json())
                         .then(list => {
