@@ -128,33 +128,6 @@
 						</div>
 					</div>
 					
-					<script>
-						document.addEventListener('DOMContentLoaded', function() {
-							const userMenuButton = document.getElementById('user-menu-button');
-							const userDropdown = document.getElementById('user-dropdown');
-							const mobileMenuButton = document.getElementById('mobile-menu-button');
-							const mobileMenu = document.getElementById('mobile-menu');
-							
-							userMenuButton.addEventListener('click', function() {
-								userDropdown.classList.toggle('hidden');
-							});
-							
-							// Mobil menü butonu
-							mobileMenuButton.addEventListener('click', function() {
-								mobileMenu.classList.toggle('hidden');
-							});
-							
-							// Dropdown dışına tıklandığında menüyü kapat
-							document.addEventListener('click', function(event) {
-								if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
-									userDropdown.classList.add('hidden');
-								}
-								if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
-									mobileMenu.classList.add('hidden');
-								}
-							});
-						});
-					</script>
 					<?php endif; ?>
 				</div>
 				<div class="-mr-2 flex md:hidden">
@@ -205,6 +178,26 @@
 			</div>
 		</div>
 	</nav>
+	
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const userMenuButton = document.getElementById('user-menu-button');
+			const userDropdown = document.getElementById('user-dropdown');
+			
+			// Kullanıcı menüsü (mobil menü footer'da yönetiliyor)
+			if (userMenuButton && userDropdown) {
+				userMenuButton.addEventListener('click', function() {
+					userDropdown.classList.toggle('hidden');
+				});
+				// Dropdown dışına tıklanınca kapat
+				document.addEventListener('click', function(event) {
+					if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
+						userDropdown.classList.add('hidden');
+					}
+				});
+			}
+		});
+	</script>
 	
 	<main class="flex-grow">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
