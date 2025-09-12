@@ -20,21 +20,33 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="assets/js/main.js"></script>
 	<script>
-		document.getElementById('mobile-menu-button').addEventListener('click', function() {
-			const menu = document.getElementById('mobile-menu');
-			menu.classList.toggle('hidden');
-		});
-		
-		document.addEventListener('click', function(event) {
-			const menu = document.getElementById('mobile-menu');
+		(function(){
 			const menuButton = document.getElementById('mobile-menu-button');
-			
-			if (!menu.classList.contains('hidden') && 
-				!menu.contains(event.target) && 
-				!menuButton.contains(event.target)) {
-				menu.classList.add('hidden');
+			const menu = document.getElementById('mobile-menu');
+			if (menuButton && menu) {
+				const toggleMenu = function(e){
+					if (e) e.preventDefault();
+					const willOpen = menu.classList.contains('hidden');
+					menu.classList.toggle('hidden');
+					if (willOpen) {
+						menu.style.display = 'block';
+					} else {
+						menu.style.display = '';
+					}
+					menuButton.setAttribute('aria-expanded', String(willOpen));
+				};
+				menuButton.addEventListener('click', toggleMenu, { passive: true });
+				menuButton.addEventListener('touchstart', toggleMenu, { passive: true });
+				// Dışarı tıklayınca kapat
+				document.addEventListener('click', function(event) {
+					if (!menu.classList.contains('hidden') && !menu.contains(event.target) && !menuButton.contains(event.target)) {
+						menu.classList.add('hidden');
+						menu.style.display = '';
+						menuButton.setAttribute('aria-expanded', 'false');
+					}
+				});
 			}
-		});
+		})();
 		
 		const desktopToggle = document.getElementById('autoRefreshToggle');
 		const mobileToggle = document.getElementById('autoRefreshToggleMobile');
