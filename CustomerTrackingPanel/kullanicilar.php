@@ -14,10 +14,32 @@ if ($current_user['rol'] !== 'admin') {
 
 $pdo = get_pdo_connection();
 
+// Benzersiz rastgele e-posta üretici
+function generate_unique_email($pdo) {
+    $adjectives = ['info','support','contact','service','help','team','account','notif','system','client','member','user','portal','secure','fast','smart','prime','nova','alpha','beta','delta'];
+    $nouns = ['mail','desk','box','center','hub','core','unit','link','cloud','base','gate','node','line','flow','grid','mesh','zone','point','field','stack'];
+    $domains = ['mail.com','example.com','example.org','mailbox.me','inbox.dev'];
+    for ($i = 0; $i < 10; $i++) {
+        $word1 = $adjectives[random_int(0, count($adjectives)-1)];
+        $word2 = $nouns[random_int(0, count($nouns)-1)];
+        $num = random_int(10, 9999);
+        $suffix = random_int(0, 1) ? random_int(1, 99) : '';
+        $domain = $domains[random_int(0, count($domains)-1)];
+        $email = strtolower($word1 . '.' . $word2 . $num . $suffix . '@' . $domain);
+        $chk = $pdo->prepare('SELECT 1 FROM kullanicilar WHERE eposta = ? LIMIT 1');
+        $chk->execute([$email]);
+        if (!$chk->fetchColumn()) {
+            return $email;
+        }
+    }
+    // Çakışma devam ederse son çare benzersiz id ekle
+    return 'info.' . bin2hex(random_bytes(4)) . '@mail.com';
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
     $isim = trim($_POST['name']);
-    $eposta = 'info@mail.com'; // Otomatik e-posta ataması
+    $eposta = generate_unique_email($pdo); // Otomatik benzersiz e-posta ataması
     $sifre = trim($_POST['password']);
     $rol = trim($_POST['role']);
     
@@ -26,12 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Şifre değiştirilmek isteniyorsa
             if (!empty($sifre)) {
                 $hashed_password = password_hash($sifre, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare('UPDATE kullanicilar SET isim = ?, eposta = ?, sifre = ?, rol = ? WHERE id = ?');
-                $stmt->execute([$isim, $eposta, $hashed_password, $rol, $id]);
+                $stmt = $pdo->prepare('UPDATE kullanicilar SET isim = ?, sifre = ?, rol = ? WHERE id = ?');
+                $stmt->execute([$isim, $hashed_password, $rol, $id]);
             } else {
                 // Şifre değiştirilmek istenmiyorsa
-                $stmt = $pdo->prepare('UPDATE kullanicilar SET isim = ?, eposta = ?, rol = ? WHERE id = ?');
-                $stmt->execute([$isim, $eposta, $rol, $id]);
+                $stmt = $pdo->prepare('UPDATE kullanicilar SET isim = ?, rol = ? WHERE id = ?');
+                $stmt->execute([$isim, $rol, $id]);
             }
             $message = 'Kullanıcı başarıyla güncellendi.';
         } else {
