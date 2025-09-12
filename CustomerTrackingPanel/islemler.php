@@ -1068,6 +1068,21 @@ $transactions = $stmt->fetchAll();
                     productIdInput.value = id;
                     productSearchInput.parentElement.querySelector('.new-product-name').value = '';
                     productSuggestions.classList.add('hidden');
+                    // Fiyatı miktar alanına otomatik doldur
+                    const row = productSearchInput.closest('.product-row');
+                    const amountInput = row ? row.querySelector('.amount-input') : null;
+                    fetch(`urunara.php?q=${encodeURIComponent(name)}`)
+                        .then(r => r.json())
+                        .then(list => {
+                            const found = Array.isArray(list) ? list.find(p => String(p.id) === String(id)) : null;
+                            if (found && amountInput) {
+                                const val = Number(found.fiyat || 0);
+                                if (!isNaN(val) && val > 0) {
+                                    amountInput.value = val.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',');
+                                }
+                            }
+                        })
+                        .catch(() => {});
                 }
             });
             
@@ -1110,7 +1125,7 @@ $transactions = $stmt->fetchAll();
             if (!info) return;
             info.classList.remove('hidden');
             info.innerHTML = '<span class="text-gray-500">Bakiye yükleniyor...</span>';
-            fetch(`customer_summary.php?customer=${encodeURIComponent(id)}`)
+            fetch(`musteri_ozeti.php?customer=${encodeURIComponent(id)}`)
                 .then(r => r.json())
                 .then(data => {
                     if (!data.success) throw new Error();
