@@ -116,6 +116,45 @@ h4::after {
   border-left: 4px solid #dc3545;
 }
 
+.login-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.login-logo-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e0e7ff 0%, #38bdf8 100%);
+  box-shadow: 0 4px 24px rgba(56,189,248,0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border: 4px solid #38bdf8;
+}
+
+.login-logo-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.animate-logo {
+  animation: logoBounce 1.2s cubic-bezier(.68,-0.55,.27,1.55) 1;
+}
+
+@keyframes logoBounce {
+  0% { transform: scale(0.7); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  80% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
 @keyframes float {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
