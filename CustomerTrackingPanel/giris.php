@@ -39,19 +39,25 @@
 			<div class="col-md-4">
 				<div class="card shadow-sm border-0">
 					<div class="card-body">
-						<h4>Analiz Tarım</h4>
-						<?php if ($error): ?><div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
-						<form method="post" autocomplete="off">
-							<div class="mb-3">
-								<label class="form-label">Kullanıcı adı</label>
-								<input type="text" name="identifier" class="form-control" required>
-							</div>
-							<div class="mb-3">
-								<label class="form-label">Şifre</label>
-								<input type="password" name="password" class="form-control" required>
-							</div>
-							<button class="btn btn-primary w-100" type="submit">Giriş Yap</button>
-						</form>
+						<!-- Logo ve animasyonlu giriş -->
+<div class="login-logo-container">
+  <div class="login-logo-circle animate-logo">
+    <img src="img/logo.jpg" alt="Logo" class="login-logo-img">
+  </div>
+</div>
+<h4>Analiz Tarım</h4>
+<?php if ($error): ?><div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
+<form method="post" autocomplete="off">
+	<div class="mb-3">
+		<label class="form-label">Kullanıcı adı</label>
+		<input type="text" name="identifier" class="form-control" required>
+	</div>
+	<div class="mb-3">
+		<label class="form-label">Şifre</label>
+		<input type="password" name="password" class="form-control" required>
+	</div>
+	<button class="btn btn-primary w-100" type="submit">Giriş Yap</button>
+</form>
 					</div>
 				</div>
 			</div>
@@ -60,3 +66,5 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+<!-- Not: login.css'de login-logo-container, login-logo-circle ve animate-logo class'ları tanımlanmalı. -->
