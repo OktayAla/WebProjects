@@ -36,13 +36,23 @@ $t = $totals->fetch();
 
 $balance = (float)$t['toplam_borc'] - (float)$t['toplam_tahsilat'];
 
+// Müşteri özeti kutusu
+$eski_bakiye = (float)$t['toplam_borc'];
+$yeni_urunler = 0; // Bu değeri hesaplamak için gerekli sorgu eklenmeli
+$tahsil_edilen = (float)$t['toplam_tahsilat'];
+$kalan_bakiye = $eski_bakiye - $yeni_urunler + $tahsil_edilen;
+
 echo json_encode([
 	'success' => true,
 	'data' => [
 		'customer' => $customer,
 		'toplam_borc' => (float)$t['toplam_borc'],
 		'toplam_tahsilat' => (float)$t['toplam_tahsilat'],
-		'bakiye' => $balance
+		'bakiye' => $balance,
+		'eski_bakiye' => $eski_bakiye,
+		'yeni_urunler' => $yeni_urunler,
+		'tahsil_edilen' => $tahsil_edilen,
+		'kalan_bakiye' => $kalan_bakiye
 	]
 ]);
 
