@@ -455,7 +455,6 @@ if ($userRole === 'admin') {
     </div>
 </div>
 
-<!-- Detay Modal -->
 <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
         <div class="p-5 border-b border-gray-200">
@@ -468,7 +467,6 @@ if ($userRole === 'admin') {
         </div>
         <div class="p-5">
             <div id="detailContent">
-                <!-- İçerik buraya yüklenecek -->
             </div>
         </div>
     </div>
@@ -480,11 +478,9 @@ function showDetailModal(type) {
     const title = document.getElementById('modalTitle');
     const content = document.getElementById('detailContent');
     
-    // Loading göster
     content.innerHTML = '<div class="text-center py-8"><i class="bi bi-hourglass-split text-4xl text-gray-400"></i><p class="mt-2 text-gray-600">Yükleniyor...</p></div>';
     modal.classList.remove('hidden');
     
-    // Başlık ayarla
     switch(type) {
         case 'sales':
             title.textContent = 'Toplam Satış Detayları';
@@ -497,7 +493,6 @@ function showDetailModal(type) {
             break;
     }
     
-    // AJAX ile veri çek
     fetch(`detaylar.php?type=${type}`)
         .then(response => response.text())
         .then(data => {
@@ -508,7 +503,6 @@ function showDetailModal(type) {
         });
 }
 
-// Modal kapatma
 document.getElementById('closeDetailModal').addEventListener('click', function() {
     document.getElementById('detailModal').classList.add('hidden');
 });
