@@ -11,10 +11,17 @@ $pdo = get_pdo_connection();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'add') {
         $isim = trim($_POST['isim']);
+        $urun_fiyat = $_POST['urun_fiyat'];
 
         try {
             $stmt = $pdo->prepare('INSERT INTO urunler (isim) VALUES (?)');
             $stmt->execute([$isim]);
+            $urun_id = $pdo->lastInsertId();
+
+            // Fiyatlar tablosuna da ekle
+            $stmt = $pdo->prepare('INSERT INTO fiyatlar (urun_id, fiyat) VALUES (?, ?)');
+            $stmt->execute([$urun_id, $urun_fiyat]);
+
             $success = 'Ürün başarıyla eklendi.';
         } catch (Exception $e) {
             $error = 'Ürün eklenemedi: ' . $e->getMessage();
@@ -164,6 +171,22 @@ if ($search) {
                 <label class="form-label">Ürün Adı *</label>
                 <input type="text" name="isim" id="productName" class="form-input" required>
             </div>
+            <div class="form-group">
+                <label class="form-label">Ürün Fiyatı *</label>
+                <input type="text" name="urun_fiyat" id="productPrice" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Adet *</label>
+                <input type="number" name="adet" value="1" min="1" id="adet" onchange="hesaplaToplam()" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Birim Fiyat *</label>
+                <input type="text" name="birim_fiyat" id="birim_fiyat" placeholder="Birim Fiyat" onchange="hesaplaToplam()" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Toplam *</label>
+                <input type="text" name="toplam" id="toplam" placeholder="Toplam" readonly class="form-input bg-gray-100">
+            </div>
                         
             <div class="modal-footer">
                 <button type="button" onclick="hideProductModal()" class="btn btn-outline">İptal</button>
@@ -209,6 +232,10 @@ function editProduct(product) {
     document.getElementById('formAction').value = 'edit';
     document.getElementById('productId').value = product.id;
     document.getElementById('productName').value = product.isim;
+    document.getElementById('productPrice').value = product.fiyat;
+    document.getElementById('adet').value = product.adet;
+    document.getElementById('birim_fiyat').value = product.birim_fiyat;
+    document.getElementById('toplam').value = product.toplam;
     document.getElementById('productModal').classList.remove('hidden');
 }
 
@@ -224,6 +251,13 @@ function deleteProduct(id, isim) {
 
 function hideDeleteModal() {
     document.getElementById('deleteModal').classList.add('hidden');
+}
+
+function hesaplaToplam() {
+  var adet = document.getElementById('adet').value;
+  var birimFiyat = document.getElementById('birim_fiyat').value;
+  var toplam = adet * birimFiyat;
+  document.getElementById('toplam').value = toplam;
 }
 </script>
 
