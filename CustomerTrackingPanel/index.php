@@ -61,18 +61,6 @@ if ($userRole === 'admin') {
         $tahsilatData[] = isset($map[$label]) ? (float)$map[$label]['toplam_tahsilat'] : 0.0;
     }
 
-    // En çok satılan (borçlanan) 5 ürün
-    $topProductsStmt = $pdo->query(
-        "SELECT COALESCE(u.isim, 'Diğer') AS urun_adi, SUM(i.miktar) AS toplam_tutar
-         FROM islemler i
-         LEFT JOIN urunler u ON u.id = i.urun_id
-         WHERE i.odeme_tipi = 'borc' AND i.urun_id IS NOT NULL
-         GROUP BY urun_adi
-         ORDER BY toplam_tutar DESC
-         LIMIT 5"
-    );
-    $topProducts = $topProductsStmt ? $topProductsStmt->fetchAll() : [];
-    
     // En çok işlem yapılan 5 müşteri
     $topCustomersStmt = $pdo->query(
         "SELECT m.isim AS musteri_adi, COUNT(i.id) AS islem_sayisi, SUM(i.miktar) AS toplam_tutar
@@ -213,17 +201,8 @@ if ($userRole === 'admin') {
             </div>
         </div>
 
-        <!-- Ürün ve Müşteri Analizleri -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div class="card-hover shadow-lg animate-fadeIn">
-                <div class="card-header">
-                    <h3 class="card-title flex items-center"><i class="bi bi-pie-chart mr-2 text-primary-600"></i> En Çok Satılan Ürünler</h3>
-                </div>
-                <div class="p-5">
-                    <canvas id="productsChart" height="120"></canvas>
-                </div>
-            </div>
-
+        <!-- Müşteri Analizleri -->
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
             <div class="card-hover shadow-lg animate-fadeIn">
                 <div class="card-header">
                     <h3 class="card-title flex items-center"><i class="bi bi-people mr-2 text-primary-600"></i> En Aktif Müşteriler</h3>
@@ -301,9 +280,6 @@ if ($userRole === 'admin') {
                 const borcData = <?php echo json_encode($borcData ?? []); ?>;
                 const tahsilatData = <?php echo json_encode($tahsilatData ?? []); ?>;
                 
-                // Ürün verileri
-                const topProducts = <?php echo json_encode($topProducts ?? []); ?>;
-                
                 // Müşteri verileri
                 const topCustomers = <?php echo json_encode($topCustomers ?? []); ?>;
                 
@@ -346,51 +322,6 @@ if ($userRole === 'admin') {
                     });
                 }
 
-                // Ürün grafiği
-                const productsCtx = document.getElementById('productsChart');
-                if (productsCtx && topProducts && topProducts.length) {
-                    console.log('Ürün verileri:', topProducts); // Debug için
-                    const chart = new Chart(productsCtx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: topProducts.map(p => p.urun_adi || 'İsimsiz Ürün'),
-                            datasets: [{
-                                data: topProducts.map(p => parseFloat(p.toplam_tutar) || 0),
-                                backgroundColor: ['#6366f1','#22c55e','#f59e0b','#ef4444','#06b6d4'],
-                                borderWidth: 1,
-                                borderColor: '#fff'
-                            }]
-                        },
-                        options: { 
-                            responsive: true, 
-                            maintainAspectRatio: false,
-                            cutout: '60%',
-                            plugins: {
-                                legend: {
-                                    position: 'right',
-                                    display: true
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'En Çok Satılan Ürünler',
-                                    font: { size: 16 }
-                                },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            const value = parseFloat(context.raw).toLocaleString('tr-TR', {
-                                                minimumFractionDigits: 2,
-                                                maximumFractionDigits: 2
-                                            });
-                                            return `${context.label}: ${value} ₺`;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-                
                 // Müşteri grafiği
                 const customersCtx = document.getElementById('customersChart');
                 if (customersCtx && topCustomers.length) {
