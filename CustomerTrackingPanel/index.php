@@ -374,8 +374,7 @@ if ($userRole === 'admin') {
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
                 }
                 
                 // Müşteri grafiği
@@ -434,8 +433,7 @@ if ($userRole === 'admin') {
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
                 }
                 
                 // Aylık trend grafiği
@@ -492,8 +490,7 @@ if ($userRole === 'admin') {
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
                 }
                 
                 // SVG daire grafiği için stil
