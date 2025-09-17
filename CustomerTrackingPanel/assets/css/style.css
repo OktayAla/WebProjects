@@ -89,7 +89,7 @@ body {
   .navbar-brand {
     font-size: 1.25rem;
   }
-  
+
   .navbar-item {
     padding: 0.5rem 0.75rem;
   }
@@ -140,8 +140,13 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInUp {
@@ -149,6 +154,7 @@ body {
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -156,9 +162,12 @@ body {
 }
 
 @keyframes pulseSlow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.7;
   }
@@ -168,13 +177,16 @@ body {
   0% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-10px);
   }
+
   100% {
     transform: translateY(0px);
   }
 }
+
 /* Floating Background Elements */
 .card-hover {
   border-radius: 16px;
@@ -249,6 +261,7 @@ body {
     opacity: 0;
     transform: translateY(-20px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -484,8 +497,11 @@ body {
   border-spacing: 0;
   min-width: 650px;
 }
+
 /* Compact tables without forced min-width (avoid desktop scrollbar) */
-.table-compact { min-width: 0; }
+.table-compact {
+  min-width: 0;
+}
 
 .table thead {
   background-color: #f8fafc;
@@ -534,6 +550,7 @@ body {
 .table-striped tbody tr:nth-of-type(odd):hover {
   background-color: #f1f5f9;
 }
+
 /* Badges */
 .badge {
   display: inline-flex;
@@ -545,14 +562,17 @@ body {
   line-height: 1;
   font-weight: 600;
 }
+
 .badge-danger {
   background-color: #fee2e2;
   color: #991b1b;
 }
+
 .badge-success {
   background-color: #dcfce7;
   color: #166534;
 }
+
 .badge-primary {
   background-color: #dbeafe;
   color: #1e40af;
@@ -621,7 +641,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
   pointer-events: none;
 }
 
@@ -677,34 +697,37 @@ body {
 }
 
 @media print {
-  nav, button, .no-print { 
-    display: none !important; 
+
+  nav,
+  button,
+  .no-print {
+    display: none !important;
   }
-  
-  body { 
-    background: white !important; 
+
+  body {
+    background: white !important;
   }
-  
-  main { 
-    max-width: 100% !important; 
-    padding: 0 !important; 
-    margin: 0 !important; 
+
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
-  
+
   .card-hover {
     box-shadow: none !important;
     border: 1px solid #e2e8f0 !important;
   }
-  
+
   .table tbody tr:hover {
     background-color: transparent !important;
     transform: none !important;
   }
-  
+
   .floating-element {
     display: none !important;
   }
-  
+
   .dashboard-header {
     background: #667eea !important;
     color: white !important;
@@ -716,35 +739,38 @@ body {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .stat-icon {
     margin-right: 0;
     margin-bottom: 1rem;
   }
-  
+
   .floating-element {
     display: none;
   }
-  
+
   .table-container {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-  /* Stacked table for small screens */
+
   .table.table-stacked thead {
     display: none;
   }
+
   .table.table-stacked tbody tr {
     display: block;
     border-bottom: 1px solid #e5e7eb;
     padding: 0.5rem 0.75rem;
   }
+
   .table.table-stacked tbody tr td {
     display: grid;
     grid-template-columns: 40% 1fr;
     padding: 0.5rem 0;
     font-size: 0.875rem;
   }
+
   .table.table-stacked tbody tr td::before {
     content: attr(data-label);
     color: var(--text-secondary);
@@ -753,21 +779,21 @@ body {
     letter-spacing: 0.03em;
     padding-right: 0.75rem;
   }
-  
+
   .modal-dialog {
     margin: 1rem;
     max-width: calc(100% - 2rem);
   }
-  
+
   .modal-dialog-centered {
     min-height: calc(100% - 2rem);
   }
-  
+
   .grid {
     grid-template-columns: 1fr !important;
   }
-  
-  .md\:grid-cols-12 > * {
+
+  .md\:grid-cols-12>* {
     grid-column: span 1 !important;
   }
 }
@@ -895,11 +921,11 @@ body {
   .modal {
     display: none !important;
   }
-  
+
   .btn {
     display: none !important;
   }
-  
+
   .table tbody tr:nth-child(even) {
     background-color: #f9fafb !important;
   }
@@ -910,12 +936,12 @@ body {
   .dashboard-stats {
     grid-template-columns: repeat(2, 1fr) !important;
   }
-  
+
   .table-container {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   .table {
     min-width: 800px;
   }
@@ -926,34 +952,34 @@ body {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  
+
   .dashboard-stats {
     grid-template-columns: 1fr !important;
     gap: 1rem;
   }
-  
+
   .stat-card {
     padding: 1rem;
   }
-  
+
   .stat-icon {
     width: 45px;
     height: 45px;
     font-size: 1.25rem;
   }
-  
+
   .stat-value {
     font-size: 1.25rem;
   }
-  
+
   .card-header {
     padding: 1rem;
   }
-  
+
   .card-title {
     font-size: 1.1rem;
   }
-  
+
   .btn {
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
@@ -966,37 +992,38 @@ body {
     margin: 1rem;
     border-radius: 16px;
   }
-  
+
   .modal-header,
   .modal-body,
   .modal-footer {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-   
+
   .table thead th {
     white-space: nowrap;
     padding: 0.5rem;
   }
-  
+
   .table tbody td {
     padding: 0.5rem;
   }
-  
-  .form-input, .form-select {
+
+  .form-input,
+  .form-select {
     font-size: 0.875rem;
     padding: 0.5rem 0.75rem;
   }
-  
+
   .btn {
     padding: 0.5rem 1rem;
     font-size: 0.8125rem;
   }
-  
+
   .flex.flex-col.md\:flex-row {
     gap: 0.75rem;
   }
-  
+
   .flex.space-x-2 {
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -1005,9 +1032,9 @@ body {
 
 @media (max-width: 1024px) {
   .table-container {
-  overflow-x: auto !important;
-  -webkit-overflow-scrolling: touch;
-}
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
 
   .table {
     min-width: 800px;
