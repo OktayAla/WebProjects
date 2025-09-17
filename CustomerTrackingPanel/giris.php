@@ -41,11 +41,8 @@
 					<div class="card-body">
 						<!-- Logo ve animasyonlu giriş -->
 <div class="login-logo-container">
-  <div class="login-logo-circle animate-logo">
     <img src="img/logo.jpg" alt="Logo" class="login-logo-img">
-  </div>
 </div>
-<h4>Analiz Tarım</h4>
 <?php if ($error): ?><div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
 <form method="post" autocomplete="off">
 	<div class="mb-3">
