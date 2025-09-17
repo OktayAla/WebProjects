@@ -222,7 +222,6 @@ $history = $historyStmt->fetchAll();
 						</div>
 					</div>
 					<div class="md:text-right">
-						<h5 class="text-base font-semibold text-gray-900 mb-3">İşlem Detayları</h5>
 						<div class="space-y-2">
 							<div class="flex flex-col md:items-end">
 								<span class="text-sm font-medium text-gray-500">Tür</span>
