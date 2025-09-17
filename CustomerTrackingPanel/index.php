@@ -61,13 +61,13 @@ if ($userRole === 'admin') {
         $tahsilatData[] = isset($map[$label]) ? (float)$map[$label]['toplam_tahsilat'] : 0.0;
     }
 
-    // En çok satılan (borçlanan) 5 ürün - DÜZELTİLDİ
+    // En çok satılan (borçlanan) 5 ürün
     $topProductsStmt = $pdo->query(
         "SELECT COALESCE(u.isim, 'Diğer') AS urun_adi, SUM(i.miktar) AS toplam_tutar
          FROM islemler i
          LEFT JOIN urunler u ON u.id = i.urun_id
          WHERE i.odeme_tipi = 'borc' AND i.urun_id IS NOT NULL
-         GROUP BY i.urun_id, urun_adi
+         GROUP BY urun_adi
          ORDER BY toplam_tutar DESC
          LIMIT 5"
     );
@@ -346,54 +346,49 @@ if ($userRole === 'admin') {
                     });
                 }
 
-                // Ürün grafiği - DÜZELTİLDİ
+                // Ürün grafiği
                 const productsCtx = document.getElementById('productsChart');
-                if (productsCtx) {
+                if (productsCtx && topProducts && topProducts.length) {
                     console.log('Ürün verileri:', topProducts); // Debug için
-                    
-                    // Eğer veri yoksa boş grafik göster
-                    if (!topProducts || topProducts.length === 0) {
-                        const ctx = productsCtx.getContext('2d');
-                        ctx.font = '16px Arial';
-                        ctx.fillStyle = '#9ca3af';
-                        ctx.textAlign = 'center';
-                        ctx.fillText('Veri bulunamadı', productsCtx.width / 2, productsCtx.height / 2);
-                    } else {
-                        const chart = new Chart(productsCtx, {
-                            type: 'doughnut',
-                            data: {
-                                labels: topProducts.map(p => p.urun_adi || 'İsimsiz Ürün'),
-                                datasets: [{
-                                    data: topProducts.map(p => parseFloat(p.toplam_tutar) || 0),
-                                    backgroundColor: ['#6366f1','#22c55e','#f59e0b','#ef4444','#06b6d4'],
-                                    borderWidth: 1,
-                                    borderColor: '#fff'
-                                }]
-                            },
-                            options: { 
-                                responsive: true, 
-                                maintainAspectRatio: false,
-                                cutout: '60%',
-                                plugins: {
-                                    legend: {
-                                        position: 'right',
-                                        display: true
-                                    },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function(context) {
-                                                const value = parseFloat(context.raw).toLocaleString('tr-TR', {
-                                                    minimumFractionDigits: 2,
-                                                    maximumFractionDigits: 2
-                                                });
-                                                return `${context.label}: ${value} ₺`;
-                                            }
+                    const chart = new Chart(productsCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: topProducts.map(p => p.urun_adi || 'İsimsiz Ürün'),
+                            datasets: [{
+                                data: topProducts.map(p => parseFloat(p.toplam_tutar) || 0),
+                                backgroundColor: ['#6366f1','#22c55e','#f59e0b','#ef4444','#06b6d4'],
+                                borderWidth: 1,
+                                borderColor: '#fff'
+                            }]
+                        },
+                        options: { 
+                            responsive: true, 
+                            maintainAspectRatio: false,
+                            cutout: '60%',
+                            plugins: {
+                                legend: {
+                                    position: 'right',
+                                    display: true
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'En Çok Satılan Ürünler',
+                                    font: { size: 16 }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const value = parseFloat(context.raw).toLocaleString('tr-TR', {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2
+                                            });
+                                            return `${context.label}: ${value} ₺`;
                                         }
                                     }
                                 }
                             }
-                        });
-                    }
+                        }
+                    });
                 }
                 
                 // Müşteri grafiği
