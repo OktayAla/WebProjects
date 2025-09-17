@@ -174,7 +174,6 @@
 				
 				<!-- Şirket Bilgileri -->
 				<div id="company-info" class="mb-6 text-center">
-					<h3 id="company-name-display" class="text-xl font-bold text-gray-900">Müşteri Portalı</h3>
 					<div id="company-contact-display" class="text-sm text-gray-600 mt-1"></div>
 				</div>
 				
@@ -188,10 +187,6 @@
 							<div class="flex flex-col">
 								<span class="text-sm font-medium text-gray-500">Ad Soyad</span>
 								<span class="text-base"><?php echo htmlspecialchars($tx['musteri_isim']); ?></span>
-							</div>
-							<div class="flex flex-col">
-								<span class="text-sm font-medium text-gray-500">Telefon</span>
-								<span class="text-base"><?php echo htmlspecialchars($tx['numara']); ?></span>
 							</div>
 						</div>
 					</div>
