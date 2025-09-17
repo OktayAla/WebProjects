@@ -69,12 +69,13 @@ if (isset($_GET['delete'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // CSRF doğrulama hatası düzeltildi
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo 'İşlem başarısız: Güvenlik doğrulaması başarısız (CSRF).';
+        exit;
+    }
     $pdo->beginTransaction();
     try {
-        // CSRF kontrolü
-        if (!isset($_POST['csrf_token']) || !verify_csrf($_POST['csrf_token'])) {
-            throw new Exception('Güvenlik doğrulaması başarısız (CSRF).');
-        }
         // İşlem güncelleme - user_id güncellenmez, sadece diğer alanlar güncellenir
         if (isset($_POST['action']) && $_POST['action'] === 'update_transaction' && isset($_POST['transaction_id'])) {
             $transaction_id = (int)$_POST['transaction_id'];
