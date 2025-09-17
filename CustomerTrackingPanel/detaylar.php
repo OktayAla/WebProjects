@@ -10,7 +10,6 @@ $type = $_GET['type'] ?? '';
 
 switch($type) {
     case 'sales':
-        // Toplam satış detayları (borç + tahsilat)
         $stmt = $pdo->query("
             SELECT 
                 i.id,
@@ -66,7 +65,6 @@ switch($type) {
         break;
         
     case 'collections':
-        // Tahsilat detayları
         $stmt = $pdo->query("
             SELECT 
                 i.id,
@@ -113,7 +111,6 @@ switch($type) {
         break;
         
     case 'receivables':
-        // Alacak detayları
         $stmt = $pdo->query("
             SELECT 
                 i.id,

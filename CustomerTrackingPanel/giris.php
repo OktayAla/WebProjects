@@ -39,7 +39,6 @@
 			<div class="col-md-4">
 				<div class="card shadow-sm border-0">
 					<div class="card-body">
-						<!-- Logo ve animasyonlu giriş -->
 <div class="login-logo-container">
     <img src="img/logo.jpg" alt="Logo" class="login-logo-img">
 </div>

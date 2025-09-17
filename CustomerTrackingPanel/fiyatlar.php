@@ -8,11 +8,9 @@ require_once __DIR__ . '/includes/header.php';
 
 $pdo = get_pdo_connection();
 
-// Fiyat alanını ekle (eğer yoksa)
 try {
     $pdo->exec("ALTER TABLE urunler ADD COLUMN IF NOT EXISTS fiyat DECIMAL(10,2) DEFAULT 0.00");
 } catch (Exception $e) {
-    // Alan zaten varsa hata vermez
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
@@ -30,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-// Arama parametresi
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 // Ürünleri getir
@@ -51,7 +48,6 @@ if ($search) {
         </div>
     </div>
     
-    <!-- Arama Formu -->
     <div class="mb-6">
         <form action="" method="GET" class="flex gap-2">
             <div class="form-group flex-grow">
@@ -126,7 +122,6 @@ if ($search) {
     </div>
 </div>
 
-<!-- Fiyat Güncelleme Modal -->
 <div id="priceModal" class="modal hidden">
     <div class="modal-overlay" onclick="hidePriceModal()"></div>
     <div class="modal-content">
