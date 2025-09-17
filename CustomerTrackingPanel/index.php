@@ -348,33 +348,47 @@ if ($userRole === 'admin') {
 
                 // Ürün grafiği
                 const productsCtx = document.getElementById('productsChart');
-                if (productsCtx && topProducts.length) {
-                    new Chart(productsCtx, {
+                if (productsCtx && topProducts && topProducts.length) {
+                    console.log('Ürün verileri:', topProducts); // Debug için
+                    const chart = new Chart(productsCtx, {
                         type: 'doughnut',
                         data: {
-                            labels: topProducts.map(p => p.urun_adi),
+                            labels: topProducts.map(p => p.urun_adi || 'İsimsiz Ürün'),
                             datasets: [{
-                                label: 'Tutar (₺)',
-                                data: topProducts.map(p => Number(p.toplam_tutar)),
-                                backgroundColor: ['#6366f1','#22c55e','#f59e0b','#ef4444','#06b6d4']
+                                data: topProducts.map(p => parseFloat(p.toplam_tutar) || 0),
+                                backgroundColor: ['#6366f1','#22c55e','#f59e0b','#ef4444','#06b6d4'],
+                                borderWidth: 1,
+                                borderColor: '#fff'
                             }]
                         },
                         options: { 
                             responsive: true, 
                             maintainAspectRatio: false,
+                            cutout: '60%',
                             plugins: {
                                 legend: {
                                     position: 'right',
+                                    display: true
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'En Çok Satılan Ürünler',
+                                    font: { size: 16 }
                                 },
                                 tooltip: {
                                     callbacks: {
                                         label: function(context) {
-                                            return context.label + ': ' + Number(context.raw).toLocaleString('tr-TR') + ' ₺';
+                                            const value = parseFloat(context.raw).toLocaleString('tr-TR', {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2
+                                            });
+                                            return `${context.label}: ${value} ₺`;
                                         }
                                     }
                                 }
                             }
-                        });
+                        }
+                    });
                 }
                 
                 // Müşteri grafiği
@@ -433,7 +447,8 @@ if ($userRole === 'admin') {
                                     }
                                 }
                             }
-                        });
+                        }
+                    });
                 }
                 
                 // Aylık trend grafiği
@@ -490,7 +505,8 @@ if ($userRole === 'admin') {
                                     }
                                 }
                             }
-                        });
+                        }
+                    });
                 }
                 
                 // SVG daire grafiği için stil
