@@ -178,6 +178,9 @@
 					<div id="company-contact-display" class="text-sm text-gray-600 mt-1"></div>
 				</div>
 				
+				<div class="flex justify-center mb-4">
+					<img src="img/logo.jpg" alt="Logo" style="width:150px;">
+				</div>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div>
 						<h5 class="text-base font-semibold text-gray-900 mb-3">Müşteri Bilgileri</h5>
@@ -234,7 +237,6 @@
 					</div>
 				</div>
 				<?php endif; ?>
-				<img src="img/logo.jpg" alt="Logo" style="width:150px;">
 			</div>
 		</div>
 	</div>
