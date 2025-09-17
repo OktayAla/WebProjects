@@ -234,7 +234,7 @@
 					</div>
 				</div>
 				<?php endif; ?>
-
+				<img src="img/logo.jpg" alt="Logo" style="width:150px;">
 			</div>
 		</div>
 	</div>
