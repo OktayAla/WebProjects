@@ -1,197 +1,33 @@
 <!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
 <!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
  
-<?php  
-require_once __DIR__ . '/includes/auth.php'; 
-require_login(); 
-require_once __DIR__ . '/includes/header.php'; 
-
-$pdo = get_pdo_connection();
-$customerId = isset($_GET['customer']) ? (int)$_GET['customer'] : 0;
-$customer = null;
-if ($customerId) {
-    $stmt = $pdo->prepare('SELECT * FROM musteriler WHERE id = ?');
-    $stmt->execute([$customerId]);
-    $customer = $stmt->fetch();
-}
-if (!$customer) {
-    echo '<div class="alert alert-danger">Müşteri bulunamadı.</div>';
-    require_once __DIR__ . '/includes/footer.php';
-    exit;
-}
-
-// Toplam Borç (Satış)
-$salesStmt = $pdo->prepare("SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE musteri_id = ? AND odeme_tipi = 'borc'");
-$salesStmt->execute([$customerId]);
-$totalSales = (float)$salesStmt->fetchColumn();
-
-// Toplam Tahsilat (Ödeme)
-$paidStmt = $pdo->prepare("SELECT COALESCE(SUM(miktar), 0) FROM islemler WHERE musteri_id = ? AND odeme_tipi = 'tahsilat'");
-$paidStmt->execute([$customerId]);
-$totalPaid = (float)$paidStmt->fetchColumn();
-
-// Net Bakiye (Tahsilat - Borç) -> Pozitif: alacaklı, Negatif: borçlu
-$remaining = $totalPaid - $totalSales;
-
-$historyStmt = $pdo->prepare('SELECT i.id, i.odeme_tipi, i.miktar, i.aciklama, i.olusturma_zamani, u.isim AS urun_isim FROM islemler i LEFT JOIN urunler u ON u.id = i.urun_id WHERE i.musteri_id = ? ORDER BY i.olusturma_zamani DESC');
-$historyStmt->execute([$customerId]);
-$history = $historyStmt->fetchAll();
-?>
-
-
-<div class="container mx-auto px-4 py-6">
-    <div class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
-        <a href="index.php" class="hover:text-primary-600 transition-colors duration-200">Panel</a>
-        <span class="text-gray-400">/</span>
-        <a href="musteriler.php" class="hover:text-primary-600 transition-colors duration-200">Müşteriler</a>
-        <span class="text-gray-400">/</span>
-        <span class="text-gray-700 font-medium"><?php echo htmlspecialchars($customer['isim']); ?></span>
-    </div>
-
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-        <div>
-            <h2 class="text-xl font-semibold text-gray-900">Müşteri Detayları</h2>
-            <p class="text-sm text-gray-600 mt-1">Müşteri bilgileri ve işlem geçmişi</p>
-        </div>
-        <div class="flex space-x-2">
-            <a href="islemler.php?customer=<?php echo $customerId; ?>" class="btn btn-outline flex items-center">
-                <i class="bi bi-arrow-left mr-2"></i> İşlemlere Dön
-            </a>
-            <button onclick="window.print()" class="btn btn-outline flex items-center">
-                <i class="bi bi-printer mr-2"></i> Yazdır
-            </button>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
-        <div class="md:col-span-5">
-            <div class="card-hover animate-fadeIn">
-                <div class="card-header">
-                    <h3 class="card-title">Müşteri Bilgileri</h3>
-                </div>
-                <div class="p-4">
-                    <div class="space-y-4">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-500">Ad Soyad</span>
-                            <span class="text-base font-semibold"><?php echo htmlspecialchars($customer['isim']); ?></span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-500">Telefon</span>
-                            <span class="text-base"><?php echo htmlspecialchars($customer['numara']); ?></span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-500">Adres</span>
-                            <span class="text-base whitespace-pre-line"><?php echo htmlspecialchars($customer['adres']); ?></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="md:col-span-7">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="stat-card card-hover animate-fadeIn" style="animation-delay: 0.1s">
-                    <div class="stat-icon">
-                        <i class="bi bi-cart"></i>
-                    </div>
-                    <div class="stat-info">
-                        <span class="stat-label">Toplam Satış</span>
-                        <span class="stat-value"><?php echo number_format($totalSales, 2, ',', '.'); ?> ₺</span>
-                    </div>
-                </div>
-                
-                <div class="stat-card card-hover" style="animation-delay: 0.3s">
-                    <div class="stat-icon" style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);">
-                        <i class="bi bi-cash-coin"></i>
-                    </div>
-                    <div class="stat-info">
-                        <span class="stat-label">Toplam Tahsilat</span>
-                        <span class="stat-value"><?php echo number_format($totalPaid, 2, ',', '.'); ?> ₺</span>
-                    </div>
-                </div>
-                
-                <div class="stat-card card-hover animate-fadeIn" style="animation-delay: 0.3s">
-                    <div class="stat-icon" style="background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);">
-                        <i class="bi bi-wallet2"></i>
-                    </div>
-                    <div class="stat-info">
-                        <span class="stat-label">Net Bakiye</span>
-                        <span class="stat-value <?php echo $remaining < 0 ? 'text-danger-600' : ($remaining > 0 ? 'text-success-600' : ''); ?>">
-                            <?php echo ($remaining > 0 ? '+' : '') . number_format($remaining, 2, ',', '.'); ?> ₺
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card-hover animate-fadeIn" style="animation-delay: 0.4s">
-        <div class="card-header">
-            <div class="flex justify-between items-center">
-                <h3 class="card-title">İşlem Geçmişi (<?php echo count($history); ?> adet)</h3>
-            </div>
-        </div>
-        <div class="p-0">
-            <div class="table-container">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Tarih</th>
-                            <th>Tür</th>
-                            <th>Ürün</th>
-                            <th>Tutar (₺)</th>
-                            <th>Not</th>
-                            <th class="text-right">İşlem</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (count($history) > 0): ?>
-                            <?php foreach ($history as $index => $row): ?>
-                            <tr class="animate-fadeIn" style="animation-delay: <?php echo 0.5 + ($index * 0.05); ?>s">
-                                <td><?php echo $row['id']; ?></td>
-                                <td><?php echo date('d.m.Y H:i', strtotime($row['olusturma_zamani'])); ?></td>
-                                <td>
-                                    <?php if ($row['odeme_tipi'] === 'borc'): ?>
-                                    <span class="badge-debit">Borç</span>
-                                    <?php else: ?>
-                                    <span class="badge-credit">Tahsilat</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if ($row['urun_isim']): ?>
-                                        <span class="badge badge-outline"><?php echo htmlspecialchars($row['urun_isim']); ?></span>
-                                    <?php else: ?>
-                                        <span class="text-gray-400">-</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="font-medium <?php echo $row['odeme_tipi'] === 'borc' ? 'text-danger-600' : 'text-success-600'; ?>">
-                                    <?php 
-                                        $signedAmount = ($row['odeme_tipi'] === 'borc' ? '-' : '+') . number_format($row['miktar'], 2, ',', '.');
-                                        echo $signedAmount;
-                                    ?>
-                                </td>
-                                <td><?php echo htmlspecialchars($row['aciklama']); ?></td>
-                                <td class="text-right">
-                                    <a href="print.php?id=<?php echo $row['id']; ?>" class="btn btn-outline btn-sm">
-                                        <i class="bi bi-printer mr-1"></i> Yazdır
-                                    </a>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                        <tr>
-                            <td colspan="7" class="text-center py-8 text-gray-500">
-                                <i class="bi bi-inbox text-3xl mb-2 block"></i>
-                                Henüz işlem kaydı bulunmuyor
-                            </td>
-                        </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+<?php
+ goto M0ZxB; lHVgV: require_once __DIR__ . "\x2f\x69\x6e\143\x6c\x75\x64\x65\x73\57\x68\145\x61\x64\x65\162\x2e\x70\150\x70"; goto suIBM; aNNqX: $salesStmt->execute(array($customerId)); goto tgTE7; tt73g: echo htmlspecialchars($customer["\156\165\x6d\141\162\141"]); goto ZZ0dp; JQKbB: require_once __DIR__ . "\x2f\x69\156\x63\x6c\x75\144\x65\163\x2f\146\157\157\x74\x65\162\x2e\x70\150\160"; goto awOEG; M0ZxB: require_once __DIR__ . "\57\151\156\143\x6c\x75\144\x65\x73\57\141\x75\x74\x68\x2e\x70\150\x70"; goto QtfGD; ZZ0dp: ?>
+</span></div><div class="flex flex-col"><span class="font-medium text-gray-500 text-sm">Adres</span> <span class="text-base whitespace-pre-line"><?php  goto uc5X_; kaPMY: $history = $historyStmt->fetchAll(); goto oY7qT; GEjBn: echo number_format($totalSales, 2, "\54", "\56"); goto iGEUG; lMtqI: if ($customerId) { $stmt = $pdo->prepare("\123\x45\114\x45\103\124\40\52\40\x46\122\117\x4d\40\x6d\x75\x73\164\145\162\151\x6c\x65\x72\x20\127\110\x45\x52\105\40\x69\x64\x20\x3d\40\77"); $stmt->execute(array($customerId)); $customer = $stmt->fetch(); } goto lnEvY; suIBM: $pdo = get_pdo_connection(); goto Sw2GK; vEdDJ: ?>
+"><i class="bi mr-2 bi-arrow-left"></i> İşlemlere Dön </a><button class="flex items-center btn btn-outline"onclick="window.print()"><i class="bi bi-printer mr-2"></i> Yazdır</button></div></div><div class="grid grid-cols-1 gap-6 mb-6 md:grid-cols-12"><div class="md:col-span-5"><div class="animate-fadeIn card-hover"><div class="card-header"><h3 class="card-title">Müşteri Bilgileri</h3></div><div class="p-4"><div class="space-y-4"><div class="flex flex-col"><span class="font-medium text-gray-500 text-sm">Ad Soyad</span> <span class="text-base font-semibold"><?php  goto c2F9P; N8Oe5: echo count($history); goto Rw2_c; tgTE7: $totalSales = (double) $salesStmt->fetchColumn(); goto jrNva; o871s: ?>
+</span></div></div></div></div></div><div class="md:col-span-7"><div class="gap-4 grid grid-cols-1 md:grid-cols-3"><div class="animate-fadeIn card-hover stat-card"style="animation-delay:.1s"><div class="stat-icon"><i class="bi bi-cart"></i></div><div class="stat-info"><span class="stat-label">Toplam Satış</span> <span class="stat-value"><?php  goto GEjBn; V9SwL: echo $remaining < 0 ? "\164\145\x78\164\x2d\x64\x61\156\147\x65\x72\x2d\x36\60\x30" : ($remaining > 0 ? "\164\145\x78\x74\x2d\x73\165\143\x63\145\163\x73\x2d\66\60\x30" : ''); goto bJTiy; jrNva: $paidStmt = $pdo->prepare("\x53\x45\114\x45\103\124\x20\103\x4f\101\x4c\105\123\103\105\x28\123\x55\x4d\50\x6d\x69\153\x74\141\x72\51\x2c\40\60\x29\40\106\122\117\x4d\40\151\163\154\145\155\x6c\x65\x72\x20\x57\x48\105\x52\x45\40\155\x75\163\164\x65\x72\151\137\x69\x64\x20\75\40\x3f\40\101\116\104\x20\x6f\144\x65\155\x65\137\x74\x69\x70\151\x20\75\40\x27\x74\x61\x68\x73\x69\x6c\x61\164\47"); goto sMw5Z; c2F9P: echo htmlspecialchars($customer["\151\163\x69\x6d"]); goto ho9pX; f0Wxh: echo $customerId; goto vEdDJ; HPtGg: ?>
+</span></div><div class="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between"><div><h2 class="font-semibold text-gray-900 text-xl">Müşteri Detayları</h2><p class="mt-1 text-gray-600 text-sm">Müşteri bilgileri ve işlem geçmişi</p></div><div class="flex space-x-2"><a class="flex items-center btn btn-outline"href="islemler.php?customer=<?php  goto f0Wxh; jVwKJ: if (count($history) > 0) { foreach ($history as $index => $row) { ?>
+<tr class="animate-fadeIn"style="animation-delay:<?php  echo 0.5 + $index * 0.05; ?>
+s"><td><?php  echo $row["\x69\x64"]; ?>
+</td><td><?php  echo date("\x64\56\155\56\x59\40\x48\x3a\x69", strtotime($row["\157\154\x75\x73\x74\x75\x72\155\x61\x5f\x7a\141\x6d\x61\156\x69"])); ?>
+</td><td><?php  if ($row["\x6f\144\x65\155\145\x5f\164\x69\x70\x69"] === "\x62\x6f\162\x63") { ?>
+<span class="badge-debit">Borç</span><?php  } else { ?>
+<span class="badge-credit">Tahsilat</span><?php  } ?>
+</td><td><?php  if ($row["\x75\162\165\x6e\137\x69\163\151\x6d"]) { ?>
+<span class="badge badge-outline"><?php  echo htmlspecialchars($row["\x75\162\x75\156\137\x69\x73\x69\x6d"]); ?>
+</span><?php  } else { ?>
+<span class="text-gray-400">-</span><?php  } ?>
+</td><td class="font-medium<?php  echo $row["\157\144\145\155\145\x5f\164\x69\x70\x69"] === "\142\157\x72\143" ? "\x74\145\x78\164\55\144\141\x6e\147\145\x72\x2d\x36\60\x30" : "\164\x65\170\164\55\x73\165\143\x63\145\x73\x73\x2d\66\x30\x30"; ?>
+"><?php  $signedAmount = ($row["\x6f\144\x65\x6d\x65\x5f\164\151\160\151"] === "\x62\157\162\x63" ? "\55" : "\53") . number_format($row["\x6d\151\x6b\x74\141\162"], 2, "\x2c", "\x2e"); echo $signedAmount; ?>
+</td><td><?php  echo htmlspecialchars($row["\141\143\151\x6b\154\x61\x6d\x61"]); ?>
+</td><td class="text-right"><a class="btn btn-outline btn-sm"href="print.php?id=<?php  echo $row["\151\144"]; ?>
+"><i class="bi bi-printer mr-1"></i> Yazdır</a></td></tr><?php  } } else { ?>
+<tr><td class="text-gray-500 py-8 text-center"colspan="7"><i class="bi bi-inbox block mb-2 text-3xl"></i> Henüz işlem kaydı bulunmuyor</td></tr><?php  } goto qYcS4; QtfGD: require_login(); goto lHVgV; auPpF: echo number_format($totalPaid, 2, "\54", "\x2e"); goto QbKim; XMwQ6: $remaining = $totalPaid - $totalSales; goto KjMH5; Sw2GK: $customerId = isset($_GET["\x63\x75\x73\164\157\x6d\145\162"]) ? (int) $_GET["\143\165\163\x74\x6f\155\x65\162"] : 0; goto FWrtX; Pe2p4: $salesStmt = $pdo->prepare("\x53\105\x4c\105\103\124\x20\x43\x4f\x41\114\105\x53\103\x45\x28\123\125\115\50\155\x69\x6b\x74\141\162\51\x2c\40\60\51\x20\106\x52\x4f\x4d\x20\x69\x73\154\145\155\154\x65\x72\x20\x57\110\x45\x52\x45\x20\x6d\165\163\x74\x65\x72\x69\x5f\x69\144\40\x3d\40\77\40\x41\x4e\104\x20\157\144\x65\155\145\137\x74\151\160\x69\40\x3d\x20\47\x62\x6f\162\x63\47"); goto aNNqX; ho9pX: ?>
+</span></div><div class="flex flex-col"><span class="font-medium text-gray-500 text-sm">Telefon</span> <span class="text-base"><?php  goto tt73g; qYcS4: ?>
+</tbody></table></div></div></div></div><?php  goto JQKbB; FWrtX: $customer = null; goto lMtqI; Rw2_c: ?>
+adet)</h3></div></div><div class="p-0"><div class="table-container"><table class="table"><thead><tr><th>#</th><th>Tarih</th><th>Tür</th><th>Ürün</th><th>Tutar (₺)</th><th>Not</th><th class="text-right">İşlem</th></tr></thead><tbody><?php  goto jVwKJ; oY7qT: ?>
+<div class="container mx-auto px-4 py-6"><div class="flex items-center mb-6 space-x-2 text-gray-500 text-sm"><a class="duration-200 hover:text-primary-600 transition-colors"href="index.php">Panel</a> <span class="text-gray-400">/</span> <a class="duration-200 hover:text-primary-600 transition-colors"href="musteriler.php">Müşteriler</a> <span class="text-gray-400">/</span> <span class="font-medium text-gray-700"><?php  goto IYil9; sMw5Z: $paidStmt->execute(array($customerId)); goto sN4hG; iGEUG: ?>
+₺</span></div></div><div class="card-hover stat-card"style="animation-delay:.3s"><div class="stat-icon"style="background:linear-gradient(135deg,#16a34a 0,#15803d 100%)"><i class="bi bi-cash-coin"></i></div><div class="stat-info"><span class="stat-label">Toplam Tahsilat</span> <span class="stat-value"><?php  goto auPpF; uc5X_: echo htmlspecialchars($customer["\x61\144\162\x65\163"]); goto o871s; IYil9: echo htmlspecialchars($customer["\x69\163\x69\155"]); goto HPtGg; U4meE: echo ($remaining > 0 ? "\x2b" : '') . number_format($remaining, 2, "\54", "\x2e"); goto uyKwF; CvChW: $historyStmt->execute(array($customerId)); goto kaPMY; bJTiy: ?>
+"><?php  goto U4meE; KjMH5: $historyStmt = $pdo->prepare("\123\105\x4c\x45\103\124\x20\151\x2e\x69\144\54\x20\x69\56\x6f\x64\x65\x6d\145\137\164\x69\x70\151\x2c\x20\151\x2e\x6d\151\x6b\164\141\x72\x2c\40\151\56\141\x63\x69\x6b\x6c\141\x6d\141\x2c\x20\x69\56\157\x6c\x75\163\164\x75\162\x6d\141\137\172\141\155\141\156\151\54\40\165\x2e\151\x73\x69\x6d\x20\x41\123\40\165\162\x75\156\137\x69\163\151\x6d\x20\106\x52\117\x4d\40\151\x73\x6c\145\x6d\154\145\162\40\151\x20\x4c\105\106\x54\40\x4a\x4f\x49\x4e\x20\x75\x72\165\156\x6c\145\162\x20\165\40\x4f\116\40\165\56\151\144\x20\75\x20\x69\56\x75\162\x75\x6e\x5f\151\144\40\127\110\x45\x52\105\40\151\x2e\x6d\165\x73\x74\145\x72\x69\137\x69\144\x20\x3d\40\x3f\40\117\122\104\105\x52\40\x42\131\x20\151\56\x6f\x6c\165\163\164\165\162\155\x61\137\x7a\x61\x6d\141\156\151\40\x44\x45\x53\x43"); goto CvChW; QbKim: ?>
+₺</span></div></div><div class="animate-fadeIn card-hover stat-card"style="animation-delay:.3s"><div class="stat-icon"style="background:linear-gradient(135deg,#f56565 0,#e53e3e 100%)"><i class="bi bi-wallet2"></i></div><div class="stat-info"><span class="stat-label">Net Bakiye</span> <span class="stat-value<?php  goto V9SwL; lnEvY: if (!$customer) { echo "\74\x64\x69\166\x20\x63\154\x61\x73\163\x3d\42\141\x6c\145\x72\164\40\x61\154\145\162\x74\x2d\144\141\x6e\x67\145\162\42\76\115\xc3\xbc\xc5\x9f\164\x65\x72\x69\40\x62\165\x6c\x75\x6e\141\155\141\x64\304\xb1\56\74\x2f\144\x69\x76\x3e"; require_once __DIR__ . "\57\x69\156\x63\154\165\x64\145\163\x2f\x66\x6f\157\164\x65\162\x2e\x70\x68\160"; die; } goto Pe2p4; sN4hG: $totalPaid = (double) $paidStmt->fetchColumn(); goto XMwQ6; uyKwF: ?>
+₺</span></div></div></div></div></div><div class="animate-fadeIn card-hover"style="animation-delay:.4s"><div class="card-header"><div class="flex items-center justify-between"><h3 class="card-title">İşlem Geçmişi (<?php  goto N8Oe5; awOEG: ?>
