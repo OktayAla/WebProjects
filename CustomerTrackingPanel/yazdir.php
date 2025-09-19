@@ -1,11 +1,14 @@
 <!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
 <!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
 
-<?php require_once __DIR__ . '/includes/auth.php';
+<?php
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/manual_products.php';
 require_login(); ?>
 <?php
 $pdo = get_pdo_connection();
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+// Ana işlem kaydını al
 $stmt = $pdo->prepare('
         SELECT 
             i.*, 
@@ -16,12 +19,36 @@ $stmt = $pdo->prepare('
         FROM islemler i 
         JOIN musteriler m ON m.id = i.musteri_id 
         LEFT JOIN urunler u ON u.id = i.urun_id 
-        WHERE i.id = ?
+        WHERE i.id = ? AND (i.is_main_transaction = 1 OR i.is_main_transaction IS NULL)
     ');
 $stmt->execute([$id]);
 $tx = $stmt->fetch();
 if (!$tx) {
 	die('Kayıt bulunamadı');
+}
+
+// Eğer ana işlem ise, alt ürünleri de al
+$products = [];
+if ($tx['is_main_transaction']) {
+    $productStmt = $pdo->prepare('
+        SELECT 
+            i.*, 
+            u.isim AS urun_isim 
+        FROM islemler i 
+        LEFT JOIN urunler u ON u.id = i.urun_id 
+        WHERE i.parent_transaction_id = ? AND i.is_main_transaction = 0
+        ORDER BY i.id ASC
+    ');
+    $productStmt->execute([$id]);
+    $products = $productStmt->fetchAll();
+} else {
+    // Eğer eski format ise, tek ürün olarak göster
+    $products = [[
+        'urun_isim' => $tx['urun_isim'],
+        'miktar' => $tx['miktar'],
+        'aciklama' => $tx['aciklama'],
+        'adet' => 1
+    ]];
 }
 
 $customerId = isset($_GET['customer']) ? (int) $_GET['customer'] : (isset($tx['musteri_id']) ? (int) $tx['musteri_id'] : 0);
@@ -246,7 +273,53 @@ $history = $historyStmt->fetchAll();
 					</div>
 				</div>
 
-				<?php if ($tx['urun_isim']): ?>
+				<?php if (!empty($products)): ?>
+					<div class="border-t border-gray-200 mt-6 pt-6">
+						<h5 class="text-base font-semibold text-gray-900 mb-4">Ürün Detayları</h5>
+						<div class="space-y-3">
+							<?php foreach ($products as $product): ?>
+								<div class="bg-gray-50 p-4 rounded-lg border">
+									<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+										<div>
+											<span class="text-sm font-medium text-gray-500">Ürün Adı</span>
+											<div class="text-base font-medium"><?php 
+												if ($product['urun_isim']) {
+													echo htmlspecialchars($product['urun_isim']);
+												} else {
+													// Manuel ürün adını JSON'dan al
+													$manualProductName = getManualProduct($product['id']);
+													if ($manualProductName) {
+														echo htmlspecialchars($manualProductName);
+													} else {
+														echo 'Manuel Ürün';
+													}
+												}
+											?></div>
+										</div>
+										<div>
+											<span class="text-sm font-medium text-gray-500">Adet</span>
+											<div class="text-base"><?php echo $product['adet'] ?: 1; ?></div>
+										</div>
+										<div>
+											<span class="text-sm font-medium text-gray-500">Birim Fiyat</span>
+											<div class="text-base"><?php echo number_format($product['miktar'] / ($product['adet'] ?: 1), 2, ',', '.'); ?> ₺</div>
+										</div>
+										<div>
+											<span class="text-sm font-medium text-gray-500">Toplam</span>
+											<div class="text-base font-semibold"><?php echo number_format($product['miktar'], 2, ',', '.'); ?> ₺</div>
+										</div>
+									</div>
+									<?php if ($product['aciklama']): ?>
+										<div class="mt-2">
+											<span class="text-sm font-medium text-gray-500">Açıklama</span>
+											<div class="text-sm text-gray-700"><?php echo htmlspecialchars($product['aciklama']); ?></div>
+										</div>
+									<?php endif; ?>
+								</div>
+							<?php endforeach; ?>
+						</div>
+					</div>
+				<?php elseif ($tx['urun_isim']): ?>
 					<div class="border-t border-gray-200 mt-6 pt-6">
 						<h5 class="text-base font-semibold text-gray-900 mb-2">Ürün Bilgisi</h5>
 						<div class="bg-blue-50 p-4 rounded-lg">
