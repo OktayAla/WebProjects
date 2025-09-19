@@ -1,19 +1,5 @@
-<?php 
-require_once __DIR__ . '/includes/auth.php';
-require_login();
+<!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
+<!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
 
-$pdo = get_pdo_connection();
-$query = $_GET['q'] ?? '';
-
-if (strlen($query) < 2) {
-    echo json_encode([]);
-    exit;
-}
-
-$stmt = $pdo->prepare("SELECT id, isim, numara FROM musteriler WHERE LOWER(isim) LIKE LOWER(?) ORDER BY isim ASC LIMIT 10");
-$stmt->execute(["%$query%"]);
-$customers = $stmt->fetchAll();
-
-header('Content-Type: application/json');
-echo json_encode($customers);
-?>
+<?php
+ goto sgCC1; M_KoL: require_login(); goto NJWi6; v3Xoz: $stmt->execute(array("\x25{$query}\45")); goto ePJoW; NJWi6: $pdo = get_pdo_connection(); goto Lp3Gh; Nmn6M: $stmt = $pdo->prepare("\123\105\x4c\x45\103\124\x20\x69\x64\54\40\x69\163\x69\155\x2c\x20\x6e\x75\x6d\x61\162\141\x20\x46\x52\117\x4d\x20\155\x75\x73\164\x65\162\x69\154\145\162\40\127\110\105\122\x45\40\114\117\x57\105\x52\50\x69\163\151\x6d\x29\40\114\x49\113\105\x20\114\117\127\105\122\x28\77\51\40\117\x52\x44\x45\122\x20\102\x59\40\151\x73\151\155\x20\101\123\103\40\x4c\111\x4d\x49\x54\x20\x31\x30"); goto v3Xoz; KfGZc: if (strlen($query) < 2) { echo json_encode(array()); die; } goto Nmn6M; ePJoW: $customers = $stmt->fetchAll(); goto CuJt1; tOuLZ: echo json_encode($customers); goto zuJYH; sgCC1: require_once __DIR__ . "\x2f\151\156\143\154\165\x64\145\163\57\x61\165\164\150\x2e\160\x68\x70"; goto M_KoL; Lp3Gh: $query = $_GET["\161"] ?? ''; goto KfGZc; CuJt1: header("\103\x6f\x6e\164\x65\x6e\164\55\x54\171\x70\145\72\x20\x61\160\x70\x6c\x69\143\141\164\x69\157\156\x2f\152\x73\x6f\x6e"); goto tOuLZ; zuJYH: ?>
