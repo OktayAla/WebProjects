@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/manual_products.php';
 require_login();
 
 $pdo = get_pdo_connection();
@@ -61,7 +62,7 @@ try {
         $whereClause = 'WHERE ' . implode(' AND ', $conditions);
     }
 
-    $countSql = "SELECT COUNT(*) FROM islemler i JOIN musteriler m ON m.id = i.musteri_id $whereClause";
+    $countSql = "SELECT COUNT(*) FROM islemler i JOIN musteriler m ON m.id = i.musteri_id WHERE (i.is_main_transaction = 1 OR i.is_main_transaction IS NULL) $whereClause";
     $countStmt = $pdo->prepare($countSql);
     $countStmt->execute($params);
     $totalRows = (int)$countStmt->fetchColumn();
@@ -70,11 +71,13 @@ try {
     $safeLimit = (int)$perPage;
     $safeOffset = (int)$offset;
 
-    $sql = "SELECT i.*, m.isim AS musteri_isim, u.isim AS urun_isim, k.isim AS kullanici_isim
+    $sql = "SELECT i.*, m.isim AS musteri_isim, u.isim AS urun_isim, k.isim AS kullanici_isim,
+                   (SELECT COUNT(*) FROM islemler sub WHERE sub.parent_transaction_id = i.id) as product_count
            FROM islemler i
            JOIN musteriler m ON m.id = i.musteri_id
            LEFT JOIN urunler u ON u.id = i.urun_id
            LEFT JOIN kullanicilar k ON k.id = i.kullanici_id
+           WHERE (i.is_main_transaction = 1 OR i.is_main_transaction IS NULL)
            $whereClause
            ORDER BY i.olusturma_zamani DESC
            LIMIT $safeLimit OFFSET $safeOffset";
@@ -88,6 +91,16 @@ try {
 
     $stmt->execute();
     $transactions = $stmt->fetchAll();
+    
+    // Manuel ürün adlarını JSON'dan ekle
+    foreach ($transactions as &$transaction) {
+        if (!$transaction['urun_isim'] && $transaction['urun_id'] === null) {
+            $manualName = getManualProduct($transaction['id']);
+            if ($manualName) {
+                $transaction['new_product_name'] = $manualName;
+            }
+        }
+    }
 } catch (Exception $e) {
     header('Content-Type: application/json');
     echo json_encode([
