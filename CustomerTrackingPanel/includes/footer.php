@@ -1,26 +1,5 @@
-</main>
-	
-	<footer class="bg-white py-8 mt-auto border-t border-gray-200">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="flex flex-col md:flex-row justify-between items-center">
-				<div class="flex items-center mb-4 md:mb-0">
-				</div>
-				<div class="flex flex-col items-center md:items-end">
-					<p class="text-center md:text-right text-gray-500 text-sm">
-						Copyright © Tüm hakları saklıdır.
-					</p>
-					<p class="text-center md:text-right text-gray-400 text-xs mt-1">
-						OA Grafik Tasarım tarafından <span class="text-danger-600">❤️</span> ile geliştirilmiştir.
-					</p>
-				</div>
-			</div>
-		</div>
-	</footer>
-	
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="assets/js/main.js"></script>
-	<script>
-		(function(){
+<?php
+r class="bg-white border-gray-200 border-t mt-auto py-8"><div class="lg:px-8 max-w-7xl mx-auto px-4 sm:px-6"><div class="flex items-center flex-col justify-between md:flex-row"><div class="flex items-center mb-4 md:mb-0"></div><div class="flex items-center flex-col md:items-end"><p class="md:text-right text-center text-gray-500 text-sm">Copyright © Tüm hakları saklıdır.</p><p class="md:text-right text-center mt-1 text-gray-400 text-xs">OA Grafik Tasarım tarafından <span class="text-danger-600">❤️</span> ile geliştirilmiştir.</p></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script src="assets/js/main.js"></script><script>(function(){
 			const menuButton = document.getElementById('mobile-menu-button');
 			const menu = document.getElementById('mobile-menu');
 			if (menuButton && menu) {
@@ -128,7 +107,4 @@
 					}
 				});
 			});
-		});
-	</script>
-</body>
-</html>
+		});</script>
