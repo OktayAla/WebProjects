@@ -2,63 +2,8 @@
 <!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
 
 <?php
-	require_once __DIR__ . '/includes/auth.php';
-	if (current_user()) {
-		header('Location: index.php');
-		exit;
-	}
-
-	$error = '';
-	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		$identifier = isset($_POST['identifier']) ? trim($_POST['identifier']) : '';
-		$password = isset($_POST['password']) ? $_POST['password'] : '';
-		if (!$identifier || !$password) {
-			$error = 'Kullanıcı adı, isim veya e-posta ve şifre gerekli.';
-		} else if (!login($identifier, $password)) {
-			$error = 'Geçersiz giriş bilgileri.';
-		} else {
-			header('Location: index.php');
-			exit;
-		}
-	}
-?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Giriş</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="assets/css/login.css" rel="stylesheet">
-</head>
-<body class="d-flex align-items-center bg-light">
-
-
-	<div class="container">
-		<div class="row justify-content-center">
-			<div class="col-md-4">
-				<div class="card shadow-sm border-0">
-					<div class="card-body">
-<div class="login-logo-container">
-    <img src="img/logo.jpg" alt="Logo" class="login-logo-img">
-</div>
-<?php if ($error): ?><div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
-<form method="post" autocomplete="off">
-	<div class="mb-3">
-		<label class="form-label">Kullanıcı adı</label>
-		<input type="text" name="identifier" class="form-control" required>
-	</div>
-	<div class="mb-3">
-		<label class="form-label">Şifre</label>
-		<input type="password" name="password" class="form-control" required>
-	</div>
-	<button class="btn btn-primary w-100" type="submit">Giriş Yap</button>
-</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+ goto ZQL_0; vGMd6: ?>
+<!doctypehtml><html lang="tr"><head><meta charset="UTF-8"><meta content="width=device-width,initial-scale=1"name="viewport"><title>Giriş</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"rel="stylesheet"><link href="assets/css/login.css"rel="stylesheet"></head><body class="align-items-center bg-light d-flex"><div class="container"><div class="justify-content-center row"><div class="col-md-4"><div class="border-0 card shadow-sm"><div class="card-body"><div class="login-logo-container"><img alt="Logo"class="login-logo-img"src="img/logo.jpg"></div><?php  goto q_KUU; hEhl2: $error = ''; goto hRhlJ; q_KUU: if ($error) { ?>
+<div class="alert alert-danger"><?php  echo htmlspecialchars($error); ?>
+</div><?php  } goto vdIlw; mEnfF: if (current_user()) { header("\114\157\x63\141\x74\x69\x6f\156\x3a\40\151\x6e\x64\145\170\56\x70\x68\x70"); die; } goto hEhl2; hRhlJ: if ($_SERVER["\122\105\x51\x55\x45\123\124\137\x4d\x45\124\110\117\x44"] === "\120\117\123\124") { $identifier = isset($_POST["\151\x64\145\x6e\x74\151\x66\151\x65\162"]) ? trim($_POST["\x69\x64\x65\156\164\x69\x66\x69\145\162"]) : ''; $password = isset($_POST["\x70\141\x73\x73\167\x6f\162\x64"]) ? $_POST["\160\141\163\x73\x77\157\x72\144"] : ''; if (!$identifier || !$password) { $error = "\x4b\x75\154\154\141\156\304\xb1\143\xc4\xb1\x20\141\144\304\261\54\x20\151\x73\x69\155\x20\166\x65\x79\141\x20\x65\x2d\x70\157\x73\x74\x61\40\x76\145\x20\xc5\x9f\x69\x66\x72\x65\x20\x67\x65\162\x65\153\154\x69\x2e"; } else { if (!login($identifier, $password)) { $error = "\x47\145\xc3\247\x65\162\163\x69\x7a\40\147\x69\162\x69\305\237\x20\x62\151\x6c\147\151\154\x65\162\x69\56"; } else { header("\x4c\x6f\x63\141\x74\x69\x6f\156\x3a\x20\151\x6e\x64\145\170\x2e\160\x68\x70"); die; } } } goto vGMd6; ZQL_0: require_once __DIR__ . "\x2f\x69\156\x63\154\165\x64\145\x73\57\x61\165\x74\150\x2e\160\150\160"; goto mEnfF; vdIlw: ?>
+<form autocomplete="off"method="post"><div class="mb-3"><label class="form-label">Kullanıcı adı</label> <input class="form-control"name="identifier"required></div><div class="mb-3"><label class="form-label">Şifre</label> <input class="form-control"name="password"required type="password"></div><button class="btn btn-primary w-100"type="submit">Giriş Yap</button></form></div></div></div></div></div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script></body></html>
