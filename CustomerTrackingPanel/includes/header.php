@@ -183,8 +183,10 @@
 		document.addEventListener('DOMContentLoaded', function() {
 			const userMenuButton = document.getElementById('user-menu-button');
 			const userDropdown = document.getElementById('user-dropdown');
+			const mobileMenuButton = document.getElementById('mobile-menu-button');
+			const mobileMenu = document.getElementById('mobile-menu');
 			
-			// Kullanıcı menüsü (mobil menü footer'da yönetiliyor)
+			// Kullanıcı menüsü
 			if (userMenuButton && userDropdown) {
 				userMenuButton.addEventListener('click', function() {
 					userDropdown.classList.toggle('hidden');
@@ -193,6 +195,19 @@
 				document.addEventListener('click', function(event) {
 					if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
 						userDropdown.classList.add('hidden');
+					}
+				});
+			}
+			
+			// Mobil menü
+			if (mobileMenuButton && mobileMenu) {
+				mobileMenuButton.addEventListener('click', function() {
+					mobileMenu.classList.toggle('hidden');
+				});
+				// Menü dışına tıklanınca kapat
+				document.addEventListener('click', function(event) {
+					if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+						mobileMenu.classList.add('hidden');
 					}
 				});
 			}
