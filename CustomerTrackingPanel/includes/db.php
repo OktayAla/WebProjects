@@ -1,26 +1,2 @@
 <?php
-	require_once __DIR__ . '/config.php';
-
-	function get_pdo_connection() {
-		static $pdo = null;
-		if ($pdo !== null) return $pdo;
-		$host = DB_HOST;
-		$port = null;
-		if (strpos($host, ':') !== false) {
-			list($host, $port) = explode(':', $host, 2);
-		}
-		$dsn = 'mysql:host=' . $host . ';dbname=' . DB_NAME . ';charset=utf8mb4';
-		if ($port) {
-			$dsn .= ';port=' . $port;
-		}
-		$options = [
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-			PDO::ATTR_EMULATE_PREPARES => false,
-		];
-		$pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
-		return $pdo;
-	}
-?>
-
-
+ goto VBxja; vGmyZ: function get_pdo_connection() { static $pdo = null; if ($pdo !== null) { return $pdo; } $host = DB_HOST; $port = null; if (strpos($host, "\x3a") !== false) { list($host, $port) = explode("\72", $host, 2); } $dsn = "\155\171\163\161\x6c\x3a\150\157\x73\164\75" . $host . "\73\x64\x62\156\141\x6d\145\x3d" . DB_NAME . "\73\x63\150\141\x72\163\145\x74\x3d\x75\x74\146\x38\155\142\x34"; if ($port) { $dsn .= "\73\160\157\162\164\75" . $port; } $options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_EMULATE_PREPARES => false); $pdo = new PDO($dsn, DB_USER, DB_PASS, $options); return $pdo; } goto p9peb; VBxja: require_once __DIR__ . "\x2f\x63\157\x6e\x66\151\x67\56\x70\x68\x70"; goto vGmyZ; p9peb: ?>
