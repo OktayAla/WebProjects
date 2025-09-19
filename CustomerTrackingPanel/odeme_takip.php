@@ -2,362 +2,57 @@
 <!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
 
 <?php
-require_once __DIR__ . '/includes/auth.php';
-require_login();
-require_once __DIR__ . '/includes/header.php';
-
-$pdo = get_pdo_connection();
-
-// Borçlu müşteriler listesi
-$debtorsStmt = $pdo->query("
-    SELECT 
-        m.id,
-        m.isim,
-        m.numara,
-        COALESCE(SUM(CASE WHEN i.odeme_tipi = 'borc' THEN i.miktar ELSE 0 END), 0) as toplam_borc,
-        COALESCE(SUM(CASE WHEN i.odeme_tipi = 'tahsilat' THEN i.miktar ELSE 0 END), 0) as toplam_tahsilat,
-        MAX(CASE WHEN i.odeme_tipi = 'borc' THEN i.olusturma_zamani END) as son_borc_tarihi,
-        MAX(CASE WHEN i.odeme_tipi = 'tahsilat' THEN i.olusturma_zamani END) as son_odeme_tarihi
-    FROM musteriler m
-    LEFT JOIN islemler i ON i.musteri_id = m.id
-    GROUP BY m.id, m.isim, m.numara
-    HAVING (toplam_borc - toplam_tahsilat) > 0
-    ORDER BY (toplam_borc - toplam_tahsilat) DESC
-");
-$debtors = $debtorsStmt->fetchAll();
-
-// Alacaklı müşteriler listesi
-$creditorsStmt = $pdo->query("
-    SELECT 
-        m.id,
-        m.isim,
-        m.numara,
-        COALESCE(SUM(CASE WHEN i.odeme_tipi = 'borc' THEN i.miktar ELSE 0 END), 0) as toplam_borc,
-        COALESCE(SUM(CASE WHEN i.odeme_tipi = 'tahsilat' THEN i.miktar ELSE 0 END), 0) as toplam_tahsilat,
-        MAX(CASE WHEN i.odeme_tipi = 'tahsilat' THEN i.olusturma_zamani END) as son_odeme_tarihi
-    FROM musteriler m
-    LEFT JOIN islemler i ON i.musteri_id = m.id
-    GROUP BY m.id, m.isim, m.numara
-    HAVING (toplam_borc - toplam_tahsilat) < 0
-    ORDER BY (toplam_tahsilat - toplam_borc) DESC
-");
-$creditors = $creditorsStmt->fetchAll();
-
-// Özet istatistikler
-$totalDebt = array_sum(array_map(function($d) { return $d['toplam_borc'] - $d['toplam_tahsilat']; }, $debtors));
-$totalCredit = abs(array_sum(array_map(function($c) { return $c['toplam_borc'] - $c['toplam_tahsilat']; }, $creditors)));
-
-// Vadesi geçmiş borçlar (30 gün)
-$overdueStmt = $pdo->query("
-    SELECT 
-        m.id,
-        m.isim,
-        m.numara,
-        COALESCE(SUM(CASE WHEN i.odeme_tipi = 'borc' THEN i.miktar ELSE 0 END), 0) as toplam_borc,
-        COALESCE(SUM(CASE WHEN i.odeme_tipi = 'tahsilat' THEN i.miktar ELSE 0 END), 0) as toplam_tahsilat,
-        MAX(CASE WHEN i.odeme_tipi = 'borc' THEN i.olusturma_zamani END) as son_borc_tarihi,
-        DATEDIFF(NOW(), MAX(CASE WHEN i.odeme_tipi = 'borc' THEN i.olusturma_zamani END)) as gun_gecikme
-    FROM musteriler m
-    LEFT JOIN islemler i ON i.musteri_id = m.id
-    GROUP BY m.id, m.isim, m.numara
-    HAVING (toplam_borc - toplam_tahsilat) > 0 
-        AND gun_gecikme > 30
-    ORDER BY gun_gecikme DESC
-");
-$overdue = $overdueStmt->fetchAll();
-?>
-
-<div class="container mx-auto px-4 py-6">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800 flex items-center">
-                <i class="bi bi-credit-card-2-back mr-2 text-primary-600"></i> Ödeme Takip Sistemi
-            </h1>
-            <p class="text-sm text-gray-600 mt-1">Müşteri borç ve alacak durumlarını takip edin</p>
-        </div>
-        <div class="flex gap-2">
-            <a href="bakiye_dogrula.php" class="btn btn-outline flex items-center">
-                <i class="bi bi-shield-check mr-2"></i> Bakiye Doğrula
-            </a>
-            <button onclick="window.print()" class="btn btn-outline flex items-center">
-                <i class="bi bi-printer mr-2"></i> Yazdır
-            </button>
-        </div>
-    </div>
-
-    <!-- Özet İstatistikler -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.1s">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
-                <i class="bi bi-arrow-up-circle"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-label">Toplam Alacak</span>
-                <span class="stat-value text-red-600"><?php echo number_format($totalDebt, 2, ',', '.'); ?> ₺</span>
-            </div>
-        </div>
-
-        <div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.2s">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);">
-                <i class="bi bi-arrow-down-circle"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-label">Toplam Borç</span>
-                <span class="stat-value text-green-600"><?php echo number_format($totalCredit, 2, ',', '.'); ?> ₺</span>
-            </div>
-        </div>
-
-        <div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.3s">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-                <i class="bi bi-exclamation-triangle"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-label">Vadesi Geçmiş</span>
-                <span class="stat-value text-warning-600"><?php echo count($overdue); ?> müşteri</span>
-            </div>
-        </div>
-
-        <div class="stat-card card-hover animate-slideInUp" style="animation-delay: 0.4s">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
-                <i class="bi bi-people"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-label">Borçlu Müşteri</span>
-                <span class="stat-value text-primary-600"><?php echo count($debtors); ?> kişi</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Vadesi Geçmiş Borçlar -->
-    <?php if (!empty($overdue)): ?>
-    <div class="card-hover animate-fadeIn mb-6 shadow-lg border-l-4 border-red-500">
-        <div class="card-header bg-red-50">
-            <h3 class="card-title flex items-center text-red-700">
-                <i class="bi bi-exclamation-triangle-fill mr-2"></i>
-                Vadesi Geçmiş Borçlar (<?php echo count($overdue); ?> müşteri)
-            </h3>
-        </div>
-        <div class="p-0">
-            <div class="table-container">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Müşteri</th>
-                            <th>Telefon</th>
-                            <th>Borç Tutarı</th>
-                            <th>Son Borç Tarihi</th>
-                            <th>Gecikme</th>
-                            <th class="text-right">İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($overdue as $customer): ?>
-                            <?php $debt = $customer['toplam_borc'] - $customer['toplam_tahsilat']; ?>
-                            <tr class="hover:bg-red-50">
-                                <td>
-                                    <a href="musteri_rapor.php?customer=<?php echo $customer['id']; ?>" class="font-medium text-red-700 hover:text-red-900">
-                                        <?php echo htmlspecialchars($customer['isim']); ?>
-                                    </a>
-                                </td>
-                                <td><?php echo htmlspecialchars($customer['numara']); ?></td>
-                                <td class="font-medium text-red-600">
-                                    +<?php echo number_format($debt, 2, ',', '.'); ?> ₺
-                                </td>
-                                <td><?php echo date('d.m.Y', strtotime($customer['son_borc_tarihi'])); ?></td>
-                                <td>
-                                    <span class="badge bg-red-100 text-red-800">
-                                        <?php echo $customer['gun_gecikme']; ?> gün
-                                    </span>
-                                </td>
-                                <td class="text-right">
-                                    <div class="flex justify-end gap-2">
-                                        <a href="islemler.php?customer=<?php echo $customer['id']; ?>" class="btn btn-outline btn-sm text-primary" title="Tahsilat Ekle">
-                                            <i class="bi bi-cash-coin"></i>
-                                        </a>
-                                        <a href="tel:<?php echo $customer['numara']; ?>" class="btn btn-outline btn-sm text-success" title="Ara">
-                                            <i class="bi bi-telephone"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- Borçlu ve Alacaklı Müşteriler -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Borçlu Müşteriler -->
-        <div class="card-hover animate-fadeIn shadow-lg">
-            <div class="card-header">
-                <h3 class="card-title flex items-center text-red-700">
-                    <i class="bi bi-arrow-up-circle-fill mr-2"></i>
-                    Borçlu Müşteriler (<?php echo count($debtors); ?>)
-                </h3>
-            </div>
-            <div class="p-0">
-                <?php if (empty($debtors)): ?>
-                    <div class="p-8 text-center text-gray-500">
-                        <i class="bi bi-check-circle text-4xl text-green-500 mb-3 block"></i>
-                        <p>Harika! Borçlu müşteri bulunmuyor.</p>
-                    </div>
-                <?php else: ?>
-                    <div class="table-container max-h-96 overflow-y-auto">
-                        <table class="table table-hover">
-                            <thead class="sticky top-0 bg-white">
-                                <tr>
-                                    <th>Müşteri</th>
-                                    <th>Borç</th>
-                                    <th>Son İşlem</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($debtors as $customer): ?>
-                                    <?php 
-                                    $debt = $customer['toplam_borc'] - $customer['toplam_tahsilat'];
-                                    $lastDate = $customer['son_odeme_tarihi'] ?: $customer['son_borc_tarihi'];
-                                    $daysSince = $lastDate ? floor((time() - strtotime($lastDate)) / 86400) : null;
-                                    ?>
-                                    <tr class="hover:bg-red-50">
-                                        <td>
-                                            <div>
-                                                <a href="musteri_rapor.php?customer=<?php echo $customer['id']; ?>" class="font-medium text-red-700 hover:text-red-900">
-                                                    <?php echo htmlspecialchars($customer['isim']); ?>
-                                                </a>
-                                                <?php if ($customer['numara']): ?>
-                                                    <div class="text-xs text-gray-500"><?php echo htmlspecialchars($customer['numara']); ?></div>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                        <td class="font-medium text-red-600">
-                                            +<?php echo number_format($debt, 2, ',', '.'); ?> ₺
-                                        </td>
-                                        <td class="text-sm text-gray-600">
-                                            <?php if ($lastDate): ?>
-                                                <?php echo date('d.m.Y', strtotime($lastDate)); ?>
-                                                <?php if ($daysSince !== null): ?>
-                                                    <div class="text-xs <?php echo $daysSince > 30 ? 'text-red-500' : 'text-gray-400'; ?>">
-                                                        <?php echo $daysSince; ?> gün önce
-                                                    </div>
-                                                <?php endif; ?>
-                                            <?php else: ?>
-                                                <span class="text-gray-400">-</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td class="text-right">
-                                            <a href="islemler.php?customer=<?php echo $customer['id']; ?>" class="btn btn-outline btn-sm text-primary" title="Tahsilat Ekle">
-                                                <i class="bi bi-plus-circle"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <!-- Alacaklı Müşteriler -->
-        <div class="card-hover animate-fadeIn shadow-lg">
-            <div class="card-header">
-                <h3 class="card-title flex items-center text-green-700">
-                    <i class="bi bi-arrow-down-circle-fill mr-2"></i>
-                    Alacaklı Müşteriler (<?php echo count($creditors); ?>)
-                </h3>
-            </div>
-            <div class="p-0">
-                <?php if (empty($creditors)): ?>
-                    <div class="p-8 text-center text-gray-500">
-                        <i class="bi bi-dash-circle text-4xl text-gray-400 mb-3 block"></i>
-                        <p>Alacaklı müşteri bulunmuyor.</p>
-                    </div>
-                <?php else: ?>
-                    <div class="table-container max-h-96 overflow-y-auto">
-                        <table class="table table-hover">
-                            <thead class="sticky top-0 bg-white">
-                                <tr>
-                                    <th>Müşteri</th>
-                                    <th>Alacak</th>
-                                    <th>Son Ödeme</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($creditors as $customer): ?>
-                                    <?php 
-                                    $credit = abs($customer['toplam_borc'] - $customer['toplam_tahsilat']);
-                                    $daysSince = $customer['son_odeme_tarihi'] ? floor((time() - strtotime($customer['son_odeme_tarihi'])) / 86400) : null;
-                                    ?>
-                                    <tr class="hover:bg-green-50">
-                                        <td>
-                                            <div>
-                                                <a href="musteri_rapor.php?customer=<?php echo $customer['id']; ?>" class="font-medium text-green-700 hover:text-green-900">
-                                                    <?php echo htmlspecialchars($customer['isim']); ?>
-                                                </a>
-                                                <?php if ($customer['numara']): ?>
-                                                    <div class="text-xs text-gray-500"><?php echo htmlspecialchars($customer['numara']); ?></div>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                        <td class="font-medium text-green-600">
-                                            <?php echo number_format($credit, 2, ',', '.'); ?> ₺
-                                        </td>
-                                        <td class="text-sm text-gray-600">
-                                            <?php if ($customer['son_odeme_tarihi']): ?>
-                                                <?php echo date('d.m.Y', strtotime($customer['son_odeme_tarihi'])); ?>
-                                                <?php if ($daysSince !== null): ?>
-                                                    <div class="text-xs text-gray-400"><?php echo $daysSince; ?> gün önce</div>
-                                                <?php endif; ?>
-                                            <?php else: ?>
-                                                <span class="text-gray-400">-</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td class="text-right">
-                                            <a href="islemler.php?customer=<?php echo $customer['id']; ?>" class="btn btn-outline btn-sm text-primary" title="İşlem Ekle">
-                                                <i class="bi bi-plus-circle"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-@media print {
-    .btn, .card-header, nav, header, footer {
-        display: none !important;
-    }
-    
-    .card-hover {
-        box-shadow: none !important;
-        border: 1px solid #ddd !important;
-    }
-    
-    .container {
-        max-width: none !important;
-        padding: 0 !important;
-    }
-    
-    .grid {
-        display: block !important;
-    }
-    
-    .card-hover {
-        break-inside: avoid;
-        margin-bottom: 20px;
-    }
-}
-</style>
-
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+ goto mSFLd; uEXOu: ?>
+₺</span></div></div><div class="card-hover animate-slideInUp stat-card"style="animation-delay:.3s"><div class="stat-icon"style="background:linear-gradient(135deg,#f59e0b 0,#d97706 100%)"><i class="bi bi-exclamation-triangle"></i></div><div class="stat-info"><span class="stat-label">Vadesi Geçmiş</span> <span class="stat-value text-warning-600"><?php  goto DfEh5; F3u0B: ?>
+)</h3></div><div class="p-0"><?php  goto YW6Lf; DfEh5: echo count($overdue); goto g2Rvx; lofVr: require_login(); goto rAhP1; YW6Lf: if (empty($creditors)) { ?>
+<div class="text-gray-500 p-8 text-center"><i class="bi block mb-3 text-4xl bi-dash-circle text-gray-400"></i><p>Alacaklı müşteri bulunmuyor.</p></div><?php  } else { ?>
+<div class="table-container max-h-96 overflow-y-auto"><table class="table table-hover"><thead class="bg-white sticky top-0"><tr><th>Müşteri</th><th>Alacak</th><th>Son Ödeme</th><th></th></tr></thead><tbody><?php  foreach ($creditors as $customer) { $credit = abs($customer["\164\x6f\x70\x6c\141\x6d\137\x62\x6f\162\143"] - $customer["\164\x6f\160\x6c\x61\155\x5f\x74\141\150\163\151\x6c\141\x74"]); $daysSince = $customer["\x73\157\156\x5f\157\144\145\155\x65\137\164\x61\162\151\150\x69"] ? floor((time() - strtotime($customer["\x73\x6f\156\x5f\157\x64\145\x6d\x65\x5f\x74\x61\x72\x69\x68\151"])) / 86400) : null; ?>
+<tr class="hover:bg-green-50"><td><div><a class="font-medium hover:text-green-900 text-green-700"href="musteri_rapor.php?customer=<?php  echo $customer["\151\x64"]; ?>
+"><?php  echo htmlspecialchars($customer["\x69\x73\x69\155"]); ?>
+</a><?php  if ($customer["\x6e\165\155\141\x72\141"]) { ?>
+<div class="text-gray-500 text-xs"><?php  echo htmlspecialchars($customer["\x6e\x75\155\141\x72\141"]); ?>
+</div><?php  } ?>
+</div></td><td class="font-medium text-green-600"><?php  echo number_format($credit, 2, "\x2c", "\56"); ?>
+₺</td><td class="text-gray-600 text-sm"><?php  if ($customer["\x73\x6f\156\x5f\x6f\144\145\155\145\137\164\x61\x72\x69\150\151"]) { echo date("\x64\56\155\56\131", strtotime($customer["\163\157\x6e\137\157\x64\145\x6d\145\x5f\164\x61\x72\x69\x68\x69"])); if ($daysSince !== null) { ?>
+<div class="text-gray-400 text-xs"><?php  echo $daysSince; ?>
+gün önce</div><?php  } } else { ?>
+<span class="text-gray-400">-</span><?php  } ?>
+</td><td class="text-right"><a class="btn btn-outline btn-sm text-primary"href="islemler.php?customer=<?php  echo $customer["\x69\x64"]; ?>
+"title="İşlem Ekle"><i class="bi bi-plus-circle"></i></a></td></tr><?php  } ?>
+</tbody></table></div><?php  } goto N9ohV; iojzX: echo count($debtors); goto hxqHw; FLmqN: $pdo = get_pdo_connection(); goto pC06i; g2Rvx: ?>
+müşteri</span></div></div><div class="card-hover animate-slideInUp stat-card"style="animation-delay:.4s"><div class="stat-icon"style="background:linear-gradient(135deg,#6366f1 0,#4f46e5 100%)"><i class="bi bi-people"></i></div><div class="stat-info"><span class="stat-label">Borçlu Müşteri</span> <span class="stat-value text-primary-600"><?php  goto x16b7; fugOV: require_once __DIR__ . "\57\151\x6e\143\x6c\x75\144\x65\163\x2f\146\157\157\x74\x65\162\x2e\160\150\160"; goto yJKvh; x16b7: echo count($debtors); goto anGjd; qqvy6: $debtors = $debtorsStmt->fetchAll(); goto rcOIW; pC06i: $debtorsStmt = $pdo->query("\xa\x20\40\x20\x20\x53\105\x4c\x45\103\124\40\xa\x20\40\x20\x20\40\x20\40\40\x6d\x2e\151\144\x2c\12\x20\x20\x20\x20\40\40\x20\40\x6d\56\151\163\x69\155\x2c\12\40\40\40\x20\x20\40\x20\x20\155\56\x6e\x75\155\141\x72\141\54\12\40\x20\x20\x20\x20\x20\x20\x20\x43\x4f\101\x4c\x45\x53\103\x45\50\123\125\x4d\50\103\101\x53\x45\40\x57\x48\105\116\x20\x69\56\x6f\x64\145\155\x65\137\x74\151\160\x69\40\75\x20\x27\x62\157\x72\143\47\x20\x54\110\x45\x4e\40\x69\56\x6d\151\153\x74\141\162\40\105\x4c\x53\105\x20\60\x20\105\x4e\104\x29\54\40\x30\51\40\x61\163\40\x74\157\x70\x6c\x61\155\137\142\157\x72\x63\x2c\12\x20\x20\40\x20\x20\x20\40\40\103\x4f\101\114\x45\x53\x43\x45\x28\x53\x55\x4d\50\x43\x41\123\x45\40\127\110\x45\116\x20\151\x2e\157\144\x65\155\145\137\x74\x69\160\151\x20\75\x20\x27\164\141\x68\x73\x69\x6c\141\164\47\40\124\x48\105\116\40\x69\x2e\x6d\x69\153\x74\141\162\40\105\114\123\105\40\x30\x20\105\x4e\104\51\x2c\40\x30\x29\x20\141\x73\x20\164\157\x70\154\141\155\x5f\x74\141\150\163\x69\154\x61\x74\54\12\x20\x20\x20\x20\40\x20\40\x20\115\x41\x58\50\103\x41\x53\x45\x20\x57\x48\105\x4e\x20\x69\x2e\157\x64\145\x6d\x65\x5f\164\x69\160\151\x20\x3d\40\47\x62\157\162\x63\47\x20\x54\x48\x45\x4e\40\151\56\x6f\154\x75\163\x74\165\162\x6d\x61\x5f\x7a\x61\155\141\x6e\151\x20\105\x4e\x44\x29\x20\141\x73\x20\163\157\x6e\137\142\x6f\162\x63\137\x74\x61\162\151\150\151\x2c\xa\40\x20\40\40\40\x20\x20\40\115\x41\x58\x28\103\x41\x53\x45\40\x57\x48\x45\x4e\x20\x69\x2e\157\x64\x65\x6d\145\137\x74\151\160\x69\40\x3d\x20\47\x74\x61\x68\163\x69\154\x61\164\47\40\x54\x48\105\116\40\x69\56\157\154\165\x73\164\x75\162\155\141\x5f\172\141\x6d\141\x6e\151\x20\x45\x4e\104\51\40\141\x73\x20\x73\x6f\x6e\137\157\144\x65\x6d\145\x5f\164\141\x72\x69\x68\151\12\40\x20\x20\40\106\x52\117\x4d\x20\155\x75\163\164\145\x72\151\154\145\x72\40\x6d\xa\x20\x20\40\40\x4c\105\x46\124\40\x4a\x4f\x49\116\x20\151\163\154\145\155\x6c\145\162\40\x69\x20\x4f\116\x20\x69\56\x6d\165\163\164\145\162\151\x5f\151\x64\40\75\x20\x6d\56\x69\144\xa\40\40\40\x20\x47\x52\x4f\x55\120\40\102\x59\40\155\x2e\151\144\x2c\x20\x6d\56\151\x73\151\x6d\x2c\40\155\56\x6e\x75\155\141\x72\141\xa\x20\x20\x20\40\110\101\126\111\116\107\x20\50\x74\x6f\160\154\141\155\137\x62\x6f\162\143\x20\55\40\164\x6f\x70\x6c\x61\x6d\137\x74\141\150\163\151\154\141\164\51\x20\x3e\40\60\12\x20\x20\x20\x20\x4f\122\104\105\122\40\x42\131\x20\50\x74\157\160\154\141\x6d\137\x62\157\162\x63\40\55\x20\164\157\x70\x6c\141\x6d\137\x74\x61\150\163\151\154\141\164\51\40\x44\105\123\103\12"); goto qqvy6; XM4D1: echo count($creditors); goto F3u0B; BLDPu: $creditors = $creditorsStmt->fetchAll(); goto ojNVf; hxqHw: ?>
+)</h3></div><div class="p-0"><?php  goto XFZEX; VZi3R: ?>
+₺</span></div></div><div class="card-hover animate-slideInUp stat-card"style="animation-delay:.2s"><div class="stat-icon"style="background:linear-gradient(135deg,#16a34a 0,#15803d 100%)"><i class="bi bi-arrow-down-circle"></i></div><div class="stat-info"><span class="stat-label">Toplam Borç</span> <span class="stat-value text-green-600"><?php  goto zelMn; bev8O: echo number_format($totalDebt, 2, "\x2c", "\x2e"); goto VZi3R; ojNVf: $totalDebt = array_sum(array_map(function ($d) { return $d["\x74\x6f\160\154\141\x6d\x5f\142\x6f\x72\143"] - $d["\x74\157\x70\154\141\155\137\164\x61\x68\163\x69\154\141\x74"]; }, $debtors)); goto LU369; XFZEX: if (empty($debtors)) { ?>
+<div class="text-gray-500 p-8 text-center"><i class="bi block mb-3 text-4xl bi-check-circle text-green-500"></i><p>Harika! Borçlu müşteri bulunmuyor.</p></div><?php  } else { ?>
+<div class="table-container max-h-96 overflow-y-auto"><table class="table table-hover"><thead class="bg-white sticky top-0"><tr><th>Müşteri</th><th>Borç</th><th>Son İşlem</th><th></th></tr></thead><tbody><?php  foreach ($debtors as $customer) { $debt = $customer["\164\157\160\x6c\x61\x6d\x5f\142\157\162\x63"] - $customer["\164\x6f\x70\154\x61\155\137\x74\141\x68\x73\151\x6c\141\164"]; $lastDate = $customer["\x73\157\x6e\137\x6f\x64\145\155\145\x5f\164\141\162\x69\150\x69"] ?: $customer["\163\x6f\x6e\137\142\157\162\x63\137\x74\141\x72\151\150\x69"]; $daysSince = $lastDate ? floor((time() - strtotime($lastDate)) / 86400) : null; ?>
+<tr class="hover:bg-red-50"><td><div><a class="font-medium hover:text-red-900 text-red-700"href="musteri_rapor.php?customer=<?php  echo $customer["\x69\x64"]; ?>
+"><?php  echo htmlspecialchars($customer["\x69\x73\x69\x6d"]); ?>
+</a><?php  if ($customer["\156\165\x6d\141\x72\141"]) { ?>
+<div class="text-gray-500 text-xs"><?php  echo htmlspecialchars($customer["\x6e\165\x6d\141\x72\141"]); ?>
+</div><?php  } ?>
+</div></td><td class="font-medium text-red-600">+<?php  echo number_format($debt, 2, "\54", "\56"); ?>
+₺</td><td class="text-gray-600 text-sm"><?php  if ($lastDate) { echo date("\144\x2e\155\56\x59", strtotime($lastDate)); if ($daysSince !== null) { ?>
+<div class="text-xs<?php  echo $daysSince > 30 ? "\164\x65\x78\164\55\x72\x65\x64\55\x35\x30\x30" : "\164\145\170\x74\55\147\x72\141\x79\x2d\64\60\60"; ?>
+"><?php  echo $daysSince; ?>
+gün önce</div><?php  } } else { ?>
+<span class="text-gray-400">-</span><?php  } ?>
+</td><td class="text-right"><a class="btn btn-outline btn-sm text-primary"href="islemler.php?customer=<?php  echo $customer["\x69\144"]; ?>
+"title="Tahsilat Ekle"><i class="bi bi-plus-circle"></i></a></td></tr><?php  } ?>
+</tbody></table></div><?php  } goto b8wRw; anGjd: ?>
+kişi</span></div></div></div><?php  goto KTO7D; Whowu: $overdue = $overdueStmt->fetchAll(); goto yIDT1; HZKSB: $overdueStmt = $pdo->query("\xa\x20\40\x20\x20\x53\x45\114\105\103\x54\x20\12\40\x20\x20\x20\x20\x20\x20\x20\x6d\x2e\151\x64\x2c\12\x20\x20\40\40\x20\x20\40\x20\x6d\x2e\x69\163\151\x6d\54\xa\40\x20\40\40\40\40\x20\x20\x6d\56\156\165\155\141\162\141\x2c\12\40\x20\40\x20\x20\x20\40\40\103\x4f\101\x4c\105\x53\103\105\50\x53\125\x4d\50\x43\101\x53\105\40\x57\x48\x45\x4e\x20\x69\x2e\157\144\x65\x6d\x65\137\x74\151\160\x69\x20\x3d\40\47\142\157\x72\143\47\40\124\x48\x45\x4e\x20\151\56\x6d\151\x6b\x74\141\162\x20\x45\x4c\123\105\40\x30\40\105\x4e\104\x29\x2c\40\60\x29\40\141\x73\x20\x74\x6f\160\x6c\141\155\137\x62\x6f\x72\143\x2c\12\x20\x20\x20\x20\x20\40\x20\x20\103\117\101\114\105\x53\x43\x45\50\x53\x55\x4d\x28\103\101\x53\x45\40\127\110\105\x4e\40\x69\x2e\157\x64\x65\155\x65\137\x74\151\x70\x69\x20\x3d\40\x27\164\141\150\163\151\154\141\x74\47\40\x54\110\105\116\x20\151\56\155\x69\x6b\164\x61\x72\40\105\x4c\x53\105\40\x30\40\x45\116\104\x29\x2c\x20\x30\51\x20\141\x73\x20\x74\157\x70\154\x61\155\137\164\141\x68\163\x69\x6c\141\x74\54\12\40\40\x20\x20\40\x20\x20\40\x4d\101\x58\50\x43\x41\x53\105\40\127\x48\x45\x4e\x20\151\x2e\157\144\145\x6d\x65\137\x74\x69\160\151\x20\x3d\x20\x27\x62\x6f\x72\143\x27\40\x54\x48\105\x4e\40\151\56\x6f\x6c\x75\163\164\165\162\x6d\141\137\x7a\141\155\x61\156\x69\40\105\116\x44\x29\x20\141\163\x20\x73\157\x6e\137\x62\x6f\x72\x63\x5f\x74\141\x72\151\150\x69\x2c\12\x20\40\40\40\x20\x20\40\x20\x44\101\124\105\x44\111\x46\106\x28\116\117\127\50\51\54\x20\115\101\130\x28\103\x41\x53\x45\x20\x57\110\x45\116\40\151\56\x6f\144\x65\x6d\x65\x5f\x74\151\160\151\40\x3d\x20\x27\142\x6f\162\x63\x27\40\x54\x48\105\116\40\151\x2e\x6f\x6c\165\163\x74\165\162\155\x61\x5f\172\x61\155\x61\x6e\151\40\105\116\104\x29\x29\x20\x61\x73\40\x67\165\156\x5f\x67\145\x63\x69\x6b\155\145\12\40\x20\x20\40\x46\x52\117\x4d\40\155\x75\163\x74\145\x72\x69\x6c\145\x72\x20\x6d\12\x20\40\40\x20\x4c\x45\x46\124\x20\x4a\117\x49\116\x20\x69\x73\154\145\155\154\x65\x72\40\x69\x20\x4f\116\x20\x69\56\x6d\x75\163\164\x65\x72\151\137\151\x64\x20\x3d\40\155\56\151\144\xa\40\40\40\x20\107\122\x4f\125\x50\x20\x42\131\x20\155\x2e\x69\144\x2c\x20\x6d\56\151\x73\151\x6d\x2c\x20\155\x2e\156\165\x6d\141\x72\x61\12\x20\40\x20\40\x48\x41\126\111\116\x47\x20\50\164\x6f\160\x6c\x61\x6d\x5f\142\157\162\143\x20\x2d\x20\x74\157\160\154\141\155\x5f\x74\x61\x68\163\x69\x6c\141\164\x29\40\76\x20\x30\x20\12\x20\x20\40\40\x20\x20\40\x20\x41\x4e\x44\40\147\165\x6e\137\x67\x65\143\151\153\155\145\x20\x3e\40\63\60\xa\40\40\x20\x20\117\122\x44\x45\x52\40\x42\131\x20\x67\x75\x6e\x5f\x67\x65\143\x69\x6b\x6d\145\40\x44\105\123\x43\12"); goto Whowu; yIDT1: ?>
+<div class="container mx-auto px-4 py-6"><div class="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between"><div><h1 class="flex items-center font-bold text-2xl text-gray-800"><i class="bi mr-2 bi-credit-card-2-back text-primary-600"></i> Ödeme Takip Sistemi</h1><p class="text-gray-600 text-sm mt-1">Müşteri borç ve alacak durumlarını takip edin</p></div><div class="flex gap-2"><a class="flex items-center btn btn-outline"href="bakiye_dogrula.php"><i class="bi mr-2 bi-shield-check"></i> Bakiye Doğrula </a><button class="flex items-center btn btn-outline"onclick="window.print()"><i class="bi mr-2 bi-printer"></i> Yazdır</button></div></div><div class="gap-6 grid grid-cols-1 mb-8 md:grid-cols-4"><div class="card-hover animate-slideInUp stat-card"style="animation-delay:.1s"><div class="stat-icon"style="background:linear-gradient(135deg,#ef4444 0,#dc2626 100%)"><i class="bi bi-arrow-up-circle"></i></div><div class="stat-info"><span class="stat-label">Toplam Alacak</span> <span class="stat-value text-red-600"><?php  goto bev8O; b8wRw: ?>
+</div></div><div class="card-hover animate-fadeIn shadow-lg"><div class="card-header"><h3 class="flex items-center card-title text-green-700"><i class="bi mr-2 bi-arrow-down-circle-fill"></i> Alacaklı Müşteriler (<?php  goto XM4D1; q_1Q1: ?>
+<div class="gap-6 grid grid-cols-1 lg:grid-cols-2"><div class="card-hover animate-fadeIn shadow-lg"><div class="card-header"><h3 class="flex items-center card-title text-red-700"><i class="bi mr-2 bi-arrow-up-circle-fill"></i> Borçlu Müşteriler (<?php  goto iojzX; mSFLd: require_once __DIR__ . "\57\151\156\143\154\165\x64\x65\x73\57\x61\165\164\150\x2e\160\150\160"; goto lofVr; LU369: $totalCredit = abs(array_sum(array_map(function ($c) { return $c["\164\157\160\x6c\x61\x6d\137\142\157\x72\x63"] - $c["\164\157\160\x6c\x61\155\x5f\x74\141\150\x73\x69\154\x61\x74"]; }, $creditors))); goto HZKSB; zelMn: echo number_format($totalCredit, 2, "\54", "\x2e"); goto uEXOu; KTO7D: if (!empty($overdue)) { ?>
+<div class="card-hover animate-fadeIn shadow-lg border-l-4 border-red-500 mb-6"><div class="card-header bg-red-50"><h3 class="flex items-center card-title text-red-700"><i class="bi mr-2 bi-exclamation-triangle-fill"></i> Vadesi Geçmiş Borçlar (<?php  echo count($overdue); ?>
+müşteri)</h3></div><div class="p-0"><div class="table-container"><table class="table table-hover"><thead><tr><th>Müşteri</th><th>Telefon</th><th>Borç Tutarı</th><th>Son Borç Tarihi</th><th>Gecikme</th><th class="text-right">İşlemler</th></tr></thead><tbody><?php  foreach ($overdue as $customer) { $debt = $customer["\x74\157\x70\154\141\155\137\142\x6f\162\143"] - $customer["\164\x6f\160\x6c\x61\155\x5f\164\x61\x68\163\151\154\x61\164"]; ?>
+<tr class="hover:bg-red-50"><td><a class="font-medium hover:text-red-900 text-red-700"href="musteri_rapor.php?customer=<?php  echo $customer["\x69\x64"]; ?>
+"><?php  echo htmlspecialchars($customer["\151\x73\x69\x6d"]); ?>
+</a></td><td><?php  echo htmlspecialchars($customer["\x6e\165\155\x61\x72\141"]); ?>
+</td><td class="font-medium text-red-600">+<?php  echo number_format($debt, 2, "\x2c", "\56"); ?>
+₺</td><td><?php  echo date("\x64\56\x6d\x2e\x59", strtotime($customer["\163\157\x6e\137\142\x6f\162\x63\x5f\x74\x61\x72\151\x68\x69"])); ?>
+</td><td><span class="badge bg-red-100 text-red-800"><?php  echo $customer["\x67\x75\156\x5f\147\145\143\x69\x6b\155\x65"]; ?>
+gün</span></td><td class="text-right"><div class="flex gap-2 justify-end"><a class="btn btn-outline btn-sm text-primary"href="islemler.php?customer=<?php  echo $customer["\151\x64"]; ?>
+"title="Tahsilat Ekle"><i class="bi bi-cash-coin"></i> </a><a class="btn btn-outline btn-sm text-success"href="tel:<?php  echo $customer["\156\165\155\x61\x72\141"]; ?>
+"title="Ara"><i class="bi bi-telephone"></i></a></div></td></tr><?php  } ?>
+</tbody></table></div></div></div><?php  } goto q_1Q1; N9ohV: ?>
+</div></div></div></div><style>@media print{.btn,.card-header,footer,header,nav{display:none!important}.card-hover{box-shadow:none!important;border:1px solid #ddd!important}.container{max-width:none!important;padding:0!important}.grid{display:block!important}.card-hover{break-inside:avoid;margin-bottom:20px}}</style><?php  goto fugOV; rAhP1: require_once __DIR__ . "\x2f\x69\156\143\x6c\x75\x64\145\163\57\150\145\x61\144\x65\x72\56\160\x68\x70"; goto FLmqN; rcOIW: $creditorsStmt = $pdo->query("\xa\40\40\x20\40\x53\105\114\x45\103\x54\40\12\x20\x20\x20\x20\40\40\40\40\x6d\56\151\x64\54\12\40\40\x20\x20\40\40\x20\x20\155\x2e\x69\163\151\x6d\54\xa\40\x20\40\40\x20\x20\x20\x20\x6d\x2e\x6e\165\x6d\141\162\141\54\12\40\x20\x20\40\40\40\x20\x20\x43\117\x41\114\x45\123\103\x45\x28\123\125\x4d\x28\103\101\x53\105\x20\x57\110\105\116\x20\151\56\x6f\144\x65\155\145\137\x74\151\x70\151\40\75\x20\x27\142\157\x72\x63\47\40\124\110\105\x4e\40\x69\56\155\x69\x6b\164\141\162\x20\105\x4c\123\x45\40\x30\40\105\x4e\104\x29\x2c\40\60\x29\x20\x61\x73\40\x74\157\x70\x6c\x61\155\x5f\142\x6f\162\143\x2c\12\40\x20\40\40\x20\40\40\40\x43\117\x41\114\x45\123\x43\x45\x28\x53\125\115\50\103\x41\x53\x45\40\127\x48\x45\116\40\151\x2e\157\x64\145\x6d\145\137\164\x69\160\151\x20\x3d\x20\47\164\141\x68\x73\x69\x6c\141\x74\47\40\124\110\105\116\x20\x69\56\155\151\153\164\141\162\40\105\114\123\x45\x20\x30\x20\x45\x4e\x44\51\x2c\x20\x30\51\x20\141\x73\40\164\157\x70\x6c\141\x6d\137\164\141\150\163\151\x6c\141\164\x2c\12\40\40\40\40\40\40\x20\x20\115\x41\x58\50\103\x41\123\105\40\127\110\x45\x4e\x20\x69\x2e\157\144\145\x6d\145\137\164\151\160\x69\x20\75\40\x27\164\141\x68\x73\151\154\x61\164\47\x20\x54\110\105\x4e\x20\x69\56\157\154\165\163\164\x75\x72\x6d\141\x5f\x7a\x61\155\x61\x6e\x69\40\105\116\x44\x29\40\141\x73\40\163\157\156\137\157\x64\x65\155\x65\137\164\x61\162\151\x68\151\12\x20\x20\x20\x20\x46\122\x4f\115\x20\x6d\x75\x73\164\x65\x72\151\154\145\162\40\x6d\xa\40\40\x20\x20\x4c\105\106\124\x20\x4a\117\111\x4e\40\x69\x73\154\x65\155\x6c\x65\162\x20\x69\40\117\116\40\x69\56\155\165\x73\x74\x65\x72\x69\x5f\x69\x64\40\75\40\155\x2e\x69\x64\xa\40\x20\40\40\x47\x52\x4f\x55\x50\40\102\x59\x20\x6d\56\x69\144\x2c\x20\155\x2e\x69\163\151\155\x2c\x20\155\56\156\165\155\x61\x72\141\12\40\40\40\x20\x48\x41\126\111\116\107\40\x28\164\x6f\160\x6c\141\155\x5f\x62\x6f\x72\x63\x20\x2d\40\x74\x6f\160\x6c\141\155\137\164\141\x68\x73\x69\x6c\x61\x74\x29\x20\x3c\40\60\xa\x20\x20\x20\40\x4f\x52\104\x45\x52\40\x42\131\x20\x28\164\157\160\154\141\155\x5f\x74\x61\150\x73\x69\154\x61\x74\40\55\40\164\157\160\154\x61\x6d\137\x62\157\162\143\51\x20\x44\x45\123\x43\12"); goto BLDPu; yJKvh: ?>
