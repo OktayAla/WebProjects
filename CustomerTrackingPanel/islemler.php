@@ -3,6 +3,7 @@
  
 <?php
 require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/manual_products.php';
 require_login();
 
 $pdo = get_pdo_connection();
@@ -69,22 +70,16 @@ if (isset($_GET['delete'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // CSRF doğrulama hatası düzeltildi
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        echo 'İşlem başarısız: Güvenlik doğrulaması başarısız (CSRF).';
-        exit;
-    }
     $pdo->beginTransaction();
     try {
-        // İşlem güncelleme - user_id güncellenmez, sadece diğer alanlar güncellenir
-        if (isset($_POST['action']) && $_POST['action'] === 'update_transaction' && isset($_POST['transaction_id'])) {
-            $transaction_id = (int)$_POST['transaction_id'];
-            $urun_id = !empty($_POST['product_id']) ? (int)$_POST['product_id'] : null;
-            $odeme_tipi = $_POST['type'];
-            $miktar = (float)str_replace([',', ' '], ['.', ''], $_POST['amount']);
-            $aciklama = trim($_POST['note']);
-
-            // Bakiye güncellemesi için eski işlemi alalım
+// İşlem güncelleme - user_id güncellenmez, sadece diğer alanlar güncellenir
+            if (isset($_POST['action']) && $_POST['action'] === 'update_transaction' && isset($_POST['transaction_id'])) {
+                $transaction_id = (int)$_POST['transaction_id'];
+                $urun_id = !empty($_POST['product_id']) ? (int)$_POST['product_id'] : null;
+                $odeme_tipi = $_POST['type'];
+                $miktar = (float)str_replace([',', ' '], ['.', ''], $_POST['amount']);
+                $aciklama = trim($_POST['note']);
+                $adet = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1;            // Bakiye güncellemesi için eski işlemi alalım
             $oldTxStmt = $pdo->prepare('SELECT i.*, k.isim AS kullanici_isim FROM islemler i LEFT JOIN kullanicilar k ON k.id = i.kullanici_id WHERE i.id = ?');
             $oldTxStmt->execute([$transaction_id]);
             $oldTransaction = $oldTxStmt->fetch();
@@ -138,37 +133,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $musteri_id = $pdo->lastInsertId();
             }
 
-            // Çoklu ürün işleme
+            // Çoklu ürün işleme - tek işlem ID'si ile
             $products = $_POST['products'] ?? [];
             $totalDebit = 0;
             $totalCredit = 0;
+            $mainTransactionId = null;
+            $transactionDescription = '';
 
-            foreach ($products as $productData) {
+            // Önce ana işlem kaydını oluştur
+            if (!empty($products)) {
+                $firstProduct = $products[0];
+                $odeme_tipi = $firstProduct['type'];
+                
+                // Ürün sayısını hesapla
+                $productCount = count($products);
+                $transactionDescription = $productCount > 1 ? 
+                    "Çoklu ürün işlemi ({$productCount} kalem)" : 
+                    "Tek ürün işlemi";
+                
+                // Ana işlem kaydını oluştur
+                try {
+                    $stmt = $pdo->prepare('INSERT INTO islemler (musteri_id, urun_id, odeme_tipi, miktar, aciklama, kullanici_id, is_main_transaction) VALUES (?, ?, ?, ?, ?, ?, 1)');
+                    $stmt->execute([$musteri_id, null, $odeme_tipi, 0, $transactionDescription, $currentUserId]);
+                } catch (Exception $e) {
+                    // Eğer yeni sütunlar yoksa, eski formatla ekle
+                    if (strpos($e->getMessage(), 'is_main_transaction') !== false) {
+                        $stmt = $pdo->prepare('INSERT INTO islemler (musteri_id, urun_id, odeme_tipi, miktar, aciklama, kullanici_id) VALUES (?, ?, ?, ?, ?, ?)');
+                        $stmt->execute([$musteri_id, null, $odeme_tipi, 0, $transactionDescription, $currentUserId]);
+                    } else {
+                        throw $e;
+                    }
+                }
+                $mainTransactionId = $pdo->lastInsertId();
+            }
+
+            // Her ürün için ayrı kayıt oluştur
+            foreach ($products as $index => $productData) {
                 if (!empty($productData['amount'])) {
                     $urun_id = !empty($productData['product_id']) ? (int)$productData['product_id'] : null;
                     $odeme_tipi = $productData['type'];
                     $miktar = (float)str_replace([',', ' '], ['.', ''], $productData['amount']);
+                    $adet = isset($productData['quantity']) ? (int)$productData['quantity'] : 1;
                     $urun_notu = !empty($productData['note']) ? trim($productData['note']) : '';
                     
-                    // Eğer ürün ID 0 ise ve yeni ürün adı varsa, yeni ürün oluştur
+                    // Eğer ürün ID 0 ise ve yeni ürün adı varsa, manuel ürün olarak işle
                     if ($urun_id === 0 && !empty($productData['new_product_name'])) {
                         $newProductName = trim($productData['new_product_name']);
-                        
-                        $stmt = $pdo->prepare('INSERT INTO urunler (isim, fiyat) VALUES (?, 0)');
-                        $stmt->execute([$newProductName]);
-                        $urun_id = $pdo->lastInsertId();
-                        
-                        // Yeni ürün adını açıklamaya ekle
-                        if (!empty($urun_notu)) {
-                            $urun_notu = "Yeni ürün: " . $newProductName . " - " . $urun_notu;
-                        } else {
-                            $urun_notu = "Yeni ürün: " . $newProductName;
-                        }
+                        // Manuel ürün için urun_id null kalacak
+                        $urun_id = null;
                     }
 
-                    // İşlemi eklerken user_id'yi de kaydediyoruz
-                    $stmt = $pdo->prepare('INSERT INTO islemler (musteri_id, urun_id, odeme_tipi, miktar, aciklama, kullanici_id) VALUES (?, ?, ?, ?, ?, ?)');
-                    $stmt->execute([$musteri_id, $urun_id, $odeme_tipi, $miktar, $urun_notu, $currentUserId]);
+                    // Ürün kaydını oluştur (ana işleme bağlı)
+                    // Önce yeni sütunların var olup olmadığını kontrol et
+                    try {
+                        $stmt = $pdo->prepare('INSERT INTO islemler (musteri_id, urun_id, odeme_tipi, miktar, aciklama, kullanici_id, parent_transaction_id, is_main_transaction, adet) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?)');
+                        $stmt->execute([$musteri_id, $urun_id, $odeme_tipi, $miktar, $urun_notu, $currentUserId, $mainTransactionId, $adet]);
+                        $transactionId = $pdo->lastInsertId();
+                        
+                        // Eğer manuel ürün adı varsa JSON'a kaydet
+                        if ($urun_id === null && !empty($productData['new_product_name'])) {
+                            saveManualProduct($transactionId, $productData['new_product_name']);
+                        }
+                    } catch (Exception $e) {
+                        // Eğer yeni sütunlar yoksa, eski formatla ekle
+                        if (strpos($e->getMessage(), 'adet') !== false || strpos($e->getMessage(), 'parent_transaction_id') !== false) {
+                            $stmt = $pdo->prepare('INSERT INTO islemler (musteri_id, urun_id, odeme_tipi, miktar, aciklama, kullanici_id) VALUES (?, ?, ?, ?, ?, ?)');
+                            $stmt->execute([$musteri_id, $urun_id, $odeme_tipi, $miktar, $urun_notu, $currentUserId]);
+                            $transactionId = $pdo->lastInsertId();
+                            
+                            // Eğer manuel ürün adı varsa JSON'a kaydet
+                            if ($urun_id === null && !empty($productData['new_product_name'])) {
+                                saveManualProduct($transactionId, $productData['new_product_name']);
+                            }
+                        } else {
+                            throw $e;
+                        }
+                    }
 
                     if ($odeme_tipi === 'borc') {
                         $totalDebit += $miktar;
@@ -176,6 +216,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $totalCredit += $miktar;
                     }
                 }
+            }
+
+            // Ana işlem kaydını güncelle (toplam tutar ile)
+            if ($mainTransactionId) {
+                $netAmount = $totalDebit - $totalCredit;
+                $stmt = $pdo->prepare('UPDATE islemler SET miktar = ? WHERE id = ?');
+                $stmt->execute([$netAmount, $mainTransactionId]);
             }
 
             // Müşteri bakiyesini güncelle
@@ -259,28 +306,39 @@ if ($dateTo) {
     $params[] = $dateTo . ' 23:59:59';
 }
 
-// SQL sorgusu oluşturma
 $whereClause = '';
 if (!empty($conditions)) {
     $whereClause = 'WHERE ' . implode(' AND ', $conditions);
 }
 
-// Toplam kayıt sayısını hesaplama
-$countSql = "SELECT COUNT(*) FROM islemler i JOIN musteriler m ON m.id = i.musteri_id $whereClause";
+$countSql = "SELECT COUNT(*) FROM islemler i JOIN musteriler m ON m.id = i.musteri_id ";
+
+// WHERE koşulunu ekle
+if (!empty($conditions)) {
+    $countSql .= "WHERE (i.is_main_transaction = 1 OR i.is_main_transaction IS NULL) AND " . implode(' AND ', $conditions);
+} else {
+    $countSql .= "WHERE (i.is_main_transaction = 1 OR i.is_main_transaction IS NULL)";
+}
 $countStmt = $pdo->prepare($countSql);
 $countStmt->execute($params);
 $totalRows = (int)$countStmt->fetchColumn();
 $totalPages = max(1, ceil($totalRows / $perPage));
 
-// Ana sorgu - user bilgisini de joinliyoruz (users.name kullanıyoruz)
-$sql = "SELECT i.*, m.isim AS musteri_isim, u.isim AS urun_isim, k.isim AS kullanici_isim
+$sql = "SELECT i.*, m.isim AS musteri_isim, u.isim AS urun_isim, k.isim AS kullanici_isim,
+               (SELECT COUNT(*) FROM islemler sub WHERE sub.parent_transaction_id = i.id) as product_count
        FROM islemler i
        JOIN musteriler m ON m.id = i.musteri_id
        LEFT JOIN urunler u ON u.id = i.urun_id
-       LEFT JOIN kullanicilar k ON k.id = i.kullanici_id
-       $whereClause
-       ORDER BY i.olusturma_zamani DESC
-       LIMIT ? OFFSET ?";
+       LEFT JOIN kullanicilar k ON k.id = i.kullanici_id";
+
+// WHERE koşulunu ekle
+if (!empty($conditions)) {
+    $sql .= " WHERE (i.is_main_transaction = 1 OR i.is_main_transaction IS NULL) AND " . implode(' AND ', $conditions);
+} else {
+    $sql .= " WHERE (i.is_main_transaction = 1 OR i.is_main_transaction IS NULL)";
+}
+
+$sql .= " ORDER BY i.olusturma_zamani DESC LIMIT ? OFFSET ?";
 
 $stmt = $pdo->prepare($sql);
 $paramIndex = 1;
@@ -360,7 +418,6 @@ $transactions = $stmt->fetchAll();
         </div>
         <div class="p-5">
             <form method="POST" id="transactionForm" class="grid grid-cols-1 gap-4">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <div class="md:col-span-4 col-span-1">
                         <label class="form-label flex items-center">
@@ -371,7 +428,7 @@ $transactions = $stmt->fetchAll();
                             <input type="text" class="form-input bg-gray-100" readonly value="<?php echo htmlspecialchars($selectedCustomer['isim']); ?>">
                         <?php else: ?>
                             <div class="relative">
-                                <input type="text" id="customer-search" class="form-input" placeholder="Müşteri ara veya yeni müşteri adı yazın..." autocomplete="off">
+                                <input type="text" id="customer-search" class="form-input" placeholder="Müşteri ara veya yeni müşteri adı yazın..." autocomplete="off" autofocus>
                                 <input type="hidden" name="customer_id" id="customer_id" required>
                                 <input type="hidden" name="new_customer_name" id="new_customer_name">
                                 <input type="hidden" name="new_customer_phone" id="new_customer_phone">
@@ -411,18 +468,32 @@ $transactions = $stmt->fetchAll();
                             </select>
                         </div>
 
-                        <div class="md:col-span-3 col-span-1">
+                        <div class="md:col-span-2 col-span-1">
                             <label class="form-label flex items-center">
-                                <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)
+                                <i class="bi bi-123 mr-2 text-primary-500"></i> Adet
                             </label>
-                            <input type="text" name="products[0][amount]" class="form-input amount-input" placeholder="0,00" required>
+                            <input type="number" name="products[0][quantity]" class="form-input quantity-input" value="1" min="1" required>
                         </div>
 
                         <div class="md:col-span-2 col-span-1">
                             <label class="form-label flex items-center">
-                                <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Ürün Notu
+                                <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Birim Fiyat (₺)
                             </label>
-                            <input type="text" name="products[0][note]" class="form-input" placeholder="Bu ürün için not">
+                            <input type="text" name="products[0][unit_price]" class="form-input unit-price-input" placeholder="0,00" required>
+                        </div>
+
+                        <div class="md:col-span-2 col-span-1">
+                            <label class="form-label flex items-center">
+                                <i class="bi bi-calculator mr-2 text-primary-500"></i> Toplam (₺)
+                            </label>
+                            <input type="text" name="products[0][amount]" class="form-input amount-input" placeholder="0,00" readonly>
+                        </div>
+
+                        <div class="md:col-span-2 col-span-1">
+                            <label class="form-label flex items-center">
+                                <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Not
+                            </label>
+                            <input type="text" name="products[0][note]" class="form-input" placeholder="">
                         </div>
 
                         <div class="md:col-span-1 col-span-1 flex items-end">
@@ -577,10 +648,35 @@ $transactions = $stmt->fetchAll();
                                         </td>
                                     <?php endif; ?>
                                     <td>
-                                        <?php if (isset($row['urun_isim']) && $row['urun_isim']): ?>
+                                        <?php if (isset($row['product_count']) && $row['product_count'] > 0): ?>
+                                            <?php
+                                            // Çoklu ürün için alt ürünleri al ve manuel ürün adlarını JSON'dan çek
+                                            $subProductStmt = $pdo->prepare('SELECT i.*, u.isim AS urun_isim FROM islemler i LEFT JOIN urunler u ON u.id = i.urun_id WHERE i.parent_transaction_id = ? ORDER BY i.id ASC');
+                                            $subProductStmt->execute([$row['id']]);
+                                            $subProducts = $subProductStmt->fetchAll();
+                                            
+                                            $productNames = [];
+                                            foreach ($subProducts as $subProduct) {
+                                                if ($subProduct['urun_isim']) {
+                                                    $productNames[] = $subProduct['urun_isim'];
+                                                } else {
+                                                    $manualName = getManualProduct($subProduct['id']);
+                                                    $productNames[] = $manualName ?: 'Manuel Ürün';
+                                                }
+                                            }
+                                            ?>
+                                            <span class="badge badge-outline"><?php echo htmlspecialchars(implode(' - ', $productNames)); ?></span>
+                                        <?php elseif (isset($row['urun_isim']) && $row['urun_isim']): ?>
                                             <span class="badge badge-outline"><?php echo htmlspecialchars($row['urun_isim']); ?></span>
                                         <?php else: ?>
-                                            <span class="text-gray-400">-</span>
+                                            <?php 
+                                            // Tek ürün için manuel ürün adını JSON'dan al
+                                            $manualName = getManualProduct($row['id']);
+                                            if ($manualName): ?>
+                                                <span class="badge badge-outline"><?php echo htmlspecialchars($manualName); ?></span>
+                                            <?php else: ?>
+                                                <span class="text-gray-400">-</span>
+                                            <?php endif; ?>
                                         <?php endif; ?>
                                     </td>
                                     <td><?php echo date('d.m.Y H:i', strtotime($row['olusturma_zamani'])); ?></td>
@@ -799,18 +895,32 @@ $transactions = $stmt->fetchAll();
                     </select>
                 </div>
                 
-                <div class="md:col-span-3 col-span-1">
-                    <label class="form-label flex items-center">
-                        <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Tutar (₺)
-                    </label>
-                    <input type="text" name="products[${productCounter}][amount]" class="form-input amount-input" placeholder="0,00" required>
-                </div>
-                
                 <div class="md:col-span-2 col-span-1">
                     <label class="form-label flex items-center">
-                        <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Ürün Notu
+                        <i class="bi bi-123 mr-2 text-primary-500"></i> Adet
                     </label>
-                    <input type="text" name="products[${productCounter}][note]" class="form-input" placeholder="Bu ürün için not">
+                    <input type="number" name="products[${productCounter}][quantity]" class="form-input quantity-input" value="1" min="1" required>
+                </div>
+
+                <div class="md:col-span-2 col-span-1">
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-currency-exchange mr-2 text-primary-500"></i> Birim Fiyat (₺)
+                    </label>
+                    <input type="text" name="products[${productCounter}][unit_price]" class="form-input unit-price-input" placeholder="0,00" required>
+                </div>
+
+                <div class="md:col-span-2 col-span-1">
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-calculator mr-2 text-primary-500"></i> Toplam (₺)
+                    </label>
+                    <input type="text" name="products[${productCounter}][amount]" class="form-input amount-input" placeholder="0,00" readonly>
+                </div>
+
+                <div class="md:col-span-1 col-span-1">
+                    <label class="form-label flex items-center">
+                        <i class="bi bi-chat-left-text mr-2 text-primary-500"></i> Not
+                    </label>
+                    <input type="text" name="products[${productCounter}][note]" class="form-input" placeholder="Not">
                 </div>
                 
                 <div class="md:col-span-1 col-span-1 flex items-end">
@@ -828,7 +938,7 @@ $transactions = $stmt->fetchAll();
                 }
                 productCounter++;
 
-                // Yeni eklenen satırdaki amount inputunu ayarla
+                // Yeni eklenen satırdaki input alanlarını ayarla
                 setupAmountInputs();
                 // Tüm remove butonlarını güncelle
                 updateRemoveButtons();
@@ -856,11 +966,19 @@ $transactions = $stmt->fetchAll();
             });
         }
 
-        // Tutar alanları için para formatı
+        // Tutar alanları için para formatı ve hesaplama
         function setupAmountInputs() {
+            const unitPriceInputs = document.querySelectorAll('.unit-price-input');
+            const quantityInputs = document.querySelectorAll('.quantity-input');
             const amountInputs = document.querySelectorAll('.amount-input');
-            amountInputs.forEach(input => {
-                input.addEventListener('input', function (e) {
+
+            // Birim fiyat formatı
+            unitPriceInputs.forEach(input => {
+                // Önce mevcut event listener'ları temizle
+                input.removeEventListener('input', input._inputHandler);
+                
+                // Yeni event handler oluştur
+                input._inputHandler = function (e) {
                     let value = e.target.value.replace(/[^\d,]/g, '');
                     value = value.replace(',', '.');
                     if (value.includes('.')) {
@@ -871,8 +989,42 @@ $transactions = $stmt->fetchAll();
                         value = parts.join('.');
                     }
                     e.target.value = value;
-                });
+                    calculateTotal(e.target);
+                };
+                
+                input.addEventListener('input', input._inputHandler);
             });
+
+            // Adet değişikliği
+            quantityInputs.forEach(input => {
+                // Önce mevcut event listener'ları temizle
+                input.removeEventListener('input', input._quantityHandler);
+                
+                // Yeni event handler oluştur
+                input._quantityHandler = function (e) {
+                    calculateTotal(e.target);
+                };
+                
+                input.addEventListener('input', input._quantityHandler);
+            });
+
+            // Toplam hesaplama fonksiyonu
+            function calculateTotal(input) {
+                const row = input.closest('.product-row');
+                if (!row) return;
+
+                const unitPriceInput = row.querySelector('.unit-price-input');
+                const quantityInput = row.querySelector('.quantity-input');
+                const amountInput = row.querySelector('.amount-input');
+
+                if (!unitPriceInput || !quantityInput || !amountInput) return;
+
+                const unitPrice = parseFloat(unitPriceInput.value.replace(',', '.')) || 0;
+                const quantity = parseInt(quantityInput.value) || 1;
+                const total = unitPrice * quantity;
+
+                amountInput.value = total.toFixed(2).replace('.', ',');
+            }
         }
 
         // Form gönderildiğinde buton durumunu değiştir
@@ -923,12 +1075,54 @@ $transactions = $stmt->fetchAll();
         updateRemoveButtons();
         setupAmountInputs();
         
+        // İlk satır için de event listener'ları ayarla
+        document.querySelectorAll('.product-search').forEach(setupProductSearch);
+        
+        // İlk satır için hesaplama fonksiyonunu test et
+        setTimeout(() => {
+            const firstQuantityInput = document.querySelector('.quantity-input');
+            const firstUnitPriceInput = document.querySelector('.unit-price-input');
+            if (firstQuantityInput && firstUnitPriceInput) {
+                // İlk satır için hesaplama yap
+                const row = firstQuantityInput.closest('.product-row');
+                if (row) {
+                    const unitPriceInput = row.querySelector('.unit-price-input');
+                    const quantityInput = row.querySelector('.quantity-input');
+                    const amountInput = row.querySelector('.amount-input');
+                    
+                    if (unitPriceInput && quantityInput && amountInput) {
+                        const unitPrice = parseFloat(unitPriceInput.value.replace(',', '.')) || 0;
+                        const quantity = parseInt(quantityInput.value) || 1;
+                        const total = unitPrice * quantity;
+                        amountInput.value = total.toFixed(2).replace('.', ',');
+                    }
+                }
+            }
+        }, 100);
+
+        // Fiyat güncelleme fonksiyonu
+        function updatePrice(quantityInput, amountInput) {
+            if (!amountInput || !quantityInput) return;
+            
+            const basePrice = parseFloat(amountInput.getAttribute('data-base-price') || amountInput.value.replace(',', '.'));
+            if (!isNaN(basePrice)) {
+                const quantity = parseInt(quantityInput.value) || 1;
+                const newPrice = (basePrice * quantity).toFixed(2);
+                amountInput.value = newPrice.replace('.', ',');
+            }
+        }
+        
         // Müşteri arama özelliği
         const customerSearch = document.getElementById('customer-search');
         const customerSuggestions = document.getElementById('customer-suggestions');
         const customerIdInput = document.getElementById('customer_id');
         
         if (customerSearch) {
+            // Sayfa yüklendiğinde arama alanını temizle
+            customerSearch.value = '';
+            customerIdInput.value = '';
+            document.getElementById('new_customer_name').value = '';
+            document.getElementById('new_customer_phone').value = '';
             let customerTimeout;
             
             customerSearch.addEventListener('input', function() {
@@ -1069,18 +1263,27 @@ $transactions = $stmt->fetchAll();
                     productIdInput.value = id;
                     productSearchInput.parentElement.querySelector('.new-product-name').value = '';
                     productSuggestions.classList.add('hidden');
-                    // Fiyatı miktar alanına otomatik doldur
+                    // Fiyatı birim fiyat alanına otomatik doldur
                     const row = productSearchInput.closest('.product-row');
+                    const unitPriceInput = row ? row.querySelector('.unit-price-input') : null;
+                    const quantityInput = row ? row.querySelector('.quantity-input') : null;
                     const amountInput = row ? row.querySelector('.amount-input') : null;
-                    // Ürün fiyatını ileri taşı: liste öğesindeki ikinci satırdan parse edebiliriz, fakat güvenilir yol API'den tekrar çekmek
+                    
+                    // Ürün fiyatını birim fiyat alanına doldur
                     fetch(`urunara.php?q=${encodeURIComponent(name)}`)
                         .then(r => r.json())
                         .then(list => {
                             const found = Array.isArray(list) ? list.find(p => String(p.id) === String(id)) : null;
-                            if (found && amountInput) {
+                            if (found && unitPriceInput) {
                                 const val = Number(found.fiyat || 0);
                                 if (!isNaN(val) && val > 0) {
-                                    amountInput.value = val.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',');
+                                    unitPriceInput.value = val.toFixed(2).replace('.', ',');
+                                    // Toplam hesapla
+                                    if (quantityInput && amountInput) {
+                                        const quantity = parseInt(quantityInput.value) || 1;
+                                        const total = val * quantity;
+                                        amountInput.value = total.toFixed(2).replace('.', ',');
+                                    }
                                 }
                             }
                         })
@@ -1101,10 +1304,26 @@ $transactions = $stmt->fetchAll();
                 }
             });
             
-            // Dışarı tıklandığında önerileri gizle
+            // Dışarı tıklandığında önerileri gizle ve manuel ürün kontrolü yap
             document.addEventListener('click', function(e) {
                 if (!productSearchInput.contains(e.target) && !productSuggestions.contains(e.target)) {
                     productSuggestions.classList.add('hidden');
+                    
+                    // Eğer arama alanında değer var ama ürün seçilmemişse, manuel ürün olarak işle
+                    const query = productSearchInput.value.trim();
+                    if (query.length > 0 && (!productIdInput.value || productIdInput.value === '')) {
+                        productIdInput.value = '0';
+                        productSearchInput.parentElement.querySelector('.new-product-name').value = query;
+                    }
+                }
+            });
+            
+            // Form submit edilmeden önce manuel ürün kontrolü
+            productSearchInput.addEventListener('blur', function() {
+                const query = this.value.trim();
+                if (query.length > 0 && (!productIdInput.value || productIdInput.value === '')) {
+                    productIdInput.value = '0';
+                    productSearchInput.parentElement.querySelector('.new-product-name').value = query;
                 }
             });
         }
@@ -1266,9 +1485,13 @@ $transactions = $stmt->fetchAll();
                     '<span class="badge-debit flex items-center w-fit"><i class="bi bi-arrow-down-right mr-1"></i> Borç</span>' :
                     '<span class="badge-credit flex items-center w-fit"><i class="bi bi-arrow-up-right mr-1"></i> Tahsilat</span>';
                 
-                const productName = row.urun_isim ? 
-                    `<span class="badge badge-outline">${escapeHtml(row.urun_isim)}</span>` :
-                    '<span class="text-gray-400">-</span>';
+                const productName = row.product_count && row.product_count > 0 ? 
+                    `<span class="badge badge-primary">${row.product_count} kalem ürün</span>` :
+                    (row.urun_isim ? 
+                        `<span class="badge badge-outline">${escapeHtml(row.urun_isim)}</span>` :
+                        (row.new_product_name ? 
+                            `<span class="badge badge-outline">${escapeHtml(row.new_product_name)}</span>` :
+                            '<span class="text-gray-400">-</span>'));
                 
                 const description = row.aciklama ? 
                     escapeHtml(row.aciklama) : 

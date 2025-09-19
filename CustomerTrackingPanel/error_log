@@ -1,0 +1,8 @@
+[18-Sep-2025 21:00:31 Europe/Istanbul] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'WHERE i.musteri_id = ?' at line 1 in /home/oktayala/proje.oktayala.com/musteripaneli/islemler.php:318
+Stack trace:
+#0 /home/oktayala/proje.oktayala.com/musteripaneli/islemler.php(318): PDO->prepare('SELECT COUNT(*)...')
+#1 {main}
+  thrown in /home/oktayala/proje.oktayala.com/musteripaneli/islemler.php on line 318
+[18-Sep-2025 21:14:31 Europe/Istanbul] PHP Notice:  Undefined index: new_product_name in /home/oktayala/proje.oktayala.com/musteripaneli/yazdir.php on line 283
+[18-Sep-2025 21:14:31 Europe/Istanbul] PHP Notice:  Undefined index: new_product_name in /home/oktayala/proje.oktayala.com/musteripaneli/yazdir.php on line 283
+[18-Sep-2025 21:18:12 Europe/Istanbul] PHP Notice:  Undefined index: new_product_name in /home/oktayala/proje.oktayala.com/musteripaneli/yazdir.php on line 283
