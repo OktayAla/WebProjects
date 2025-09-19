@@ -1,26 +1,5 @@
-<?php 
-require_once __DIR__ . '/includes/auth.php';
-require_login();
+<!-- Bu sistem Oktay ALA tarafından, Analiz Tarım için geliştirilmiştir. -->
+<!-- Copyright © Her Hakkı Saklıdır. Ticari amaçlı kullanılması yasaktır. -->
 
-$pdo = get_pdo_connection();
-$query = $_GET['q'] ?? '';
-
-if (strlen($query) < 2) {
-    echo json_encode([]);
-    exit;
-}
-
-// Fiyat alanını ekle (eğer yoksa)
-try {
-    $pdo->exec("ALTER TABLE urunler ADD COLUMN IF NOT EXISTS fiyat DECIMAL(10,2) DEFAULT 0.00");
-} catch (Exception $e) {
-    // Alan zaten varsa hata vermez
-}
-
-$stmt = $pdo->prepare("SELECT id, isim, fiyat FROM urunler WHERE LOWER(isim) LIKE LOWER(?) ORDER BY isim ASC LIMIT 10");
-$stmt->execute(["%$query%"]);
-$products = $stmt->fetchAll();
-
-header('Content-Type: application/json');
-echo json_encode($products);
-?>
+<?php
+ goto J2imQ; fnKvY: require_login(); goto B8CpC; VL742: if (strlen($query) < 2) { echo json_encode(array()); die; } goto LRoE5; V4V73: $query = $_GET["\x71"] ?? ''; goto VL742; J2imQ: require_once __DIR__ . "\57\x69\x6e\x63\x6c\165\x64\x65\x73\57\141\165\x74\x68\56\160\150\160"; goto fnKvY; B8CpC: $pdo = get_pdo_connection(); goto V4V73; GsHoz: $stmt->execute(array("\x25{$query}\45")); goto q86bK; LRoE5: try { $pdo->exec("\101\114\124\105\x52\x20\124\101\x42\114\x45\x20\x75\x72\x75\156\154\x65\x72\40\101\x44\x44\x20\x43\x4f\114\125\x4d\x4e\x20\111\x46\40\x4e\117\x54\40\105\130\111\x53\124\x53\x20\146\151\171\141\164\x20\x44\105\103\111\x4d\101\114\x28\61\x30\54\x32\x29\40\104\105\x46\101\125\x4c\x54\x20\x30\56\x30\x30"); } catch (Exception $e) { } goto Ugtrb; q86bK: $products = $stmt->fetchAll(); goto nKYzA; In4Uz: echo json_encode($products); goto kQf7a; Ugtrb: $stmt = $pdo->prepare("\123\x45\114\105\x43\124\40\151\144\54\40\x69\x73\151\155\54\40\x66\151\x79\x61\164\40\106\x52\x4f\115\40\x75\x72\165\156\x6c\x65\162\x20\127\110\x45\x52\x45\x20\114\117\127\x45\122\50\x69\163\151\x6d\51\x20\x4c\x49\113\x45\40\114\117\127\x45\x52\x28\77\x29\40\117\x52\x44\x45\x52\x20\102\131\40\x69\163\151\x6d\x20\101\123\103\40\x4c\111\x4d\x49\x54\x20\61\x30"); goto GsHoz; nKYzA: header("\x43\157\x6e\164\145\x6e\x74\55\124\171\x70\x65\72\40\141\x70\160\x6c\x69\143\141\x74\x69\x6f\x6e\57\152\163\x6f\x6e"); goto In4Uz; kQf7a: ?>
