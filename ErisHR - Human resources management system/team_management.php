@@ -1,487 +1,74 @@
 <?php
-session_start();
-
-// Redirect to login page if not logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
-// Check if user has manager role
-if ($_SESSION['role'] !== 'manager' && $_SESSION['role'] !== 'admin') {
-    header("Location: index.php");
-    exit();
-}
-
-// Get user data
-$userId = $_SESSION['user_id'];
-$userName = $_SESSION['name'];
-$userRole = $_SESSION['role'];
-$userDepartment = $_SESSION['department'];
-
-// Load employees data
-$employeesFile = 'data/employees.json';
-$employees = [];
-$teamMembers = [];
-
-if (file_exists($employeesFile)) {
-    $employees = json_decode(file_get_contents($employeesFile), true);
-    
-    // Filter employees to get team members (employees who report to this manager)
-    foreach ($employees as $employee) {
-        if ($employee['manager_id'] == $userId) {
-            $teamMembers[] = $employee;
-        }
-    }
-    
-    // Sort team members by name
-    usort($teamMembers, function($a, $b) {
-        return strcmp($a['name'], $b['name']);
-    });
-}
-
-// Load leave requests data
-$leaveRequestsFile = 'data/leave_requests.json';
-$leaveRequests = [];
-
-if (file_exists($leaveRequestsFile)) {
-    $allLeaveRequests = json_decode(file_get_contents($leaveRequestsFile), true);
-    
-    // Filter leave requests for team members
-    foreach ($allLeaveRequests as $request) {
-        foreach ($teamMembers as $member) {
-            if ($request['employee_id'] == $member['id']) {
-                $leaveRequests[] = $request;
-                break;
-            }
-        }
-    }
-    
-    // Sort leave requests by created_at (newest first)
-    usort($leaveRequests, function($a, $b) {
-        return strtotime($b['created_at']) - strtotime($a['created_at']);
-    });
-}
-
-// Load advance requests data
-$advanceRequestsFile = 'data/advance_requests.json';
-$advanceRequests = [];
-
-if (file_exists($advanceRequestsFile)) {
-    $allAdvanceRequests = json_decode(file_get_contents($advanceRequestsFile), true);
-    
-    // Filter advance requests for team members
-    foreach ($allAdvanceRequests as $request) {
-        foreach ($teamMembers as $member) {
-            if ($request['employee_id'] == $member['id']) {
-                $advanceRequests[] = $request;
-                break;
-            }
-        }
-    }
-    
-    // Sort advance requests by created_at (newest first)
-    usort($advanceRequests, function($a, $b) {
-        return strtotime($b['created_at']) - strtotime($a['created_at']);
-    });
-}
-
-// Load attendance data
-$attendanceFile = 'data/attendance.json';
-$attendance = [];
-
-if (file_exists($attendanceFile)) {
-    $allAttendance = json_decode(file_get_contents($attendanceFile), true);
-    
-    // Filter attendance records for team members (last 7 days)
-    $sevenDaysAgo = date('Y-m-d', strtotime('-7 days'));
-    
-    foreach ($allAttendance as $record) {
-        if ($record['date'] >= $sevenDaysAgo) {
-            foreach ($teamMembers as $member) {
-                if ($record['employee_id'] == $member['id']) {
-                    $attendance[] = $record;
-                    break;
-                }
-            }
-        }
-    }
-    
-    // Sort attendance records by date (newest first) and then by time
-    usort($attendance, function($a, $b) {
-        $dateCompare = strcmp($b['date'], $a['date']);
-        if ($dateCompare === 0) {
-            return strcmp($b['time'], $a['time']);
-        }
-        return $dateCompare;
-    });
-}
-?>
-
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRMS - Ekip Yönetimi</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <img src="img/logo.png" alt="HRMS Logo" class="logo">
-                <h3>HRMS</h3>
-            </div>
-            
-            <div class="user-info">
-                <div class="user-avatar">
-                    <img src="img/avatars/default.png" alt="User Avatar">
-                </div>
-                <div class="user-details">
-                    <h4><?php echo $userName; ?></h4>
-                    <p><?php 
-                    if($userRole == 'admin') echo 'İK Yöneticisi';
-                    else if($userRole == 'manager') echo 'Birim Müdürü';
-                    else echo 'Personel';
-                    ?></p>
-                </div>
-            </div>
-            
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li>
-                    <li><a href="attendance.php"><i class="fas fa-clock"></i> Giriş/Çıkış Kayıtları</a></li>
-                    <li><a href="leave_requests.php"><i class="fas fa-calendar-alt"></i> İzin Talepleri</a></li>
-                    <li><a href="advance_requests.php"><i class="fas fa-money-bill-wave"></i> Avans Talepleri</a></li>
-                    
-                    <?php if($userRole == 'manager' || $userRole == 'admin'): ?>
-                    <li><a href="team_management.php" class="active"><i class="fas fa-users"></i> Ekip Yönetimi</a></li>
-                    <li><a href="approval_requests.php"><i class="fas fa-tasks"></i> Onay Bekleyen Talepler</a></li>
-                    <?php endif; ?>
-                    
-                    <?php if($userRole == 'admin'): ?>
-                    <li><a href="employee_management.php"><i class="fas fa-user-cog"></i> Personel Yönetimi</a></li>
-                    <li><a href="department_management.php"><i class="fas fa-building"></i> Departman Yönetimi</a></li>
-                    <li><a href="card_management.php"><i class="fas fa-id-card"></i> Kart Yönetimi</a></li>
-                    <li><a href="reports.php"><i class="fas fa-chart-bar"></i> Raporlar</a></li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <a href="profile.php"><i class="fas fa-user-circle"></i> Profil</a>
-                <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Çıkış</a>
-            </div>
-        </aside>
-        
-        <!-- Main Content -->
-        <main class="main-content">
-            <header class="header">
-                <div class="header-left">
-                    <button id="sidebar-toggle" class="sidebar-toggle">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <h2>Ekip Yönetimi</h2>
-                </div>
-                <div class="header-right">
-                    <div class="notification">
-                        <i class="fas fa-bell"></i>
-                        <span class="badge">3</span>
-                    </div>
-                    <div class="date-time">
-                        <span id="current-date"></span>
-                        <span id="current-time"></span>
-                    </div>
-                </div>
-            </header>
-            
-            <div class="content-wrapper">
-                <div class="container-fluid">
-                    <!-- Team Members Card -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Ekip Üyeleri</h5>
-                        </div>
-                        <div class="card-body">
-                            <?php if (empty($teamMembers)): ?>
-                            <div class="alert alert-info">Henüz ekibinizde çalışan bulunmamaktadır.</div>
-                            <?php else: ?>
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Ad Soyad</th>
-                                            <th>Pozisyon</th>
-                                            <th>E-posta</th>
-                                            <th>Telefon</th>
-                                            <th>İşe Başlama</th>
-                                            <th>Kalan İzin</th>
-                                            <th>Durum</th>
-                                            <th>İşlemler</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($teamMembers as $member): ?>
-                                        <tr>
-                                            <td><?php echo $member['name']; ?></td>
-                                            <td><?php echo $member['position']; ?></td>
-                                            <td><?php echo $member['email']; ?></td>
-                                            <td><?php echo $member['phone']; ?></td>
-                                            <td><?php echo $member['hire_date']; ?></td>
-                                            <td><?php echo $member['remaining_leave']; ?> gün</td>
-                                            <td>
-                                                <span class="badge <?php echo ($member['status'] === 'active') ? 'bg-success' : 'bg-danger'; ?>">
-                                                    <?php echo ($member['status'] === 'active') ? 'Aktif' : 'Pasif'; ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewEmployeeModal" 
-                                                    data-id="<?php echo $member['id']; ?>"
-                                                    data-name="<?php echo $member['name']; ?>"
-                                                    data-department="<?php echo $member['department']; ?>"
-                                                    data-position="<?php echo $member['position']; ?>"
-                                                    data-email="<?php echo $member['email']; ?>"
-                                                    data-phone="<?php echo $member['phone']; ?>"
-                                                    data-hire-date="<?php echo $member['hire_date']; ?>"
-                                                    data-annual-leave="<?php echo $member['annual_leave']; ?>"
-                                                    data-remaining-leave="<?php echo $member['remaining_leave']; ?>">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    
-                    <!-- Recent Leave Requests Card -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Son İzin Talepleri</h5>
-                        </div>
-                        <div class="card-body">
-                            <?php if (empty($leaveRequests)): ?>
-                            <div class="alert alert-info">Henüz izin talebi bulunmamaktadır.</div>
-                            <?php else: ?>
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Personel</th>
-                                            <th>Başlangıç</th>
-                                            <th>Bitiş</th>
-                                            <th>Gün</th>
-                                            <th>Tür</th>
-                                            <th>Durum</th>
-                                            <th>Tarih</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach (array_slice($leaveRequests, 0, 5) as $request): ?>
-                                        <tr>
-                                            <td><?php echo $request['employee_name']; ?></td>
-                                            <td><?php echo $request['start_date']; ?></td>
-                                            <td><?php echo $request['end_date']; ?></td>
-                                            <td><?php echo $request['days']; ?> gün</td>
-                                            <td>
-                                                <?php 
-                                                if ($request['type'] === 'annual') echo 'Yıllık İzin';
-                                                elseif ($request['type'] === 'sick') echo 'Hastalık';
-                                                elseif ($request['type'] === 'marriage') echo 'Evlilik';
-                                                elseif ($request['type'] === 'maternity') echo 'Doğum';
-                                                elseif ($request['type'] === 'paternity') echo 'Babalık';
-                                                elseif ($request['type'] === 'bereavement') echo 'Ölüm';
-                                                else echo $request['type'];
-                                                ?>
-                                            </td>
-                                            <td>
-                                                <span class="badge <?php 
-                                                if ($request['status'] === 'approved') echo 'bg-success';
-                                                elseif ($request['status'] === 'rejected') echo 'bg-danger';
-                                                else echo 'bg-warning';
-                                                ?>">
-                                                    <?php 
-                                                    if ($request['status'] === 'approved') echo 'Onaylandı';
-                                                    elseif ($request['status'] === 'rejected') echo 'Reddedildi';
-                                                    else echo 'Bekliyor';
-                                                    ?>
-                                                </span>
-                                            </td>
-                                            <td><?php echo date('d.m.Y', strtotime($request['created_at'])); ?></td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                                <?php if (count($leaveRequests) > 5): ?>
-                                <div class="text-center mt-3">
-                                    <a href="leave_requests.php" class="btn btn-sm btn-outline-primary">Tümünü Görüntüle</a>
-                                </div>
-                                <?php endif; ?>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    
-                    <!-- Recent Advance Requests Card -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Son Avans Talepleri</h5>
-                        </div>
-                        <div class="card-body">
-                            <?php if (empty($advanceRequests)): ?>
-                            <div class="alert alert-info">Henüz avans talebi bulunmamaktadır.</div>
-                            <?php else: ?>
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Personel</th>
-                                            <th>Miktar</th>
-                                            <th>Sebep</th>
-                                            <th>Durum</th>
-                                            <th>Ödeme Tarihi</th>
-                                            <th>Talep Tarihi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach (array_slice($advanceRequests, 0, 5) as $request): ?>
-                                        <tr>
-                                            <td><?php echo $request['employee_name']; ?></td>
-                                            <td><?php echo number_format($request['amount'], 2, ',', '.'); ?> ₺</td>
-                                            <td><?php echo $request['reason']; ?></td>
-                                            <td>
-                                                <span class="badge <?php 
-                                                if ($request['status'] === 'approved') echo 'bg-success';
-                                                elseif ($request['status'] === 'rejected') echo 'bg-danger';
-                                                else echo 'bg-warning';
-                                                ?>">
-                                                    <?php 
-                                                    if ($request['status'] === 'approved') echo 'Onaylandı';
-                                                    elseif ($request['status'] === 'rejected') echo 'Reddedildi';
-                                                    else echo 'Bekliyor';
-                                                    ?>
-                                                </span>
-                                            </td>
-                                            <td><?php echo $request['payment_date'] ? date('d.m.Y', strtotime($request['payment_date'])) : '-'; ?></td>
-                                            <td><?php echo date('d.m.Y', strtotime($request['created_at'])); ?></td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                                <?php if (count($advanceRequests) > 5): ?>
-                                <div class="text-center mt-3">
-                                    <a href="advance_requests.php" class="btn btn-sm btn-outline-primary">Tümünü Görüntüle</a>
-                                </div>
-                                <?php endif; ?>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    
-                    <!-- Recent Attendance Records Card -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Son Giriş/Çıkış Kayıtları</h5>
-                        </div>
-                        <div class="card-body">
-                            <?php if (empty($attendance)): ?>
-                            <div class="alert alert-info">Henüz giriş/çıkış kaydı bulunmamaktadır.</div>
-                            <?php else: ?>
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Personel</th>
-                                            <th>Tarih</th>
-                                            <th>Saat</th>
-                                            <th>Tür</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach (array_slice($attendance, 0, 10) as $record): ?>
-                                        <tr>
-                                            <td>
-                                                <?php 
-                                                $employeeName = 'Bilinmeyen';
-                                                foreach ($teamMembers as $member) {
-                                                    if ($member['id'] == $record['employee_id']) {
-                                                        $employeeName = $member['name'];
-                                                        break;
-                                                    }
-                                                }
-                                                echo $employeeName;
-                                                ?>
-                                            </td>
-                                            <td><?php echo date('d.m.Y', strtotime($record['date'])); ?></td>
-                                            <td><?php echo date('H:i', strtotime($record['time'])); ?></td>
-                                            <td>
-                                                <span class="badge <?php echo ($record['type'] === 'entry') ? 'bg-success' : 'bg-danger'; ?>">
-                                                    <?php echo ($record['type'] === 'entry') ? 'Giriş' : 'Çıkış'; ?>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                                <?php if (count($attendance) > 10): ?>
-                                <div class="text-center mt-3">
-                                    <a href="attendance.php" class="btn btn-sm btn-outline-primary">Tümünü Görüntüle</a>
-                                </div>
-                                <?php endif; ?>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-    
-    <!-- View Employee Modal -->
-    <div class="modal fade" id="viewEmployeeModal" tabindex="-1" aria-labelledby="viewEmployeeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="viewEmployeeModalLabel">Personel Detayları</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>ID:</strong> <span id="view-id"></span></p>
-                            <p><strong>Ad Soyad:</strong> <span id="view-name"></span></p>
-                            <p><strong>Departman:</strong> <span id="view-department"></span></p>
-                            <p><strong>Pozisyon:</strong> <span id="view-position"></span></p>
-                            <p><strong>E-posta:</strong> <span id="view-email"></span></p>
-                        </div>
-                        <div class="col-md-6">
-                            <p><strong>Telefon:</strong> <span id="view-phone"></span></p>
-                            <p><strong>İşe Başlama Tarihi:</strong> <span id="view-hire-date"></span></p>
-                            <p><strong>Yıllık İzin Hakkı:</strong> <span id="view-annual-leave"></span></p>
-                            <p><strong>Kalan İzin:</strong> <span id="view-remaining-leave"></span></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="js/main.js"></script>
-    <script>
-        // View Employee Modal
+ goto JaPui; ocItG: $userId = $_SESSION["\165\163\x65\x72\x5f\151\144"]; goto YMBJ0; gH3hJ: P4pGE: goto fh8lN; m0AOr: goto P4pGE; goto xWLkV; eehRs: goto FRv_b; goto OWwOi; zzIfK: mH5ky: goto gJtmK; pZNZW: FRv_b: goto FULJH; fBAlT: goto pvY41; goto FQ7Vl; Zic5D: sgQmc: goto eZmXf; lkvDs: goto xYWmt; goto gH3hJ; kqJML: ?>
+<div class="card mb-4"><div class="card-header"><h5 class="mb-0">Son Avans Talepleri</h5></div><div class="card-body"><?php  goto medyB; KbyWu: goto pG7Dm; goto xPhSm; GLpeu: goto sgQmc; goto Z8hn8; xnfsU: if ($userRole == "\155\141\156\x61\147\145\x72" || $userRole == "\141\x64\x6d\x69\x6e") { ?>
+<li><a href="team_management.php"class="active"><i class="fas fa-users"></i> Ekip Yönetimi</a></li><li><a href="approval_requests.php"><i class="fas fa-tasks"></i> Onay Bekleyen Talepler</a></li><?php  } goto futSO; FuR0I: goto fL5tq; goto PDCBA; I306V: goto aJv6V; goto BA8YL; futSO: goto fg8H6; goto C6fGJ; PDCBA: mmkka: goto ocItG; dtM8a: if ($userRole == "\x61\x64\155\151\x6e") { ?>
+<li><a href="employee_management.php"><i class="fas fa-user-cog"></i> Personel Yönetimi</a></li><li><a href="department_management.php"><i class="fas fa-building"></i> Departman Yönetimi</a></li><li><a href="card_management.php"><i class="fas fa-id-card"></i> Kart Yönetimi</a></li><li><a href="reports.php"><i class="fas fa-chart-bar"></i> Raporlar</a></li><?php  } goto pJPYO; ccqMn: bxgbS: goto tX0L3; vwHpg: dROo2: goto RaYW_; f7Mwp: session_start(); goto m0AOr; GF4_x: goto C5Hsb; goto vSwNX; YMBJ0: goto A4GjN; goto LsudX; LsudX: gXyoM: goto kEsiW; BA8YL: XXJGS: goto VC2wk; WSMm9: goto RH7Yw; goto DELn1; MIfhQ: pG7Dm: goto tzy39; wKmVu: goto UYpXo; goto uKwTA; fI5_x: goto gXyoM; goto SNuVc; fh8lN: if (!isset($_SESSION["\165\163\x65\162\x5f\151\x64"])) { header("\114\x6f\143\x61\164\151\x6f\156\x3a\x20\154\157\x67\x69\x6e\x2e\160\x68\x70"); die; } goto KbyWu; hNpwF: aJv6V: goto gO0vJ; SpEWS: goto dROo2; goto ayBCW; gJtmK: $advanceRequests = array(); goto WSMm9; etBEf: cIazU: goto DBp8V; xPhSm: Sh2Mb: goto ajdIZ; uvF6y: $attendance = array(); goto c6HWC; tX0L3: ?>
+<p><?php  goto GLpeu; tzy39: if ($_SESSION["\x72\x6f\x6c\145"] !== "\x6d\x61\x6e\x61\147\x65\162" && $_SESSION["\x72\157\154\145"] !== "\141\144\155\151\x6e") { header("\x4c\157\143\x61\164\x69\157\x6e\72\x20\x69\x6e\x64\145\170\56\160\x68\x70"); die; } goto YqMZz; Yw_TN: VdmIW: goto ANwhp; uKwTA: C5Hsb: goto dbHrS; TuHNq: if (file_exists($attendanceFile)) { $allAttendance = json_decode(file_get_contents($attendanceFile), true); $sevenDaysAgo = date("\131\x2d\155\x2d\144", strtotime("\55\67\x20\x64\141\x79\x73")); foreach ($allAttendance as $record) { if ($record["\x64\141\164\145"] >= $sevenDaysAgo) { foreach ($teamMembers as $member) { if ($record["\x65\x6d\x70\154\157\x79\145\x65\137\x69\x64"] == $member["\151\x64"]) { $attendance[] = $record; break; } } } } usort($attendance, function ($a, $b) { $dateCompare = strcmp($b["\144\141\164\145"], $a["\144\141\x74\x65"]); if ($dateCompare === 0) { return strcmp($b["\164\151\x6d\145"], $a["\x74\x69\x6d\x65"]); } return $dateCompare; }); } goto lyl6G; ajdIZ: if (empty($advanceRequests)) { ?>
+<div class="alert alert-info">Henüz avans talebi bulunmamaktadır.</div><?php  } else { ?>
+<div class="table-responsive"><table class="table table-hover"><thead><tr><th>Personel</th><th>Miktar</th><th>Sebep</th><th>Durum</th><th>Ödeme Tarihi</th><th>Talep Tarihi</th></tr></thead><tbody><?php  foreach (array_slice($advanceRequests, 0, 5) as $request) { ?>
+<tr><td><?php  echo $request["\x65\155\x70\154\157\x79\x65\x65\x5f\156\x61\155\x65"]; ?>
+</td><td><?php  echo number_format($request["\141\155\x6f\165\156\x74"], 2, "\54", "\56"); ?>
+₺</td><td><?php  echo $request["\x72\x65\x61\x73\x6f\156"]; ?>
+</td><td><span class="badge<?php  if ($request["\x73\x74\x61\164\165\163"] === "\141\160\x70\162\x6f\x76\x65\x64") { echo "\x62\x67\55\163\165\x63\x63\x65\x73\163"; } elseif ($request["\163\x74\141\164\x75\163"] === "\x72\x65\x6a\145\x63\164\145\144") { echo "\142\x67\x2d\x64\x61\x6e\147\x65\162"; } else { echo "\x62\x67\55\167\x61\x72\156\x69\x6e\x67"; } ?>
+"><?php  if ($request["\163\x74\x61\x74\165\163"] === "\x61\160\160\162\157\x76\x65\x64") { echo "\117\x6e\141\171\154\141\156\x64\xc4\261"; } elseif ($request["\163\164\x61\164\165\163"] === "\x72\x65\x6a\145\x63\x74\145\144") { echo "\122\x65\144\144\x65\x64\x69\154\144\x69"; } else { echo "\x42\145\153\x6c\151\x79\157\162"; } ?>
+</span></td><td><?php  echo $request["\x70\141\171\x6d\145\x6e\x74\137\x64\x61\x74\x65"] ? date("\x64\56\155\x2e\x59", strtotime($request["\160\141\171\155\145\x6e\x74\137\x64\141\164\145"])) : "\x2d"; ?>
+</td><td><?php  echo date("\x64\56\155\56\x59", strtotime($request["\x63\162\145\x61\164\145\144\x5f\x61\x74"])); ?>
+</td></tr><?php  } ?>
+</tbody></table><?php  if (count($advanceRequests) > 5) { ?>
+<div class="mt-3 text-center"><a href="advance_requests.php"class="btn btn-sm btn-outline-primary">Tümünü Görüntüle</a></div><?php  } ?>
+</div><?php  } goto Wsxto; gQu3_: ?>
+</div></div><div class="card mb-4"><div class="card-header"><h5 class="mb-0">Son Giriş/Çıkış Kayıtları</h5></div><div class="card-body"><?php  goto siS7e; DokL4: $userRole = $_SESSION["\x72\157\x6c\145"]; goto wKmVu; C6fGJ: HXXxk: goto TuHNq; Jv8JL: $userName = $_SESSION["\156\141\155\x65"]; goto RB3BV; iAzXd: FARY1: goto DokL4; ANwhp: $leaveRequestsFile = "\x64\x61\x74\x61\x2f\154\x65\x61\x76\x65\x5f\x72\x65\x71\x75\x65\x73\x74\163\x2e\x6a\x73\x6f\x6e"; goto I306V; eZmXf: if ($userRole == "\x61\x64\155\x69\x6e") { echo "\304\xb0\113\x20\x59\xc3\xb6\x6e\145\164\151\x63\151\x73\151"; } else { if ($userRole == "\155\x61\156\141\147\x65\162") { echo "\x42\151\x72\151\x6d\40\x4d\xc3\xbc\144\303\xbc\162\xc3\274"; } else { echo "\x50\x65\162\163\x6f\x6e\x65\x6c"; } } goto Pvogp; JaPui: goto MCGD0; goto rfgop; c6HWC: goto HXXxk; goto hNpwF; FULJH: $employees = array(); goto lkvDs; Pvogp: goto VwEO6; goto ccqMn; xp_R2: $advanceRequestsFile = "\x64\141\x74\141\57\x61\144\166\141\156\143\x65\137\162\x65\161\165\145\x73\164\163\x2e\x6a\163\x6f\156"; goto Y8mC9; t_jO5: goto NEKTY; goto WMiaa; medyB: goto Sh2Mb; goto vwHpg; kjL0o: MCGD0: goto f7Mwp; whDne: ?>
+</ul></nav><div class="sidebar-footer"><a href="profile.php"><i class="fas fa-user-circle"></i> Profil</a> <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Çıkış</a></div><main class="main-content"><header class="header"><div class="header-left"><button class="sidebar-toggle"id="sidebar-toggle"><i class="fas fa-bars"></i></button><h2>Ekip Yönetimi</h2></div><div class="header-right"><div class="notification"><i class="fas fa-bell"></i> <span class="badge">3</span></div><div class="date-time"><span id="current-date"></span> <span id="current-time"></span></div></div></header><div class="content-wrapper"><div class="container-fluid"><div class="card mb-4"><div class="card-header"><h5 class="mb-0">Ekip Üyeleri</h5></div><div class="card-body"><?php  goto rpeUi; fQ9w0: uq2O1: goto whDne; VNkdR: Ufesb: goto gQu3_; WMiaa: qb99w: goto P2Mqq; dbHrS: $attendanceFile = "\x64\x61\x74\x61\57\x61\164\x74\145\156\x64\141\156\143\145\56\152\163\157\156"; goto t_jO5; FgM0L: goto VdmIW; goto VNkdR; Wsxto: goto Ufesb; goto kjL0o; P2Mqq: ?>
+<!doctypehtml><html lang="tr"><head><meta charset="UTF-8"><meta content="width=device-width,initial-scale=1"name="viewport"><title>HRMS - Ekip Yönetimi</title><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"rel="stylesheet"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"rel="stylesheet"><link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"rel="stylesheet"><link href="css/style.css"rel="stylesheet"></head><body><div class="app-container"><aside class="sidebar"><div class="sidebar-header"><img alt="HRMS Logo"src="img/logo.png"class="logo"><h3>HRMS</h3></div><div class="user-info"><div class="user-avatar"><img alt="User Avatar"src="img/avatars/default.png"></div><div class="user-details"><h4><?php  goto ZXEzu; YqMZz: goto mmkka; goto fQ9w0; ayBCW: HDZ9k: goto kqJML; xdbdJ: if (empty($attendance)) { ?>
+<div class="alert alert-info">Henüz giriş/çıkış kaydı bulunmamaktadır.</div><?php  } else { ?>
+<div class="table-responsive"><table class="table table-hover"><thead><tr><th>Personel</th><th>Tarih</th><th>Saat</th><th>Tür</th></tr></thead><tbody><?php  foreach (array_slice($attendance, 0, 10) as $record) { ?>
+<tr><td><?php  $employeeName = "\102\x69\x6c\151\156\155\x65\171\145\x6e"; foreach ($teamMembers as $member) { if ($member["\x69\x64"] == $record["\x65\x6d\x70\x6c\x6f\171\145\x65\137\151\144"]) { $employeeName = $member["\156\x61\155\x65"]; break; } } echo $employeeName; ?>
+</td><td><?php  echo date("\x64\56\155\56\131", strtotime($record["\x64\x61\164\x65"])); ?>
+</td><td><?php  echo date("\110\72\151", strtotime($record["\x74\151\x6d\x65"])); ?>
+</td><td><span class="badge<?php  echo $record["\164\x79\160\x65"] === "\x65\x6e\x74\162\x79" ? "\x62\147\x2d\163\x75\x63\143\x65\163\x73" : "\142\147\55\x64\x61\156\x67\x65\162"; ?>
+"><?php  echo $record["\x74\x79\x70\x65"] === "\x65\156\164\x72\x79" ? "\x47\x69\x72\x69\305\237" : "\303\207\xc4\xb1\153\xc4\261\xc5\x9f"; ?>
+</span></td></tr><?php  } ?>
+</tbody></table><?php  if (count($attendance) > 10) { ?>
+<div class="mt-3 text-center"><a href="attendance.php"class="btn btn-sm btn-outline-primary">Tümünü Görüntüle</a></div><?php  } ?>
+</div><?php  } goto FuR0I; ZXEzu: goto dy2tH; goto MIfhQ; mu6HW: NEKTY: goto uvF6y; Y_EDz: UYpXo: goto V0mj3; SyzlA: if (empty($leaveRequests)) { ?>
+<div class="alert alert-info">Henüz izin talebi bulunmamaktadır.</div><?php  } else { ?>
+<div class="table-responsive"><table class="table table-hover"><thead><tr><th>Personel</th><th>Başlangıç</th><th>Bitiş</th><th>Gün</th><th>Tür</th><th>Durum</th><th>Tarih</th></tr></thead><tbody><?php  foreach (array_slice($leaveRequests, 0, 5) as $request) { ?>
+<tr><td><?php  echo $request["\x65\155\x70\154\157\x79\145\145\137\156\141\x6d\x65"]; ?>
+</td><td><?php  echo $request["\163\x74\141\162\x74\x5f\x64\141\164\x65"]; ?>
+</td><td><?php  echo $request["\145\156\144\137\144\141\x74\x65"]; ?>
+</td><td><?php  echo $request["\x64\x61\x79\x73"]; ?>
+gün</td><td><?php  if ($request["\164\171\160\145"] === "\141\156\x6e\x75\141\x6c") { echo "\x59\xc4\xb1\154\154\xc4\xb1\153\x20\304\260\x7a\151\x6e"; } elseif ($request["\x74\171\160\x65"] === "\x73\x69\x63\153") { echo "\110\x61\x73\x74\x61\154\xc4\261\153"; } elseif ($request["\164\171\x70\x65"] === "\x6d\141\x72\x72\x69\x61\x67\145") { echo "\x45\166\x6c\x69\x6c\151\153"; } elseif ($request["\164\171\x70\145"] === "\155\x61\164\145\x72\x6e\151\x74\x79") { echo "\104\x6f\304\x9f\165\x6d"; } elseif ($request["\x74\171\160\x65"] === "\160\141\164\x65\162\x6e\151\164\x79") { echo "\x42\141\142\141\x6c\xc4\261\x6b"; } elseif ($request["\164\x79\160\x65"] === "\142\x65\162\145\141\x76\145\x6d\145\156\x74") { echo "\303\x96\154\xc3\xbc\155"; } else { echo $request["\x74\171\160\x65"]; } ?>
+</td><td><span class="badge<?php  if ($request["\x73\164\141\x74\165\x73"] === "\x61\160\x70\x72\157\x76\145\144") { echo "\x62\147\x2d\163\x75\143\x63\145\163\x73"; } elseif ($request["\x73\x74\x61\164\165\163"] === "\162\145\152\145\x63\164\145\x64") { echo "\x62\x67\55\x64\x61\x6e\x67\x65\162"; } else { echo "\142\147\x2d\x77\x61\x72\156\151\x6e\147"; } ?>
+"><?php  if ($request["\x73\x74\141\164\165\163"] === "\141\160\160\162\x6f\166\x65\x64") { echo "\x4f\x6e\141\171\154\141\156\144\xc4\xb1"; } elseif ($request["\x73\x74\x61\x74\x75\163"] === "\x72\x65\x6a\145\143\x74\x65\144") { echo "\122\x65\x64\144\x65\144\151\x6c\144\x69"; } else { echo "\x42\x65\153\x6c\151\x79\157\x72"; } ?>
+</span></td><td><?php  echo date("\144\x2e\155\56\131", strtotime($request["\143\162\x65\141\164\145\x64\x5f\x61\x74"])); ?>
+</td></tr><?php  } ?>
+</tbody></table><?php  if (count($leaveRequests) > 5) { ?>
+<div class="mt-3 text-center"><a href="leave_requests.php"class="btn btn-sm btn-outline-primary">Tümünü Görüntüle</a></div><?php  } ?>
+</div><?php  } goto kqVnH; mnGP7: PfNDq: goto xp_R2; SNuVc: fL5tq: goto cKa8m; DBp8V: if (empty($teamMembers)) { ?>
+<div class="alert alert-info">Henüz ekibinizde çalışan bulunmamaktadır.</div><?php  } else { ?>
+<div class="table-responsive"><table class="table table-hover"><thead><tr><th>Ad Soyad</th><th>Pozisyon</th><th>E-posta</th><th>Telefon</th><th>İşe Başlama</th><th>Kalan İzin</th><th>Durum</th><th>İşlemler</th></tr></thead><tbody><?php  foreach ($teamMembers as $member) { ?>
+<tr><td><?php  echo $member["\156\x61\x6d\145"]; ?>
+</td><td><?php  echo $member["\160\157\x73\151\x74\151\157\156"]; ?>
+</td><td><?php  echo $member["\x65\x6d\141\x69\x6c"]; ?>
+</td><td><?php  echo $member["\x70\x68\157\x6e\145"]; ?>
+</td><td><?php  echo $member["\x68\151\162\x65\x5f\144\141\x74\x65"]; ?>
+</td><td><?php  echo $member["\162\145\x6d\x61\151\x6e\x69\x6e\x67\137\154\x65\x61\x76\x65"]; ?>
+gün</td><td><span class="badge<?php  echo $member["\163\x74\x61\x74\x75\163"] === "\x61\143\x74\151\x76\x65" ? "\x62\x67\x2d\163\165\143\143\x65\x73\163" : "\x62\147\x2d\144\141\x6e\147\x65\162"; ?>
+"><?php  echo $member["\x73\x74\x61\164\x75\163"] === "\x61\x63\x74\x69\166\145" ? "\x41\x6b\x74\151\146" : "\120\x61\163\x69\146"; ?>
+</span></td><td><button class="btn btn-sm btn-info"type="button"data-annual-leave="<?php  echo $member["\141\156\x6e\165\141\x6c\x5f\x6c\145\141\x76\145"]; ?>
+"data-bs-target="#viewEmployeeModal"data-bs-toggle="modal"data-department="<?php  echo $member["\144\x65\x70\141\x72\x74\155\x65\156\164"]; ?>
+"data-email="<?php  echo $member["\x65\x6d\141\151\154"]; ?>
+"data-hire-date="<?php  echo $member["\150\x69\162\145\137\144\x61\164\145"]; ?>
+"data-id="<?php  echo $member["\151\144"]; ?>
+"data-name="<?php  echo $member["\x6e\x61\155\145"]; ?>
+"data-phone="<?php  echo $member["\160\150\x6f\156\x65"]; ?>
+"data-position="<?php  echo $member["\x70\157\x73\x69\164\151\x6f\x6e"]; ?>
+"data-remaining-leave="<?php  echo $member["\162\145\155\141\x69\156\x69\156\x67\137\154\x65\x61\x76\x65"]; ?>
+"><i class="fas fa-eye"></i></button></td></tr><?php  } ?>
+</tbody></table></div><?php  } goto fI5_x; wAk2D: goto bxgbS; goto mnGP7; Y8mC9: goto mH5ky; goto Bv72q; MXMoi: goto sW5B2; goto pZNZW; RaYW_: if (file_exists($employeesFile)) { $employees = json_decode(file_get_contents($employeesFile), true); foreach ($employees as $employee) { if ($employee["\155\x61\156\141\x67\x65\x72\x5f\151\144"] == $userId) { $teamMembers[] = $employee; } } usort($teamMembers, function ($a, $b) { return strcmp($a["\x6e\141\x6d\145"], $b["\x6e\141\x6d\x65"]); }); } goto FgM0L; rpeUi: goto cIazU; goto Yw_TN; Rwf14: echo $userName; goto wAk2D; rfgop: xYWmt: goto Z2htk; OWwOi: sW5B2: goto SyzlA; RB3BV: goto FARY1; goto mu6HW; pJPYO: goto uq2O1; goto etBEf; lrFtj: wtQil: goto xdbdJ; Bv72q: VwEO6: goto nY5BT; vSwNX: fg8H6: goto dtM8a; FQ7Vl: DbKu9: goto xnfsU; VC2wk: $employeesFile = "\x64\141\164\141\57\145\155\160\154\157\171\x65\x65\x73\x2e\x6a\x73\157\x6e"; goto eehRs; Z8hn8: RH7Yw: goto UDocF; lyl6G: goto qb99w; goto iAzXd; gO0vJ: $leaveRequests = array(); goto fBAlT; UDocF: if (file_exists($advanceRequestsFile)) { $allAdvanceRequests = json_decode(file_get_contents($advanceRequestsFile), true); foreach ($allAdvanceRequests as $request) { foreach ($teamMembers as $member) { if ($request["\x65\155\x70\154\157\x79\x65\x65\137\x69\x64"] == $member["\151\x64"]) { $advanceRequests[] = $request; break; } } } usort($advanceRequests, function ($a, $b) { return strtotime($b["\x63\x72\145\x61\164\145\144\137\x61\x74"]) - strtotime($a["\x63\162\145\x61\x74\x65\x64\137\141\164"]); }); } goto GF4_x; DELn1: pvY41: goto kWjdi; TVY9z: goto PfNDq; goto Y_EDz; kEsiW: ?>
+<div class="card mb-4"><div class="card-header"><h5 class="mb-0">Son İzin Talepleri</h5></div><div class="card-body"><?php  goto MXMoi; nY5BT: ?>
+</p></div></div><nav class="sidebar-nav"><ul><li><a href="index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li><li><a href="attendance.php"><i class="fas fa-clock"></i> Giriş/Çıkış Kayıtları</a></li><li><a href="leave_requests.php"><i class="fas fa-calendar-alt"></i> İzin Talepleri</a></li><li><a href="advance_requests.php"><i class="fas fa-money-bill-wave"></i> Avans Talepleri</a></li><?php  goto UhijZ; V0mj3: $userDepartment = $_SESSION["\144\x65\x70\x61\x72\x74\x6d\x65\156\x74"]; goto A0Uej; kWjdi: if (file_exists($leaveRequestsFile)) { $allLeaveRequests = json_decode(file_get_contents($leaveRequestsFile), true); foreach ($allLeaveRequests as $request) { foreach ($teamMembers as $member) { if ($request["\x65\155\x70\154\157\171\145\145\137\151\144"] == $member["\x69\144"]) { $leaveRequests[] = $request; break; } } } usort($leaveRequests, function ($a, $b) { return strtotime($b["\x63\x72\x65\x61\164\145\144\137\x61\x74"]) - strtotime($a["\x63\x72\x65\x61\x74\145\x64\x5f\x61\x74"]); }); } goto TVY9z; xWLkV: A4GjN: goto Jv8JL; Z2htk: $teamMembers = array(); goto SpEWS; HIGY0: dy2tH: goto Rwf14; siS7e: goto wtQil; goto HIGY0; UhijZ: goto DbKu9; goto zzIfK; kqVnH: goto HDZ9k; goto Zic5D; A0Uej: goto XXJGS; goto lrFtj; cKa8m: ?>
+</div></div></div></div></main><div class="fade modal"aria-hidden="true"aria-labelledby="viewEmployeeModalLabel"id="viewEmployeeModal"tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title"id="viewEmployeeModalLabel">Personel Detayları</h5><button class="btn-close"type="button"data-bs-dismiss="modal"aria-label="Close"></button></div><div class="modal-body"><div class="row"><div class="col-md-6"><p><strong>ID:</strong> <span id="view-id"></span></p><p><strong>Ad Soyad:</strong> <span id="view-name"></span></p><p><strong>Departman:</strong> <span id="view-department"></span></p><p><strong>Pozisyon:</strong> <span id="view-position"></span></p><p><strong>E-posta:</strong> <span id="view-email"></span></p></div><div class="col-md-6"><p><strong>Telefon:</strong> <span id="view-phone"></span></p><p><strong>İşe Başlama Tarihi:</strong> <span id="view-hire-date"></span></p><p><strong>Yıllık İzin Hakkı:</strong> <span id="view-annual-leave"></span></p><p><strong>Kalan İzin:</strong> <span id="view-remaining-leave"></span></p></div></div></div><div class="modal-footer"><button class="btn btn-secondary"type="button"data-bs-dismiss="modal">Kapat</button></div></div></div></div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script><script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><script src="js/main.js"></script><script>// View Employee Modal
         document.querySelectorAll('[data-bs-target="#viewEmployeeModal"]').forEach(button => {
             button.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
@@ -504,7 +91,4 @@ if (file_exists($attendanceFile)) {
                 document.getElementById('view-annual-leave').textContent = annualLeave;
                 document.getElementById('view-remaining-leave').textContent = remainingLeave;
             });
-        });
-    </script>
-</body>
-</html>
+        });</script>
