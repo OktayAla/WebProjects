@@ -1,14 +1,2 @@
 <?php
-$host = 'localhost';
-$dbname = 'elegance_textile';
-$username = 'root';
-$password = '';
-
-try {
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
-    echo "Bağlantı hatası: " . $e->getMessage();
-    exit;
-}
+ goto fAJeC; iBRqz: $password = ''; goto QERb7; fAJeC: $host = "\154\x6f\143\141\154\x68\157\163\x74"; goto urjvu; w9YEC: $username = "\162\x6f\157\x74"; goto iBRqz; urjvu: $dbname = "\145\x6c\145\147\x61\156\143\145\137\x74\145\x78\164\151\x6c\x65"; goto w9YEC; QERb7: try { $db = new PDO("\155\x79\x73\x71\x6c\72\150\157\x73\x74\75{$host}\x3b\x64\x62\156\x61\155\145\75{$dbname}\73\x63\150\141\x72\x73\145\164\75\165\x74\146\70\x6d\142\x34", $username, $password); $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); } catch (PDOException $e) { echo "\x42\141\304\x9f\154\141\156\164\304\xb1\40\150\141\164\141\x73\304\261\x3a\40" . $e->getMessage(); die; }

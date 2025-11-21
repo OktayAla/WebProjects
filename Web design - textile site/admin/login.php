@@ -1,56 +1,6 @@
 <?php
-session_start();
-
-// Oturum kontrolü
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
-    
-    // Sabit kullanıcı bilgileri
-    if ($username === 'admin' && $password === 'admin123') {
-        $_SESSION['admin_logged_in'] = true;
-        header('Location: index.php');
-        exit;
-    } else {
-        $error = "Geçersiz kullanıcı adı veya şifre!";
-    }
-}
-?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yönetim Paneli Girişi</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h3 class="text-center mb-4">Yönetim Paneli</h3>
-                        
-                        <?php if (isset($error)): ?>
-                            <div class="alert alert-danger"><?php echo $error; ?></div>
-                        <?php endif; ?>
-                        
-                        <form method="post" action="">
-                            <div class="mb-3">
-                                <label>Kullanıcı Adı</label>
-                                <input type="text" name="username" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label>Şifre</label>
-                                <input type="password" name="password" class="form-control" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+ goto N1XHW; jw3kg: if (isset($error)) { ?>
+<div class="alert alert-danger"><?php  echo $error; ?>
+</div><?php  } goto O3pav; NNG6E: if ($_SERVER["\122\105\x51\x55\105\123\124\x5f\115\105\124\x48\x4f\104"] == "\120\x4f\123\x54") { $username = $_POST["\x75\163\145\162\156\141\x6d\x65"] ?? ''; $password = $_POST["\x70\141\x73\163\x77\x6f\162\x64"] ?? ''; if ($username === "\x61\144\x6d\151\156" && $password === "\141\x64\155\151\156\x31\x32\63") { $_SESSION["\141\x64\x6d\151\x6e\x5f\154\157\147\147\145\144\137\x69\x6e"] = true; header("\x4c\x6f\x63\141\164\x69\x6f\156\x3a\40\x69\156\144\145\x78\56\x70\150\160"); die; } else { $error = "\107\x65\xc3\xa7\x65\162\x73\151\172\x20\x6b\x75\x6c\154\x61\x6e\304\261\143\304\xb1\40\x61\144\xc4\261\x20\x76\145\x79\141\40\xc5\x9f\x69\146\162\145\x21"; } } goto m7pji; m7pji: ?>
+<!doctypehtml><html lang="tr"><head><meta charset="UTF-8"><meta content="width=device-width,initial-scale=1"name="viewport"><title>Yönetim Paneli Girişi</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"rel="stylesheet"></head><body class="bg-light"><div class="container"><div class="justify-content-center mt-5 row"><div class="col-lg-4 col-md-6"><div class="card shadow"><div class="card-body"><h3 class="mb-4 text-center">Yönetim Paneli</h3><?php  goto jw3kg; N1XHW: session_start(); goto NNG6E; O3pav: ?>
+<form action=""method="post"><div class="mb-3"><label>Kullanıcı Adı</label> <input class="form-control"name="username"required></div><div class="mb-3"><label>Şifre</label> <input class="form-control"name="password"required type="password"></div><button class="btn btn-primary w-100"type="submit">Giriş Yap</button></form></div></div></div></div></div></body></html>

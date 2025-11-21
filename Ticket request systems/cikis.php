@@ -1,8 +1,2 @@
 <?php
-session_start();
-// Tüm oturum değişkenlerini temizle
-$_SESSION = array();
-session_destroy();
-// Çıkış sonrası yönlendirme
-header("Location: index.php");
-exit;
+ goto uoeSw; USFyk: $_SESSION = array(); goto gXkWM; uoeSw: session_start(); goto USFyk; gXkWM: session_destroy(); goto Ol6HN; Ol6HN: header("\x4c\x6f\x63\x61\x74\151\x6f\156\72\x20\x69\x6e\x64\x65\x78\x2e\160\150\x70"); goto Ku2QP; Ku2QP: die;

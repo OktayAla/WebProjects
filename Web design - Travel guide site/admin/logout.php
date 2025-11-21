@@ -1,10 +1,2 @@
 <?php
-session_start();
-
-$_SESSION = array();
-
-session_destroy();
-
-header('Location: index.php');
-exit;
-?>
+ goto qk4Z1; JZFip: $_SESSION = array(); goto wt0fP; qk4Z1: session_start(); goto JZFip; Glr12: header("\114\x6f\143\x61\164\x69\157\156\x3a\40\151\156\144\145\170\56\x70\150\x70"); goto n97e2; n97e2: die; goto QkP_9; wt0fP: session_destroy(); goto Glr12; QkP_9: ?>

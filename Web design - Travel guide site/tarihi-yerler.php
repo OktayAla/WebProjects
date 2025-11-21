@@ -1,10 +1,9 @@
 <?php
-include 'includes/header.php';
-?>
+goto QJynb;
+zdPk5: ?>
 
 <main class="destinations-page">
-    <section class="page-hero"
-        style="background-image: url('/turkiyegezirehberi/img/tarihi-yerler/header.webp');">
+    <section class="page-hero" style="background-image: url('/turkiyegezirehberi/img/tarihi-yerler/header.webp');">
         <div class="hero-overlay">
             <h1>Tarihi Yerler</h1>
             <p>Türkiye'nin zengin tarihini keşfedin.</p>
@@ -619,6 +618,13 @@ include 'includes/header.php';
 <script src="js/pagination.js"></script>
 
 
-<script src="js/filter.js"></scrip>
+<script src="js/filter.js"></scrip >
 
-<?php include 'includes/footer.php'; ?>
+        <?php goto Iwi51;
+        Iwi51:
+        include "\x69\x6e\143\154\x75\x64\x65\163\57\x66\157\x6f\x74\145\x72\x2e\x70\150\x70";
+        goto oha45;
+        QJynb:
+        include "\x69\156\143\154\x75\x64\145\x73\57\x68\145\x61\144\145\x72\x2e\160\150\x70";
+        goto zdPk5;
+        oha45: ?>

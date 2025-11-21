@@ -1,5 +1,2 @@
 <?php
-session_start();
-session_destroy();
-header('Location: login.php');
-exit;
+ goto QIIEF; X_ZpP: session_destroy(); goto jNXuo; QIIEF: session_start(); goto X_ZpP; jNXuo: header("\x4c\157\x63\141\x74\x69\157\156\72\x20\x6c\x6f\147\x69\x6e\56\160\150\160"); goto dFWqk; dFWqk: die;

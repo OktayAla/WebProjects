@@ -1,421 +1,70 @@
 <?php
-session_start();
-require_once '../includes/config.php';
-
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header('Location: index.php');
-    exit;
-}
-
-if (!file_exists(DATA_PATH . 'dogal-guzellikler')) {
-    mkdir(DATA_PATH . 'dogal-guzellikler', 0777, true);
-}
-
-$jsonFile = DATA_PATH . 'dogal-guzellikler/items.json';
-
-$message = '';
-$messageType = '';
-$editItem = null;
-
-$items = [];
-if (file_exists($jsonFile)) {
-    $items = json_decode(file_get_contents($jsonFile), true) ?? [];
-}
-
-$pageFiles = glob('../pages/dogal-guzellikler/*.php');
-$pagesContent = [];
-
-foreach ($pageFiles as $pageFile) {
-    $filename = basename($pageFile);
-    $name = str_replace('-detay.php', '', $filename);
-    $title = ucwords(str_replace('-', ' ', $name));
-    
-    $content = file_get_contents($pageFile);
-    
-    $location = '';
-    if (preg_match('/<span>([^<]+)<\/span>/i', $content, $locationMatch)) {
-        $location = trim($locationMatch[1]);
-    }
-    
-    $description = '';
-    if (preg_match('/<p>([^<]+)<\/p>/i', $content, $descMatch)) {
-        $description = trim($descMatch[1]);
-    }
-    
-    $imageUrl = '';
-    if (preg_match('/background-image: url\((.*?)\)/i', $content, $imgMatch)) {
-        $imageUrl = trim($imgMatch[1], "'\"");
-    }
-    
-    $pagesContent[] = [
-        'id' => count($pagesContent) + 1,
-        'title' => $title,
-        'location' => $location,
-        'description' => $description,
-        'image_url' => $imageUrl,
-        'detail_page' => $filename,
-        'region' => 'Türkiye'
-    ];
-}
-
-if (empty($items)) {
-    $items = $pagesContent;
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['save_item'])) {
-        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
-        $isNew = ($id === 0);
-        
-        $item = [
-            'title' => trim($_POST['title']),
-            'location' => trim($_POST['location']),
-            'region' => trim($_POST['region']),
-            'category' => trim($_POST['category']),
-            'description' => trim($_POST['description']),
-            'image_url' => trim($_POST['image_url']),
-            'detail_page' => trim($_POST['detail_page'])
-        ];
-        
-        if (empty($item['title']) || empty($item['location']) || empty($item['region'])) {
-            $message = 'Başlık, konum ve bölge alanları zorunludur.';
-            $messageType = 'error';
-        } else {
-            if ($isNew) {
-                $maxId = 0;
-                foreach ($items as $existingItem) {
-                    if (isset($existingItem['id']) && $existingItem['id'] > $maxId) {
-                        $maxId = $existingItem['id'];
-                    }
-                }
-                $item['id'] = $maxId + 1;
-                $items[] = $item;
-                $message = 'Yeni doğal güzellik başarıyla eklendi.';
-            } else {
-                foreach ($items as $key => $existingItem) {
-                    if (isset($existingItem['id']) && $existingItem['id'] === $id) {
-                        $item['id'] = $id;
-                        $items[$key] = $item;
-                        break;
-                    }
-                }
-                $message = 'Doğal güzellik başarıyla güncellendi.';
-            }
-            $messageType = 'success';
-            
-            file_put_contents($jsonFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-        }
-    }
-    
-    if (isset($_POST['delete_item'])) {
-        $id = intval($_POST['delete_id']);
-        
-        foreach ($items as $key => $item) {
-            if (isset($item['id']) && $item['id'] === $id) {
-                unset($items[$key]);
-                $message = 'Doğal güzellik başarıyla silindi.';
-                $messageType = 'success';
-                
-                $items = array_values($items);
-                file_put_contents($jsonFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-                break;
-            }
-        }
-    }
-}
-
-if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['id'])) {
-    $id = intval($_GET['id']);
-    
-    foreach ($items as $item) {
-        if (isset($item['id']) && $item['id'] === $id) {
-            $editItem = $item;
-            break;
-        }
-    }
-}
-
-$regions = [];
-foreach ($items as $item) {
-    if (isset($item['region']) && !in_array($item['region'], $regions)) {
-        $regions[] = $item['region'];
-    }
-}
-sort($regions);
-
-$categories = [];
-foreach ($items as $item) {
-    if (isset($item['category']) && !in_array($item['category'], $categories)) {
-        $categories[] = $item['category'];
-    }
-}
-sort($categories);
-
-$filteredItems = $items;
-if (isset($_GET['filter_region']) && !empty($_GET['filter_region'])) {
-    $filterRegion = $_GET['filter_region'];
-    $filteredItems = array_filter($filteredItems, function($item) use ($filterRegion) {
-        return isset($item['region']) && $item['region'] === $filterRegion;
-    });
-}
-
-if (isset($_GET['filter_category']) && !empty($_GET['filter_category'])) {
-    $filterCategory = $_GET['filter_category'];
-    $filteredItems = array_filter($filteredItems, function($item) use ($filterCategory) {
-        return isset($item['category']) && $item['category'] === $filterCategory;
-    });
-}
-
-if (isset($_GET['search']) && !empty($_GET['search'])) {
-    $search = strtolower($_GET['search']);
-    $filteredItems = array_filter($filteredItems, function($item) use ($search) {
-        return strpos(strtolower($item['title']), $search) !== false ||
-               strpos(strtolower($item['location']), $search) !== false ||
-               strpos(strtolower($item['description'] ?? ''), $search) !== false;
-    });
-}
-?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doğal Güzellikler Yönetimi - <?= SITE_TITLE ?></title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/admin.css">
-
-</head>
-<body>
-    <div class="admin-container">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <i class="fas fa-paper-plane logo"></i>
-                <h1>Türkiye Gezi Rehberi</h1>
-            </div>
-            
-            <div class="sidebar-menu">
-                <div class="menu-category">Ana Menü</div>
-                <a href="\turkiyegezirehberi\index.php" class="menu-item">
-                    <i class="fas fa-home"></i>
-                    <span>Anasayfa</span>
-                </a>
-                <a href="dashboard.php" class="menu-item">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-
-                <div class="menu-category">İçerik Yönetimi</div>
-                <a href="tarihi-yerler.php" class="menu-item">
-                    <i class="fas fa-landmark"></i>
-                    <span>Tarihi Yerler</span>
-                </a>
-                <a href="dogal-guzellikler.php" class="menu-item active">
-                    <i class="fas fa-mountain"></i>
-                    <span>Doğal Güzellikler</span>
-                </a>
-                <a href="lezzet-duraklari.php" class="menu-item">
-                    <i class="fas fa-utensils"></i>
-                    <span>Lezzet Durakları</span>
-                </a>
-            </div>
-        </div>
-        
-        <div class="main-content">
-            <div class="topbar">
-                <h2 class="page-title">Doğal Güzellikler Yönetimi</h2>
-                
-                <a href="?action=add" class="btn-add">
-                    <i class="fas fa-plus"></i> Yeni Ekle
-                </a>
-            </div>
-            
-            <?php if (!empty($message)): ?>
-                <div class="message <?= $messageType ?>">
-                    <?= htmlspecialchars($message) ?>
-                </div>
-            <?php endif; ?>
-            
-            <?php if (isset($_GET['action']) && ($_GET['action'] === 'add' || $_GET['action'] === 'edit')): ?>
-                <div class="form-container">
-                    <h3 class="form-title">
-                        <?= isset($_GET['id']) ? 'Doğal Güzellik Düzenle' : 'Yeni Doğal Güzellik Ekle' ?>
-                    </h3>
-                    
-                    <form method="post" action="">
-                        <?php if ($editItem): ?>
-                            <input type="hidden" name="id" value="<?= $editItem['id'] ?>">
-                        <?php endif; ?>
-                        
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="title">Başlık *</label>
-                                <input type="text" id="title" name="title" required 
-                                       value="<?= htmlspecialchars($editItem['title'] ?? '') ?>">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="location">Konum *</label>
-                                <input type="text" id="location" name="location" required 
-                                       value="<?= htmlspecialchars($editItem['location'] ?? '') ?>">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="region">Bölge *</label>
-                                <select id="region" name="region" required>
-                                    <option value="">Bölge Seçin</option>
-                                    <option value="Marmara" <?= (isset($editItem['region']) && $editItem['region'] === 'Marmara') ? 'selected' : '' ?>>Marmara</option>
-                                    <option value="Ege" <?= (isset($editItem['region']) && $editItem['region'] === 'Ege') ? 'selected' : '' ?>>Ege</option>
-                                    <option value="Akdeniz" <?= (isset($editItem['region']) && $editItem['region'] === 'Akdeniz') ? 'selected' : '' ?>>Akdeniz</option>
-                                    <option value="Karadeniz" <?= (isset($editItem['region']) && $editItem['region'] === 'Karadeniz') ? 'selected' : '' ?>>Karadeniz</option>
-                                    <option value="İç Anadolu" <?= (isset($editItem['region']) && $editItem['region'] === 'İç Anadolu') ? 'selected' : '' ?>>İç Anadolu</option>
-                                    <option value="Doğu Anadolu" <?= (isset($editItem['region']) && $editItem['region'] === 'Doğu Anadolu') ? 'selected' : '' ?>>Doğu Anadolu</option>
-                                    <option value="Güneydoğu Anadolu" <?= (isset($editItem['region']) && $editItem['region'] === 'Güneydoğu Anadolu') ? 'selected' : '' ?>>Güneydoğu Anadolu</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="category">Kategori</label>
-                                <select id="category" name="category">
-                                    <option value="">Kategori Seçin</option>
-                                    <option value="Göl" <?= (isset($editItem['category']) && $editItem['category'] === 'Göl') ? 'selected' : '' ?>>Göl</option>
-                                    <option value="Dağ" <?= (isset($editItem['category']) && $editItem['category'] === 'Dağ') ? 'selected' : '' ?>>Dağ</option>
-                                    <option value="Plaj" <?= (isset($editItem['category']) && $editItem['category'] === 'Plaj') ? 'selected' : '' ?>>Plaj</option>
-                                    <option value="Kanyon" <?= (isset($editItem['category']) && $editItem['category'] === 'Kanyon') ? 'selected' : '' ?>>Kanyon</option>
-                                    <option value="Şelale" <?= (isset($editItem['category']) && $editItem['category'] === 'Şelale') ? 'selected' : '' ?>>Şelale</option>
-                                    <option value="Mağara" <?= (isset($editItem['category']) && $editItem['category'] === 'Mağara') ? 'selected' : '' ?>>Mağara</option>
-                                    <option value="Yayla" <?= (isset($editItem['category']) && $editItem['category'] === 'Yayla') ? 'selected' : '' ?>>Yayla</option>
-                                    <option value="Diğer" <?= (isset($editItem['category']) && $editItem['category'] === 'Diğer') ? 'selected' : '' ?>>Diğer</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="description">Açıklama</label>
-                            <textarea id="description" name="description"><?= htmlspecialchars($editItem['description'] ?? '') ?></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="image_url">Görsel URL</label>
-                            <input type="text" id="image_url" name="image_url" 
-                                   value="<?= htmlspecialchars($editItem['image_url'] ?? '') ?>">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="detail_page">Detay Sayfası</label>
-                            <input type="text" id="detail_page" name="detail_page" 
-                                   value="<?= htmlspecialchars($editItem['detail_page'] ?? '') ?>">
-                        </div>
-                        
-                        <div class="form-buttons">
-                            <a href="dogal-guzellikler.php" class="btn-cancel">İptal</a>
-                            <button type="submit" name="save_item" class="btn-save">Kaydet</button>
-                        </div>
-                    </form>
-                </div>
-            <?php else: ?>
-                <div class="filter-bar">
-                    <div class="filter-section">
-                        <form method="get" action="">
-                            <select name="filter_region" onchange="this.form.submit()">
-                                <option value="">Tüm Bölgeler</option>
-                                <?php foreach ($regions as $region): ?>
-                                    <option value="<?= htmlspecialchars($region) ?>" <?= (isset($_GET['filter_region']) && $_GET['filter_region'] === $region) ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($region) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                            
-                            <?php if (isset($_GET['filter_category'])): ?>
-                                <input type="hidden" name="filter_category" value="<?= htmlspecialchars($_GET['filter_category']) ?>">
-                            <?php endif; ?>
-                        </form>
-                        
-                        <form method="get" action="">
-                            <select name="filter_category" onchange="this.form.submit()">
-                                <option value="">Tüm Kategoriler</option>
-                                <?php foreach ($categories as $category): ?>
-                                    <option value="<?= htmlspecialchars($category) ?>" <?= (isset($_GET['filter_category']) && $_GET['filter_category'] === $category) ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($category) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                            
-                            <?php if (isset($_GET['filter_region'])): ?>
-                                <input type="hidden" name="filter_region" value="<?= htmlspecialchars($_GET['filter_region']) ?>">
-                            <?php endif; ?>
-                        </form>
-                    </div>
-                    
-                    <div class="search-box">
-                        <form method="get" action="">
-                            <?php if (isset($_GET['filter_region'])): ?>
-                                <input type="hidden" name="filter_region" value="<?= htmlspecialchars($_GET['filter_region']) ?>">
-                            <?php endif; ?>
-                            <?php if (isset($_GET['filter_category'])): ?>
-                                <input type="hidden" name="filter_category" value="<?= htmlspecialchars($_GET['filter_category']) ?>">
-                            <?php endif; ?>
-                            <input type="text" name="search" placeholder="Ara..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
-                            <button type="submit" class="btn-search">Ara</button>
-                            <a href="dogal-guzellikler.php" class="btn-reset">Sıfırla</a>
-                        </form>
-                    </div>
-                </div>
-                
-                <div class="items-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Görsel</th>
-                                <th>Başlık</th>
-                                <th>Konum</th>
-                                <th>Bölge</th>
-                                <th>Kategori</th>
-                                <th>İşlemler</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (empty($filteredItems)): ?>
-                                <tr>
-                                    <td colspan="6" style="text-align: center;">Kayıt bulunamadı.</td>
-                                </tr>
-                            <?php else: ?>
-                                <?php foreach ($filteredItems as $item): ?>
-                                    <tr>
-                                        <td>
-                                            <?php if (!empty($item['image_url'])): ?>
-                                                <img src="<?= htmlspecialchars($item['image_url']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="item-image">
-                                            <?php else: ?>
-                                                <div style="width: 60px; height: 60px; background-color: #eee; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
-                                                    <i class="fas fa-image" style="color: #aaa;"></i>
-                                                </div>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td><?= htmlspecialchars($item['title']) ?></td>
-                                        <td><?= htmlspecialchars($item['location']) ?></td>
-                                        <td><?= htmlspecialchars($item['region']) ?></td>
-                                        <td><?= htmlspecialchars($item['category'] ?? '-') ?></td>
-                                        <td>
-                                            <div class="item-actions">
-                                                <a href="?action=edit&id=<?= $item['id'] ?>" class="btn-edit">
-                                                    <i class="fas fa-edit"></i> Düzenle
-                                                </a>
-                                                <form method="post" action="" onsubmit="return confirm('Bu öğeyi silmek istediğinizden emin misiniz?');" style="display: inline;">
-                                                    <input type="hidden" name="delete_id" value="<?= $item['id'] ?>">
-                                                    <button type="submit" name="delete_item" class="btn-delete">
-                                                        <i class="fas fa-trash"></i> Sil
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-</body>
-</html>
+ goto imi0L; zgX7l: $pagesContent = array(); goto K3F3K; kvv2w: if (empty($items)) { $items = $pagesContent; } goto dzA0N; dzA0N: if ($_SERVER["\x52\105\x51\x55\x45\123\124\137\x4d\105\x54\x48\117\104"] === "\x50\x4f\x53\124") { if (isset($_POST["\x73\141\x76\x65\137\151\164\x65\155"])) { $id = isset($_POST["\151\144"]) ? intval($_POST["\x69\144"]) : 0; $isNew = $id === 0; $item = array("\164\151\164\x6c\145" => trim($_POST["\x74\x69\x74\154\x65"]), "\x6c\157\x63\x61\164\x69\x6f\156" => trim($_POST["\x6c\157\x63\141\164\x69\157\x6e"]), "\162\x65\147\151\x6f\x6e" => trim($_POST["\162\x65\147\151\x6f\x6e"]), "\143\141\164\x65\147\157\162\171" => trim($_POST["\143\141\x74\145\x67\x6f\x72\171"]), "\x64\145\163\x63\162\151\160\164\151\x6f\156" => trim($_POST["\x64\x65\x73\x63\162\151\x70\x74\x69\157\x6e"]), "\x69\155\141\x67\x65\137\x75\162\x6c" => trim($_POST["\151\x6d\141\x67\145\137\x75\162\154"]), "\x64\x65\x74\x61\151\x6c\x5f\x70\x61\147\x65" => trim($_POST["\x64\x65\164\x61\151\x6c\137\x70\141\x67\x65"])); if (empty($item["\164\x69\x74\x6c\145"]) || empty($item["\154\157\x63\141\x74\151\x6f\x6e"]) || empty($item["\x72\x65\147\x69\157\x6e"])) { $message = "\x42\141\xc5\x9f\x6c\304\261\x6b\x2c\x20\x6b\157\x6e\x75\155\40\166\145\40\142\303\xb6\154\x67\x65\40\x61\x6c\141\x6e\x6c\141\162\304\261\x20\172\157\162\165\156\x6c\165\x64\165\162\x2e"; $messageType = "\x65\162\x72\157\162"; } else { if ($isNew) { $maxId = 0; foreach ($items as $existingItem) { if (isset($existingItem["\151\x64"]) && $existingItem["\151\x64"] > $maxId) { $maxId = $existingItem["\x69\x64"]; } } $item["\x69\144"] = $maxId + 1; $items[] = $item; $message = "\x59\x65\x6e\151\x20\x64\157\xc4\237\x61\x6c\x20\147\xc3\274\x7a\x65\154\x6c\x69\x6b\40\x62\x61\305\x9f\x61\162\304\261\x79\154\x61\x20\x65\153\154\x65\x6e\144\151\x2e"; } else { foreach ($items as $key => $existingItem) { if (isset($existingItem["\x69\144"]) && $existingItem["\x69\x64"] === $id) { $item["\x69\x64"] = $id; $items[$key] = $item; break; } } $message = "\x44\157\304\x9f\x61\x6c\x20\x67\303\274\x7a\x65\x6c\154\x69\x6b\x20\x62\141\305\237\141\x72\xc4\261\171\154\141\x20\x67\303\xbc\x6e\143\145\x6c\x6c\145\x6e\144\x69\x2e"; } $messageType = "\163\x75\x63\x63\145\x73\163"; file_put_contents($jsonFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)); } } if (isset($_POST["\x64\145\154\145\x74\x65\137\x69\164\x65\x6d"])) { $id = intval($_POST["\144\145\x6c\x65\x74\145\x5f\x69\x64"]); foreach ($items as $key => $item) { if (isset($item["\x69\144"]) && $item["\151\144"] === $id) { unset($items[$key]); $message = "\104\x6f\304\x9f\x61\x6c\x20\x67\303\274\x7a\x65\x6c\x6c\151\x6b\x20\x62\141\xc5\x9f\x61\x72\xc4\261\x79\154\141\x20\x73\x69\154\151\156\x64\x69\56"; $messageType = "\x73\x75\x63\x63\x65\x73\x73"; $items = array_values($items); file_put_contents($jsonFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)); break; } } } } goto SLmZl; Vfb8K: echo SITE_TITLE; goto w9BEB; hYNzq: if (!file_exists(DATA_PATH . "\x64\157\x67\x61\154\x2d\x67\x75\x7a\x65\154\154\x69\x6b\x6c\145\x72")) { mkdir(DATA_PATH . "\x64\x6f\147\x61\x6c\55\147\165\172\x65\154\x6c\151\153\154\x65\162", 511, true); } goto z29O_; YuV_T: $messageType = ''; goto Ox21b; fR_2D: $categories = array(); goto QLw_b; lpoeS: if (isset($_GET["\x66\x69\x6c\164\x65\x72\x5f\162\x65\x67\x69\157\x6e"]) && !empty($_GET["\146\x69\x6c\x74\x65\162\137\162\145\147\x69\x6f\x6e"])) { $filterRegion = $_GET["\146\x69\x6c\164\x65\x72\x5f\x72\x65\x67\x69\157\x6e"]; $filteredItems = array_filter($filteredItems, function ($item) use($filterRegion) { return isset($item["\x72\x65\x67\151\157\156"]) && $item["\x72\x65\147\x69\157\156"] === $filterRegion; }); } goto jms13; ApIrj: $message = ''; goto YuV_T; z29O_: $jsonFile = DATA_PATH . "\144\157\x67\141\154\55\147\165\172\145\154\x6c\x69\x6b\x6c\145\x72\x2f\x69\164\x65\155\163\x2e\x6a\163\157\156"; goto ApIrj; RzPFr: if (!empty($message)) { ?>
+<div class="message<?php  echo $messageType; ?>
+"><?php  echo htmlspecialchars($message); ?>
+</div><?php  } goto cwWxb; SLmZl: if (isset($_GET["\141\143\164\151\157\156"]) && $_GET["\141\x63\x74\151\157\156"] === "\145\x64\151\164" && isset($_GET["\x69\x64"])) { $id = intval($_GET["\x69\144"]); foreach ($items as $item) { if (isset($item["\151\x64"]) && $item["\151\144"] === $id) { $editItem = $item; break; } } } goto g21VP; tT_BC: if (isset($_GET["\163\145\141\x72\x63\x68"]) && !empty($_GET["\163\145\141\162\x63\x68"])) { $search = strtolower($_GET["\163\145\x61\x72\x63\x68"]); $filteredItems = array_filter($filteredItems, function ($item) use($search) { return strpos(strtolower($item["\164\x69\x74\154\145"]), $search) !== false || strpos(strtolower($item["\154\157\x63\x61\164\x69\157\x6e"]), $search) !== false || strpos(strtolower($item["\x64\x65\163\x63\162\151\x70\x74\x69\157\x6e"] ?? ''), $search) !== false; }); } goto FH1nK; w9BEB: ?>
+</title><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"rel="stylesheet"><link href="css/admin.css"rel="stylesheet"></head><body><div class="admin-container"><div class="sidebar"><div class="sidebar-header"><i class="fas fa-paper-plane logo"></i><h1>Türkiye Gezi Rehberi</h1></div><div class="sidebar-menu"><div class="menu-category">Ana Menü</div><a class="menu-item"href="\turkiyegezirehberi\index.php"><i class="fas fa-home"></i> <span>Anasayfa</span> </a><a class="menu-item"href="dashboard.php"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a><div class="menu-category">İçerik Yönetimi</div><a class="menu-item"href="tarihi-yerler.php"><i class="fas fa-landmark"></i> <span>Tarihi Yerler</span> </a><a class="menu-item active"href="dogal-guzellikler.php"><i class="fas fa-mountain"></i> <span>Doğal Güzellikler</span> </a><a class="menu-item"href="lezzet-duraklari.php"><i class="fas fa-utensils"></i> <span>Lezzet Durakları</span></a></div></div><div class="main-content"><div class="topbar"><h2 class="page-title">Doğal Güzellikler Yönetimi</h2><a class="btn-add"href="?action=add"><i class="fas fa-plus"></i> Yeni Ekle</a></div><?php  goto RzPFr; bky5_: if (file_exists($jsonFile)) { $items = json_decode(file_get_contents($jsonFile), true) ?? array(); } goto Pa0rh; MwEBd: require_once "\56\56\x2f\151\156\x63\154\165\x64\145\x73\x2f\143\x6f\156\x66\x69\x67\56\x70\x68\160"; goto gOCCF; Y7_fM: $filteredItems = $items; goto lpoeS; Pa0rh: $pageFiles = glob("\56\56\57\160\x61\x67\145\163\57\x64\157\147\141\154\55\147\165\x7a\145\x6c\154\x69\153\154\145\162\x2f\52\x2e\160\x68\x70"); goto zgX7l; QLw_b: foreach ($items as $item) { if (isset($item["\x63\x61\164\145\x67\x6f\162\x79"]) && !in_array($item["\x63\141\164\x65\x67\x6f\162\x79"], $categories)) { $categories[] = $item["\x63\x61\x74\x65\x67\157\x72\x79"]; } } goto Ya9ns; imi0L: session_start(); goto MwEBd; jms13: if (isset($_GET["\x66\151\x6c\x74\x65\162\137\x63\x61\x74\x65\x67\157\162\x79"]) && !empty($_GET["\x66\x69\x6c\x74\x65\x72\x5f\143\x61\164\145\x67\157\x72\x79"])) { $filterCategory = $_GET["\x66\x69\154\x74\x65\x72\137\x63\x61\164\x65\147\x6f\x72\x79"]; $filteredItems = array_filter($filteredItems, function ($item) use($filterCategory) { return isset($item["\143\141\x74\145\147\157\162\171"]) && $item["\x63\x61\x74\x65\147\157\x72\171"] === $filterCategory; }); } goto tT_BC; g21VP: $regions = array(); goto GmgcO; FH1nK: ?>
+<!doctypehtml><html lang="tr"><head><meta charset="UTF-8"><meta content="width=device-width,initial-scale=1"name="viewport"><title>Doğal Güzellikler Yönetimi -<?php  goto Vfb8K; Ya9ns: sort($categories); goto Y7_fM; a4cx_: sort($regions); goto fR_2D; iAulv: $items = array(); goto bky5_; gOCCF: if (!isset($_SESSION["\x61\144\x6d\x69\156\137\x6c\157\147\147\145\x64\x5f\151\156"]) || $_SESSION["\141\x64\x6d\151\156\x5f\x6c\157\147\147\145\144\x5f\x69\x6e"] !== true) { header("\x4c\x6f\x63\x61\164\x69\157\156\x3a\x20\151\156\144\145\170\56\x70\x68\x70"); die; } goto hYNzq; cwWxb: if (isset($_GET["\141\x63\164\151\157\x6e"]) && ($_GET["\x61\x63\164\151\157\x6e"] === "\x61\144\x64" || $_GET["\x61\143\x74\151\157\156"] === "\145\x64\151\164")) { ?>
+<div class="form-container"><h3 class="form-title"><?php  echo isset($_GET["\x69\x64"]) ? "\104\157\xc4\237\141\x6c\x20\107\xc3\274\x7a\145\x6c\x6c\151\x6b\x20\104\303\274\x7a\145\x6e\x6c\145" : "\131\x65\156\151\40\x44\x6f\304\237\x61\x6c\x20\107\xc3\274\172\x65\x6c\154\x69\x6b\40\x45\153\x6c\145"; ?>
+</h3><form action=""method="post"><?php  if ($editItem) { ?>
+<input name="id"value="<?php  echo $editItem["\x69\x64"]; ?>
+"type="hidden"><?php  } ?>
+<div class="form-grid"><div class="form-group"><label for="title">Başlık *</label> <input name="title"value="<?php  echo htmlspecialchars($editItem["\x74\x69\164\x6c\145"] ?? ''); ?>
+"id="title"required></div><div class="form-group"><label for="location">Konum *</label> <input name="location"value="<?php  echo htmlspecialchars($editItem["\154\x6f\x63\141\x74\151\157\156"] ?? ''); ?>
+"id="location"required></div><div class="form-group"><label for="region">Bölge *</label> <select name="region"id="region"required><option value="">Bölge Seçin</option><option value="Marmara"<?php  echo isset($editItem["\x72\145\147\151\x6f\x6e"]) && $editItem["\x72\x65\x67\x69\x6f\156"] === "\x4d\x61\162\x6d\141\162\x61" ? "\x73\145\154\145\143\x74\x65\x64" : ''; ?>
+>Marmara</option><option value="Ege"<?php  echo isset($editItem["\x72\145\x67\x69\x6f\156"]) && $editItem["\x72\145\147\151\157\x6e"] === "\x45\147\x65" ? "\163\x65\154\145\143\x74\145\x64" : ''; ?>
+>Ege</option><option value="Akdeniz"<?php  echo isset($editItem["\162\x65\147\x69\x6f\156"]) && $editItem["\162\x65\147\151\x6f\156"] === "\x41\x6b\x64\145\x6e\x69\172" ? "\163\x65\x6c\145\143\x74\x65\144" : ''; ?>
+>Akdeniz</option><option value="Karadeniz"<?php  echo isset($editItem["\x72\x65\147\151\x6f\x6e"]) && $editItem["\x72\x65\147\151\x6f\156"] === "\x4b\x61\x72\141\144\x65\156\151\172" ? "\x73\145\x6c\145\x63\164\145\x64" : ''; ?>
+>Karadeniz</option><option value="İç Anadolu"<?php  echo isset($editItem["\x72\145\147\151\x6f\x6e"]) && $editItem["\x72\145\x67\x69\x6f\x6e"] === "\304\260\303\247\x20\101\156\141\x64\157\x6c\x75" ? "\x73\x65\x6c\145\x63\164\x65\x64" : ''; ?>
+>İç Anadolu</option><option value="Doğu Anadolu"<?php  echo isset($editItem["\x72\145\x67\x69\157\x6e"]) && $editItem["\162\x65\147\x69\157\x6e"] === "\x44\157\xc4\237\x75\40\x41\x6e\141\144\157\x6c\x75" ? "\163\x65\154\145\x63\x74\145\144" : ''; ?>
+>Doğu Anadolu</option><option value="Güneydoğu Anadolu"<?php  echo isset($editItem["\x72\x65\x67\x69\x6f\x6e"]) && $editItem["\x72\x65\147\151\157\156"] === "\x47\303\xbc\156\145\x79\144\x6f\304\237\165\40\101\156\141\144\157\x6c\x75" ? "\x73\145\154\145\x63\164\x65\144" : ''; ?>
+>Güneydoğu Anadolu</option></select></div><div class="form-group"><label for="category">Kategori</label> <select name="category"id="category"><option value="">Kategori Seçin</option><option value="Göl"<?php  echo isset($editItem["\143\x61\x74\x65\x67\157\162\171"]) && $editItem["\143\x61\164\145\147\x6f\162\171"] === "\x47\xc3\266\x6c" ? "\x73\145\154\x65\143\x74\145\x64" : ''; ?>
+>Göl</option><option value="Dağ"<?php  echo isset($editItem["\x63\x61\x74\x65\x67\157\162\171"]) && $editItem["\x63\141\x74\x65\147\x6f\162\171"] === "\104\x61\304\x9f" ? "\163\x65\x6c\145\x63\x74\x65\144" : ''; ?>
+>Dağ</option><option value="Plaj"<?php  echo isset($editItem["\x63\x61\164\145\147\x6f\162\171"]) && $editItem["\x63\141\164\x65\x67\x6f\x72\171"] === "\x50\x6c\141\x6a" ? "\x73\x65\154\145\x63\164\x65\144" : ''; ?>
+>Plaj</option><option value="Kanyon"<?php  echo isset($editItem["\143\141\x74\145\147\x6f\162\171"]) && $editItem["\x63\141\x74\145\x67\x6f\x72\x79"] === "\x4b\x61\156\x79\x6f\x6e" ? "\163\145\x6c\145\143\x74\145\x64" : ''; ?>
+>Kanyon</option><option value="Şelale"<?php  echo isset($editItem["\x63\x61\x74\145\147\157\x72\x79"]) && $editItem["\x63\141\x74\x65\147\x6f\x72\171"] === "\xc5\x9e\145\154\141\x6c\145" ? "\163\145\x6c\145\x63\x74\145\144" : ''; ?>
+>Şelale</option><option value="Mağara"<?php  echo isset($editItem["\x63\x61\x74\145\x67\x6f\x72\x79"]) && $editItem["\x63\141\x74\x65\147\x6f\162\x79"] === "\x4d\141\304\x9f\x61\x72\141" ? "\163\x65\154\145\143\164\145\x64" : ''; ?>
+>Mağara</option><option value="Yayla"<?php  echo isset($editItem["\143\x61\164\145\x67\157\x72\171"]) && $editItem["\143\x61\x74\x65\x67\157\162\171"] === "\x59\141\x79\154\141" ? "\x73\x65\154\x65\x63\x74\145\144" : ''; ?>
+>Yayla</option><option value="Diğer"<?php  echo isset($editItem["\x63\141\164\145\147\x6f\162\x79"]) && $editItem["\143\x61\164\x65\x67\x6f\x72\171"] === "\104\151\304\x9f\145\x72" ? "\163\x65\x6c\145\143\164\145\x64" : ''; ?>
+>Diğer</option></select></div></div><div class="form-group"><label for="description">Açıklama</label> <textarea id="description"name="description"><?php  echo htmlspecialchars($editItem["\x64\145\x73\x63\162\151\x70\164\x69\157\x6e"] ?? ''); ?>
+</textarea></div><div class="form-group"><label for="image_url">Görsel URL</label> <input name="image_url"value="<?php  echo htmlspecialchars($editItem["\151\155\141\147\145\x5f\165\x72\x6c"] ?? ''); ?>
+"id="image_url"></div><div class="form-group"><label for="detail_page">Detay Sayfası</label> <input name="detail_page"value="<?php  echo htmlspecialchars($editItem["\x64\x65\x74\141\151\154\x5f\x70\x61\x67\x65"] ?? ''); ?>
+"id="detail_page"></div><div class="form-buttons"><a class="btn-cancel"href="dogal-guzellikler.php">İptal</a> <button class="btn-save"type="submit"name="save_item">Kaydet</button></div></form></div><?php  } else { ?>
+<div class="filter-bar"><div class="filter-section"><form action=""><select name="filter_region"onchange="this.form.submit()"><option value="">Tüm Bölgeler</option><?php  foreach ($regions as $region) { ?>
+<option value="<?php  echo htmlspecialchars($region); ?>
+"<?php  echo isset($_GET["\x66\151\x6c\x74\145\x72\137\x72\x65\147\x69\x6f\156"]) && $_GET["\146\151\x6c\x74\x65\x72\137\x72\x65\x67\151\x6f\x6e"] === $region ? "\163\145\154\145\x63\x74\x65\x64" : ''; ?>
+><?php  echo htmlspecialchars($region); ?>
+</option><?php  } ?>
+</select><?php  if (isset($_GET["\x66\151\154\x74\145\162\137\x63\x61\x74\145\x67\x6f\162\171"])) { ?>
+<input name="filter_category"value="<?php  echo htmlspecialchars($_GET["\146\151\154\x74\x65\x72\137\143\x61\164\x65\147\x6f\162\x79"]); ?>
+"type="hidden"><?php  } ?>
+</form><form action=""><select name="filter_category"onchange="this.form.submit()"><option value="">Tüm Kategoriler</option><?php  foreach ($categories as $category) { ?>
+<option value="<?php  echo htmlspecialchars($category); ?>
+"<?php  echo isset($_GET["\x66\x69\154\164\x65\x72\137\x63\x61\164\145\x67\157\162\171"]) && $_GET["\146\151\154\x74\145\x72\x5f\x63\x61\x74\145\147\157\x72\x79"] === $category ? "\163\145\x6c\145\x63\x74\x65\x64" : ''; ?>
+><?php  echo htmlspecialchars($category); ?>
+</option><?php  } ?>
+</select><?php  if (isset($_GET["\x66\x69\x6c\164\145\x72\137\x72\145\147\151\x6f\156"])) { ?>
+<input name="filter_region"value="<?php  echo htmlspecialchars($_GET["\x66\151\154\x74\145\162\137\162\x65\x67\151\x6f\x6e"]); ?>
+"type="hidden"><?php  } ?>
+</form></div><div class="search-box"><form action=""><?php  if (isset($_GET["\x66\151\154\164\145\x72\137\162\145\x67\151\157\156"])) { ?>
+<input name="filter_region"value="<?php  echo htmlspecialchars($_GET["\x66\x69\154\164\x65\x72\137\x72\x65\147\151\157\156"]); ?>
+"type="hidden"><?php  } if (isset($_GET["\146\151\x6c\164\145\162\x5f\x63\141\x74\x65\x67\x6f\x72\x79"])) { ?>
+<input name="filter_category"value="<?php  echo htmlspecialchars($_GET["\146\151\154\164\x65\x72\x5f\143\141\x74\x65\147\x6f\x72\x79"]); ?>
+"type="hidden"><?php  } ?>
+<input name="search"value="<?php  echo htmlspecialchars($_GET["\x73\x65\x61\x72\x63\x68"] ?? ''); ?>
+"placeholder="Ara..."> <button class="btn-search"type="submit">Ara</button> <a class="btn-reset"href="dogal-guzellikler.php">Sıfırla</a></form></div></div><div class="items-table"><table><thead><tr><th>Görsel</th><th>Başlık</th><th>Konum</th><th>Bölge</th><th>Kategori</th><th>İşlemler</th></tr></thead><tbody><?php  if (empty($filteredItems)) { ?>
+<tr><td colspan="6"style="text-align:center">Kayıt bulunamadı.</td></tr><?php  } else { foreach ($filteredItems as $item) { ?>
+<tr><td><?php  if (!empty($item["\151\155\x61\x67\x65\x5f\x75\x72\154"])) { ?>
+<img alt="<?php  echo htmlspecialchars($item["\164\x69\164\154\145"]); ?>
+"class="item-image"src="<?php  echo htmlspecialchars($item["\151\x6d\141\147\145\137\x75\x72\154"]); ?>
+"><?php  } else { ?>
+<div style="width:60px;height:60px;background-color:#eee;display:flex;align-items:center;justify-content:center;border-radius:4px"><i class="fas fa-image"style="color:#aaa"></i></div><?php  } ?>
+</td><td><?php  echo htmlspecialchars($item["\x74\151\164\x6c\145"]); ?>
+</td><td><?php  echo htmlspecialchars($item["\154\157\143\141\164\x69\157\x6e"]); ?>
+</td><td><?php  echo htmlspecialchars($item["\162\x65\147\151\x6f\x6e"]); ?>
+</td><td><?php  echo htmlspecialchars($item["\x63\x61\x74\145\147\x6f\162\x79"] ?? "\55"); ?>
+</td><td><div class="item-actions"><a class="btn-edit"href="?action=edit&id=<?php  echo $item["\x69\144"]; ?>
+"><i class="fas fa-edit"></i> Düzenle</a><form action=""method="post"onsubmit='return confirm("Bu öğeyi silmek istediğinizden emin misiniz?")'style="display:inline"><input name="delete_id"value="<?php  echo $item["\151\x64"]; ?>
+"type="hidden"> <button class="btn-delete"type="submit"name="delete_item"><i class="fas fa-trash"></i> Sil</button></form></div></td></tr><?php  } } ?>
+</tbody></table></div><?php  } goto tW6oi; Ox21b: $editItem = null; goto iAulv; K3F3K: foreach ($pageFiles as $pageFile) { $filename = basename($pageFile); $name = str_replace("\55\144\145\164\141\171\x2e\x70\x68\x70", '', $filename); $title = ucwords(str_replace("\55", "\40", $name)); $content = file_get_contents($pageFile); $location = ''; if (preg_match("\x2f\x3c\163\160\x61\x6e\x3e\50\133\136\74\135\53\x29\74\x5c\57\163\x70\x61\x6e\x3e\x2f\151", $content, $locationMatch)) { $location = trim($locationMatch[1]); } $description = ''; if (preg_match("\57\x3c\160\76\50\133\136\x3c\135\x2b\51\x3c\134\x2f\160\x3e\x2f\151", $content, $descMatch)) { $description = trim($descMatch[1]); } $imageUrl = ''; if (preg_match("\x2f\142\x61\143\x6b\x67\162\157\x75\x6e\144\x2d\151\155\x61\x67\145\72\40\165\x72\154\x5c\x28\50\56\52\x3f\51\134\x29\57\151", $content, $imgMatch)) { $imageUrl = trim($imgMatch[1], "\47\x22"); } $pagesContent[] = array("\x69\144" => count($pagesContent) + 1, "\164\151\x74\x6c\x65" => $title, "\x6c\157\143\141\x74\x69\157\156" => $location, "\x64\x65\163\143\x72\151\x70\x74\x69\x6f\156" => $description, "\151\155\141\147\x65\137\x75\x72\154" => $imageUrl, "\144\145\x74\141\x69\x6c\137\160\141\x67\x65" => $filename, "\x72\x65\147\151\157\156" => "\x54\303\xbc\162\153\151\x79\x65"); } goto kvv2w; GmgcO: foreach ($items as $item) { if (isset($item["\x72\x65\x67\x69\x6f\156"]) && !in_array($item["\x72\145\x67\x69\x6f\156"], $regions)) { $regions[] = $item["\x72\145\x67\x69\x6f\156"]; } } goto a4cx_; tW6oi: ?>
+</div></div></body></html>

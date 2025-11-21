@@ -1,49 +1,11 @@
-<?php require_once 'includes/header.php'; ?>
-
 <?php
-// Ürün ID'sini al
-$product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-// JSON dosyasından ürünleri oku
-$products_json = file_get_contents(__DIR__ . '/products.json');
-$products_data = json_decode($products_json, true);
-
-// Ürünü bul
-$product = null;
-foreach ($products_data as $category => $products) {
-    foreach ($products as $p) {
-        if ($p['id'] == $product_id) {
-            $product = $p;
-            break 2;
-        }
-    }
-}
-
-// Eğer ürün bulunamazsa hata mesajı göster
-if (!$product) {
-    echo '<div class="container py-5"><div class="alert alert-warning">Ürün bulunamadı.</div></div>';
-    require_once 'includes/footer.php';
-    exit;
-}
-?>
-
-<!-- Sayfa başlığı ve arka plan resmi -->
-<div class="container py-5">
-    <div class="row">
-        <div class="col-md-6">
-            <img src="<?php echo htmlspecialchars($product['image']); ?>" class="img-fluid" alt="<?php echo htmlspecialchars($product['name']); ?>">
-        </div>
-        <div class="col-md-6">
-            <h1 class="display-4"><?php echo htmlspecialchars($product['name']); ?></h1>
-            <p class="lead"><?php echo htmlspecialchars($product['description']); ?></p>
-            <h3 class="h5 mt-4">Özellikler</h3>
-            <ul>
-                <?php foreach ($product['features'] as $key => $value): ?>
-                    <li><strong><?php echo htmlspecialchars($key); ?>:</strong> <?php echo is_array($value) ? htmlspecialchars(implode(", ", $value)) : htmlspecialchars($value); ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<?php require_once 'includes/footer.php'; ?>
+ goto KRfk_; YdZy2: $product_id = isset($_GET["\x69\144"]) ? intval($_GET["\x69\x64"]) : 0; goto mvy6M; NFLzv: ?>
+</h1><p class="lead"><?php  goto XmIdz; SjJnV: require_once "\151\156\143\x6c\165\x64\x65\163\57\x66\157\x6f\x74\x65\162\56\x70\x68\160"; goto Zl2DC; QEwOL: echo htmlspecialchars($product["\x6e\x61\x6d\145"]); goto NFLzv; RzHpN: ?>
+"class="img-fluid"src="<?php  goto WvjK4; Heh4g: ?>
+"></div><div class="col-md-6"><h1 class="display-4"><?php  goto QEwOL; gl2In: ?>
+<div class="container py-5"><div class="row"><div class="col-md-6"><img alt="<?php  goto XL7Fj; pIdd1: ?>
+</p><h3 class="h5 mt-4">Özellikler</h3><ul><?php  goto BNDZ8; WvjK4: echo htmlspecialchars($product["\x69\x6d\x61\x67\x65"]); goto Heh4g; XmIdz: echo htmlspecialchars($product["\x64\x65\163\143\x72\151\x70\164\151\157\x6e"]); goto pIdd1; SCgC3: ?>
+</ul></div></div></div><?php  goto SjJnV; mONwD: $product = null; goto jsViD; BNDZ8: foreach ($product["\x66\145\141\164\x75\x72\145\163"] as $key => $value) { ?>
+<li><strong><?php  echo htmlspecialchars($key); ?>
+:</strong><?php  echo is_array($value) ? htmlspecialchars(implode("\54\x20", $value)) : htmlspecialchars($value); ?>
+</li><?php  } goto SCgC3; XL7Fj: echo htmlspecialchars($product["\156\141\x6d\145"]); goto RzHpN; k6JsZ: $products_data = json_decode($products_json, true); goto mONwD; KRfk_: require_once "\x69\156\x63\154\165\x64\x65\163\57\x68\x65\141\x64\x65\162\x2e\x70\x68\160"; goto YdZy2; mvy6M: $products_json = file_get_contents(__DIR__ . "\57\160\x72\157\x64\x75\x63\164\163\56\x6a\x73\x6f\x6e"); goto k6JsZ; y44Hs: if (!$product) { echo "\74\144\151\166\40\143\154\x61\163\x73\75\x22\143\x6f\x6e\x74\141\151\156\x65\162\40\160\171\x2d\65\42\x3e\x3c\x64\x69\166\x20\143\154\141\163\163\75\x22\x61\x6c\x65\162\x74\40\x61\x6c\145\162\164\x2d\167\141\162\156\x69\156\x67\x22\76\xc3\234\162\xc3\xbc\156\40\142\x75\x6c\x75\x6e\x61\155\x61\x64\xc4\261\x2e\74\x2f\x64\x69\x76\76\x3c\57\144\151\x76\76"; require_once "\x69\x6e\x63\154\165\144\145\163\x2f\x66\x6f\x6f\164\145\162\x2e\160\x68\160"; die; } goto gl2In; jsViD: foreach ($products_data as $category => $products) { foreach ($products as $p) { if ($p["\x69\x64"] == $product_id) { $product = $p; break 2; } } } goto y44Hs; Zl2DC: ?>
